@@ -41,6 +41,37 @@ local STRINGS: { [string]: string } = {
 	["Series.TooFar"] = "You walked away from the station.",
 	["Series.Locked"] = "Unlocks after beating {boss}.",
 
+	-- Boss : défi et Mog-off
+	["Boss.Challenge"] = "Challenge",
+	["Boss.Required"] = "Required: {required} Mog (you have {mog})",
+	["Boss.Ready"] = "You're ready. Show him who's the Mogger!",
+	["Boss.NotReady"] = "He looks WAY too strong for you. If you lose, you drop {cash} Cash.",
+	["Boss.NotReadyFuture"] = "Beat {boss} first! If you fight now, you drop {cash} Cash.",
+	["Boss.Rematch"] = "Rematch for fun. No reward, no risk.",
+	["Boss.Fight"] = "Fight!",
+	["Boss.FightAnyway"] = "Fight anyway",
+	["Boss.Later"] = "Later",
+	["Boss.RoundTitle"] = "Round {round} / {rounds}: beat {target}!",
+	["Boss.RoundWon"] = "Round {round}: {score} vs {target}. You win it!",
+	["Boss.RoundLost"] = "Round {round}: {score} vs {target}. He takes it!",
+	["Boss.Mogged"] = "MOGGED with one look! You dropped {cash} Cash.",
+	["Boss.Victory"] = "VICTORY! {boss} got mogged into orbit!",
+	["Boss.NewStage"] = "You are now a {stage}!",
+	["Boss.RewardCash"] = "+{cash} Cash",
+	["Boss.RewardItem"] = "New style item: {item}",
+	["Boss.RematchWon"] = "You mogged {boss} again. Legend.",
+	["Boss.Defeat"] = "{boss} wins this time. Train and come back! (no loss)",
+	["Boss.Aborted"] = "You left the fight.",
+	["Boss.Ok"] = "Let's go!",
+	["BossLine.Kevin"] = "I'll start Monday. Which Monday? A Monday.",
+	["BossLine.Brayan"] = "I don't tan. I glow.",
+	["BossLine.CoachTurbo"] = "YOU'RE INCREDIBLE, TURBO! ...Oh, you're here too.",
+
+	-- Objets de style
+	["Style.PajamaTop"] = "Kevin's Lucky Pajama",
+	["Style.BronzeMedal"] = "Bronze Medal of Bronzing",
+	["Style.CoachWhistle"] = "Turbo Whistle",
+
 	-- Stades
 	["Stage.Normie"] = "Normie",
 	["Stage.GymRat"] = "Gym Rat",

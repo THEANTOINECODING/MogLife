@@ -6,6 +6,9 @@
       "$ignoreUnknownInstances": true,
       "Stations": {
         "$path": "world/Stations"
+      },
+      "Bosses": {
+        "$path": "world/Bosses"
       }
     },
     "ReplicatedStorage": {

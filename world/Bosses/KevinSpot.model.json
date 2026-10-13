@@ -1,0 +1,12 @@
+{
+  "className": "Part",
+  "properties": {
+    "Anchored": true,
+    "Size": [8, 1, 8],
+    "CFrame": { "CFrame": { "position": [0, 0.5, -34], "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]] } },
+    "Color": { "Color3uint8": [120, 40, 40] },
+    "Material": "SmoothPlastic",
+    "Tags": { "Tags": ["BossSpot"] }
+  },
+  "attributes": { "BossId": "Kevin" }
+}

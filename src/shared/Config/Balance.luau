@@ -58,6 +58,19 @@ return {
 		},
 	},
 
+	-- Boss et Mog-off (voir design/02_MECANIQUES/BOSS.md)
+	Boss = {
+		Rounds = 3,
+		RoundsToWin = 2,
+		RepsPerRound = 5,
+		SpeedFactor = 0.85, -- les manches sont un peu plus rapides que les séries
+		QualityScore = { Perfect = 100, Good = 70, Miss = 20 },
+		-- Défaite automatique (Mog insuffisant) : perte de Cash, annoncée avant le combat
+		DefeatCashLossPercent = 0.10,
+		DefeatCashLossCap = { 50, 120, 300, 600, 1_200, 2_500 }, -- par stade du joueur ❓
+		PauseBetweenRounds = 1.5,
+	},
+
 	-- Apparence provisoire (avatar Roblox) en attendant le personnage du jeu
 	BodyScale = {
 		MinWidth = 1,

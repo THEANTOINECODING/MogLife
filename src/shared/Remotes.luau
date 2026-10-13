@@ -12,6 +12,9 @@ local NAMES = {
 	"StopSeries", -- client -> serveur : arrêter la série en cours
 	"SeriesUpdate", -- serveur -> client : (update: { state: "Started" | "Rep" | "Ended", kind, ... })
 	"Notify", -- serveur -> client : ({ key: string, args: { [string]: any }? }) message court (toast)
+	"BossPrompt", -- serveur -> client : infos avant un défi (prêt ou non, perte annoncée)
+	"ChallengeBoss", -- client -> serveur : (bossId: string) confirmation du défi
+	"BossUpdate", -- serveur -> client : ({ state: "Mogged" | "RoundResult" | "Victory" | "Defeat" | "Aborted", ... })
 }
 
 local isServer = RunService:IsServer()
@@ -51,4 +54,7 @@ return remotes :: {
 	StopSeries: RemoteEvent,
 	SeriesUpdate: RemoteEvent,
 	Notify: RemoteEvent,
+	BossPrompt: RemoteEvent,
+	ChallengeBoss: RemoteEvent,
+	BossUpdate: RemoteEvent,
 }
