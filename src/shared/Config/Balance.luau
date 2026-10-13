@@ -9,6 +9,7 @@ return {
 		Cash = 0,
 		Stage = 1, -- index dans Stages.List
 		BossesBeaten = {},
+		HelpsDone = {}, -- aides déjà réussies au moins une fois (réplique unique la première fois)
 		StyleOwned = {},
 		StyleEquipped = {},
 	},
@@ -56,6 +57,12 @@ return {
 			PerfectMax = 0.15,
 			GoodMax = 0.35,
 		},
+	},
+
+	-- Aides en ville (voir design/02_MECANIQUES/AIDES.md)
+	Helps = {
+		Reps = 12, -- environ 20 à 40 s selon le mini-jeu
+		Cooldown = 120, -- secondes avant de pouvoir refaire la même aide ❓
 	},
 
 	-- Boss et Mog-off (voir design/02_MECANIQUES/BOSS.md)

@@ -29,6 +29,7 @@ type Fight = {
 local DataService
 local StatsService
 local MinigameService
+local StyleService
 
 local spots: { [string]: BasePart } = {}
 local models: { [string]: Model } = {}
@@ -111,6 +112,7 @@ local function finishFight(player: Player, fight: Fight)
 		data.StyleOwned[boss.styleReward] = true
 	end
 	StatsService.Refresh(player)
+	StyleService.Refresh(player)
 
 	Remotes.BossUpdate:FireClient(player, {
 		state = "Victory",
@@ -296,6 +298,7 @@ function BossService.Init(services)
 	DataService = services.DataService
 	StatsService = services.StatsService
 	MinigameService = services.MinigameService
+	StyleService = services.StyleService
 end
 
 function BossService.Start()

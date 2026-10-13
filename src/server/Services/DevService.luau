@@ -9,6 +9,8 @@ local ServerStorage = game:GetService("ServerStorage")
 
 local DataService
 local StatsService
+local StyleService
+local HelpService
 
 local DevService = {}
 
@@ -34,6 +36,12 @@ local commands = {
 		end
 		data[field] = deepCopy(value)
 		StatsService.Refresh(player)
+		StyleService.Refresh(player)
+		return true
+	end,
+	-- Simule le déclenchement du prompt d'un habitant (les prompts ne marchent pas si Studio est réduit)
+	StartHelp = function(player: Player, helpId: string)
+		HelpService.StartHelp(player, helpId)
 		return true
 	end,
 }
@@ -41,6 +49,8 @@ local commands = {
 function DevService.Init(services)
 	DataService = services.DataService
 	StatsService = services.StatsService
+	StyleService = services.StyleService
+	HelpService = services.HelpService
 end
 
 function DevService.Start()

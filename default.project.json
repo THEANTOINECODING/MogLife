@@ -9,6 +9,12 @@
       },
       "Bosses": {
         "$path": "world/Bosses"
+      },
+      "Helpers": {
+        "$path": "world/Helpers"
+      },
+      "Shop": {
+        "$path": "world/Shop"
       }
     },
     "ReplicatedStorage": {

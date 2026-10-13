@@ -1,0 +1,26 @@
+{
+  "className": "Part",
+  "properties": {
+    "Anchored": true,
+    "Size": [6, 9, 0.6],
+    "CFrame": { "CFrame": { "position": [-18, 4.5, 0], "orientation": [[0, 0, 1], [0, 1, 0], [-1, 0, 0]] } },
+    "Color": { "Color3uint8": [200, 230, 255] },
+    "Material": "Glass",
+    "Reflectance": 0.6,
+    "Tags": { "Tags": ["Mirror"] }
+  },
+  "children": [
+    {
+      "name": "Frame",
+      "className": "Part",
+      "properties": {
+        "Anchored": true,
+        "CanCollide": false,
+        "Size": [7, 10, 0.4],
+        "CFrame": { "CFrame": { "position": [-18.3, 4.5, 0], "orientation": [[0, 0, 1], [0, 1, 0], [-1, 0, 0]] } },
+        "Color": { "Color3uint8": [230, 180, 40] },
+        "Material": "SmoothPlastic"
+      }
+    }
+  ]
+}

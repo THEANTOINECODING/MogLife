@@ -4,6 +4,8 @@ local ORDER = {
 	"UIController",
 	"MinigameController",
 	"BossController",
+	"HelpController",
+	"ShopController",
 }
 
 local controllers = {}

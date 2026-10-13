@@ -15,6 +15,10 @@ local NAMES = {
 	"BossPrompt", -- serveur -> client : infos avant un défi (prêt ou non, perte annoncée)
 	"ChallengeBoss", -- client -> serveur : (bossId: string) confirmation du défi
 	"BossUpdate", -- serveur -> client : ({ state: "Mogged" | "RoundResult" | "Victory" | "Defeat" | "Aborted", ... })
+	"HelpState", -- serveur -> client : ({ [helpId]: readyAt }) heure serveur où chaque aide redevient disponible
+	"BuyStyle", -- client -> serveur : (itemId: string)
+	"EquipStyle", -- client -> serveur : (category: string, itemId: string?) nil = retirer
+	"StyleState", -- serveur -> client : ({ owned: { [itemId]: true }, equipped: { [category]: itemId } })
 }
 
 local isServer = RunService:IsServer()
@@ -57,4 +61,8 @@ return remotes :: {
 	BossPrompt: RemoteEvent,
 	ChallengeBoss: RemoteEvent,
 	BossUpdate: RemoteEvent,
+	HelpState: RemoteEvent,
+	BuyStyle: RemoteEvent,
+	EquipStyle: RemoteEvent,
+	StyleState: RemoteEvent,
 }
