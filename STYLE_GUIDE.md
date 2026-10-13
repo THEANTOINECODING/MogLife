@@ -1,4 +1,4 @@
-# MOG LIFE — Guide de style visuel
+# MOG LIFE : become a GOD MOGGER 💪🗿 — Guide de style visuel
 
 > À compléter avec tes choix et des images de référence (dossier `assets/references/`).
 

@@ -1,4 +1,4 @@
-# MOG LIFE 💪
+# MOG LIFE : become a GOD MOGGER 💪🗿
 
 Jeu Roblox de musculation humoristique.
 

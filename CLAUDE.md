@@ -1,6 +1,7 @@
-# MOG LIFE — règles du projet
+# MOG LIFE : become a GOD MOGGER 💪🗿 — règles du projet
 
 Jeu Roblox de musculation humoristique (« gym bro »), inspiré des mécaniques de Douchebag Workout 2.
+Titre officiel sur Roblox : **MOG LIFE : become a GOD MOGGER 💪🗿** (à utiliser tel quel dans l'interface et la page du jeu).
 La conception du jeu est dans `GAME_DESIGN.md`, la direction artistique dans `STYLE_GUIDE.md`.
 Toujours lire la section concernée de `GAME_DESIGN.md` avant d'implémenter une fonctionnalité.
 
