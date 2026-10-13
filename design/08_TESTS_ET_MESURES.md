@@ -10,6 +10,7 @@
 - Sauvegarde : pas de perte de progression ; un profil non chargé n'écrase jamais l'ancien ; migration via `schemaVersion`.
 - Personnage : habits et coupes fonctionnent sur tous les corps ; le plus gros corps passe les portes et ne gêne pas la caméra.
 - Parcours complet du MVP réalisable en mode auto, sans aucun achat.
+- Traduction : tester l'interface en français et en allemand (textes longs) ; aucun texte coupé ni qui déborde ; aucun texte resté en dur hors de `Texts.luau`.
 
 Tests de logique pour l'économie, scénarios dans Studio pour les mini-jeux. Si Studio n'est pas disponible, lister les étapes manuelles et ce qui reste non vérifié.
 

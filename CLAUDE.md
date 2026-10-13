@@ -48,6 +48,12 @@ Toujours lire `design/00_VISION.md` puis le fichier concerné avant d'implément
 4. Ne jamais renommer `STORE_NAME` dans `DataService` sans plan de migration : ça efface la progression des joueurs.
 5. Contenu adapté à tous les âges (règles Roblox) : humour gym bro absurde, pas de contenu suggestif, pas d'insultes.
 6. Pas de copie du jeu original : ni nom, ni personnages, ni textes, ni graphismes.
+7. **Textes et traduction** (le jeu est traduit par la localisation Roblox) :
+   - Tous les textes affichés sont écrits **en anglais** et regroupés dans `src/shared/Config/Texts.luau` (clé → texte). Jamais de texte en dur dans un script d'interface.
+   - Phrases complètes avec emplacements nommés (`"You lose {amount} Cash!"`), jamais de morceaux concaténés.
+   - Aucun texte dans les images, textures ou modèles 3D.
+   - Zones de texte avec 30 % de marge (le français et l'allemand sont plus longs) ; `TextScaled` ou taille automatique.
+   - Les nombres s'affichent via une fonction de formatage commune.
 
 ## Après chaque modification
 

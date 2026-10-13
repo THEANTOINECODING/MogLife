@@ -14,8 +14,16 @@ Chaque zone est plus absurde que la précédente, jusqu'à l'Olympe où l'on dev
 | L'Olympe | Roi du Quartier battu | Le Dieu du Pump | Temple en marbre, nuages, statues qui posent | Mise à jour |
 
 Dans le MVP, la sortie de la rue montre la plage au loin avec un panneau honnête « Bientôt ».
-❓ Nom de la ville (*Pumpville*, *Saint-Gonflé*, *Flexington*…).
-❓ Langue principale du jeu : le titre est en anglais ; jeu en anglais d'abord, ou en français ?
+❓ Nom de la ville (*Pumpville*, *Flexington*… ; un nom qui fonctionne en anglais, quitte à avoir une version française).
+
+## Langues
+
+- **Langue source des textes du jeu : l'anglais.** Le design reste rédigé en français.
+- **Français :** traduction relue et corrigée à la main, en priorité les répliques drôles.
+- **Autres langues :** traduction automatique de Roblox (localisation activée dans le Creator Hub), corrigée plus tard pour les langues où le jeu a beaucoup de joueurs.
+- Le joueur voit la langue de son compte Roblox. ❓ Ajouter un sélecteur de langue dans les paramètres du jeu (simple à faire si le menu de Roblox ne suffit pas).
+- Les noms propres (boss, PNJ, zones) peuvent avoir une version par langue quand le jeu de mots ne passe pas (ex. : *Mr. No-Legs* / *Monsieur Pas-Les-Jambes*).
+- Les répliques d'exemple de ce document sont en français ; leur version anglaise sera écrite à l'implémentation.
 
 ## Personnages
 

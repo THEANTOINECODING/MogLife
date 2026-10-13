@@ -2,6 +2,10 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-13 (session 3)
+
+- **D16 — Jeu multilingue via la localisation Roblox.** Textes du jeu écrits en anglais (langue source), français relu à la main, autres langues en traduction automatique Roblox. Le design reste en français. Raison : chaque joueur voit le jeu dans la langue de son compte ; l'anglais touche le plus de joueurs et se traduit le mieux automatiquement ; l'humour exige une relecture humaine au moins en français.
+
 ## 2026-10-13 (session 2)
 
 - **D15 — Les objets de style sont purement esthétiques.** Raison : simple, équitable, et compatible avec une future vente en Robux sans déséquilibre.

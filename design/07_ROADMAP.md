@@ -11,7 +11,7 @@ Principe : **un petit jeu complet d'abord, puis des mises à jour régulières**
 ## MVP
 
 ### Étape A — Socle et premier mini-jeu
-Mog comme stat principale, `schemaVersion`, **système de mini-jeux générique** (début de série, répétitions, notation, cadence serveur, mode auto) et le premier mini-jeu : **curl** (glisser haut/bas).
+Mog comme stat principale, `schemaVersion`, fichier de textes en anglais (`Texts.luau`) utilisé par toute l'interface, **système de mini-jeux générique** (début de série, répétitions, notation, cadence serveur, mode auto) et le premier mini-jeu : **curl** (glisser haut/bas).
 **Validation :** le curl est agréable 2 minutes d'affilée, sur mobile et sur PC ; aucun gain décidé par le client.
 
 ### Étape B — Les 4 mini-jeux
@@ -34,7 +34,7 @@ Corps des 4 premiers stades, habits et coupes réels, garage et rue habillés, b
 Testeurs externes, vrais mobiles, analytics, corrections, simulation d'économie comparée aux tests.
 
 ### Étape G — Publication
-Icône, miniatures honnêtes, description, cosmétiques payants éventuels (voir 06_MONETISATION.md), vérification des règles.
+Activation de la traduction automatique Roblox, relecture complète du français, page du jeu en anglais et en français, icône, miniatures honnêtes, cosmétiques payants éventuels (voir 06_MONETISATION.md), vérification des règles.
 
 ## Mises à jour (après publication)
 

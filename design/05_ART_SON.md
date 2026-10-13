@@ -34,6 +34,7 @@ Dans l'esprit de Douchebag Workout : **tout est exagéré, tout le temps.** Nos 
 - Mini-jeux : une zone d'interaction claire, en bas de l'écran sur mobile, avec le résultat (Raté / Bien / Parfait) en gros et en couleur.
 - Typographie grasse et exagérée, boutons arrondis et épais.
 - Mobile d'abord : zones de pouce, pas de chevauchement avec les boutons Roblox.
+- **Traduction** (voir 04_MONDE_PNJ.md) : aucun texte dans les images ou textures (il ne serait pas traduit) ; zones de texte prévues 30 % plus larges que l'anglais ; préférer des icônes aux mots quand c'est possible.
 
 ## Son
 
