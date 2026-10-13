@@ -2,7 +2,7 @@
 
 Jeu Roblox de musculation humoristique (« gym bro »), inspiré des mécaniques de Douchebag Workout 2.
 Titre officiel sur Roblox : **MOG LIFE : become a GOD MOGGER 💪🗿** (à utiliser tel quel dans l'interface et la page du jeu).
-Idée centrale : **la force agit sur la ville** (exploits). Le duel de pose (Mog) est un mode secondaire.
+Idée centrale : **chaque exercice est un mini-jeu différent** qui rapporte du Mog ; un boss par stade ; aider la ville rapporte du Cash pour le style ; direction artistique absurde aux traits exagérés. Garder le jeu simple : mini-jeux réutilisables + contenu en données + personnage du jeu.
 
 La conception du jeu est dans le dossier `design/` (index : `design/README.md`).
 Toujours lire `design/00_VISION.md` puis le fichier concerné avant d'implémenter une fonctionnalité.

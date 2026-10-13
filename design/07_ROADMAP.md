@@ -1,42 +1,54 @@
 # 07 — Roadmap
 
-Principe : **prouver l'idée unique le plus tôt possible.** Si les exploits ne sont pas amusants, on le saura avant d'avoir construit tout le reste.
+Principe : **un petit jeu complet d'abord, puis des mises à jour régulières** qui suivent toutes la même recette.
 
-## Existant vérifié dans le dépôt (13 octobre 2026, non testé dans Studio)
+## Existant dans le dépôt (13 octobre 2026, non testé dans Studio)
 
-- Répétition au clic validée par le serveur, Force, Cash, champ Mog sauvegardé (ProfileStore).
-- Élargissement du corps selon la Force, rangs, leaderstats, HUD provisoire.
-- Valeurs à recaler sur ce design (cadence, exercices, rangs, échelle du corps), pas de `schemaVersion`.
+- Répétition au clic validée par le serveur, stats Force / Cash / Mog sauvegardées (ProfileStore).
+- Élargissement de l'avatar Roblox selon la Force, rangs, leaderstats, HUD provisoire.
+- **À adapter** : la Force disparaît au profit du Mog ; le clic simple devient un système de mini-jeux ; l'avatar Roblox sera remplacé par le personnage du jeu ; pas de `schemaVersion`.
 
-## Étape A — Entraînement solide
+## MVP
 
-Cadence d'1 répétition/s, maintien gratuit, timing (x1 / x1,2 / x1,5), séries de 20, nouvelles valeurs d'exercices et de rangs, corps calé sur 12 000 Force, `schemaVersion` dans la sauvegarde.
-**Validation :** 5 minutes jouables sans spam, entrée mobile fonctionnelle, aucune récompense décidée par le client.
+### Étape A — Socle et premier mini-jeu
+Mog comme stat principale, `schemaVersion`, **système de mini-jeux générique** (début de série, répétitions, notation, cadence serveur, mode auto) et le premier mini-jeu : **curl** (glisser haut/bas).
+**Validation :** le curl est agréable 2 minutes d'affilée, sur mobile et sur PC ; aucun gain décidé par le client.
 
-## Étape B — Prototype de l'idée unique : les exploits ⭐
+### Étape B — Les 4 mini-jeux
+Pompes, développé couché, squat. Stations placeholder (blocs simples).
+**Validation :** chaque mini-jeu se joue différemment et des testeurs ont un préféré.
 
-Garage complet : bocal (tutoriel), frigo (boulot), cartons (porter), voiture du voisin (exploit d'histoire qui ouvre la ruelle). Système de Poids, les 4 états (impossible / effort / facile / surpuissance), changement de carte par joueur.
-**Validation :** un nouveau joueur comprend seul que la force sert à agir, a envie de revenir pousser la voiture, et rit à la surpuissance. **Si ce n'est pas le cas, on retravaille cette étape avant de continuer.**
+### Étape C — Boss et stades
+Kevin, Brayan, Coach Turbo ; Mog-off en 3 manches ; défaite comique et perte de Cash annoncée ; montée de stade et déblocages.
+**Validation :** un joueur comprend seul qu'il doit atteindre le Mog requis, et la défaite volontaire fait rire plutôt qu'enrager.
 
-## Étape C — Première boucle complète
+### Étape D — Aides et boutique de style
+5 aides, Cash, miroir et 15 objets de style (placeholders acceptés).
+**Validation :** les joueurs alternent naturellement entraînement et aides ; ils veulent un objet précis.
 
-La rue : salle de quartier (banc, squat), 4 kits, piano, bus (teaser), Kevin et Coach Turbo, premières poses, simulation d'économie.
-**Validation :** un nouveau joueur fait son premier achat, atteint la rue, et sait citer son prochain objectif.
+### Étape E — Personnage et direction artistique (peut avancer en parallèle dès l'étape A)
+Corps des 4 premiers stades, habits et coupes réels, garage et rue habillés, boss modélisés, animations, sons.
+**Validation :** une capture d'écran du jeu est reconnaissable et fait sourire.
 
-## Étape D — Multijoueur
+### Étape F — Alpha
+Testeurs externes, vrais mobiles, analytics, corrections, simulation d'économie comparée aux tests.
 
-Galères du jour, exploits géants coopératifs, duels de pose (invitations, estrade, timing égalisé, récompenses protégées).
-**Validation :** deux vrais clients ; un nouveau joueur peut gagner un duel contre un ancien grâce à sa précision ; la coopération sur un exploit géant fonctionne avec de la latence.
+### Étape G — Publication
+Icône, miniatures honnêtes, description, cosmétiques payants éventuels (voir 06_MONETISATION.md), vérification des règles.
 
-## Étape E — Alpha
+## Mises à jour (après publication)
 
-Petits groupes de testeurs externes, tests sur vrais mobiles, observation des abandons, corrections, analytics.
-**Validation :** les joueurs savent reformuler le but du jeu et dire ce qu'ils veulent débloquer ensuite.
+Chaque mise à jour suit la même recette :
+- 1 zone + 1 boss (avec son corps de stade) ;
+- 1 ou 2 exercices (nouveau mini-jeu ou variation visible) ;
+- 3 à 5 aides ;
+- une série d'objets de style à thème.
 
-## Étape F — Publication
+| # | Zone | Boss | Exercices possibles |
+|---|---|---|---|
+| 1 | La plage | Monsieur Pas-Les-Jambes | Tractions, corde à sauter |
+| 2 | La montagne | Le Roi du Quartier | Pneu géant, soulevé de terre |
+| 3 | La Lune | ❓ | Haltère satellite (apesanteur) |
+| 4 | L'Olympe | Le Dieu du Pump | ❓ (finale : GOD MOGGER) |
 
-Seulement après stabilité : cosmétiques payants, traduction minimale, icône et miniatures honnêtes, description, vérification des règles.
-
-## Hors MVP
-
-Centre-ville et Muscle Beach complets, pets, échanges, clans, maisons, passes de saison payants, tournois, rebirth, nourriture, gains hors ligne. Toute extension exige une raison observée chez les joueurs et un coût estimé.
+Entre deux mises à jour de zone : événements saisonniers (objets à thème, boss déguisé), puis fonctionnalités de `IDEES.md` si les joueurs les demandent.

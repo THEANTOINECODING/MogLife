@@ -1,43 +1,52 @@
 # 05 — Art, interface et son
 
-## Direction
+## Direction : l'absurde exagéré
 
-- Comédie cartoon lisible, **low-poly**, couleurs saturées, contrastes forts.
-- Ville de quartier chaleureuse, matériel volontairement bricolé (haltères dépareillés, barre avec des pneus).
-- Objets d'exploit **surdimensionnés et reconnaissables de loin** : on doit comprendre ce qu'on peut soulever d'un coup d'œil.
-- Pas de réalisme anatomique.
-- ❓ Ambiance générale : années 80 ? ville balnéaire ensoleillée ? néons ?
+Dans l'esprit de Douchebag Workout : **tout est exagéré, tout le temps.** Nos propres designs, rien de copié.
 
-## Palette ❓
+### Les personnages
+- Proportions extrêmes : torse en V gigantesque, bras énormes, **jambes en allumettes**, petite tête sur un cou de taureau, **mâchoire carrée** démesurée.
+- Expressions caricaturales : sourcils froncés, sourire éclatant qui brille, veines cartoon, gouttes de sueur énormes.
+- Chaque stade change radicalement la silhouette : le joueur doit voir la différence de loin.
+- Chaque boss a **un trait poussé à l'extrême** (le bronzage de Brayan, le mégaphone de Coach Turbo, les jambes de Pas-Les-Jambes).
+
+### Les objets et décors
+- Matériel absurde et bricolé : haltères faits de pastèques, banc de musculation dans un caddie, barre de squat avec des pneus de tracteur.
+- Objets surdimensionnés et lisibles de loin.
+- Low-poly, couleurs saturées, contrastes forts, formes simples.
+
+### Les effets
+- Moments de victoire et de passage de stade : ralentis, serviettes qui volent, éclairs, paillettes de sueur.
+- Défaites comiques : rétrécissement, envol, rebonds cartoon.
+- Courts (2–3 s) et quittables. Option de réduction des effets et des secousses.
+
+### Palette ❓
 
 | Usage | Couleur |
 |---|---|
 | Principale | ❓ |
 | Secondaire | ❓ |
 | Accent (boutons, récompenses) | ❓ |
-| Objets d'exploit possibles | ❓ (couleur de surbrillance) |
-| Objets d'exploit impossibles | ❓ |
 
 ## Interface
 
-- HUD principal : Force, Cash, **prochain exploit**, bouton Mog/collection. Rien de plus à l'écran.
-- Sur un objet d'exploit : Poids et Force requise, indication possible / impossible.
-- Feedback de répétition : animation fluide, son bref, gain discret. Pas de pluie permanente de chiffres.
-- Passage de rang et exploit d'histoire : effet plus fort mais court.
-- Police grasse et lisible ; gros boutons arrondis ; **mobile d'abord** (zones de pouce, pas de chevauchement avec les boutons Roblox).
-- Options : réduction des effets et des secousses.
+- HUD : Mog (avec jauge vers le prochain boss), Cash, prochain objectif, bouton Style. Rien de plus.
+- Mini-jeux : une zone d'interaction claire, en bas de l'écran sur mobile, avec le résultat (Raté / Bien / Parfait) en gros et en couleur.
+- Typographie grasse et exagérée, boutons arrondis et épais.
+- Mobile d'abord : zones de pouce, pas de chevauchement avec les boutons Roblox.
 
 ## Son
 
-- Sons d'effort comiques, grincements de matériel, cris d'encouragement du coach (volume indépendant).
-- ❓ Musique : thème « montage d'entraînement » parodique ?
+- Bruitages cartoon exagérés : grognements d'effort, grincements, « BOING » de défaite.
+- Le coach et les boss ont des cris signatures (volume réglable).
+- ❓ Musique : thème « montage d'entraînement » parodique, variante par zone.
 
-## Règles techniques pour les assets (Blender / IA)
+## Production des assets (Blender / IA)
 
-- Low-poly, surfaces planes, couleurs unies plutôt que textures détaillées.
-- ~10 000 triangles max par objet ; textures 1024×1024 max.
-- Export FBX dans `assets/export/`, 1 stud ≈ 0,28 m, pivot à la base.
+- **Corps du personnage** : 7 modèles (un par stade) sur le même squelette compatible R15. Priorité absolue : ils font l'identité du jeu.
+- Habits et coupes : modèles qui s'adaptent à tous les corps (accessoires ou vêtements en couches ❓ à valider techniquement).
+- ~10 000 triangles max par objet, textures 1024×1024 max, export FBX dans `assets/export/`, 1 stud ≈ 0,28 m.
 
 ## Performance
 
-Au moins 30 FPS sur l'appareil mobile de référence choisi pour les tests, avec joueurs et effets. Mesurer, ne pas promettre.
+Au moins 30 FPS sur l'appareil mobile de référence choisi pour les tests. Mesurer, ne pas promettre.

@@ -1,41 +1,43 @@
 # 01 — Boucles de jeu
 
+## La boucle principale
+
+```
+Exercices (mini-jeux) ──► Mog ──► Stade atteint ──► Boss du stade
+                           │                            │ victoire
+                           ▼                            ▼
+              Aides débloquées en ville ◄── Nouvelle zone, exercice, aides
+                           │
+                           ▼
+                         Cash ──► Coupes, habits, accessoires
+```
+
 ## Boucle courte (30 à 90 secondes)
 
-Deux activités, au choix du joueur :
-- **S'entraîner** : une série à la salle → Force (+ un peu de Cash) → le corps change.
-- **Faire un exploit** : soulever, porter, pousser ou ouvrir quelque chose en ville → Cash et/ou Mog → la ville réagit.
+Choisir un exercice → jouer une série de son mini-jeu → gagner du Mog → voir le corps et la jauge du prochain stade avancer.
 
-## Boucle moyenne (3 à 8 minutes) — le cœur du jeu
+## Boucle moyenne (3 à 8 minutes)
 
-```
-Repérer un exploit trop lourd ──► S'entraîner / acheter un kit ──► Revenir et réussir l'exploit
-        ▲                                                                  │
-        └──────── La ville change, un nouvel exploit apparaît ◄────────────┘
-```
-
-Le joueur voit toujours **ce qu'il ne peut pas encore faire** (affiché avec la Force nécessaire) : c'est sa motivation naturelle à s'entraîner, sans jamais devoir lui dire « va cliquer ».
+Alterner exercices (Mog) et aides en ville (Cash) → acheter un objet de style → atteindre un stade → affronter son boss → débloquer la suite.
 
 ## Boucle de session (15 à 25 minutes)
 
-Réussir un exploit majeur qui ouvre un nouveau quartier, battre un rival, faire quelques petits boulots ou duels, puis repartir avec un prochain objectif explicite. On peut s'arrêter après un seul exploit sans rien perdre.
+Battre un boss, découvrir le nouvel exercice ou la nouvelle zone, se refaire un look, repartir avec le prochain boss en tête.
 
 ## Boucle de retour
 
-Les exploits majeurs pas encore réussis, les rivaux, la collection de poses, les amis, et les **galères du jour** (événements aléatoires du serveur, voir EXPLOITS.md). Jamais d'obligation quotidienne ni de pénalité d'absence.
-
-La progression doit toujours offrir **quelque chose à obtenir vite** et **quelque chose de spectaculaire à entrevoir**.
+Le prochain boss, les objets de style qu'on veut, et les **mises à jour** (nouvelle zone, nouveau boss, nouveaux mini-jeux). Jamais d'obligation quotidienne.
 
 ## Les 5 premières minutes
 
 | Temps cible | Ce qui se passe | Ce que le joueur comprend |
 |---|---|---|
-| 0–15 s | Dans le garage de maman. Elle n'arrive pas à ouvrir le **bocal de cornichons**. Le joueur essaie : impossible. Le coach débarque avec un haltère bricolé. | « Je dois devenir plus fort pour faire des choses. » |
-| 15–45 s | Première série de curls. Feedback immédiat, le corps change un peu. | « Je progresse. » |
-| 45–90 s | Retour au bocal : il s'ouvre, les cornichons volent partout. Maman paie quelques pièces. | « La force sert à agir. » ← **moment signature** |
-| 1–3 min | Premier kit à acheter. La voiture du voisin bloque la ruelle : trop lourde pour l'instant, Force requise affichée. Petit duel de pose tutoriel contre Kevin. | « J'ai un objectif clair, et le Mog existe. » |
-| 3–5 min | Nouveau rang, nouvel exercice ou nouvelle pose. Le joueur aperçoit la rue de l'autre côté de la voiture, et un exploit géant au loin (le bus). | « Je veux voir la suite. » |
+| 0–15 s | Garage de maman. Kevin, le boss Normie, traîne sur le canapé et se moque. Le coach tend un haltère fait de deux pastèques. | « Je dois m'entraîner. » |
+| 15–60 s | Premier mini-jeu : le curl (glisser de haut en bas). Le Mog monte, le corps change déjà. | « Je progresse, et c'est un vrai petit jeu. » |
+| 60–120 s | Maman demande d'ouvrir le bocal de cornichons (première aide). Les cornichons volent partout ; elle paie quelques pièces. | « Aider rapporte du Cash. » |
+| 2–3 min | Premier achat au miroir du garage : une coupe ridicule. | « Le Cash sert à mon style. » |
+| 3–5 min | 50 Mog atteints → Mog-off contre Kevin. Victoire, scène absurde, débloquage des pompes (nouveau mini-jeu). Au loin, Brayan le Bronzé attend. | « Il y a un boss à chaque stade, et je veux voir le suivant. » |
 
-Le tutoriel est contextuel, rejouable et quittable. Aucun paiement n'est nécessaire. Ne pas remplir l'écran de boutiques.
+Le tutoriel est contextuel, rejouable et quittable. Aucun paiement nécessaire.
 
-**Moment signature :** l'ouverture du bocal. Les cornichons volent au ralenti, maman applaudit, le coach annonce : « Le garage n'était pas prêt. » Scène de 2 à 3 secondes, quittable.
+**Moment signature :** la victoire contre Kevin. Il est « moggé » si fort qu'il traverse le toit du garage, les serviettes volent, le coach annonce : « Le garage n'était pas prêt. » Scène de 2–3 s, quittable.

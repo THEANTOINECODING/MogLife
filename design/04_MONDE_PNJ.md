@@ -1,56 +1,41 @@
 # 04 — Monde et personnages
 
-## La ville
+## L'escalade absurde
 
-Nom de la ville : ❓ (propositions : *Pumpville*, *Saint-Gonflé*, *Flexington*). À choisir avec la langue du jeu.
-❓ **Langue principale du jeu** : le titre est en anglais (« become a GOD MOGGER »). Jeu en anglais d'abord avec traduction française, ou l'inverse ?
+Chaque zone est plus absurde que la précédente, jusqu'à l'Olympe où l'on devient GOD MOGGER.
 
-La ville est **compacte** et pleine de galères visibles. On doit toujours voir au moins un exploit qu'on ne peut pas encore faire.
+| Zone | Accès | Boss | Ambiance | Version |
+|---|---|---|---|---|
+| **Garage de maman** | Départ | Kevin, Brayan | Bric-à-brac, haltères en pastèques, canapé défoncé | MVP |
+| **La rue** | Brayan battu | Coach Turbo | Salle de quartier miteuse, voisins excentriques | MVP |
+| La plage | Coach Turbo battu | Monsieur Pas-Les-Jambes | Muscle Beach parodique, mouettes musclées | Mise à jour |
+| La montagne | Pas-Les-Jambes battu | Le Roi du Quartier | Entraînement façon film des années 80, yacks | Mise à jour |
+| La Lune | ❓ | ❓ (boss bonus) | Haltères en apesanteur, astronautes bodybuilders | Mise à jour |
+| L'Olympe | Roi du Quartier battu | Le Dieu du Pump | Temple en marbre, nuages, statues qui posent | Mise à jour |
 
-## Quartiers
-
-| Quartier | Comment on y accède | Contenu | Version |
-|---|---|---|---|
-| Garage de maman | Départ | Curl, pompes, coach, bocal, frigo, cartons | MVP |
-| La rue | Exploit : pousser la voiture du voisin (600 Force) | Salle de quartier (banc, squat), estrade de Mog, piano, galères du jour, rivaux | MVP |
-| Centre-ville | Exploit : pousser le bus en panne (12 000 Force) | ❓ | Extension |
-| Muscle Beach / port | ❓ | Défis de portage, exploits géants coopératifs | Extension |
-
-Dans le MVP, le bus est poussable mais le centre-ville est annoncé honnêtement comme « à venir » : pas de portail vers une zone inexistante.
-Pas de long trajet entre deux étapes du tutoriel. On ne crée pas plusieurs grandes cartes avant qu'un quartier soit vraiment amusant.
+Dans le MVP, la sortie de la rue montre la plage au loin avec un panneau honnête « Bientôt ».
+❓ Nom de la ville (*Pumpville*, *Saint-Gonflé*, *Flexington*…).
+❓ Langue principale du jeu : le titre est en anglais ; jeu en anglais d'abord, ou en français ?
 
 ## Personnages
 
-### Rivaux (défis de pose)
+### Le coach
+Il accompagne le joueur partout, commente ses séries, présente chaque boss avec une emphase ridicule. ❓ Son nom et son look.
 
-| Rival | Personnalité | Défi | Condition |
-|---|---|---|---|
-| Kevin « demain je commence » | Excuses extravagantes | Tutoriel de pose | Premières minutes |
-| Coach Turbo | S'encourage lui-même au mégaphone | Timing régulier | 120 Force |
-| Monsieur Pas-Les-Jambes | Chaussettes énormes | Squat et pose | 2 000 Force |
-| Le Roi du Quartier | Entre avec son propre ventilateur | Final du chapitre | 6 000 Force |
+### Boss
+Voir `02_MECANIQUES/BOSS.md`. Chaque boss a : un look ultra-exagéré, une entrée en scène, 3 répliques avant le combat, une scène de défaite absurde, un objet de style exclusif.
 
-La Force donne l'**accès** à un rival ; le **timing** donne la victoire. Le PNJ adapte sa difficulté après plusieurs échecs.
-
-### Donneurs de galères
-
-| PNJ | Galère | Lieu |
-|---|---|---|
-| Maman | Bocal, frigo | Garage |
-| Le voisin | Sa voiture qui bloque la ruelle | Ruelle |
-| Mme Do-Ré | Son piano à déménager | Rue |
-| Le livreur dépassé | Cartons et frigos à livrer | Rue |
-| Le chauffeur de bus | Le bus en panne | Fin de la rue |
-| ❓ | | |
-
-Les PNJ **se souviennent** de ce que le joueur a fait (réplique différente après un exploit), et réagissent quand il revient beaucoup plus fort.
+### Habitants (aides)
+Voir `02_MECANIQUES/AIDES.md`. Maman, le livreur dépassé, le petit voisin, le voisin à la voiture, Mme Do-Ré. Chaque zone en ajoute 3 à 5.
 
 ## Humour
 
-Répliques courtes, traduisibles, qui n'interrompent pas chaque série. Les personnages peuvent se moquer d'eux-mêmes.
+- Toujours exagéré, toujours absurde, jamais méchant envers les vrais gens.
+- Répliques courtes, traduisibles, qui n'interrompent pas chaque série.
+- Les personnages peuvent se moquer d'eux-mêmes.
 
 Exemples :
-- « Cette barre a peur de toi. Enfin… elle grince surtout. »
-- « Ce n'est pas un garage. C'est un centre de recherche sur les biceps. »
-- « Le jour des jambes est enfin arrivé. Il avait raté le bus. »
-- (Mme Do-Ré, quand on porte son piano avec un doigt) « Faites attention, il est accordé ! »
+- Kevin : « Je commence lundi. Quel lundi ? Un lundi. »
+- Brayan : « Je ne bronze pas. Je brille. »
+- Le coach : « Ce n'est pas un garage. C'est un centre de recherche sur les biceps. »
+- Coach Turbo, à lui-même : « TU ES INCROYABLE, TURBO ! »

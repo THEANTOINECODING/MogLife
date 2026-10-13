@@ -4,14 +4,15 @@
 
 ## Pour la première version publique
 
-À privilégier :
-- Packs cosmétiques au contenu clairement affiché.
-- Poses et animations d'entrée, sans avantage.
-- Animations d'exploit cosmétiques (soulever le frigo avec style), sans avantage.
+À privilégier (tout est purement esthétique, comme la boutique en Cash) :
+- Packs de style exclusifs en Robux (coupes, habits, bronzages), au contenu clairement affiché.
+- Animations de victoire et poses, sans avantage.
 - Effets visuels, avec un réglage pour que les autres joueurs puissent les atténuer.
 
-À ne pas vendre au lancement : x2 Force, auto-entraînement, Cash, victoire. Le maintien d'entraînement reste gratuit.
-Un éventuel accélérateur plus tard = décision séparée, parcours gratuit testé, plafonné, et **jamais** pris en compte dans les duels.
+Les objets en Cash restent toujours obtenables gratuitement ; les objets Robux s'y ajoutent, ils ne les remplacent pas.
+
+À ne pas vendre au lancement : x2 Mog, Cash, mode auto, victoire contre un boss, protection contre la perte de Cash. Le mode auto reste gratuit.
+Un éventuel accélérateur plus tard = décision séparée, parcours gratuit testé, plafonné, et **jamais** pris en compte dans les Mog-off.
 
 ## Règles d'interface
 

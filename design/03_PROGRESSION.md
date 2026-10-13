@@ -1,79 +1,49 @@
 # 03 — Progression et économie
 
-## Stats
+## Deux ressources seulement
 
-| Donnée | Rôle | Règle |
-|---|---|---|
-| **Force** | Ouvre exercices, exploits, rangs et quartiers | Ne fait qu'augmenter ; jamais retirée |
-| **Cash** | Kits et accessoires | Gagné surtout par les petits boulots ; dépensé explicitement |
-| **Mog** | Réputation | Débloque poses, titres, effets ; aucune puissance |
-| Rang | Palier dérivé de la Force | Pas une monnaie, jamais choisi par le client |
+| Ressource | Gagnée par | Sert à | Règles |
+|---|---|---|---|
+| **Mog** 🗿 | Les exercices (mini-jeux) | Défier les boss, débloquer les aides (seuils) | Ne fait qu'augmenter. N'est jamais dépensé ni perdu. |
+| **Cash** 💵 | Les aides en ville, les premières victoires de boss | Coupes, habits, accessoires (purement esthétiques) | Peut baisser : achats, défaite contre un boss trop fort. Jamais négatif. |
+| Stade | Dérivé des boss battus | Corps, déblocages | Jamais choisi par le client |
 
-**Pas d'énergie dans le MVP.** Les pauses sont des choix d'activité, pas des attentes imposées.
-Maîtrise d'exercice : extension ultérieure.
+Pas d'énergie, pas de kits d'équipement, pas de rebirth dans le MVP.
 
-## Économie : d'où vient et où va l'argent
+## Stades
 
-```
-SOURCES                              DÉPENSES
-Petits boulots  ───── (principal) ──►  Kits d'entraînement (accélèrent la Force)
-Exploits d'histoire ─ (ponctuel) ───►  Accessoires cosmétiques
-Entraînement  ─────── (faible) ❓ ──►
-Galères du jour ───── (bonus) ──────►
-```
+Normie → Gym Rat → Bro → Alpha → Chad → Gigachad → **GOD MOGGER**
+On passe au stade suivant en battant le boss correspondant (voir BOSS.md).
 
-Le choix entre **s'entraîner** (Force) et **travailler** (Cash) est la décision centrale de la boucle.
+## Décision du joueur
 
-## Kits d'entraînement
+À chaque instant, le joueur choisit entre :
+- **s'entraîner** → Mog → prochain boss et nouveaux exercices ;
+- **aider** → Cash → style ;
+- **défier un boss** → risqué s'il n'a pas le Mog requis.
 
-| Kit | Coût | Multiplicateur | Condition |
-|---|---:|---:|---|
-| Kit bricolé | Gratuit | x1 | Départ |
-| Kit correct | 60 | x1,15 | 30 Force |
-| Kit solide | 180 | x1,35 | 120 Force + kit précédent |
-| Kit de quartier | 450 | x1,60 | 600 Force + kit précédent |
+## Défaite contre un boss trop fort
 
-- Un seul kit actif ; chaque prix est celui du passage au kit suivant, sans remboursement.
-- Afficher le prix, le multiplicateur avant/après et un aperçu. Les kits accélèrent la Force, pas les revenus.
-- Accessoires (bandeau, débardeur, lunettes cartoon) : prix calibrés **après** les kits ; la confirmation rappelle qu'un objet est purement cosmétique.
-- Pas de vente de Force, pas de sac à vider, pas d'aller-retour vers un vendeur.
-
-## Rangs
-
-| Rang | Force | Récompense |
-|---|---:|---|
-| Normie (ou Rookie ❓) | 0 | Pose de départ |
-| Gym Rat | 120 | Nouvelle posture |
-| Bro | 600 | Assez fort pour la voiture du voisin → la rue |
-| Alpha | 2 000 | Squat et pose |
-| Chad | 6 000 | Accessoire et rival de chapitre |
-| Gigachad | 12 000 | Assez fort pour le bus → teaser du centre-ville |
-
-Les rangs sont alignés sur les exploits d'histoire : chaque rang important correspond à **une action concrète** devenue possible.
+Perte de 10 % du Cash, plafonnée ❓ (plafond qui augmente avec les stades). Toujours annoncée avant le combat. Jamais de perte de Mog, d'objets ou de stade.
 
 ## Objectifs de rythme
 
-- Feedback dès la première répétition.
-- Premier exploit réussi (bocal) en moins de 90 s.
-- Premier achat après environ une minute de jeu actif.
-- Premier duel tutoriel dans les 3 premières minutes.
-- Accès à la rue en 5 à 10 minutes.
-- Au moins trois découvertes importantes dans les 20 premières minutes.
-- Chad / Gigachad : cible de 20 à 45 minutes à tester ; ne pas l'imposer si les chiffres ne le permettent pas.
+- Premier Mog dès la première répétition.
+- Première aide et premier Cash en moins de 2 minutes.
+- Premier achat de style vers 2–3 minutes.
+- Premier boss (Kevin) vers 3–5 minutes.
+- Un nouveau mini-jeu toutes les 5 à 10 minutes pendant le MVP.
+- Coach Turbo battu (fin du MVP) : cible 25–40 minutes à tester.
 
-Les récompenses ne sont pas toutes des nombres : nouvel exploit, nouvel exercice, rival, quartier, pose, silhouette.
+Les récompenses ne sont pas toutes des nombres : nouveau mini-jeu, nouveau boss, nouvelle zone, nouveau corps, nouvel objet de style.
 
 ## Simulation à faire avant d'ajuster les chiffres
 
-Profils à simuler :
-1. Maintien gratuit, achats optimaux, sans duel.
-2. Timing moyen, avec achats, trajets et petits boulots.
-3. Joueur orienté boulots, qui s'entraîne peu.
-4. Joueur orienté duels.
-5. Joueur qui achète tôt un accessoire.
-6. Joueur qui ne connaît pas le meilleur chemin.
+Profils :
+1. Mode auto uniquement, aucune aide.
+2. Joueur moyen (mélange Bien/Raté), alterne exercices et aides.
+3. Joueur très précis (beaucoup de Parfait).
+4. Joueur qui dépense tout en style dès que possible.
+5. Joueur qui défie les boss trop tôt.
 
-Rapporter : temps jusqu'à chaque exploit d'histoire, rang et achat ; plus longue période sans nouveauté ; revenus et dépenses. Déclarer chaque hypothèse (cadence, précision, pauses, trajets).
-Un calcul en continu est une borne, pas une vraie session. Ajuster un groupe de paramètres à la fois et garder l'ancienne configuration.
-
-Pas de rebirth dans le MVP.
+Rapporter : temps jusqu'à chaque boss et chaque mini-jeu, plus longue période sans nouveauté, Cash gagné et dépensé, nombre d'objets achetables à la fin du MVP. Déclarer les hypothèses (cadence, précision, temps de trajet, délais des aides).

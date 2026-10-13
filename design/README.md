@@ -6,10 +6,10 @@ Ce dossier est la source de vérité du jeu. Un fichier = un sujet.
 |---|---|---|
 | [00_VISION.md](00_VISION.md) | L'idée unique, les piliers, ce qu'on refuse | Toujours en premier |
 | [01_BOUCLES.md](01_BOUCLES.md) | Boucles de jeu et 5 premières minutes | On touche au rythme ou au tutoriel |
-| [02_MECANIQUES/EXPLOITS.md](02_MECANIQUES/EXPLOITS.md) | **Mécanique principale** : la force agit sur la ville | On crée un défi, un boulot, un événement |
-| [02_MECANIQUES/ENTRAINEMENT.md](02_MECANIQUES/ENTRAINEMENT.md) | Salle, exercices, maintien et timing | On touche à l'entraînement |
-| [02_MECANIQUES/CORPS.md](02_MECANIQUES/CORPS.md) | Transformation visuelle de l'avatar | On touche à l'apparence |
-| [02_MECANIQUES/MOG.md](02_MECANIQUES/MOG.md) | Réputation, déblocages, duels de pose | On touche au Mog |
+| [02_MECANIQUES/MINIJEUX.md](02_MECANIQUES/MINIJEUX.md) | **Mécanique principale** : un mini-jeu par exercice | On crée ou modifie un exercice |
+| [02_MECANIQUES/BOSS.md](02_MECANIQUES/BOSS.md) | Un boss par stade, Mog-off, défaite trop tôt | On touche aux boss ou aux stades |
+| [02_MECANIQUES/AIDES.md](02_MECANIQUES/AIDES.md) | Aider la ville pour gagner du Cash | On crée une aide ou un habitant |
+| [02_MECANIQUES/PERSONNAGE.md](02_MECANIQUES/PERSONNAGE.md) | Personnage cartoon et boutique de style | On touche au corps, aux habits, aux coupes |
 | [03_PROGRESSION.md](03_PROGRESSION.md) | Stats, économie, rangs, rythme | On touche aux chiffres |
 | [04_MONDE_PNJ.md](04_MONDE_PNJ.md) | Ville, quartiers, personnages, humour | On crée du contenu |
 | [05_ART_SON.md](05_ART_SON.md) | Direction artistique, interface, son | On crée des visuels ou de l'UI |
