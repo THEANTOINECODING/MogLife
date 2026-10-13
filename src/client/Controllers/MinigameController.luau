@@ -28,7 +28,8 @@ local QUALITY_COLORS = {
 local player = Players.LocalPlayer
 
 local UIController
-local controls
+-- Vitesse et saut d'origine, mémorisés pendant qu'une série bloque le personnage
+local savedMovement: { walkSpeed: number, jumpHeight: number, jumpPower: number }? = nil
 
 local gui: ScreenGui
 local endPanel: Frame
@@ -52,14 +53,31 @@ local current: {
 
 local MinigameController = {}
 
+-- Bloque le personnage sur place pendant une série (le client contrôle son propre personnage).
+-- On n'utilise pas PlayerModule : les versions récentes de Roblox ne le fournissent plus.
 local function setGameplayLocked(locked: boolean)
 	ProximityPromptService.Enabled = not locked
-	if controls then
-		if locked then
-			controls:Disable()
-		else
-			controls:Enable()
+
+	local character = player.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	if locked then
+		if humanoid and not savedMovement then
+			savedMovement = {
+				walkSpeed = humanoid.WalkSpeed,
+				jumpHeight = humanoid.JumpHeight,
+				jumpPower = humanoid.JumpPower,
+			}
+			humanoid.WalkSpeed = 0
+			humanoid.JumpHeight = 0
+			humanoid.JumpPower = 0
 		end
+	elseif savedMovement then
+		if humanoid then
+			humanoid.WalkSpeed = savedMovement.walkSpeed
+			humanoid.JumpHeight = savedMovement.jumpHeight
+			humanoid.JumpPower = savedMovement.jumpPower
+		end
+		savedMovement = nil
 	end
 end
 
@@ -340,9 +358,9 @@ end
 function MinigameController.Start()
 	buildGui()
 
-	task.spawn(function()
-		local playerModule = player:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule")
-		controls = (require(playerModule :: ModuleScript) :: any):GetControls()
+	-- Un nouveau personnage (mort, respawn) repart avec ses valeurs par défaut
+	player.CharacterAdded:Connect(function()
+		savedMovement = nil
 	end)
 
 	Remotes.SeriesUpdate.OnClientEvent:Connect(function(update)

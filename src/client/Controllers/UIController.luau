@@ -75,6 +75,7 @@ local function buildHud()
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.28),
 		Size = UDim2.fromOffset(520, 48),
+		Text = "",
 		TextTransparency = 1,
 		TextStrokeTransparency = 1,
 		Parent = gui,
