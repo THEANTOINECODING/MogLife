@@ -2,8 +2,21 @@
 
 Jeu Roblox de musculation humoristique (« gym bro »), inspiré des mécaniques de Douchebag Workout 2.
 Titre officiel sur Roblox : **MOG LIFE : become a GOD MOGGER 💪🗿** (à utiliser tel quel dans l'interface et la page du jeu).
-La conception du jeu est dans `GAME_DESIGN.md`, la direction artistique dans `STYLE_GUIDE.md`.
-Toujours lire la section concernée de `GAME_DESIGN.md` avant d'implémenter une fonctionnalité.
+Idée centrale : **la force agit sur la ville** (exploits). Le duel de pose (Mog) est un mode secondaire.
+
+La conception du jeu est dans le dossier `design/` (index : `design/README.md`).
+Toujours lire `design/00_VISION.md` puis le fichier concerné avant d'implémenter une fonctionnalité.
+
+## Contrat de travail
+
+1. Lire le design, ces règles et le code réel avant d'éditer.
+2. Distinguer : existant vérifié, existant déclaré, spécification nouvelle, extension.
+3. Une étape de `design/07_ROADMAP.md` à la fois. Ne pas réécrire tout le projet ; livrer une tranche jouable.
+4. Ne pas inventer de dépendances, d'assets, de résultats de tests ou d'états de Studio. Ne jamais écrire « testé dans Studio » sans l'avoir fait.
+5. Ne pas trancher les `❓` du design à la place du créateur : poser la question. Une idée nouvelle va dans `design/IDEES.md`, pas dans le code.
+6. Expliquer toute divergence avec le design avant de l'implémenter.
+7. À chaque livraison : fichiers modifiés, résultat jouable, tests faits, limites, prochaine étape.
+8. Claude et Codex ne modifient jamais les mêmes fichiers en même temps : un responsable par lot, commits courts, passation explicite.
 
 ## Stack
 
@@ -48,7 +61,7 @@ Si Studio est connecté (MCP `Roblox_Studio`, intégré à Studio), lancer un te
 
 ## Assets 3D
 
-- Style low-poly, couleurs unies (voir `STYLE_GUIDE.md`)
+- Style low-poly, couleurs unies (voir `design/05_ART_SON.md`)
 - Maximum ~10 000 triangles par objet (limite Roblox ~20 000 par MeshPart, viser bien moins pour le mobile)
 - Textures 1024×1024 maximum
 - Export **FBX** dans `assets/export/`, échelle : 1 stud ≈ 0,28 m

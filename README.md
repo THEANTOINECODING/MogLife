@@ -22,6 +22,5 @@ wally install
 
 ## Documents
 
-- [GAME_DESIGN.md](GAME_DESIGN.md) : idée et mécaniques du jeu
-- [STYLE_GUIDE.md](STYLE_GUIDE.md) : direction artistique
+- [design/](design/README.md) : idée, mécaniques, progression, art, roadmap (commencer par `00_VISION.md`)
 - [CLAUDE.md](CLAUDE.md) : règles pour les agents IA
