@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.rbxm binary
+*.rbxl binary
+*.blend binary
+*.fbx binary
+*.png binary
