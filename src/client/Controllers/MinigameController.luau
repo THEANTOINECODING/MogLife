@@ -1,5 +1,5 @@
--- Séries d'exercices côté client : ouvre le bon mini-jeu, envoie les répétitions au serveur,
--- affiche le feedback (Perfect / Good / Miss), le mode auto et l'écran de fin de série.
+-- Runs de mini-jeu côté client (série d'exercice, aide, manche de boss) : ouvre le bon mini-jeu,
+-- envoie les répétitions au serveur, affiche le feedback, le mode auto et l'écran de fin de série.
 -- Le client ne calcule aucun gain : il affiche ce que le serveur confirme.
 
 local Players = game:GetService("Players")
@@ -10,7 +10,6 @@ local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
-local Exercises = require(ReplicatedStorage.Shared.Config.Exercises)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Format = require(ReplicatedStorage.Shared.Format)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
@@ -28,7 +27,7 @@ local QUALITY_COLORS = {
 local player = Players.LocalPlayer
 
 local UIController
--- Vitesse et saut d'origine, mémorisés pendant qu'une série bloque le personnage
+-- Vitesse et saut d'origine, mémorisés pendant qu'un run bloque le personnage
 local savedMovement: { walkSpeed: number, jumpHeight: number, jumpPower: number }? = nil
 
 local gui: ScreenGui
@@ -37,8 +36,10 @@ local endLabel: TextLabel
 local lastExerciseId: string? = nil
 local pendingContinue = false
 
-local current: {
-	exerciseId: string,
+type Current = {
+	kind: string,
+	id: string,
+	total: number,
 	interval: number,
 	minigame: any,
 	root: Frame,
@@ -47,15 +48,17 @@ local current: {
 	gainLabel: TextLabel,
 	lastLocalRep: number,
 	autoHeld: boolean,
+	gained: number, -- somme des gains confirmés par le serveur
 	connections: { RBXScriptConnection },
-}? =
-	nil
+}
+
+local current: Current? = nil
 
 local MinigameController = {}
 
--- Bloque le personnage sur place pendant une série (le client contrôle son propre personnage).
+-- Bloque le personnage sur place (le client contrôle son propre personnage).
 -- On n'utilise pas PlayerModule : les versions récentes de Roblox ne le fournissent plus.
-local function setGameplayLocked(locked: boolean)
+function MinigameController.SetGameplayLocked(locked: boolean)
 	ProximityPromptService.Enabled = not locked
 
 	local character = player.Character
@@ -111,7 +114,7 @@ local function sendRep(quality: string): boolean
 	return true
 end
 
-local function closeSeries()
+local function closeRun()
 	if not current then
 		return
 	end
@@ -123,21 +126,26 @@ local function closeSeries()
 	current = nil
 end
 
-local function openSeries(exerciseId: string, total: number)
-	closeSeries()
+local function isPress(input: InputObject): boolean
+	return input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch
+end
+
+local function openRun(update)
+	closeRun()
 	pendingContinue = false
 	endPanel.Visible = false
 
-	local exercise = Exercises[exerciseId]
-	local module = exercise and Minigames:FindFirstChild(exercise.minigame)
+	local module = Minigames:FindFirstChild(update.minigame)
 	if not module then
-		warn(`[MinigameController] No minigame module for {exerciseId}`)
+		warn(`[MinigameController] No minigame module named {update.minigame}`)
 		Remotes.StopSeries:FireServer()
 		return
 	end
 
-	lastExerciseId = exerciseId
-	setGameplayLocked(true)
+	if update.kind == "Exercise" then
+		lastExerciseId = update.id
+	end
+	MinigameController.SetGameplayLocked(true)
 
 	-- Le cadre plein écran capte les touches : la caméra ne tourne pas pendant le mini-jeu
 	local root = Ui.create("Frame", {
@@ -148,38 +156,54 @@ local function openSeries(exerciseId: string, total: number)
 		Parent = gui,
 	})
 
+	if update.titleKey then
+		Ui.label({
+			Name = "Title",
+			AnchorPoint = Vector2.new(0.5, 0),
+			Position = UDim2.new(0.5, 0, 0, 120),
+			Size = UDim2.fromOffset(520, 40),
+			TextColor3 = Color3.fromRGB(255, 220, 120),
+			Text = UIController.Resolve({ key = update.titleKey, args = update.titleArgs }),
+			Parent = root,
+		})
+	end
 	local counter = Ui.label({
+		Name = "Counter",
 		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 0, 120),
-		Size = UDim2.fromOffset(200, 46),
-		Text = Texts.Get("Minigame.RepCounter", { reps = 0, total = total }),
+		Position = UDim2.new(0.5, 0, 0, 162),
+		Size = UDim2.fromOffset(200, 40),
+		Text = Texts.Get("Minigame.RepCounter", { reps = 0, total = update.total }),
 		Parent = root,
 	})
 	local feedback = Ui.label({
+		Name = "Feedback",
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.45, 0.42),
+		Position = UDim2.fromScale(0.42, 0.45),
 		Size = UDim2.fromOffset(420, 80),
 		TextTransparency = 1,
 		TextStrokeTransparency = 1,
 		Parent = root,
 	})
 	local gainLabel = Ui.label({
+		Name = "Gain",
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.45, 0.52),
+		Position = UDim2.fromScale(0.42, 0.55),
 		Size = UDim2.fromOffset(260, 40),
 		TextTransparency = 1,
 		TextStrokeTransparency = 1,
 		Parent = root,
 	})
 	Ui.label({
+		Name = "Hint",
 		AnchorPoint = Vector2.new(0.5, 1),
 		Position = UDim2.new(0.5, 0, 1, -84),
-		Size = UDim2.fromOffset(560, 34),
-		Text = Texts.Get(`Minigame.Hint.{exercise.minigame}`),
+		Size = UDim2.fromOffset(600, 34),
+		Text = Texts.Get(`Minigame.Hint.{update.minigame}`),
 		Parent = root,
 	})
 
 	local stopButton = Ui.button({
+		Name = "Stop",
 		AnchorPoint = Vector2.new(0, 1),
 		Position = UDim2.new(0, 16, 1, -16),
 		Size = UDim2.fromOffset(130, 56),
@@ -187,7 +211,43 @@ local function openSeries(exerciseId: string, total: number)
 		Text = Texts.Get("Minigame.Stop"),
 		Parent = root,
 	})
+
+	local minigame = require(module :: ModuleScript).new(root, update.interval, function(quality: string)
+		if current and not current.autoHeld then
+			sendRep(quality)
+		end
+	end)
+
+	local session: Current = {
+		kind = update.kind,
+		id = update.id,
+		total = update.total,
+		interval = update.interval,
+		minigame = minigame,
+		root = root,
+		counter = counter,
+		feedback = feedback,
+		gainLabel = gainLabel,
+		lastLocalRep = 0,
+		autoHeld = false,
+		gained = 0,
+		connections = {},
+	}
+	current = session
+
+	table.insert(
+		session.connections,
+		stopButton.Activated:Connect(function()
+			Remotes.StopSeries:FireServer()
+		end)
+	)
+
+	if not update.autoAllowed then
+		return
+	end
+
 	local autoButton = Ui.button({
+		Name = "Auto",
 		AnchorPoint = Vector2.new(0, 1),
 		Position = UDim2.new(0, 162, 1, -16),
 		Size = UDim2.fromOffset(200, 56),
@@ -196,41 +256,11 @@ local function openSeries(exerciseId: string, total: number)
 		Parent = root,
 	})
 
-	local minigame = require(module :: ModuleScript).new(root, exercise.repInterval, function(quality: string)
-		if current and not current.autoHeld then
-			sendRep(quality)
-		end
-	end)
-
-	local session = {
-		exerciseId = exerciseId,
-		interval = exercise.repInterval,
-		minigame = minigame,
-		root = root,
-		counter = counter,
-		feedback = feedback,
-		gainLabel = gainLabel,
-		lastLocalRep = 0,
-		autoHeld = false,
-		connections = {},
-	}
-	current = session
-
 	local function setAuto(held: boolean)
 		session.autoHeld = held
 		minigame:SetAuto(held)
 	end
 
-	local function isPress(input: InputObject): boolean
-		return input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch
-	end
-
-	table.insert(
-		session.connections,
-		stopButton.Activated:Connect(function()
-			Remotes.StopSeries:FireServer()
-		end)
-	)
 	table.insert(
 		session.connections,
 		autoButton.InputBegan:Connect(function(input)
@@ -243,7 +273,7 @@ local function openSeries(exerciseId: string, total: number)
 	table.insert(
 		session.connections,
 		UserInputService.InputEnded:Connect(function(input)
-			if isPress(input) or input.KeyCode == Enum.KeyCode.ButtonR2 then
+			if session.autoHeld and (isPress(input) or input.KeyCode == Enum.KeyCode.ButtonR2) then
 				setAuto(false)
 			end
 		end)
@@ -270,31 +300,40 @@ local function onRepConfirmed(update)
 	if not current then
 		return
 	end
-	current.counter.Text = Texts.Get("Minigame.RepCounter", { reps = update.reps, total = Balance.SeriesLength })
-	pop(
-		current.gainLabel,
-		Texts.Get("Minigame.Gain", { value = Format.Gain(update.gain) }),
-		Color3.fromRGB(255, 255, 255)
-	)
+	current.counter.Text = Texts.Get("Minigame.RepCounter", { reps = update.reps, total = current.total })
+	if update.gain then
+		current.gained += update.gain
+		pop(
+			current.gainLabel,
+			Texts.Get("Minigame.Gain", { value = Format.Gain(update.gain) }),
+			Color3.fromRGB(255, 255, 255)
+		)
+	end
 end
 
 local function onEnded(update)
-	closeSeries()
-	if update.reason == "Completed" then
-		endLabel.Text = Texts.Get("Series.Complete", { mog = Format.Gain(update.mogGained) })
+	local gained = if current then current.gained else 0
+	closeRun()
+	-- Les manches de boss s'enchaînent : c'est BossController qui rend la main au joueur
+	if update.kind == "Boss" then
+		return
+	end
+	if update.kind == "Exercise" and update.reason == "Completed" then
+		endLabel.Text = Texts.Get("Series.Complete", { mog = Format.Gain(gained) })
 		endPanel.Visible = true
 		return
 	end
 	if update.reason == "TooFar" then
 		UIController.Toast(Texts.Get("Series.TooFar"))
 	end
-	setGameplayLocked(false)
+	MinigameController.SetGameplayLocked(false)
 end
 
 local function buildGui()
 	gui = Ui.create("ScreenGui", { Name = "Minigame", ResetOnSpawn = false })
 
 	endPanel = Ui.create("Frame", {
+		Name = "EndPanel",
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
 		Size = UDim2.fromOffset(400, 190),
@@ -311,6 +350,7 @@ local function buildGui()
 	})
 
 	local continueButton = Ui.button({
+		Name = "Continue",
 		AnchorPoint = Vector2.new(0, 1),
 		Position = UDim2.new(0, 16, 1, -16),
 		Size = UDim2.new(0.5, -24, 0, 60),
@@ -319,6 +359,7 @@ local function buildGui()
 		Parent = endPanel,
 	})
 	local doneButton = Ui.button({
+		Name = "Done",
 		AnchorPoint = Vector2.new(1, 1),
 		Position = UDim2.new(1, -16, 1, -16),
 		Size = UDim2.new(0.5, -24, 0, 60),
@@ -330,7 +371,7 @@ local function buildGui()
 	continueButton.Activated:Connect(function()
 		endPanel.Visible = false
 		if not lastExerciseId then
-			setGameplayLocked(false)
+			MinigameController.SetGameplayLocked(false)
 			return
 		end
 		pendingContinue = true
@@ -339,13 +380,13 @@ local function buildGui()
 		task.delay(2, function()
 			if pendingContinue then
 				pendingContinue = false
-				setGameplayLocked(false)
+				MinigameController.SetGameplayLocked(false)
 			end
 		end)
 	end)
 	doneButton.Activated:Connect(function()
 		endPanel.Visible = false
-		setGameplayLocked(false)
+		MinigameController.SetGameplayLocked(false)
 	end)
 
 	gui.Parent = player:WaitForChild("PlayerGui")
@@ -365,14 +406,11 @@ function MinigameController.Start()
 
 	Remotes.SeriesUpdate.OnClientEvent:Connect(function(update)
 		if update.state == "Started" then
-			openSeries(update.exerciseId, update.total)
+			openRun(update)
 		elseif update.state == "Rep" then
 			onRepConfirmed(update)
 		elseif update.state == "Ended" then
 			onEnded(update)
-		elseif update.state == "Locked" then
-			local boss = if update.bossId then Texts.Get(`Boss.{update.bossId}`) else "?"
-			UIController.Toast(Texts.Get("Series.Locked", { boss = boss }))
 		end
 	end)
 end

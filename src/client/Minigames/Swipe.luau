@@ -4,7 +4,7 @@
 --
 -- Interface commune des mini-jeux :
 --   Minigame.new(parent: GuiObject, interval: number, onRep: (quality: string) -> ())
---   minigame:SetAuto(on: boolean)   -- en mode auto, le marqueur suit le fantôme
+--   minigame:SetAuto(on: boolean)   -- en mode auto, le mini-jeu s'anime tout seul et ne note rien
 --   minigame:Destroy()
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -33,10 +33,28 @@ local function circle(size: number, color: Color3, transparency: number, emoji: 
 	}, {
 		Ui.corner(UDim.new(1, 0)),
 		Ui.label({
-			Size = UDim2.fromScale(1, 1),
+			Size = UDim2.fromScale(0.8, 0.8),
+			Position = UDim2.fromScale(0.1, 0.1),
 			Text = emoji,
 			TextStrokeTransparency = 1,
 			ZIndex = zIndex,
+		}),
+	})
+end
+
+local function zone(positionY: number, height: number, color: Color3, arrow: string)
+	return Ui.create("Frame", {
+		Position = UDim2.new(0, 8, positionY, 0),
+		Size = UDim2.new(1, -16, height, 0),
+		BackgroundColor3 = color,
+		BackgroundTransparency = 0.55,
+	}, {
+		Ui.corner(UDim.new(0, 12)),
+		Ui.label({
+			Size = UDim2.fromScale(1, 1),
+			Text = arrow,
+			TextTransparency = 0.3,
+			TextStrokeTransparency = 1,
 		}),
 	})
 end
@@ -51,32 +69,23 @@ function Swipe.new(parent: GuiObject, interval: number, onRep: (string) -> ())
 	self.auto = false
 	self.connections = {}
 
-	self.track = Ui.create("Frame", {
+	self.track = Ui.panel({
 		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -40, 0.5, 0),
-		Size = UDim2.new(0, 120, 0.6, 0),
-		BackgroundColor3 = Color3.fromRGB(25, 25, 25),
-		BackgroundTransparency = 0.35,
+		Position = UDim2.new(1, -40, 0.5, 20),
+		Size = UDim2.new(0, 130, 0.6, 0),
 		Parent = parent,
-	}, { Ui.corner(UDim.new(0, 16)) })
+	})
 
-	Ui.create("Frame", {
-		Size = UDim2.fromScale(1, 1 - TOP),
-		BackgroundColor3 = Color3.fromRGB(90, 230, 90),
-		BackgroundTransparency = 0.7,
-		Parent = self.track,
-	}, { Ui.corner(UDim.new(0, 16)) })
-	Ui.create("Frame", {
-		Position = UDim2.fromScale(0, 1 - BOTTOM),
-		Size = UDim2.fromScale(1, BOTTOM),
-		BackgroundColor3 = Color3.fromRGB(200, 200, 200),
-		BackgroundTransparency = 0.8,
-		Parent = self.track,
-	}, { Ui.corner(UDim.new(0, 16)) })
+	local topZone = zone(0.02, 1 - TOP - 0.02, Color3.fromRGB(90, 230, 90), "▲")
+	topZone.Parent = self.track
+	local bottomZone = zone(1 - BOTTOM, BOTTOM - 0.02, Color3.fromRGB(120, 160, 255), "▼")
+	bottomZone.Parent = self.track
 
-	self.ghost = circle(64, Color3.new(1, 1, 1), 0.7, "🍉", 2)
+	self.ghost = circle(64, Color3.new(1, 1, 1), 0.65, "🍉", 2)
 	self.ghost.Parent = self.track
-	self.marker = circle(84, Color3.fromRGB(255, 200, 40), 0.05, "💪", 3)
+	self.marker = circle(84, Color3.fromRGB(255, 200, 40), 0, "💪", 3)
+	self.markerStroke = Ui.stroke(Color3.new(1, 1, 1), 4, 0)
+	self.markerStroke.Parent = self.marker
 	self.marker.Parent = self.track
 
 	local function onInput(input: InputObject)
@@ -128,6 +137,8 @@ function Swipe:_step()
 
 	local y = if self.auto then ghostY else self.pointerY
 	self.marker.Position = UDim2.fromScale(0.5, 0.9 - 0.8 * y)
+	-- Contour vert quand la répétition est « armée » (on est passé par le bas)
+	self.markerStroke.Color = if self.armed then Color3.fromRGB(90, 230, 90) else Color3.new(1, 1, 1)
 
 	if self.auto then
 		return

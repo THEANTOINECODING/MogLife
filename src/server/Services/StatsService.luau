@@ -106,6 +106,12 @@ function StatsService.Add(player: Player, stat: "Mog" | "Cash", amount: number)
 	end
 end
 
+-- Renvoie les stats au client et met à jour l'apparence (après une modification directe des données).
+function StatsService.Refresh(player: Player)
+	sync(player)
+	applyBodyScale(player)
+end
+
 function StatsService.Init(services)
 	DataService = services.DataService
 end

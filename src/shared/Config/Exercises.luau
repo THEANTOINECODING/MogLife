@@ -19,19 +19,19 @@ local Exercises: { [string]: Exercise } = {
 		requiredStage = 1,
 	},
 	PushUp = {
-		minigame = "Ring", -- pas encore implémenté (étape B)
+		minigame = "Ring",
 		mogPerRep = 2,
 		repInterval = 1.0,
 		requiredStage = 2,
 	},
 	BenchPress = {
-		minigame = "HoldRelease", -- pas encore implémenté (étape B)
+		minigame = "HoldRelease",
 		mogPerRep = 4,
 		repInterval = 1.4,
 		requiredStage = 3,
 	},
 	Squat = {
-		minigame = "Balance", -- pas encore implémenté (étape B)
+		minigame = "Tilt",
 		mogPerRep = 8,
 		repInterval = 1.5,
 		requiredStage = 4,

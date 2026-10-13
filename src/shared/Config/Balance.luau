@@ -34,6 +34,30 @@ return {
 		Good = 0.3,
 	},
 
+	-- Réglages propres à chaque mini-jeu (valeurs de départ, à ajuster en jouant)
+	Minigames = {
+		-- Pompes : un anneau rétrécit et touche la cible à HitPhase × intervalle
+		Ring = {
+			HitPhase = 0.75,
+		},
+		-- Développé couché : maintenir remplit la jauge en FillFactor × intervalle, relâcher dans la zone
+		HoldRelease = {
+			FillFactor = 0.75,
+			ZoneMin = 0.68,
+			ZoneMax = 0.9,
+			PerfectHalfWidth = 0.045, -- autour du centre de la zone
+		},
+		-- Squat : la barre penche ; on note l'inclinaison moyenne sur chaque répétition (0 = droite, 1 = max)
+		Tilt = {
+			DriftStrength = 0.9, -- force de la dérive aléatoire
+			DriftChangeTime = 0.8, -- secondes entre deux changements de dérive
+			Instability = 1.2, -- plus la barre penche, plus elle continue de pencher
+			ControlStrength = 2.6, -- force de correction du joueur
+			PerfectMax = 0.15,
+			GoodMax = 0.35,
+		},
+	},
+
 	-- Apparence provisoire (avatar Roblox) en attendant le personnage du jeu
 	BodyScale = {
 		MinWidth = 1,

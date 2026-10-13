@@ -129,9 +129,29 @@ function UIController.Toast(text: string, duration: number?)
 	end)
 end
 
+-- Résout un message du serveur : { key, args }. Un argument { key = "..." } est lui-même traduit.
+function UIController.Resolve(message: { key: string, args: { [string]: any }? }): string
+	local args = {}
+	if message.args then
+		for name, value in message.args do
+			if typeof(value) == "table" and value.key then
+				args[name] = Texts.Get(value.key, value.args)
+			elseif typeof(value) == "number" then
+				args[name] = Format.Short(value)
+			else
+				args[name] = value
+			end
+		end
+	end
+	return Texts.Get(message.key, args)
+end
+
 function UIController.Start()
 	buildHud()
 	Remotes.StatsChanged.OnClientEvent:Connect(update)
+	Remotes.Notify.OnClientEvent:Connect(function(message)
+		UIController.Toast(UIController.Resolve(message))
+	end)
 	Remotes.RequestStats:FireServer()
 end
 

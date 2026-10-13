@@ -10,7 +10,8 @@ local NAMES = {
 	"StartSeries", -- client -> serveur : (exerciseId: string) — relancer une série (« Keep going »)
 	"Rep", -- client -> serveur : (quality: "Miss" | "Good" | "Perfect" | "Auto")
 	"StopSeries", -- client -> serveur : arrêter la série en cours
-	"SeriesUpdate", -- serveur -> client : (update: { state: "Started" | "Rep" | "Ended" | "Locked", ... })
+	"SeriesUpdate", -- serveur -> client : (update: { state: "Started" | "Rep" | "Ended", kind, ... })
+	"Notify", -- serveur -> client : ({ key: string, args: { [string]: any }? }) message court (toast)
 }
 
 local isServer = RunService:IsServer()
@@ -49,4 +50,5 @@ return remotes :: {
 	Rep: RemoteEvent,
 	StopSeries: RemoteEvent,
 	SeriesUpdate: RemoteEvent,
+	Notify: RemoteEvent,
 }

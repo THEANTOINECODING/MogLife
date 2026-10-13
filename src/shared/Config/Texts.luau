@@ -30,6 +30,9 @@ local STRINGS: { [string]: string } = {
 	["Minigame.Stop"] = "Stop",
 	["Minigame.AutoButton"] = "Hold: AUTO",
 	["Minigame.Hint.Swipe"] = "Move up and down with the dumbbell!",
+	["Minigame.Hint.Ring"] = "Tap when the ring hits the circle!",
+	["Minigame.Hint.HoldRelease"] = "Hold to push, release in the green zone!",
+	["Minigame.Hint.Tilt"] = "Keep the bar straight! (A / D or move left and right)",
 
 	-- Séries
 	["Series.Complete"] = "Series complete! +{mog} Mog",

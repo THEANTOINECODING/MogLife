@@ -1,0 +1,38 @@
+{
+  "className": "Part",
+  "properties": {
+    "Anchored": true,
+    "Size": [6, 1, 6],
+    "CFrame": { "CFrame": { "position": [12, 0.5, -16], "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]] } },
+    "Color": { "Color3uint8": [90, 90, 100] },
+    "Material": "SmoothPlastic",
+    "Tags": { "Tags": ["Station"] }
+  },
+  "attributes": { "ExerciseId": "PushUp" },
+  "children": [
+    {
+      "name": "PatchedMat",
+      "className": "Part",
+      "properties": {
+        "Anchored": true,
+        "CanCollide": false,
+        "Size": [3, 0.2, 5],
+        "CFrame": { "CFrame": { "position": [12, 1.1, -16], "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]] } },
+        "Color": { "Color3uint8": [200, 60, 140] },
+        "Material": "Fabric"
+      }
+    },
+    {
+      "name": "DuctTape",
+      "className": "Part",
+      "properties": {
+        "Anchored": true,
+        "CanCollide": false,
+        "Size": [3.1, 0.22, 0.6],
+        "CFrame": { "CFrame": { "position": [12, 1.12, -15], "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]] } },
+        "Color": { "Color3uint8": [170, 170, 170] },
+        "Material": "SmoothPlastic"
+      }
+    }
+  ]
+}
