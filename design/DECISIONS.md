@@ -2,6 +2,15 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-14 (nuit, implémentation autonome — choix PROVISOIRES à valider par le créateur)
+
+- **D22 — Aucun essayage gratuit au miroir pour l'instant.** Le design le prévoit ; à faire avec le vrai personnage (étape E).
+- **D21 — Une aide ne peut pas « rater » : terminer les 12 répétitions suffit à être payé.** Le design dit « une aide ratée ne coûte rien » sans définir l'échec. ❓ Faut-il un score minimum ?
+- **D20 — Le mode auto est autorisé pendant les aides, interdit pendant les combats de boss.** Raison : la récompense d'une aide est fixe ; un combat mesure l'habileté. ❓ À confirmer.
+- **D19 — « Le boss devient moins exigeant après 3 défaites » n'est pas implémenté** (marqué ❓ dans le design).
+- **D18 — Défier un boss d'un stade supérieur (sans avoir battu le précédent) = défaite automatique, avec la même perte de Cash annoncée** (« Bats d'abord Kevin ! »). Un boss déjà battu peut être revu pour le plaisir : ni récompense ni perte.
+- **D17 — Une manche de boss non jouée se termine d'elle-même** (répétitions manquantes = 0 point), pour qu'un joueur inactif ne bloque pas le combat.
+
 ## 2026-10-13 (session 3)
 
 - **D16 — Jeu multilingue via la localisation Roblox.** Textes du jeu écrits en anglais (langue source), français relu à la main, autres langues en traduction automatique Roblox. Le design reste en français. Raison : chaque joueur voit le jeu dans la langue de son compte ; l'anglais touche le plus de joueurs et se traduit le mieux automatiquement ; l'humour exige une relecture humaine au moins en français.

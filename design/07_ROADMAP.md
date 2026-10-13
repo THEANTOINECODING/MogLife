@@ -2,11 +2,17 @@
 
 Principe : **un petit jeu complet d'abord, puis des mises à jour régulières** qui suivent toutes la même recette.
 
-## Existant dans le dépôt (13 octobre 2026, non testé dans Studio)
+## Existant dans le dépôt (nuit du 13 au 14 octobre 2026)
 
-- Répétition au clic validée par le serveur, stats Force / Cash / Mog sauvegardées (ProfileStore).
-- Élargissement de l'avatar Roblox selon la Force, rangs, leaderstats, HUD provisoire.
-- **À adapter** : la Force disparaît au profit du Mog ; le clic simple devient un système de mini-jeux ; l'avatar Roblox sera remplacé par le personnage du jeu ; pas de `schemaVersion`.
+Étapes **A, B, C et D codées et testées dans Studio via MCP** (logique serveur, gains, notation des mini-jeux, flux complets). Non testées : le ressenti réel en jouant à la main, le mobile sur un vrai téléphone, plusieurs joueurs en même temps.
+
+- A : Mog, `schemaVersion`, `Texts.luau`, moteur de mini-jeux générique, curl, mode auto, HUD.
+- B : pompes (Ring), développé couché (HoldRelease), squat (Tilt), stations provisoires.
+- C : Kevin, Brayan, Coach Turbo (PNJ provisoires), Mog-off en 3 manches, défaite auto avec perte de Cash annoncée, montée de stade, récompenses idempotentes, revanche sans récompense.
+- D : 5 aides avec délai et réplique unique, badges au-dessus des habitants, miroir et boutique (15 objets + 3 de boss), visuels provisoires sur l'avatar Roblox.
+- Outil : `tools/simulate_economy.luau` (simulation de progression, à lancer dans Studio).
+- Choix provisoires faits pendant l'implémentation : voir `DECISIONS.md` (D17–D22).
+- Reste avant l'alpha : étape E (personnage, carte garage + rue, boss modélisés, sons), tutoriel des 5 premières minutes, réglage des chiffres.
 
 ## MVP
 

@@ -30,13 +30,16 @@ Toujours lire `design/00_VISION.md` puis le fichier concerné avant d'implément
 
 | Dossier | Dans Studio | Contenu |
 |---|---|---|
-| `src/server/` | ServerScriptService.Server | `init.server.luau` + `Services/` |
+| `src/server/` | ServerScriptService.Server | `init.server.luau` + `Services/` + `Npc.luau` (PNJ provisoires) |
 | `src/client/` | StarterPlayerScripts.Client | `init.client.luau` + `Controllers/` + `Minigames/` (un module par mini-jeu, interface `new / SetAuto / Destroy`) + `Ui.luau` |
-| `world/` | Workspace (Rojo ignore le reste de la carte) | Objets de jeu versionnés, ex. `world/Stations/*.model.json` |
+| `world/` | Workspace (Rojo ignore le reste de la carte) | Objets de jeu versionnés : `Stations/` (tag `Station`), `Bosses/` (tag `BossSpot`), `Helpers/` (tag `HelperSpot`), `Shop/` (tag `Mirror`) |
 | `src/shared/` | ReplicatedStorage.Shared | `Config/`, `Remotes.luau` |
 | `assets/` | — | Sources Blender et exports FBX/OBJ |
-| `tools/` | — | Scripts d'automatisation (export, upload) |
+| `tools/` | — | Scripts d'automatisation (ex. `simulate_economy.luau`, à coller dans la barre de commande de Studio) |
 
+- **Architecture des activités** : `MinigameService` est le moteur générique des « runs » (cadence, distance, mode auto). `ExerciseService` (séries → Mog), `HelpService` (aides → Cash) et `BossService` (manches de Mog-off) lancent des runs avec `StartRun(player, spec)` et reçoivent `onRep` / `onEnd`. Ne pas dupliquer cette logique.
+- **Tests dans Studio** : `DevService` (Studio uniquement) expose `ServerStorage.DevCommands` (`Get`, `Set`, `StartHelp`). Toujours **restaurer les données du joueur** après un test, elles sont réellement sauvegardées.
+- Si Studio est réduit, le rendu est en pause (pas de `RenderStepped`, prompts inutilisables) : tester la logique via les remotes et en pilotant les modules de mini-jeu directement.
 - Un **service** serveur = un module dans `src/server/Services/` avec `Init(services)` (optionnel) et `Start()` (optionnel). L'ajouter dans `ORDER` de `init.server.luau`.
 - Un **contrôleur** client = pareil dans `src/client/Controllers/` et `init.client.luau`.
 - Nouveau remote : l'ajouter dans `NAMES` **et** dans le type en bas de `src/shared/Remotes.luau`.
@@ -44,7 +47,7 @@ Toujours lire `design/00_VISION.md` puis le fichier concerné avant d'implément
 ## Règles impératives
 
 1. **Le serveur décide de tout.** Le client envoie des demandes, jamais des résultats (pas de « ajoute-moi 50 de force »). Le serveur valide : type des arguments, délai, distance, prérequis, argent.
-2. **Aucun chiffre d'équilibrage en dur dans le code.** Tout va dans `src/shared/Config/` (`Balance.luau`, `Exercises.luau`, `Ranks.luau`…).
+2. **Aucun chiffre d'équilibrage en dur dans le code.** Tout va dans `src/shared/Config/` (`Balance.luau`, `Exercises.luau`, `Stages.luau`, `Helps.luau`, `StyleItems.luau`, `Npcs.luau`…).
 3. Les données joueur passent uniquement par `DataService` et sont modifiées via `StatsService.Add` (ou un service dédié). Ajouter tout nouveau champ dans `Balance.StartingData` (ProfileStore le complète automatiquement chez les anciens joueurs grâce à `Reconcile`).
 4. Ne jamais renommer `STORE_NAME` dans `DataService` sans plan de migration : ça efface la progression des joueurs.
 5. Contenu adapté à tous les âges (règles Roblox) : humour gym bro absurde, pas de contenu suggestif, pas d'insultes.
