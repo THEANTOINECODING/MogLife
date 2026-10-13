@@ -1,43 +1,40 @@
--- Liste des exercices. Pour en ajouter un : copier une entrée et changer les valeurs.
--- requiresEquipment = true : le joueur doit être près d'une Part taguée "Equipment"
--- avec l'attribut ExerciseId correspondant.
+-- Liste des exercices. Voir design/02_MECANIQUES/MINIJEUX.md.
+-- minigame : nom du module dans src/client/Minigames/
+-- repInterval : durée d'une répétition (secondes), aussi la cadence max acceptée par le serveur
+-- requiredStage : index dans Stages.List
+-- Une station dans le monde = une Part avec le tag "Station" et l'attribut ExerciseId.
 
 export type Exercise = {
-	displayName: string,
-	strengthPerRep: number,
-	cashPerRep: number,
-	requiredStrength: number,
-	requiresEquipment: boolean,
+	minigame: string,
+	mogPerRep: number,
+	repInterval: number,
+	requiredStage: number,
 }
 
 local Exercises: { [string]: Exercise } = {
 	Curl = {
-		displayName = "Curl haltère",
-		strengthPerRep = 1,
-		cashPerRep = 1,
-		requiredStrength = 0,
-		requiresEquipment = false,
+		minigame = "Swipe",
+		mogPerRep = 1,
+		repInterval = 1.3,
+		requiredStage = 1,
 	},
 	PushUp = {
-		displayName = "Pompes",
-		strengthPerRep = 3,
-		cashPerRep = 2,
-		requiredStrength = 100,
-		requiresEquipment = false,
+		minigame = "Ring", -- pas encore implémenté (étape B)
+		mogPerRep = 2,
+		repInterval = 1.0,
+		requiredStage = 2,
 	},
 	BenchPress = {
-		displayName = "Développé couché",
-		strengthPerRep = 10,
-		cashPerRep = 5,
-		requiredStrength = 1_000,
-		requiresEquipment = true,
+		minigame = "HoldRelease", -- pas encore implémenté (étape B)
+		mogPerRep = 4,
+		repInterval = 1.4,
+		requiredStage = 3,
 	},
 	Squat = {
-		displayName = "Squat",
-		strengthPerRep = 35,
-		cashPerRep = 15,
-		requiredStrength = 10_000,
-		requiresEquipment = true,
+		minigame = "Balance", -- pas encore implémenté (étape B)
+		mogPerRep = 8,
+		repInterval = 1.5,
+		requiredStage = 4,
 	},
 }
 

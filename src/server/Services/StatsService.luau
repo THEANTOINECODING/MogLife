@@ -3,16 +3,19 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
-local Ranks = require(ReplicatedStorage.Shared.Config.Ranks)
+local Stages = require(ReplicatedStorage.Shared.Config.Stages)
+local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 
 local DataService
 
 local StatsService = {}
 
-local function bodyProgress(strength: number): number
-	local max = Balance.BodyScale.StrengthForMax
-	return math.clamp(math.log10(1 + strength) / math.log10(1 + max), 0, 1)
+-- Apparence provisoire : l'avatar Roblox s'élargit avec le Mog (échelle logarithmique).
+-- Sera remplacé par le personnage du jeu (un corps par stade).
+local function bodyProgress(mog: number): number
+	local max = Balance.BodyScale.MogForMax
+	return math.clamp(math.log10(1 + mog) / math.log10(1 + max), 0, 1)
 end
 
 local function applyBodyScale(player: Player)
@@ -23,7 +26,7 @@ local function applyBodyScale(player: Player)
 		return
 	end
 
-	local t = bodyProgress(data.Strength)
+	local t = bodyProgress(data.Mog)
 	local scale = Balance.BodyScale
 	local width = humanoid:FindFirstChild("BodyWidthScale") :: NumberValue?
 	local depth = humanoid:FindFirstChild("BodyDepthScale") :: NumberValue?
@@ -35,24 +38,27 @@ local function applyBodyScale(player: Player)
 	end
 end
 
+local function stageName(stageIndex: number): string
+	local stage = Stages.List[stageIndex]
+	return Texts.Get(`Stage.{stage.id}`)
+end
+
 local function sync(player: Player)
 	local data = DataService.Get(player)
 	if not data then
 		return
 	end
 
-	local rank = Ranks.FromStrength(data.Strength)
 	local leaderstats = player:FindFirstChild("leaderstats")
 	if leaderstats then
-		(leaderstats:FindFirstChild("Force") :: IntValue).Value = data.Strength;
-		(leaderstats:FindFirstChild("Rang") :: StringValue).Value = rank
+		(leaderstats:FindFirstChild("Mog") :: IntValue).Value = math.floor(data.Mog);
+		(leaderstats:FindFirstChild("Stage") :: StringValue).Value = stageName(data.Stage)
 	end
 
 	Remotes.StatsChanged:FireClient(player, {
-		Strength = data.Strength,
-		Cash = data.Cash,
 		Mog = data.Mog,
-		Rank = rank,
+		Cash = data.Cash,
+		Stage = data.Stage,
 	})
 end
 
@@ -60,13 +66,13 @@ local function onPlayerLoaded(player: Player)
 	local leaderstats = Instance.new("Folder")
 	leaderstats.Name = "leaderstats"
 
-	local strength = Instance.new("IntValue")
-	strength.Name = "Force"
-	strength.Parent = leaderstats
+	local mog = Instance.new("IntValue")
+	mog.Name = "Mog"
+	mog.Parent = leaderstats
 
-	local rank = Instance.new("StringValue")
-	rank.Name = "Rang"
-	rank.Parent = leaderstats
+	local stage = Instance.new("StringValue")
+	stage.Name = "Stage"
+	stage.Parent = leaderstats
 
 	leaderstats.Parent = player
 
@@ -81,23 +87,22 @@ local function onPlayerLoaded(player: Player)
 	sync(player)
 end
 
--- Ajoute (ou retire si négatif) une quantité à une stat. Serveur uniquement.
-function StatsService.Add(player: Player, stat: string, amount: number)
+-- Ajoute (ou retire si négatif) une quantité à une stat numérique. Serveur uniquement.
+-- Le Cash ne descend jamais sous 0.
+function StatsService.Add(player: Player, stat: "Mog" | "Cash", amount: number)
 	local data = DataService.Get(player)
-	if not data or data[stat] == nil then
+	if not data or typeof(data[stat]) ~= "number" then
 		return
 	end
 
-	local previousRank = Ranks.FromStrength(data.Strength)
 	data[stat] += amount
+	if stat == "Cash" and data.Cash < 0 then
+		data.Cash = 0
+	end
 	sync(player)
 
-	if stat == "Strength" then
+	if stat == "Mog" then
 		applyBodyScale(player)
-		local newRank = Ranks.FromStrength(data.Strength)
-		if newRank ~= previousRank then
-			print(`[MOG LIFE] {player.Name} passe au rang {newRank}`)
-		end
 	end
 end
 

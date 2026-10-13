@@ -31,7 +31,8 @@ Toujours lire `design/00_VISION.md` puis le fichier concerné avant d'implément
 | Dossier | Dans Studio | Contenu |
 |---|---|---|
 | `src/server/` | ServerScriptService.Server | `init.server.luau` + `Services/` |
-| `src/client/` | StarterPlayerScripts.Client | `init.client.luau` + `Controllers/` |
+| `src/client/` | StarterPlayerScripts.Client | `init.client.luau` + `Controllers/` + `Minigames/` (un module par mini-jeu, interface `new / SetAuto / Destroy`) + `Ui.luau` |
+| `world/` | Workspace (Rojo ignore le reste de la carte) | Objets de jeu versionnés, ex. `world/Stations/*.model.json` |
 | `src/shared/` | ReplicatedStorage.Shared | `Config/`, `Remotes.luau` |
 | `assets/` | — | Sources Blender et exports FBX/OBJ |
 | `tools/` | — | Scripts d'automatisation (export, upload) |
@@ -71,4 +72,4 @@ Si Studio est connecté (MCP `Roblox_Studio`, intégré à Studio), lancer un te
 - Maximum ~10 000 triangles par objet (limite Roblox ~20 000 par MeshPart, viser bien moins pour le mobile)
 - Textures 1024×1024 maximum
 - Export **FBX** dans `assets/export/`, échelle : 1 stud ≈ 0,28 m
-- Appareils de musculation : Part/MeshPart avec le tag CollectionService `Equipment` et l'attribut `ExerciseId` (= clé dans `Exercises.luau`)
+- Stations d'exercice : Part/MeshPart avec le tag CollectionService `Station` et l'attribut `ExerciseId` (= clé dans `Exercises.luau`). Le serveur y ajoute le ProximityPrompt.

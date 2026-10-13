@@ -4,7 +4,7 @@
 local ORDER = {
 	"DataService",
 	"StatsService",
-	"TrainingService",
+	"MinigameService",
 }
 
 local services = {}

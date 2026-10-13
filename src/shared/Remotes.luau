@@ -5,20 +5,26 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local NAMES = {
-	"Train", -- client -> serveur : (exerciseId: string)
-	"StatsChanged", -- serveur -> client : (stats: { Strength, Cash, Mog, Rank })
+	"StatsChanged", -- serveur -> client : (stats: { Mog, Cash, Stage })
 	"RequestStats", -- client -> serveur : redemande l'envoi des stats
+	"StartSeries", -- client -> serveur : (exerciseId: string) — relancer une série (« Keep going »)
+	"Rep", -- client -> serveur : (quality: "Miss" | "Good" | "Perfect" | "Auto")
+	"StopSeries", -- client -> serveur : arrêter la série en cours
+	"SeriesUpdate", -- serveur -> client : (update: { state: "Started" | "Rep" | "Ended" | "Locked", ... })
 }
 
 local isServer = RunService:IsServer()
 local folder: Folder
 
 if isServer then
-	folder = ReplicatedStorage:FindFirstChild("Remotes") :: Folder
-	if not folder then
-		folder = Instance.new("Folder")
-		folder.Name = "Remotes"
-		folder.Parent = ReplicatedStorage
+	local existing = ReplicatedStorage:FindFirstChild("Remotes")
+	if existing then
+		folder = existing :: Folder
+	else
+		local created = Instance.new("Folder")
+		created.Name = "Remotes"
+		created.Parent = ReplicatedStorage
+		folder = created
 	end
 	for _, name in NAMES do
 		if not folder:FindFirstChild(name) then
@@ -37,7 +43,10 @@ for _, name in NAMES do
 end
 
 return remotes :: {
-	Train: RemoteEvent,
 	StatsChanged: RemoteEvent,
 	RequestStats: RemoteEvent,
+	StartSeries: RemoteEvent,
+	Rep: RemoteEvent,
+	StopSeries: RemoteEvent,
+	SeriesUpdate: RemoteEvent,
 }

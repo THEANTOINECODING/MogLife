@@ -2,7 +2,7 @@
 
 local ORDER = {
 	"UIController",
-	"TrainingController",
+	"MinigameController",
 }
 
 local controllers = {}

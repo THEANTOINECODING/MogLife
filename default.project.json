@@ -2,6 +2,12 @@
   "name": "MogLife",
   "tree": {
     "$className": "DataModel",
+    "Workspace": {
+      "$ignoreUnknownInstances": true,
+      "Stations": {
+        "$path": "world/Stations"
+      }
+    },
     "ReplicatedStorage": {
       "Shared": {
         "$path": "src/shared"
