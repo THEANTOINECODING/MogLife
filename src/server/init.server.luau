@@ -10,6 +10,11 @@ local ORDER = {
 	"BossService",
 	"HelpService",
 	"StyleService",
+	"PlotService",
+	"FurnitureService",
+	"TravelService",
+	"DayNightService",
+	"StatueService",
 	"DevService",
 }
 

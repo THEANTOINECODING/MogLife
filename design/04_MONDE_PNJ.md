@@ -16,7 +16,7 @@ Chaque zone est plus absurde que la précédente, jusqu'à l'Olympe où l'on dev
 Dans le MVP, la sortie de la rue montre la plage au loin avec un panneau honnête « Bientôt ».
 **La ville s'appelle Muscle City** (D30).
 
-**Carte du MVP (D31)** : générée par `tools/build_map.py` dans `world/Map/`. Garage de maman (départ : curl, pompes, Kevin, Brayan devant, maman, livreur) → la rue (maisons pastel, habitants sur le trottoir d'en face) → la salle de quartier (4 autres stations, Coach Turbo) → la place des boss (Pas-Les-Jambes, Roi du Quartier, statue du Dieu du Pump dans son temple). La place des boss est provisoire : ces boss déménageront à la plage et à la montagne quand ces zones existeront. Pas encore de zones verrouillées par les boss.
+**Carte du MVP (D31, D32, D33)** : générée par `tools/build_map.py` dans `world/Map/`. Plan carré et compact : au centre, la place à fontaine (statues des 3 plus gros moggers du serveur, touriste, arrêt de bus) ; autour d'elle, la boutique de vêtements, le coiffeur, le magasin de meubles et l'épicerie (côté nord), la salle de quartier avec 3 exemplaires de chaque station et Coach Turbo (côté est), le parc avec Brayan, la piscine et la cabane (nord-ouest), l'arène des boss avec Pas-Les-Jambes, le Roi du Quartier et le temple du Dieu du Pump (sud-ouest). Une route en anneau fait le tour ; de l'autre côté, les 20 maisons de maman (une par joueur), 5 par côté, tournées vers le centre. Chaque maison a son garage (curl, pompes, Kevin), sa maman et 8 emplacements de meubles. Bouton « Maison » et 5 arrêts de bus pour raccourcir les trajets. Cycle jour/nuit. L'arène remplace provisoirement la plage et la montagne ; pas encore de zones verrouillées.
 
 ## Langues
 

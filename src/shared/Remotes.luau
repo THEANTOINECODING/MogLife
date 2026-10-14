@@ -19,6 +19,11 @@ local NAMES = {
 	"BuyStyle", -- client -> serveur : (itemId: string)
 	"EquipStyle", -- client -> serveur : (category: string, itemId: string?) nil = retirer
 	"StyleState", -- serveur -> client : ({ owned: { [itemId]: true }, equipped: { [category]: itemId } })
+	"BuyFurniture", -- client -> serveur : (itemId: string) au comptoir du magasin de meubles
+	"PlaceFurniture", -- client -> serveur : (slot: string, itemId: string?) nil = vider l'emplacement
+	"FurnitureState", -- serveur -> client : ({ owned: { [itemId]: true }, placed: { [slot]: itemId } })
+	"GoHome", -- client -> serveur : retour à sa maison
+	"TakeBus", -- client -> serveur : (stopId: string) depuis un arrêt de bus, vers un autre arrêt
 }
 
 local isServer = RunService:IsServer()
@@ -65,4 +70,9 @@ return remotes :: {
 	BuyStyle: RemoteEvent,
 	EquipStyle: RemoteEvent,
 	StyleState: RemoteEvent,
+	BuyFurniture: RemoteEvent,
+	PlaceFurniture: RemoteEvent,
+	FurnitureState: RemoteEvent,
+	GoHome: RemoteEvent,
+	TakeBus: RemoteEvent,
 }

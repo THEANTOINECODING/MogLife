@@ -1,0 +1,4208 @@
+{
+ "className": "Model",
+ "children": [
+  {
+   "name": "Lawn",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     56,
+     0.1,
+     70
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       175.0,
+       0.15,
+       -112.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      118,
+      172,
+      88
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HedgeSide0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     3,
+     64
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       178.0,
+       1.6,
+       -84.4
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      64,
+      122,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HedgeSide1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     3,
+     64
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       178.0,
+       1.6,
+       -139.6
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      64,
+      122,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HedgeBack",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     56,
+     3,
+     1.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       209.4,
+       1.6,
+       -112.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      64,
+      122,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HedgeFront0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.0,
+     1.6,
+     1.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       140.8,
+       0.9,
+       -86.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      64,
+      122,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HedgeFront1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     16.5,
+     1.6,
+     1.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       140.8,
+       0.9,
+       -115.25
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      64,
+      122,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HedgeFront2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     11.5,
+     1.6,
+     1.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       140.8,
+       0.9,
+       -134.25
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      64,
+      122,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Driveway",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     18,
+     0.16,
+     9
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       144.5,
+       0.18,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      148,
+      142
+     ]
+    },
+    "Material": "Concrete",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Apron",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     18,
+     0.04,
+     7.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       136.0,
+       0.72,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      148,
+      142
+     ]
+    },
+    "Material": "Concrete",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Path",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     4,
+     0.16,
+     12
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       146.0,
+       0.18,
+       -126.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      198,
+      192
+     ]
+    },
+    "Material": "Concrete",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "SignPost",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.4,
+     2.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       142.8,
+       1.3,
+       -115.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      130,
+      92,
+      60
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "OwnerSign",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7,
+     2.4,
+     0.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       142.8,
+       3.5,
+       -115.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "MailboxPost",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.4,
+     3,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       142.8,
+       1.6,
+       -109.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      130,
+      92,
+      60
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Mailbox",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.2,
+     1.2,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       142.8,
+       3.5,
+       -109.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      40,
+      90,
+      160
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Spawn",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     1,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       147.0,
+       3.1,
+       -117.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "GarageFloor",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     26,
+     0.3,
+     30
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       163.0,
+       0.25,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      148,
+      142
+     ]
+    },
+    "Material": "Concrete",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "GarageWallBack",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     26,
+     14,
+     1.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       177.5,
+       7.1,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      170,
+      182
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "GarageWallLeft",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.0,
+     14,
+     30
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       163.0,
+       7.1,
+       -85.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      170,
+      182
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "GarageWallRight",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.0,
+     14,
+     30
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       163.0,
+       7.1,
+       -110.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      170,
+      182
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "GarageWallFrontL",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     4.0,
+     14,
+     1.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       148.5,
+       7.1,
+       -87.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      170,
+      182
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "GarageWallFrontR",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     4.0,
+     14,
+     1.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       148.5,
+       7.1,
+       -109.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      170,
+      182
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "GarageLintel",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     18,
+     4,
+     1.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       148.5,
+       12.1,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      170,
+      182
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "GarageRoof",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     27.5,
+     0.8,
+     31.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       163.0,
+       14.5,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      96,
+      108,
+      118
+     ]
+    },
+    "Material": "CorrodedMetal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "GarageRoofTrim",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     27.5,
+     0.6,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       147.5,
+       13.9,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      245,
+      245,
+      240
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "GarageDoor",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     18,
+     1.6,
+     1.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       149.2,
+       11.9,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      190,
+      192,
+      188
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "GarageLamp0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     8,
+     0.4,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       156.0,
+       13.7,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      244,
+      214
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.4,
+      "Range": 26,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.902,
+        0.7451
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "GarageLamp1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     8,
+     0.4,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       168.0,
+       13.7,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      244,
+      214
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.4,
+      "Range": 26,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.902,
+        0.7451
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     1,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       154.5,
+       0.9,
+       -91.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      90,
+      100
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "Tags": {
+     "Tags": [
+      "Station"
+     ]
+    }
+   },
+   "attributes": {
+    "ExerciseId": "Curl"
+   },
+   "children": [
+    {
+     "name": "Bar",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "CanCollide": false,
+      "Size": [
+       3.2,
+       0.3,
+       0.3
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         154.5,
+         2.9,
+         -91.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0.0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        150,
+        150,
+        150
+       ]
+      },
+      "Material": "Metal"
+     }
+    },
+    {
+     "name": "MelonLeft",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "CanCollide": false,
+      "Shape": "Ball",
+      "Size": [
+       1.8,
+       1.8,
+       1.8
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         154.5,
+         2.9,
+         -89.2
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0.0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        50,
+        150,
+        50
+       ]
+      },
+      "Material": "SmoothPlastic"
+     }
+    },
+    {
+     "name": "MelonRight",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "CanCollide": false,
+      "Shape": "Ball",
+      "Size": [
+       1.8,
+       1.8,
+       1.8
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         154.5,
+         2.9,
+         -92.8
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0.0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        50,
+        150,
+        50
+       ]
+      },
+      "Material": "SmoothPlastic"
+     }
+    }
+   ],
+   "name": "CurlStation"
+  },
+  {
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     1,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       154.5,
+       0.9,
+       -105.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      90,
+      100
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "Tags": {
+     "Tags": [
+      "Station"
+     ]
+    }
+   },
+   "attributes": {
+    "ExerciseId": "PushUp"
+   },
+   "children": [
+    {
+     "name": "PatchedMat",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "CanCollide": false,
+      "Size": [
+       3,
+       0.2,
+       5
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         154.5,
+         1.5,
+         -105.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0.0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        200,
+        60,
+        140
+       ]
+      },
+      "Material": "Fabric"
+     }
+    },
+    {
+     "name": "DuctTape",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "CanCollide": false,
+      "Size": [
+       3.1,
+       0.22,
+       0.6
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         155.5,
+         1.52,
+         -105.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0.0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        170,
+        170,
+        170
+       ]
+      },
+      "Material": "SmoothPlastic"
+     }
+    }
+   ],
+   "name": "PushUpStation"
+  },
+  {
+   "name": "KevinSpot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     8,
+     1,
+     8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       165.0,
+       0.9,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      140,
+      40,
+      40
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true,
+    "Tags": {
+     "Tags": [
+      "BossSpot"
+     ]
+    }
+   },
+   "attributes": {
+    "BossId": "Kevin"
+   }
+  },
+  {
+   "name": "CouchSeat",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     11,
+     2.4,
+     4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       172.5,
+       1.6,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      122,
+      82,
+      62
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "CouchBack",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     11,
+     2.6,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       174.3,
+       3.7,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      112,
+      74,
+      56
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "CouchArm0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     2.2,
+     4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       172.5,
+       2.7,
+       -92.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      112,
+      74,
+      56
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "CouchArm1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     2.2,
+     4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       172.5,
+       2.7,
+       -104.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      112,
+      74,
+      56
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "PizzaBox",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.3,
+     2.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       172.0,
+       2.95,
+       -95.0
+      ],
+      "orientation": [
+       [
+        -0.34202,
+        0.0,
+        0.939693
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.939693,
+        0.0,
+        -0.34202
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      136,
+      90
+     ]
+    },
+    "Material": "Cardboard",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Workbench",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.4,
+     3.6,
+     7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       165.0,
+       2.2,
+       -87.4
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      130,
+      92,
+      60
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Toolboard",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     3.4,
+     7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       165.0,
+       7.1,
+       -85.7
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      132,
+      88
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Fridge",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3,
+     7.2,
+     3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       165.0,
+       4.0,
+       -108.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      232,
+      230,
+      220
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "WashingMachine",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.2,
+     3.2,
+     3.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       169.5,
+       2.0,
+       -108.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      220,
+      220,
+      226
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Box0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.4,
+     2.4,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       174.5,
+       1.6,
+       -107.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      136,
+      90
+     ]
+    },
+    "Material": "Cardboard",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Box1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.8,
+     1.8,
+     1.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       174.6,
+       3.7,
+       -108.0
+      ],
+      "orientation": [
+       [
+        -0.390731,
+        0.0,
+        0.920505
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.920505,
+        0.0,
+        -0.390731
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      136,
+      90
+     ]
+    },
+    "Material": "Cardboard",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Box2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.2,
+     2.2,
+     2.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       174.5,
+       1.4,
+       -88.5
+      ],
+      "orientation": [
+       [
+        -0.71934,
+        0.0,
+        0.694658
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.694658,
+        0.0,
+        -0.71934
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      136,
+      90
+     ]
+    },
+    "Material": "Cardboard",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HouseFloor",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     26,
+     0.5,
+     32
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       168.0,
+       0.35,
+       -126.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      132,
+      88
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HouseWallBack",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     26,
+     12,
+     1.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       183.5,
+       6.1,
+       -126.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      244,
+      228,
+      160
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HouseWallLeft",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.0,
+     12,
+     32
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       168.0,
+       6.1,
+       -113.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      244,
+      228,
+      160
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HouseWallRight",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.0,
+     12,
+     32
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       168.0,
+       6.1,
+       -138.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      244,
+      228,
+      160
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HouseWallFrontL",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     10.0,
+     12,
+     1.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       152.5,
+       6.1,
+       -118.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      244,
+      228,
+      160
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HouseWallFrontR",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     10.0,
+     12,
+     1.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       152.5,
+       6.1,
+       -134.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      244,
+      228,
+      160
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HouseLintel",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     3.5,
+     1.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       152.5,
+       10.35,
+       -126.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      244,
+      228,
+      160
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HouseWindow0_0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.5,
+     4,
+     0.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.94,
+       6.1,
+       -118.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      195,
+      225
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false,
+    "Reflectance": 0.15
+   }
+  },
+  {
+   "name": "HouseWindow0_1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.5,
+     4,
+     0.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       153.06,
+       6.1,
+       -118.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      195,
+      225
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false,
+    "Reflectance": 0.15
+   }
+  },
+  {
+   "name": "HouseSill0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6.1,
+     0.3,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.8,
+       3.95,
+       -118.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      245,
+      245,
+      240
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HouseWindow1_0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.5,
+     4,
+     0.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.94,
+       6.1,
+       -134.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      195,
+      225
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false,
+    "Reflectance": 0.15
+   }
+  },
+  {
+   "name": "HouseWindow1_1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.5,
+     4,
+     0.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       153.06,
+       6.1,
+       -134.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      195,
+      225
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false,
+    "Reflectance": 0.15
+   }
+  },
+  {
+   "name": "HouseSill1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6.1,
+     0.3,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.8,
+       3.95,
+       -134.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      245,
+      245,
+      240
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HouseRoof0",
+   "className": "WedgePart",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     34,
+     7.8,
+     13.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       168.0,
+       16.0,
+       -119.25
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      160,
+      100,
+      70
+     ]
+    },
+    "Material": "Slate",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HouseRoof1",
+   "className": "WedgePart",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     34,
+     7.8,
+     13.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       168.0,
+       16.0,
+       -132.75
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      160,
+      100,
+      70
+     ]
+    },
+    "Material": "Slate",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HouseEave",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     27,
+     0.3,
+     33
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       168.0,
+       11.95,
+       -126.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      245,
+      245,
+      240
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Chimney",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     7,
+     2.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       174.0,
+       16.6,
+       -133.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      72,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Doormat",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     4.4,
+     0.1,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       150.7,
+       0.22,
+       -126.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      60,
+      50
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Porch",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     8,
+     0.5,
+     1.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.3,
+       0.35,
+       -126.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      198,
+      192
+     ]
+    },
+    "Material": "Concrete",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DoorFrame",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7,
+     0.5,
+     0.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.9,
+       8.85,
+       -126.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      245,
+      245,
+      240
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "HouseLamp0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     4,
+     0.4,
+     4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       161.0,
+       11.7,
+       -126.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      244,
+      214
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.4,
+      "Range": 26,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.902,
+        0.7451
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "HouseLamp1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     4,
+     0.4,
+     4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       174.0,
+       11.7,
+       -126.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      244,
+      214
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.4,
+      "Range": 26,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.902,
+        0.7451
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "SlotRug",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       166.0,
+       0.6,
+       -126.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "FurnitureSlot"
+     ]
+    },
+    "CanTouch": false
+   },
+   "attributes": {
+    "Slot": "Rug"
+   }
+  },
+  {
+   "name": "SlotSofa",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       167.0,
+       0.6,
+       -115.5
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "FurnitureSlot"
+     ]
+    },
+    "CanTouch": false
+   },
+   "attributes": {
+    "Slot": "Sofa"
+   }
+  },
+  {
+   "name": "SlotTv",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       167.0,
+       0.6,
+       -137.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "FurnitureSlot"
+     ]
+    },
+    "CanTouch": false
+   },
+   "attributes": {
+    "Slot": "Tv"
+   }
+  },
+  {
+   "name": "SlotBed",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       178.0,
+       0.6,
+       -132.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "FurnitureSlot"
+     ]
+    },
+    "CanTouch": false
+   },
+   "attributes": {
+    "Slot": "Bed"
+   }
+  },
+  {
+   "name": "SlotTrophy",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       181.6,
+       0.6,
+       -119.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "FurnitureSlot"
+     ]
+    },
+    "CanTouch": false
+   },
+   "attributes": {
+    "Slot": "Trophy"
+   }
+  },
+  {
+   "name": "SlotPoster",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       167.0,
+       6.1,
+       -114.1
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "FurnitureSlot"
+     ]
+    },
+    "CanTouch": false
+   },
+   "attributes": {
+    "Slot": "Poster"
+   }
+  },
+  {
+   "name": "SlotPlant",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       155.5,
+       0.6,
+       -116.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "FurnitureSlot"
+     ]
+    },
+    "CanTouch": false
+   },
+   "attributes": {
+    "Slot": "Plant"
+   }
+  },
+  {
+   "name": "SlotLamp",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       155.5,
+       0.6,
+       -135.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "FurnitureSlot"
+     ]
+    },
+    "CanTouch": false
+   },
+   "attributes": {
+    "Slot": "Lamp"
+   }
+  },
+  {
+   "name": "MomSpot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     1,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       146.0,
+       0.7,
+       -133.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      150,
+      100
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true,
+    "Tags": {
+     "Tags": [
+      "HelperSpot"
+     ]
+    }
+   },
+   "attributes": {
+    "HelpId": "OpenJar"
+   }
+  },
+  {
+   "name": "TreeATrunk",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     9.0,
+     1.3,
+     1.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       196.0,
+       4.6,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.0,
+        1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        1.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      78,
+      50
+     ]
+    },
+    "Material": "Wood",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "TreeALeaves",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     9.0,
+     9.0,
+     9.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       196.0,
+       11.35,
+       -98.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      80,
+      140,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": true,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "TreeALeaves2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6.3,
+     6.3,
+     6.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       194.65,
+       8.65,
+       -100.25
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      89,
+      156,
+      67
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": true,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "TreeBTrunk",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7,
+     1.3,
+     1.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       200.0,
+       3.6,
+       -126.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.0,
+        1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        1.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      78,
+      50
+     ]
+    },
+    "Material": "Wood",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "TreeBLeaves",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7.2,
+     7.2,
+     7.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       200.0,
+       8.9,
+       -126.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      96,
+      150,
+      70
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": true,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "TreeBLeaves2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.04,
+     5.04,
+     5.04
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       198.92,
+       6.74,
+       -127.8
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      107,
+      168,
+      78
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": true,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "Hydrant",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.8,
+     0.9,
+     0.9
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       137.5,
+       1.6,
+       -87.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.0,
+        1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        1.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      40,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  }
+ ],
+ "properties": {
+  "Tags": {
+   "Tags": [
+    "Plot"
+   ]
+  }
+ },
+ "attributes": {
+  "PlotIndex": 18
+ }
+}

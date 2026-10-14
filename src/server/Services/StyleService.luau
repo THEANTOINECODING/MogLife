@@ -1,6 +1,7 @@
 -- Boutique de style : achat (Cash), équipement par catégorie, visuels sur le personnage.
 -- Purement esthétique. Visuels PROVISOIRES (blocs soudés à l'avatar) en attendant le personnage du jeu.
--- Le miroir (tag "Mirror") reçoit un prompt ; c'est le client qui ouvre la boutique quand il est déclenché.
+-- Les miroirs (tag "Mirror") des boutiques reçoivent un prompt ; c'est le client qui ouvre la boutique quand il est
+-- déclenché. Attributs du miroir : Store (« Clothes », « Barber ») et Categories (« Top,Accessory », « Hair »).
 
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -164,7 +165,8 @@ local function setupMirror(mirror: Instance)
 	end
 	local prompt = Instance.new("ProximityPrompt")
 	prompt.ActionText = Texts.Get("Shop.Prompt")
-	prompt.ObjectText = Texts.Get("Shop.Mirror")
+	local store = mirror:GetAttribute("Store")
+	prompt.ObjectText = Texts.Get(if typeof(store) == "string" then `Shop.Store.{store}` else "Shop.Mirror")
 	prompt.MaxActivationDistance = 10
 	prompt.RequiresLineOfSight = false
 	prompt.Parent = mirror

@@ -12,6 +12,7 @@ local StatsService
 local StyleService
 local HelpService
 local BossService
+local FurnitureService
 
 local DevService = {}
 
@@ -38,6 +39,7 @@ local commands = {
 		data[field] = deepCopy(value)
 		StatsService.Refresh(player)
 		StyleService.Refresh(player)
+		FurnitureService.Refresh(player)
 		return true
 	end,
 	-- Simule le déclenchement du prompt d'un habitant (les prompts ne marchent pas si Studio est réduit)
@@ -58,6 +60,7 @@ function DevService.Init(services)
 	StyleService = services.StyleService
 	HelpService = services.HelpService
 	BossService = services.BossService
+	FurnitureService = services.FurnitureService
 end
 
 function DevService.Start()

@@ -1,0 +1,178 @@
+-- Repères pour s'orienter :
+-- - une grande icône flottante au-dessus de chaque bâtiment (tag "Landmark" + attribut Icon), visible de loin ;
+-- - quand le joueur a assez de Mog pour son prochain boss, un trait doré le guide jusqu'à lui
+--   (pour Kevin : celui du garage de sa propre maison).
+
+local CollectionService = game:GetService("CollectionService")
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Stages = require(ReplicatedStorage.Shared.Config.Stages)
+local Texts = require(ReplicatedStorage.Shared.Config.Texts)
+local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Ui = require(script.Parent.Parent.Ui)
+
+local LANDMARK_TAG = "Landmark"
+local BOSS_SPOT_TAG = "BossSpot"
+local PLOT_TAG = "Plot"
+local GUIDE_COLOR = Color3.fromRGB(255, 210, 60)
+
+local player = Players.LocalPlayer
+
+local targetBossId: string? = nil
+local beam: Beam
+local startAttachment: Attachment
+local endAttachment: Attachment
+local marker: BillboardGui
+
+local WayfindingController = {}
+
+local function addLandmark(part: Instance)
+	if not part:IsA("BasePart") or part:FindFirstChild("LandmarkIcon") then
+		return
+	end
+	local icon = part:GetAttribute("Icon")
+	if typeof(icon) ~= "string" then
+		return
+	end
+	local billboard = Ui.create("BillboardGui", {
+		Name = "LandmarkIcon",
+		Size = UDim2.fromScale(9, 9),
+		LightInfluence = 0,
+		MaxDistance = 600,
+		Adornee = part,
+		Parent = part,
+	})
+	Ui.create("Frame", {
+		Size = UDim2.fromScale(1, 1),
+		BackgroundColor3 = Color3.fromRGB(30, 25, 45),
+		BackgroundTransparency = 0.2,
+		Parent = billboard,
+	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.fromRGB(255, 220, 120), 3, 0) })
+	Ui.label({
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.5),
+		Size = UDim2.fromScale(0.7, 0.7),
+		Text = Texts.Get(`Icon.{icon}`),
+		Parent = billboard,
+	})
+end
+
+-- La maison (tag Plot) qui contient cet objet, s'il y en a une
+local function plotOf(instance: Instance): Instance?
+	local current = instance.Parent
+	while current and current ~= workspace do
+		if CollectionService:HasTag(current, PLOT_TAG) then
+			return current
+		end
+		current = current.Parent
+	end
+	return nil
+end
+
+-- Emplacement du boss à suivre : celui de sa propre maison si le boss vit dans les maisons, sinon le plus proche
+local function findTarget(bossId: string, from: Vector3): BasePart?
+	local best: BasePart? = nil
+	local bestDistance = math.huge
+	for _, spot in CollectionService:GetTagged(BOSS_SPOT_TAG) do
+		if not spot:IsA("BasePart") or spot:GetAttribute("BossId") ~= bossId then
+			continue
+		end
+		local plot = plotOf(spot)
+		if plot and plot:GetAttribute("OwnerUserId") == player.UserId then
+			return spot
+		end
+		local distance = (spot.Position - from).Magnitude
+		if not plot and distance < bestDistance then
+			best, bestDistance = spot, distance
+		end
+	end
+	return best
+end
+
+local function buildGuide()
+	beam = Instance.new("Beam")
+	beam.Name = "BossGuide"
+	beam.Color = ColorSequence.new(GUIDE_COLOR)
+	beam.LightEmission = 1
+	beam.Transparency = NumberSequence.new(0.25)
+	beam.Width0 = 0.8
+	beam.Width1 = 0.8
+	beam.FaceCamera = true
+	beam.Segments = 1
+	beam.Enabled = false
+	endAttachment = Instance.new("Attachment")
+	endAttachment.Name = "BossGuideTarget"
+	endAttachment.Parent = workspace.Terrain
+	beam.Attachment1 = endAttachment
+	beam.Parent = workspace.Terrain
+
+	marker = Ui.create("BillboardGui", {
+		Name = "BossGuideMarker",
+		Size = UDim2.fromScale(5, 5),
+		StudsOffsetWorldSpace = Vector3.new(0, 12, 0),
+		AlwaysOnTop = true,
+		LightInfluence = 0,
+		Enabled = false,
+		Adornee = endAttachment,
+		Parent = player:WaitForChild("PlayerGui"),
+	})
+	Ui.label({
+		Size = UDim2.fromScale(1, 1),
+		TextColor3 = GUIDE_COLOR,
+		Text = Texts.Get("Guide.Marker"),
+		Parent = marker,
+	})
+end
+
+local function attachToCharacter(character: Model)
+	local root = character:WaitForChild("HumanoidRootPart", 10)
+	if not root then
+		return
+	end
+	startAttachment = Instance.new("Attachment")
+	startAttachment.Name = "BossGuideStart"
+	startAttachment.Position = Vector3.new(0, -2.5, 0)
+	startAttachment.Parent = root
+	beam.Attachment0 = startAttachment
+end
+
+local function update()
+	local character = player.Character
+	local root = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
+	local target = if targetBossId and root then findTarget(targetBossId, root.Position) else nil
+	local visible = target ~= nil and startAttachment ~= nil and startAttachment.Parent ~= nil
+	if target then
+		endAttachment.WorldPosition = target.Position + Vector3.new(0, 1, 0)
+	end
+	beam.Enabled = visible
+	marker.Enabled = visible
+end
+
+function WayfindingController.Start()
+	for _, part in CollectionService:GetTagged(LANDMARK_TAG) do
+		addLandmark(part)
+	end
+	CollectionService:GetInstanceAddedSignal(LANDMARK_TAG):Connect(addLandmark)
+
+	buildGuide()
+	player.CharacterAdded:Connect(attachToCharacter)
+	if player.Character then
+		task.spawn(attachToCharacter, player.Character)
+	end
+
+	Remotes.StatsChanged.OnClientEvent:Connect(function(stats)
+		local stage = Stages.List[stats.Stage]
+		local boss = stage and stage.boss
+		targetBossId = if boss and not boss.comingSoon and stats.Mog >= boss.mogRequired then boss.id else nil
+		update()
+	end)
+	task.spawn(function()
+		while true do
+			update()
+			task.wait(0.5)
+		end
+	end)
+end
+
+return WayfindingController

@@ -21,7 +21,8 @@ local ExerciseService
 
 -- Heure serveur (workspace:GetServerTimeNow) où chaque aide redevient disponible, par joueur
 local readyAt: { [Player]: { [string]: number } } = {}
-local anchors: { [string]: BasePart } = {}
+-- Une même aide peut avoir plusieurs habitants (la maman de chaque maison)
+local anchors: { [string]: { BasePart } } = {}
 
 local HelpService = {}
 
@@ -59,12 +60,18 @@ local function startHelp(player: Player, helpId: string)
 		return
 	end
 	local help = Helps[helpId]
-	local anchor = anchors[helpId]
 	local data = DataService.Get(player)
-	if not help or not anchor or not data or MinigameService.IsBusy(player) then
+	if not help or not data or MinigameService.IsBusy(player) then
 		return
 	end
-	if not MinigameService.IsNear(player, anchor) then
+	local anchor: BasePart? = nil
+	for _, spot in anchors[helpId] or {} do
+		if MinigameService.IsNear(player, spot) then
+			anchor = spot
+			break
+		end
+	end
+	if not anchor then
 		return
 	end
 
@@ -112,7 +119,8 @@ local function setupSpot(spot: Instance)
 		warn(`[HelpService] HelperSpot {spot:GetFullName()} has an invalid HelpId`)
 		return
 	end
-	anchors[helpId] = spot
+	anchors[helpId] = anchors[helpId] or {}
+	table.insert(anchors[helpId], spot)
 
 	local model, root = Npc.Spawn(help.npc, Texts.Get(`Npc.{help.npc}`), spot, spot.Position + spot.CFrame.LookVector)
 	model:SetAttribute("HelpId", helpId)

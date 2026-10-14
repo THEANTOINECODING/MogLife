@@ -6,6 +6,10 @@ local ORDER = {
 	"BossController",
 	"HelpController",
 	"ShopController",
+	"FurnitureController",
+	"TravelController",
+	"WayfindingController",
+	"AmbienceController",
 }
 
 local controllers = {}

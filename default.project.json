@@ -4,20 +4,49 @@
     "$className": "DataModel",
     "Workspace": {
       "$ignoreUnknownInstances": true,
-      "Stations": {
-        "$path": "world/Stations"
-      },
-      "Bosses": {
-        "$path": "world/Bosses"
-      },
-      "Helpers": {
-        "$path": "world/Helpers"
-      },
-      "Shop": {
-        "$path": "world/Shop"
-      },
       "Map": {
         "$path": "world/Map"
+      }
+    },
+    "Lighting": {
+      "$ignoreUnknownInstances": true,
+      "$properties": {
+        "ClockTime": 14.5,
+        "Brightness": 2.6,
+        "Ambient": [0.36, 0.33, 0.38],
+        "OutdoorAmbient": [0.55, 0.52, 0.56],
+        "EnvironmentDiffuseScale": 0.6,
+        "EnvironmentSpecularScale": 0.3,
+        "GlobalShadows": true,
+        "ShadowSoftness": 0.25
+      },
+      "MuscleCityAtmosphere": {
+        "$className": "Atmosphere",
+        "$properties": {
+          "Density": 0.28,
+          "Offset": 0.1,
+          "Color": [0.85, 0.82, 0.78],
+          "Decay": [0.95, 0.75, 0.6],
+          "Glare": 0.2,
+          "Haze": 1.2
+        }
+      },
+      "MuscleCityColor": {
+        "$className": "ColorCorrectionEffect",
+        "$properties": {
+          "Saturation": 0.18,
+          "Contrast": 0.08,
+          "Brightness": 0.02,
+          "TintColor": [1, 0.98, 0.94]
+        }
+      },
+      "MuscleCityBloom": {
+        "$className": "BloomEffect",
+        "$properties": {
+          "Intensity": 0.35,
+          "Size": 22,
+          "Threshold": 1.6
+        }
       }
     },
     "ReplicatedStorage": {

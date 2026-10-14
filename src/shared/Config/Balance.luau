@@ -12,6 +12,8 @@ return {
 		HelpsDone = {}, -- aides déjà réussies au moins une fois (réplique unique la première fois)
 		StyleOwned = {},
 		StyleEquipped = {},
+		FurnitureOwned = {}, -- meubles achetés
+		FurniturePlaced = {}, -- emplacement de la maison -> meuble posé
 	},
 
 	-- Séries d'exercices
@@ -63,6 +65,34 @@ return {
 	Helps = {
 		Reps = 12, -- environ 20 à 40 s selon le mini-jeu
 		Cooldown = 120, -- secondes avant de pouvoir refaire la même aide ❓
+	},
+
+	-- Maison et meubles
+	Furniture = {
+		ShopDistance = 14, -- distance max (studs) au comptoir du magasin pour acheter
+		PlaceDistance = 16, -- distance max à l'emplacement pour poser un meuble
+	},
+
+	-- Déplacements : bouton « Maison » et arrêts de bus
+	Travel = {
+		HomeCooldown = 5, -- secondes entre deux retours à la maison
+		BusCooldown = 3, -- secondes entre deux trajets en bus
+		BusStopDistance = 12, -- distance max (studs) à un arrêt pour prendre le bus
+	},
+
+	-- Cycle jour / nuit (heure de Lighting.ClockTime, de 0 à 24)
+	DayNight = {
+		DayMinutes = 12, -- durée réelle d'une journée (6 h -> 18 h)
+		NightMinutes = 4, -- durée réelle d'une nuit (18 h -> 6 h), plus courte
+		StartClock = 9, -- heure au démarrage du serveur
+		LightsOn = 18, -- les lampadaires s'allument
+		LightsOff = 6.5, -- et s'éteignent
+	},
+
+	-- Statues des 3 plus gros moggers du serveur, sur la place
+	Statues = {
+		RefreshSeconds = 20,
+		Scale = { 2.2, 1.8, 1.6 }, -- taille de la statue selon le rang
 	},
 
 	-- Boss et Mog-off (voir design/02_MECANIQUES/BOSS.md)

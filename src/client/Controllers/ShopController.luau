@@ -1,4 +1,5 @@
--- Boutique de style (miroir) : catégories, achat avec confirmation, porter / retirer.
+-- Boutiques de style (miroir de la boutique de vêtements ou du coiffeur) : catégories vendues par ce miroir,
+-- achat avec confirmation, porter / retirer.
 -- Le serveur vérifie tout (prix, Cash, possession) ; ce contrôleur n'affiche que l'état reçu.
 
 local CollectionService = game:GetService("CollectionService")
@@ -13,17 +14,19 @@ local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Ui = require(script.Parent.Parent.Ui)
 
 local MIRROR_TAG = "Mirror"
-local CATEGORIES = { "Hair", "Top", "Accessory" }
+local ALL_CATEGORIES = { "Hair", "Top", "Accessory" }
 
 local player = Players.LocalPlayer
 
 local MinigameController
 
 local panel: Frame
+local titleLabel: TextLabel
 local cashLabel: TextLabel
 local list: ScrollingFrame
 local tabs: { [string]: TextButton } = {}
 
+local categories: { string } = ALL_CATEGORIES
 local category = "Hair"
 local cash = 0
 local owned: { [string]: boolean } = {}
@@ -137,7 +140,47 @@ function render()
 	end
 end
 
-local function open()
+-- Onglets des catégories vendues par ce miroir
+local function buildTabs()
+	for _, tab in tabs do
+		tab:Destroy()
+	end
+	tabs = {}
+	local count = #categories
+	for index, cat in categories do
+		local tab = Ui.button({
+			Name = `Tab{cat}`,
+			Position = UDim2.new((index - 1) / count, if index == 1 then 16 else 6, 0, 82),
+			Size = UDim2.new(1 / count, if count == 1 then -32 else -16, 0, 44),
+			Text = Texts.Get(`Shop.Category.{cat}`),
+			Parent = panel,
+		})
+		tab.Activated:Connect(function()
+			category = cat
+			confirming = nil
+			render()
+		end)
+		tabs[cat] = tab
+	end
+end
+
+local function open(mirror: Instance)
+	local store = mirror:GetAttribute("Store")
+	local listed = mirror:GetAttribute("Categories")
+	categories = {}
+	if typeof(listed) == "string" then
+		for _, cat in ALL_CATEGORIES do
+			if table.find(string.split(listed, ","), cat) then
+				table.insert(categories, cat)
+			end
+		end
+	end
+	if #categories == 0 then
+		categories = ALL_CATEGORIES
+	end
+	category = categories[1]
+	titleLabel.Text = Texts.Get(if typeof(store) == "string" then `Shop.Title.{store}` else "Shop.Title")
+	buildTabs()
 	confirming = nil
 	panel.Visible = true
 	MinigameController.SetGameplayLocked(true)
@@ -160,7 +203,7 @@ local function buildGui()
 		Visible = false,
 		Parent = gui,
 	})
-	Ui.label({
+	titleLabel = Ui.label({
 		Position = UDim2.fromOffset(16, 12),
 		Size = UDim2.new(0.6, -16, 0, 40),
 		TextXAlignment = Enum.TextXAlignment.Left,
@@ -184,22 +227,6 @@ local function buildGui()
 		Text = Texts.Get("Shop.Cosmetic"),
 		Parent = panel,
 	})
-
-	for index, cat in CATEGORIES do
-		local tab = Ui.button({
-			Name = `Tab{cat}`,
-			Position = UDim2.new((index - 1) / 3, if index == 1 then 16 else 6, 0, 82),
-			Size = UDim2.new(1 / 3, -16, 0, 44),
-			Text = Texts.Get(`Shop.Category.{cat}`),
-			Parent = panel,
-		})
-		tab.Activated:Connect(function()
-			category = cat
-			confirming = nil
-			render()
-		end)
-		tabs[cat] = tab
-	end
 
 	list = Ui.create("ScrollingFrame", {
 		Name = "List",
@@ -239,7 +266,7 @@ function ShopController.Start()
 	ProximityPromptService.PromptTriggered:Connect(function(prompt)
 		local parent = prompt.Parent
 		if parent and CollectionService:HasTag(parent, MIRROR_TAG) then
-			open()
+			open(parent)
 		end
 	end)
 	Remotes.StatsChanged.OnClientEvent:Connect(function(stats)

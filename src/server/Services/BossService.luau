@@ -36,8 +36,9 @@ local StatsService
 local MinigameService
 local StyleService
 
-local spots: { [string]: BasePart } = {}
-local models: { [string]: Model } = {}
+-- Un même boss peut avoir plusieurs emplacements (Kevin dans le garage de chaque maison)
+local spots: { [string]: { BasePart } } = {}
+local models: { [BasePart]: Model } = {}
 local fights: { [Player]: Fight } = {}
 
 local BossService = {}
@@ -87,7 +88,7 @@ local function finishFight(player: Player, fight: Fight)
 		if fight.stakes > 0 then
 			StatsService.Add(player, "Cash", -fight.stakes)
 		end
-		local model = models[fight.bossId]
+		local model = models[fight.spot]
 		if model then
 			Npc.Pose(model)
 		end
@@ -95,7 +96,7 @@ local function finishFight(player: Player, fight: Fight)
 		return
 	end
 
-	local model = models[fight.bossId]
+	local model = models[fight.spot]
 	if model then
 		Npc.LaunchAndReturn(model, 80, 5)
 	end
@@ -271,12 +272,22 @@ function startRound(player: Player, fight: Fight)
 	end)
 end
 
+-- Emplacement de ce boss à portée du joueur (nil s'il est trop loin de tous)
+local function nearestSpot(player: Player, bossId: string): BasePart?
+	for _, spot in spots[bossId] or {} do
+		if MinigameService.IsNear(player, spot) then
+			return spot
+		end
+	end
+	return nil
+end
+
 local function onChallenge(player: Player, bossId: unknown)
 	if typeof(bossId) ~= "string" or fights[player] or MinigameService.IsBusy(player) then
 		return
 	end
-	local spot = spots[bossId]
-	if not spot or not MinigameService.IsNear(player, spot) then
+	local spot = nearestSpot(player, bossId)
+	if not spot then
 		return
 	end
 	local state = assess(player, bossId)
@@ -287,7 +298,7 @@ local function onChallenge(player: Player, bossId: unknown)
 	if not state.ready then
 		-- Défaite automatique et comique, avec la perte annoncée dans la fenêtre de défi
 		StatsService.Add(player, "Cash", -state.autoLoss)
-		local model = models[bossId]
+		local model = models[spot]
 		if model then
 			Npc.Pose(model)
 		end
@@ -323,11 +334,12 @@ local function setupSpot(spot: Instance)
 		warn(`[BossService] BossSpot {spot:GetFullName()} has an invalid BossId`)
 		return
 	end
-	spots[bossId] = spot
+	spots[bossId] = spots[bossId] or {}
+	table.insert(spots[bossId], spot)
 
 	local model, root = Npc.Spawn(bossId, Texts.Get(`Boss.{bossId}`), spot, spot.Position + spot.CFrame.LookVector)
 	model:SetAttribute("BossId", bossId)
-	models[bossId] = model
+	models[spot] = model
 
 	-- Boss annoncé mais pas encore jouable : une statue qui nargue le joueur, sans défi
 	local boss = Stages.FindBoss(bossId)
@@ -345,6 +357,11 @@ local function setupSpot(spot: Instance)
 	prompt.Triggered:Connect(function(player)
 		BossService.ShowChallenge(player, bossId)
 	end)
+end
+
+-- Le joueur est-il en plein Mog-off (y compris entre deux manches) ?
+function BossService.IsFighting(player: Player): boolean
+	return fights[player] ~= nil
 end
 
 -- Envoie la fenêtre de défi au joueur (prompt du boss ; aussi utilisé par les tests de DevService)
