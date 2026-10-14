@@ -153,8 +153,8 @@ local function buildGui()
 	-- Score en direct pendant le Mog-off : toi contre le boss
 	scoreboard = Ui.label({
 		Name = "Scoreboard",
-		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 0, 210),
+		AnchorPoint = Vector2.new(0.5, 1),
+		Position = UDim2.new(0.5, 0, 1, -128),
 		Size = UDim2.fromOffset(560, 44),
 		BackgroundTransparency = 0.25,
 		BackgroundColor3 = Color3.fromRGB(20, 20, 20),
