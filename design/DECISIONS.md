@@ -2,6 +2,12 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-14 (lancement de l'étape E — visuels)
+
+- **D29 — Le coach est un mentor mystérieux** (lunettes de soleil, proverbes absurdes, apparaît de nulle part).
+- **D28 — Personnages : squelette R15 standard + coque visuelle modélisée dans Blender** (une par stade et par PNJ). Raison : les animations Roblox fonctionnent sans rigging complexe, les habits restent compatibles, et c'est ce que l'IA produit le plus sûrement.
+- **D27 — Ambiance évolutive** : chaque zone a sa propre ambiance (garage bricolé → rue pastel → plage ensoleillée → montagne années 80 → Lune → Olympe doré). L'étape E commence par les personnages (choix du créateur).
+
 ## 2026-10-14 (retour du créateur après avoir joué)
 
 - **D26 — Quota de rythme côté serveur** au lieu d'un écart fixe entre répétitions : jamais plus de répétitions que le temps écoulé ne le permet (+1). Raison : les jeux de réaction peuvent produire deux réponses rapprochées sans permettre d'aller plus vite en moyenne.

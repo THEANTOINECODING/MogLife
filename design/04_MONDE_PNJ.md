@@ -28,7 +28,8 @@ Dans le MVP, la sortie de la rue montre la plage au loin avec un panneau honnêt
 ## Personnages
 
 ### Le coach
-Il accompagne le joueur partout, commente ses séries, présente chaque boss avec une emphase ridicule. ❓ Son nom et son look.
+Il accompagne le joueur partout, commente ses séries, présente chaque boss avec une emphase ridicule.
+**Look (décision D29) : le mentor mystérieux.** Lunettes de soleil même la nuit, apparaît de nulle part (derrière une poubelle, dans un frigo…), parle en proverbes absurdes sur les biceps (« Le biceps qui doute est déjà un triceps. »). Silhouette massive mais toujours à moitié dans l'ombre ou de dos. ❓ Son nom.
 
 ### Boss
 Voir `02_MECANIQUES/BOSS.md`. Chaque boss a : un look ultra-exagéré, une entrée en scène, 3 répliques avant le combat, une scène de défaite absurde, un objet de style exclusif.

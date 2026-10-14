@@ -20,13 +20,27 @@ Dans l'esprit de Douchebag Workout : **tout est exagéré, tout le temps.** Nos 
 - Défaites comiques : rétrécissement, envol, rebonds cartoon.
 - Courts (2–3 s) et quittables. Option de réduction des effets et des secousses.
 
-### Palette ❓
+### Ambiance : elle évolue de zone en zone (décision D27)
 
-| Usage | Couleur |
-|---|---|
-| Principale | ❓ |
-| Secondaire | ❓ |
-| Accent (boutons, récompenses) | ❓ |
+Chaque zone a sa propre ambiance, de plus en plus absurde. Palettes **proposées** (à valider) :
+
+| Zone | Ambiance | Palette proposée |
+|---|---|---|
+| Garage de maman | Bric-à-brac, bricolé, poussiéreux | Brun, orange rouille, bleu délavé |
+| La rue | Banlieue cartoon pastel | Rose, menthe, jaune pâle |
+| La plage | Ville balnéaire ensoleillée | Turquoise, orange chaud, sable |
+| La montagne | Années 80 rétro | Violet, rose néon, bleu électrique |
+| La Lune | Science-fiction kitsch | Gris lunaire, bleu nuit, vert fluo |
+| L'Olympe | Temple doré | Blanc marbre, or, bleu ciel |
+
+**Constantes sur tout le jeu** : interface violet foncé + doré (déjà en place), personnages aux couleurs saturées pour se détacher de chaque décor.
+
+### Technique des personnages (décision D28)
+
+- Chaque personnage garde le **squelette R15 standard** de Roblox : toutes les animations Roblox fonctionnent sans travail en plus.
+- Par-dessus, une **« coque » visuelle** modélisée dans Blender : une pièce 3D exagérée par partie du corps (torse énorme, jambes en allumettes, mâchoire carrée…), collée sur le squelette, comme les habits actuels.
+- **Une coque par stade** (7 pour le joueur) et une par PNJ. Les habits et coupes se posent par-dessus.
+- Pipeline : Blender → export FBX (`assets/export/`) → import dans Studio (un import par lot) → la coque est assemblée par le code.
 
 ## Interface
 
