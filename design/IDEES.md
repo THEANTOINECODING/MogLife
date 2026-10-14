@@ -31,7 +31,7 @@ Test de la vision : l'idée tient-elle dans les trois briques (mini-jeux, conten
 Déjà fait : plusieurs stations par exercice, bouton Maison et bus, icônes et guide vers le boss, statues des meilleurs moggers, routes détaillées, cycle jour/nuit, ville compacte. Reste à décider :
 
 - **Boss personnels** : chaque joueur voit son propre exemplaire du boss pendant son combat (aujourd'hui, plusieurs joueurs face au même boss voient les mêmes animations).
-- **Kevin et maman visibles seulement chez soi** (ou pour les visiteurs qui entrent) au lieu de 20 Kevin et 20 mamans dans la ville.
+- **Maman visible seulement chez soi** (ou pour les visiteurs qui entrent) au lieu de 20 mamans dans la ville (Kevin est déjà unique, D34).
 - **Mini-carte** et flèche de guidage vers l'objectif quand le joueur n'est pas encore prêt (vers les stations utiles).
 - **Objet de déplacement** à acheter (trottinette, rollers) : cosmétique et un peu plus rapide.
 - **Maisons** : le panneau affiche le stade et le Mog du propriétaire ; bouton « J'aime » et classement des maisons ; personnalisation de l'extérieur (façade, porte de garage, drapeau, boîte aux lettres) ; garage qui s'équipe à chaque stade ; 3 à 5 modèles de maisons différents.

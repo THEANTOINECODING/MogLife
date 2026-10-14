@@ -4,8 +4,10 @@ Format : date — décision — raison. La plus récente en haut.
 
 ## 2026-10-14 (carte)
 
+- **D34 — Un seul Kevin pour toute la ville** (choix du créateur) : il traîne sur son canapé dans le square nord-est, à côté de la salle de quartier, au lieu d'un Kevin dans chaque garage. Les garages gardent le curl et les pompes.
+
 - **D33 — Ville carrée et compacte, déplacements rapides** : tout se passe au centre, les maisons sont autour, les boutiques et la salle donnent sur la route juste en face des maisons. Bouton « Maison », bus entre 5 arrêts, icônes au-dessus des bâtiments, guide vers le prochain boss quand le joueur est prêt, statues des 3 meilleurs moggers du serveur, cycle jour/nuit. Raison : 20 joueurs par serveur et des allers-retours fréquents entre la maison et le centre.
-- **D32 — Une maison de maman par joueur** (choix du créateur) : serveur de 20 joueurs max, maison attribuée à l'arrivée ; elle contient le garage (curl, pompes, Kevin) et maman. Décoration sur 8 emplacements fixes, meubles achetés en Cash au magasin de meubles, certains réservés à un stade ; maisons ouvertes aux visiteurs. Le miroir est remplacé par la boutique de vêtements (hauts, accessoires) et le coiffeur (coupes).
+- **D32 — Une maison de maman par joueur** (choix du créateur) : serveur de 20 joueurs max, maison attribuée à l'arrivée ; elle contient le garage (curl, pompes) et maman (Kevin : voir D34). Décoration sur 8 emplacements fixes, meubles achetés en Cash au magasin de meubles, certains réservés à un stade ; maisons ouvertes aux visiteurs. Le miroir est remplacé par la boutique de vêtements (hauts, accessoires) et le coiffeur (coupes).
 
 - **D31 — Carte hybride** : la structure (bâtiments, rue, sols) est faite de blocs Roblox générés par `tools/build_map.py` et versionnés via Rojo ; les objets de décor détaillés seront modélisés dans Blender ensuite. Raison : agencement rapide à modifier et testable tout de suite, détails low poly ajoutés une fois le plan validé.
 - **D30 — La ville s'appelle Muscle City** (choix du créateur).

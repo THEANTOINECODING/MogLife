@@ -6,7 +6,7 @@ et la salle de quartier donnent sur la route en anneau, juste en face des 20 mai
 serveur de 20 joueurs max), 5 par côté, tournées vers le centre. 5 arrêts de bus (tag BusStop).
 
 Écrit world/Map/ :
-- Plots/PlotNN : maison + garage (curl, pompes, Kevin), maman devant la porte, 8 emplacements de meubles.
+- Plots/PlotNN : maison + garage (curl, pompes), maman devant la porte, 8 emplacements de meubles.
 - Town/*      : route en anneau (marquages, feux, voitures garées), centre-ville, parc, arène, bordure.
 Tous les emplacements de jeu (stations, boss, habitants, miroirs, comptoir de meubles) sont générés ici.
 Visuels des stations : tools/map_templates/*.model.json.
@@ -385,7 +385,14 @@ def plot(index, side, offset):
         c.append(P(G, f"GarageLamp{k}", (0, 13.6, lz), (8, 0.4, 1), (255, 244, 214), "Neon", children=[light()]))
     c.append(station(G, "CurlStation", (-7, 0.8, 6.5), "Curl"))
     c.append(station(G, "PushUpStation", (7, 0.8, 6.5), "PushUp"))
-    c.append(spot(G, "KevinSpot", (0, 0.8, 17), (8, 1, 8), SPOT_BOSS, "BossSpot", {"BossId": "Kevin"}))
+    # Vieux tapis de course qui sert d'étendoir à linge (Kevin, lui, traîne en ville)
+    c.append(P(G, "TreadmillBase", (0, 0.8, 17), (3.4, 1, 7), (60, 60, 66), "Metal"))
+    c.append(P(G, "TreadmillBelt", (0, 1.32, 17.4), (2.8, 0.05, 6), (30, 30, 34), "Rubber", collide=False))
+    c.append(P(G, "TreadmillHandle", (0, 3.6, 14), (3.4, 0.4, 0.4), (60, 60, 66), "Metal"))
+    for k, lx in enumerate((-1.5, 1.5)):
+        c.append(P(G, f"TreadmillPost{k}", (lx, 2.3, 14), (0.3, 3, 0.3), (60, 60, 66), "Metal"))
+    for k, (lx, colr) in enumerate(((-0.9, (240, 90, 90)), (0.6, (90, 140, 220)))):
+        c.append(P(G, f"Laundry{k}", (lx, 2.7, 14), (1.2, 1.6, 0.1), colr, "Fabric", collide=False))
     c.append(P(G, "CouchSeat", (0, 1.5, 24.5), (11, 2.4, 4), (122, 82, 62), "Fabric"))
     c.append(P(G, "CouchBack", (0, 3.6, 26.3), (11, 2.6, 1), (112, 74, 56), "Fabric"))
     for k, lx in enumerate((-6, 6)):
@@ -768,6 +775,21 @@ def downtown():
     c += flowerbed(F, "SquareBedNE", (70, 0, 44), (10, 10))
     c += flowerbed(F, "SquareBedSE", (30, 0, -64), (10, 10))
     c += bench(F, "SquareBenchNE", (56, 0, 30), yaw=0)
+    # Kevin « je commence demain » : un seul pour toute la ville, affalé sur son canapé juste à côté de la salle
+    K = Frame((73, GROUND, 22), 90)  # regarde vers la place
+    c.append(P(K, "KevinRug", (0, 0.05, -1), (12, 0.1, 12), (150, 120, 90), "Fabric", collide=False))
+    c.append(spot(K, "KevinSpot", (0, 0.6, -4), (8, 1, 8), SPOT_BOSS, "BossSpot", {"BossId": "Kevin"}))
+    c.append(P(K, "KevinCouchSeat", (0, 1.2, 2.5), (11, 2.4, 4), (122, 82, 62), "Fabric"))
+    c.append(P(K, "KevinCouchBack", (0, 3.3, 4.3), (11, 2.6, 1), (112, 74, 56), "Fabric"))
+    for k, lx in enumerate((-6, 6)):
+        c.append(P(K, f"KevinCouchArm{k}", (lx, 2.3, 2.5), (1, 2.2, 4), (112, 74, 56), "Fabric"))
+    for k, (lx, ly, yaw) in enumerate(((-3, 2.55, 20), (7.5, 0.25, -10), (7.6, 0.55, 15), (7.4, 0.85, 40))):
+        c.append(P(K, f"KevinPizza{k}", (lx, ly, 2 if k == 0 else 0), (2.6, 0.3, 2.6), CARDBOARD, "Cardboard",
+                   yaw=yaw))
+    # Sa vieille télé, sur le côté, tournée vers le canapé
+    c.append(P(K, "KevinTvStand", (-9, 1, -3), (1.6, 2, 5), WOOD, "WoodPlanks"))
+    c.append(P(K, "KevinTv", (-9, 3.4, -3), (2, 2.8, 4), (60, 60, 64)))
+    c.append(P(K, "KevinTvScreen", (-7.95, 3.4, -3), (0.1, 2.2, 3.4), (110, 160, 210), "Neon", collide=False))
     c += bench(F, "SquareBenchSE", (40, 0, -60), yaw=-90)
     # La voiture du voisin, en panne sur la route ouest ; le voisin attend sur le trottoir
     c += car(F, "NeighborCar", (-ROAD[0] - 5, 0.15, -40), (200, 60, 50), yaw=90)

@@ -21786,6 +21786,625 @@
    }
   },
   {
+   "name": "KevinRug",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     12,
+     0.1,
+     12
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       72.0,
+       0.15,
+       22.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      120,
+      90
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "KevinSpot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     8,
+     1,
+     8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.0,
+       0.7,
+       22.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      140,
+      40,
+      40
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true,
+    "Tags": {
+     "Tags": [
+      "BossSpot"
+     ]
+    }
+   },
+   "attributes": {
+    "BossId": "Kevin"
+   }
+  },
+  {
+   "name": "KevinCouchSeat",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     11,
+     2.4,
+     4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       75.5,
+       1.3,
+       22.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      122,
+      82,
+      62
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KevinCouchBack",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     11,
+     2.6,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       77.3,
+       3.4,
+       22.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      112,
+      74,
+      56
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KevinCouchArm0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     2.2,
+     4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       75.5,
+       2.4,
+       28.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      112,
+      74,
+      56
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KevinCouchArm1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     2.2,
+     4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       75.5,
+       2.4,
+       16.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      112,
+      74,
+      56
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KevinPizza0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.3,
+     2.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       75.0,
+       2.65,
+       25.0
+      ],
+      "orientation": [
+       [
+        -0.34202,
+        0.0,
+        0.939693
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.939693,
+        0.0,
+        -0.34202
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      136,
+      90
+     ]
+    },
+    "Material": "Cardboard",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KevinPizza1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.3,
+     2.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       73.0,
+       0.35,
+       14.5
+      ],
+      "orientation": [
+       [
+        0.173648,
+        0.0,
+        0.984808
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.984808,
+        0.0,
+        0.173648
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      136,
+      90
+     ]
+    },
+    "Material": "Cardboard",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KevinPizza2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.3,
+     2.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       73.0,
+       0.65,
+       14.4
+      ],
+      "orientation": [
+       [
+        -0.258819,
+        0.0,
+        0.965926
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.965926,
+        0.0,
+        -0.258819
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      136,
+      90
+     ]
+    },
+    "Material": "Cardboard",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KevinPizza3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.3,
+     2.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       73.0,
+       0.95,
+       14.6
+      ],
+      "orientation": [
+       [
+        -0.642788,
+        0.0,
+        0.766044
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.766044,
+        0.0,
+        -0.642788
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      136,
+      90
+     ]
+    },
+    "Material": "Cardboard",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KevinTvStand",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.6,
+     2,
+     5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       70.0,
+       1.1,
+       31.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      130,
+      92,
+      60
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KevinTv",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     2.8,
+     4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       70.0,
+       3.5,
+       31.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      64
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KevinTvScreen",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     2.2,
+     3.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       70.0,
+       3.5,
+       29.95
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      160,
+      210
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false
+   }
+  },
+  {
    "name": "SquareBenchSESeat",
    "className": "Part",
    "properties": {
