@@ -75,6 +75,7 @@ fill_cell(0, 2, lambda x, y: (0.02, 0.02, 0.02))                # pupilles
 fill_cell(1, 2, lambda x, y: (0.95, 0.93, 0.85) if (y > 20 and 8 < x < 23 and x != 16) else (0.3, 0.06, 0.06))  # bouche
 fill_cell(2, 2, lambda x, y: noise(PALE) if not (14 <= x <= 16 and 14 <= y <= 16) else (0.55, 0.42, 0.36))  # ventre
 fill_cell(3, 2, lambda x, y: [(0.9, 0.2, 0.2), (0.2, 0.8, 0.3), (0.2, 0.4, 0.9), (0.95, 0.85, 0.2)][(x // 8 + y // 8) % 4])
+fill_cell(0, 3, lambda x, y: noise((0.4, 0.3, 0.18), 0.04))   # iris marron terne
 
 img.pixels = px
 img.pack()
@@ -91,7 +92,7 @@ nt.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
 
 # ---------------------------------------------------------------- géométrie
 CELLS = {"skin": (0, 0), "face": (1, 0), "pj": (2, 0), "shirt": (3, 0), "hair": (0, 1), "slipper": (1, 1),
-         "pad": (2, 1), "white": (3, 1), "black": (0, 2), "mouth": (1, 2), "belly": (2, 2), "buttons": (3, 2)}
+         "pad": (2, 1), "white": (3, 1), "black": (0, 2), "mouth": (1, 2), "belly": (2, 2), "buttons": (3, 2), "iris": (0, 3)}
 
 def uv_project(bm, cell, front_cell=None):
     uv = bm.loops.layers.uv.verify()
@@ -183,11 +184,14 @@ for side, s in (("L", -1), ("R", 1)):
     make(f"Forearm{side}", prism(el, wr, 0.075, 0.065, sides=5), "skin")
     make(f"Hand{side}", block((0.88 * s, -0.36, 2.88), (0.18, 0.13, 0.34)), "skin")
     make(f"Ear{side}", block((0.4 * s, -0.66, 6.05), (0.07, 0.2, 0.28)), "skin")
-    make(f"Eye{side}", lowsphere((0.17 * s, -1.0, 6.22), (0.22, 0.2, 0.24)), "white")
-    make(f"Lid{side}", half_sphere((0.17 * s, -1.0, 6.28), (0.235, 0.215, 0.25)), "skin")
+    # Gros yeux exorbités mais humains (iris coloré, paupières lourdes), comme les autres boss
+    make(f"Eye{side}", lowsphere((0.17 * s, -1.0, 6.2), (0.18, 0.16, 0.19)), "white")
+    make(f"Lid{side}", half_sphere((0.17 * s, -1.0, 6.25), (0.195, 0.175, 0.2)), "skin")
 
-make("PupilL", lowsphere((-0.2, -1.195, 6.13), (0.07, 0.04, 0.07), 6, 4), "black")
-make("PupilR", lowsphere((0.21, -1.195, 6.1), (0.07, 0.04, 0.07), 6, 4), "black")
+make("IrisL", lowsphere((-0.19, -1.14, 6.15), (0.085, 0.03, 0.085), 8, 4), "iris")
+make("IrisR", lowsphere((0.2, -1.14, 6.12), (0.085, 0.03, 0.085), 8, 4), "iris")
+make("PupilL", lowsphere((-0.19, -1.165, 6.15), (0.04, 0.02, 0.04), 6, 4), "black")
+make("PupilR", lowsphere((0.2, -1.165, 6.12), (0.04, 0.02, 0.04), 6, 4), "black")
 make("Hips", block((0, 0.05, 3.3), (0.85, 0.5, 0.45)), "pj")
 make("Torso", block((0, 0.0, 4.2), (0.82, 0.42, 1.55), taper_top=0.82, lean_top=-0.3), "pj", front_cell="shirt")
 make("Belly", lowsphere((0, -0.22, 3.62), (0.3, 0.22, 0.28)), "belly")

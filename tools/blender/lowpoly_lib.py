@@ -13,14 +13,15 @@ S, C, PAD = 128, 32, 2
 
 # ------------------------------------------------------------------ atlas
 class Atlas:
-    def __init__(self, name):
+    def __init__(self, name, size=S):
         self.name = name
-        self.px = [0.0] * (S * S * 4)
+        self.size = size
+        self.px = [0.0] * (size * size * 4)
         self.cells = {}
 
     def put(self, x, y, rgb):
-        if 0 <= x < S and 0 <= y < S:
-            i = (y * S + x) * 4
+        if 0 <= x < self.size and 0 <= y < self.size:
+            i = (y * self.size + x) * 4
             self.px[i:i + 4] = [rgb[0], rgb[1], rgb[2], 1.0]
 
     def cell(self, key, cx, cy, fn):
@@ -31,7 +32,11 @@ class Atlas:
                 self.put(cx * C + x, cy * C + y, fn(x, y))
 
     def material(self):
-        img = bpy.data.images.get(f"{self.name}_Atlas") or bpy.data.images.new(f"{self.name}_Atlas", S, S)
+        img = bpy.data.images.get(f"{self.name}_Atlas")
+        if img and tuple(img.size) != (self.size, self.size):
+            bpy.data.images.remove(img)
+            img = None
+        img = img or bpy.data.images.new(f"{self.name}_Atlas", self.size, self.size)
         img.pixels = self.px
         img.pack()
         mat = bpy.data.materials.get(f"{self.name}_Mat") or bpy.data.materials.new(f"{self.name}_Mat")
@@ -75,6 +80,7 @@ class Builder:
         xs = [v.co.x for v in bm.verts]; ys = [v.co.y for v in bm.verts]; zs = [v.co.z for v in bm.verts]
         mn = Vector((min(xs), min(ys), min(zs)))
         size = Vector((max(xs), max(ys), max(zs))) - mn
+        T = self.atlas.size
         for f in bm.faces:
             n = f.normal
             key = front_cell if (front_cell and n.y < -0.5) else cell
@@ -85,7 +91,7 @@ class Builder:
                 p = l.vert.co
                 u = (p[a] - mn[a]) / (size[a] or 1)
                 v = (p[b] - mn[b]) / (size[b] or 1)
-                l[uv].uv = ((cx * C + PAD + u * (C - 2 * PAD)) / S, (cy * C + PAD + v * (C - 2 * PAD)) / S)
+                l[uv].uv = ((cx * C + PAD + u * (C - 2 * PAD)) / T, (cy * C + PAD + v * (C - 2 * PAD)) / T)
 
     def make(self, bm, cell, front_cell=None):
         for v in bm.verts:
@@ -120,6 +126,28 @@ def prism(p0, p1, r0, r1, sides=6):
         j = (i + 1) % sides
         bm.faces.new((rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
     bm.faces.new(list(reversed(rings[0]))); bm.faces.new(rings[1])
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return bm
+
+
+def limb(p0, p1, r0, r_mid, r1, sides=8, mid_t=0.5, bulge_dir=None, bulge=0.0):
+    """Membre en fuseau (muscle) : 3 anneaux, plus épais au milieu. `bulge_dir` décale le renflement
+    (ex. biceps vers l'avant, mollet vers l'arrière)."""
+    bm = bmesh.new()
+    p0, p1 = Vector(p0), Vector(p1)
+    axis = (p1 - p0).normalized()
+    side = axis.cross(Vector((0, 0, 1)) if abs(axis.z) < 0.9 else Vector((1, 0, 0))).normalized()
+    up = axis.cross(side)
+    pm = p0.lerp(p1, mid_t) + (Vector(bulge_dir).normalized() * bulge if bulge_dir else Vector())
+    rings = []
+    for p, r in ((p0, r0), (pm, r_mid), (p1, r1)):
+        rings.append([bm.verts.new(p + (side * math.cos(2 * math.pi * i / sides) + up * math.sin(2 * math.pi * i / sides)) * r)
+                      for i in range(sides)])
+    for k in range(2):
+        for i in range(sides):
+            j = (i + 1) % sides
+            bm.faces.new((rings[k][i], rings[k][j], rings[k + 1][j], rings[k + 1][i]))
+    bm.faces.new(list(reversed(rings[0]))); bm.faces.new(rings[2])
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     return bm
 
