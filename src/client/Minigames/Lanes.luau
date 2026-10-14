@@ -1,6 +1,7 @@
 -- Mini-jeu « Lanes » (aide : porter le piano de Mme Do-Ré) : le piano avance dans un couloir à
 -- 3 voies ; chaque vague de vases bloque 2 voies sur 3. Rejoindre la voie libre (◀ ▶, A / D, flèches, boutons).
 -- Vague passée = Perfect (Good si esquive de dernière seconde), percutée = Miss.
+-- Sans rien faire, on ne passe qu'une vague sur trois.
 
 local Kit = require(script.Parent.Parent.MinigameKit)
 local Ui = require(script.Parent.Parent.Ui)

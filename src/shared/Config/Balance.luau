@@ -72,7 +72,8 @@ return {
 		RepsPerRound = 6,
 		-- Chaque manche est plus dure : rythme plus rapide et fenêtres de timing plus serrées
 		SpeedByRound = { 1, 0.92, 0.85 }, -- multiplie l'intervalle du mini-jeu du boss
-		TimingScaleByRound = { 0.9, 0.78, 0.66 }, -- multiplie les fenêtres Perfect / Good
+		TimingScaleByRound = { 0.95, 0.85, 0.75 }, -- multiplie les fenêtres Perfect / Good
+		BossSkillBonusPerRound = 0.03, -- le boss gagne +3 % de chances de Perfect à chaque manche
 		QualityScore = { Perfect = 100, Good = 70, Miss = 20 },
 		-- Le boss joue en direct : il gagne la manche en cas d'égalité
 		-- Défaite automatique (Mog insuffisant) : perte de Cash, annoncée avant le combat
@@ -90,6 +91,6 @@ return {
 		MaxWidth = 2.2,
 		MinDepth = 1,
 		MaxDepth = 1.8,
-		MogForMax = 15_000,
+		MogForMax = 45_000, -- taille max atteinte au niveau du Dieu du Pump
 	},
 }

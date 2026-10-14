@@ -37,6 +37,16 @@ Perte de 10 % du Cash, plafonnée ❓ (plafond qui augmente avec les stades). To
 
 Les récompenses ne sont pas toutes des nombres : nouveau mini-jeu, nouveau boss, nouvelle zone, nouveau corps, nouvel objet de style.
 
+## Dernière simulation (14 octobre 2026, `tools/simulate_economy.luau`)
+
+| Profil | Kevin | Brayan | Coach Turbo | Pas-Les-Jambes | Roi du Quartier | Défaites |
+|---|---|---|---|---|---|---:|
+| Joueur précis | 2:04 | 6:32 | 20:48 | 38:25 | 59:54 | 0 |
+| Joueur moyen qui progresse | 2:04 | 7:20 | 22:40 | 42:30 | 67:26 | 4 |
+| Joueur moyen qui ne progresse pas | 2:04 | 7:20 | bloqué | — | — | — |
+
+Coach Turbo est le premier vrai mur : il faut devenir plus précis. Le Cash s'accumule en fin de MVP (≈ 3 500 gagnés pour 1 290 d'objets) : prévoir des objets plus chers ou plus nombreux.
+
 ## Simulation à faire avant d'ajuster les chiffres
 
 Profils :

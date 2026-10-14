@@ -40,7 +40,7 @@ local List: { Stage } = {
 		id = "GymRat",
 		boss = {
 			id = "Brayan",
-			mogRequired = 300,
+			mogRequired = 400,
 			minigame = "Spotlight",
 			interval = 1.5,
 			skill = { perfect = 0.18, good = 0.5 },
@@ -52,7 +52,7 @@ local List: { Stage } = {
 		id = "Bro",
 		boss = {
 			id = "CoachTurbo",
-			mogRequired = 1_200,
+			mogRequired = 2_500,
 			minigame = "Beats",
 			interval = 0.9,
 			skill = { perfect = 0.25, good = 0.5 },
@@ -64,10 +64,10 @@ local List: { Stage } = {
 		id = "Alpha",
 		boss = {
 			id = "NoLegs",
-			mogRequired = 3_500,
+			mogRequired = 7_500,
 			minigame = "Wobble",
 			interval = 1.5,
-			skill = { perfect = 0.33, good = 0.5 },
+			skill = { perfect = 0.3, good = 0.5 },
 			firstWinCash = 200,
 			styleReward = "TinySocks",
 		},
@@ -76,10 +76,10 @@ local List: { Stage } = {
 		id = "Chad",
 		boss = {
 			id = "BlockKing",
-			mogRequired = 9_000,
+			mogRequired = 20_000,
 			minigame = "Combo",
 			interval = 2.6,
-			skill = { perfect = 0.42, good = 0.48 },
+			skill = { perfect = 0.38, good = 0.48 },
 			firstWinCash = 400,
 			styleReward = "RoyalFan",
 		},
@@ -88,7 +88,7 @@ local List: { Stage } = {
 		id = "Gigachad",
 		boss = {
 			id = "PumpGod",
-			mogRequired = 20_000,
+			mogRequired = 45_000,
 			minigame = "Combo",
 			interval = 2.2,
 			skill = { perfect = 0.55, good = 0.4 },

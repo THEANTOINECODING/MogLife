@@ -9,11 +9,11 @@ Tout le monde commence au stade **Normie**. « Mog requis » = le Mog nécessair
 | Boss | Mog requis ❓ | Son mini-jeu | Niveau en direct ❓ | Victoire → stade | Victoire débloque |
 |---|---:|---|---|---|---|
 | **Kevin « demain je commence »** — en pyjama, excuses extravagantes | 50 | Reaction | ~50 / 100 | Gym Rat | Pompes, nouvelles aides |
-| **Brayan le Bronzé** — bronzage orange fluo | 300 | Spotlight | ~59 | Bro | Développé couché |
-| **Coach Turbo** — mégaphone plus gros que lui | 1 200 | Beats | ~65 | Alpha | Squat, transats |
-| **Monsieur Pas-Les-Jambes** — torse énorme sur deux cure-dents, chaussettes géantes | 3 500 | Wobble | ~71 | Chad | Tractions, courses |
-| **Le Roi du Quartier** — arrive avec son propre ventilateur | 9 000 | Combo | ~78 | Gigachad | Corde à sauter, touriste |
-| **Le Dieu du Pump** — sur un nuage, foudre dans chaque biceps | 20 000 | ❓ | ~84 | **GOD MOGGER** | Le titre GOD MOGGER (mise à jour Olympe) |
+| **Brayan le Bronzé** — bronzage orange fluo | 400 | Spotlight | ~59 | Bro | Développé couché |
+| **Coach Turbo** — mégaphone plus gros que lui | 2 500 | Beats | ~65 | Alpha | Squat, transats |
+| **Monsieur Pas-Les-Jambes** — torse énorme sur deux cure-dents, chaussettes géantes | 7 500 | Wobble | ~69 | Chad | Tractions, courses |
+| **Le Roi du Quartier** — arrive avec son propre ventilateur | 20 000 | Combo | ~74 | Gigachad | Corde à sauter, touriste |
+| **Le Dieu du Pump** — sur un nuage, foudre dans chaque biceps | 45 000 | ❓ | ~84 | **GOD MOGGER** | Le titre GOD MOGGER (mise à jour Olympe) |
 
 Le MVP contient les **5 premiers boss** (Normie → Gigachad, décision D25). Le Dieu du Pump est annoncé « coming soon ». Les chiffres sont des hypothèses (voir `tools/simulate_economy.luau`).
 

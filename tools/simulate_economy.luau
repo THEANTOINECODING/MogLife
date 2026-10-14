@@ -27,6 +27,7 @@ local ASSUME = {
 	WalkBetweenSpots = 6, -- trajet entre station, habitant, boss, miroir
 	HelpOverhead = 3,
 	BossOverhead = 10, -- fenêtre de défi, scènes, pauses
+	SeriesBetweenHelps = 2, -- le joueur fait 2 séries d'entraînement entre deux aides
 	MaxMinutes = 150,
 }
 
@@ -61,7 +62,7 @@ local function winsFight(profile, boss): (boolean, string)
 		local perfect = profile.perfect * scale
 		local good = profile.good * scale + profile.perfect * (1 - scale)
 		local player = expectedScore(perfect, good)
-		local bonus = (round - 1) * 0.05
+		local bonus = (round - 1) * BOSS.BossSkillBonusPerRound
 		local opponent = expectedScore(boss.skill.perfect + bonus, boss.skill.good)
 		table.insert(details, `{math.floor(player)}-{math.floor(opponent)}`)
 		if player > opponent then
@@ -107,6 +108,7 @@ local function simulate(baseProfile)
 	local owned, cooldowns, milestones = {}, {}, {}
 	local cashEarned, cashSpent, cashLost = 0, 0, 0
 	local longestTraining, trainingStreak = 0, 0
+	local seriesSinceHelp = ASSUME.SeriesBetweenHelps
 
 	local function mark(name)
 		if not milestones[name] then
@@ -146,7 +148,7 @@ local function simulate(baseProfile)
 		end
 
 		-- 2. Aider quelqu'un si une aide est disponible
-		if not acted and profile.helps then
+		if not acted and profile.helps and seriesSinceHelp >= ASSUME.SeriesBetweenHelps then
 			local bestHelp, bestCash = nil, 0
 			for id, help in Helps do
 				if stage >= help.requiredStage and (cooldowns[id] or 0) <= t and help.cash > bestCash then
@@ -161,6 +163,7 @@ local function simulate(baseProfile)
 				cooldowns[bestHelp] = t + Balance.Helps.Cooldown
 				mark("Première aide")
 				trainingStreak = 0
+				seriesSinceHelp = 0
 				acted = true
 			end
 		end
@@ -185,6 +188,7 @@ local function simulate(baseProfile)
 			t += duration
 			mog += Balance.SeriesLength * exercise.mogPerRep * trainingMultiplier(profile)
 			trainingStreak += duration
+			seriesSinceHelp += 1
 			longestTraining = math.max(longestTraining, trainingStreak)
 			mark(`Exercice {id}`)
 		end

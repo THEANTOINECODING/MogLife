@@ -190,7 +190,7 @@ local function playBoss(player: Player, fight: Fight, interval: number, token: n
 		return
 	end
 	-- Le boss devient aussi plus précis à chaque manche
-	local bonus = (fight.round - 1) * 0.05
+	local bonus = (fight.round - 1) * BOSS.BossSkillBonusPerRound
 	for rep = 1, BOSS.RepsPerRound do
 		task.wait(interval)
 		if fights[player] ~= fight or fight.token ~= token then
