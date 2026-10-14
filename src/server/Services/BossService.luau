@@ -329,6 +329,12 @@ local function setupSpot(spot: Instance)
 	model:SetAttribute("BossId", bossId)
 	models[bossId] = model
 
+	-- Boss annoncé mais pas encore jouable : une statue qui nargue le joueur, sans défi
+	local boss = Stages.FindBoss(bossId)
+	if boss and boss.comingSoon then
+		return
+	end
+
 	local prompt = Instance.new("ProximityPrompt")
 	prompt.ActionText = Texts.Get("Boss.Challenge")
 	prompt.ObjectText = Texts.Get(`Boss.{bossId}`)
