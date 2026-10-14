@@ -12,7 +12,7 @@ Ranger les images obtenues dans `assets/concepts/` (ex. `assets/concepts/kevin_2
 - L'humour vient de l'**attitude pathétique, gênante ou arrogante**, pas de gags visuels.
 - Ne pas donner d'images d'un jeu existant à ChatGPT comme modèle (règle 6 du projet).
 
-⚠️ Les sections « Kevin » et « GOD MOGGER » plus bas datent de la version précédente (trop cartoon). Les prompts à jour sont dans la section **Version 3 (juste milieu)** à la fin du fichier.
+⚠️ Le style a encore changé : les prompts à jour sont dans la section **Version 4 (low poly PS1)** à la fin du fichier. Les versions précédentes sont gardées pour mémoire.
 
 ## Méthode : deux images par personnage
 
@@ -157,3 +157,59 @@ Composition: one single character, full body, centered, plain white background, 
 - **Encore trop cartoon** : « More realistic proportions and a more natural human face, keep the muted colors and soft cel shading ».
 - **Trop réaliste** : « Simpler shading, flat color areas, thin outlines, no skin texture ».
 - **Pas assez ridicule** : « Make his posture and expression more pathetic and unlikable ».
+
+---
+
+# Version 4 (low poly PS1) — STYLE RETENU, prompts à jour
+
+## Le style (décision du créateur, 14/10/2026)
+
+3D **low poly des jeux PlayStation 1 / Nintendo 64** (fin des années 90) : très peu de polygones et facettes visibles, ombrage plat, textures floues en basse résolution, mains en moufles, lunettes en aplats noirs. Les personnages restent loufoques et burlesques, avec de **gros yeux exorbités**.
+- Garder le **style uniquement** : nos personnages sont inventés et ne doivent ressembler à **aucune personne réelle** (règles Roblox).
+- Avantage : ce style peut être modélisé directement dans Blender (formes à facettes, quelques centaines de polygones), et il est très léger pour Roblox.
+
+## Bloc de style V4 (identique dans tous les prompts)
+
+> Art style: a late-1990s PlayStation 1 / Nintendo 64 era low-poly 3D character render, like an in-game screenshot from an old 3D video game. Very low polygon count with clearly visible flat facets and hard angular edges, flat shading, small blurry low-resolution textures with slight pixelation, simple chunky blocky hands with mitten-like fingers, simplified geometric body shapes, slightly washed-out colors, simple vertex lighting. Absurd and ridiculous comedic character. Huge bulging googly eyes popping out of the head: big white low-poly spheres with small black pupils, wide crazy stare. Original fictional character, must not resemble any real person.
+
+## Kevin — V4
+
+```text
+Low-poly retro 3D render of Kevin, the first boss of a comedy gym game: a lazy, pathetic, unlikable young man who never leaves his couch.
+
+Body: very tall and ridiculously skinny, made of a few long thin angular polygon shapes: bony shoulders, thin stick arms and legs, hunched back with the head pushed forward, a small round pot belly sticking out.
+
+Face: a long angular low-poly head with a big pointy nose, huge bulging googly eyes popping out of the head with tiny pupils looking in slightly different directions, dark circles under the eyes painted in the blurry texture, a weak chin with a patchy beard painted as a few dark pixels, greasy messy dark hair made of a few spiky polygon chunks. A few red pimple dots in the low-res face texture. Smug, lazy open-mouth expression.
+
+Clothes: oversized light blue striped pajamas (stripes painted in a blurry low-res texture), a pizza sauce stain on the chest, shirt half unbuttoned showing the bony chest. Grey slippers made of simple blocks. He holds a game controller made of a few polygons in one blocky hand.
+
+Pose: standing, facing the camera, arms slightly away from the body (A-pose), full body visible including the feet.
+
+Art style: a late-1990s PlayStation 1 / Nintendo 64 era low-poly 3D character render, like an in-game screenshot from an old 3D video game. Very low polygon count with clearly visible flat facets and hard angular edges, flat shading, small blurry low-resolution textures with slight pixelation, simple chunky blocky hands with mitten-like fingers, simplified geometric body shapes, slightly washed-out colors, simple vertex lighting. Absurd and ridiculous comedic character. Huge bulging googly eyes popping out of the head: big white low-poly spheres with small black pupils, wide crazy stare. Original fictional character, must not resemble any real person.
+
+Composition: one single character, full body, centered, front view, plain light grey background, no text, no logo, no frame.
+```
+
+## GOD MOGGER — V4
+
+```text
+Low-poly retro 3D render of the God Mogger, the final boss of a comedy gym game: a man with so much muscle that his body is no longer physically possible.
+
+Body: an absurd, impossible mountain of angular low-poly muscles, muscles stacked on muscles. His upper body is about four times wider than a normal man, built from huge chunky faceted polygon slabs. Gigantic blocky shoulders and trapezius rising above his ears, his head half sunk into them. A chest like two big faceted boulders. Each arm is bigger than a normal man's whole body, enormous angular biceps and forearms, veins painted as a few lines in the blurry texture; the arms cannot touch his sides. Under this mountain, two comically tiny, thin, short stick legs.
+
+Face: a small low-poly head dominated by a GIGANTIC square jaw made of one huge angular block, twice as wide as the rest of his head, jutting forward, with a cleft chin. Huge bulging googly eyes popping out of the head with tiny smug pupils, one eyebrow raised. Slicked-back hair as one simple polygon shape. Deep orange-bronze tan with a shiny highlight painted in the texture.
+
+Clothes: small white wrestling shorts, a big golden champion belt made of a few flat polygons, a thin golden laurel crown.
+
+Pose: standing, facing the camera, chest pushed out, arms held away from the body by the sheer size of the muscles, full body visible including the tiny feet. Looking down on the viewer with total contempt.
+
+Art style: a late-1990s PlayStation 1 / Nintendo 64 era low-poly 3D character render, like an in-game screenshot from an old 3D video game. Very low polygon count with clearly visible flat facets and hard angular edges, flat shading, small blurry low-resolution textures with slight pixelation, simple chunky blocky hands with mitten-like fingers, simplified geometric body shapes, slightly washed-out colors, simple vertex lighting. Absurd and ridiculous comedic character. Huge bulging googly eyes popping out of the head: big white low-poly spheres with small black pupils, wide crazy stare. Original fictional character, must not resemble any real person.
+
+Composition: one single character, full body, centered, front view, plain light grey background, no text, no logo, no frame.
+```
+
+## Réglages fins
+
+- **Pas assez low poly** : « Even fewer polygons, bigger flat facets, blurrier low-res textures, like a 1998 PlayStation game ».
+- **Yeux pas assez gros** : « The eyes must be much bigger and bulging out of the head, like googly eyes ».
+- **Ressemble à une vraie personne** : « Make him a completely original fictional character with a different face ».
