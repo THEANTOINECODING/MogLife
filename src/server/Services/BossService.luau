@@ -325,7 +325,7 @@ local function setupSpot(spot: Instance)
 	end
 	spots[bossId] = spot
 
-	local model, root = Npc.Spawn(bossId, Texts.Get(`Boss.{bossId}`), spot, Vector3.new(spot.Position.X, 0, 0))
+	local model, root = Npc.Spawn(bossId, Texts.Get(`Boss.{bossId}`), spot, spot.Position + spot.CFrame.LookVector)
 	model:SetAttribute("BossId", bossId)
 	models[bossId] = model
 

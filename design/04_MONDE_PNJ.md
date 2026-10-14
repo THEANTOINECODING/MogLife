@@ -14,7 +14,9 @@ Chaque zone est plus absurde que la précédente, jusqu'à l'Olympe où l'on dev
 | L'Olympe | Roi du Quartier battu | Le Dieu du Pump | Temple en marbre, nuages, statues qui posent | Mise à jour |
 
 Dans le MVP, la sortie de la rue montre la plage au loin avec un panneau honnête « Bientôt ».
-❓ Nom de la ville (*Pumpville*, *Flexington*… ; un nom qui fonctionne en anglais, quitte à avoir une version française).
+**La ville s'appelle Muscle City** (D30).
+
+**Carte du MVP (D31)** : générée par `tools/build_map.py` dans `world/Map/`. Garage de maman (départ : curl, pompes, Kevin, Brayan devant, maman, livreur) → la rue (maisons pastel, habitants sur le trottoir d'en face) → la salle de quartier (4 autres stations, Coach Turbo) → la place des boss (Pas-Les-Jambes, Roi du Quartier, statue du Dieu du Pump dans son temple). La place des boss est provisoire : ces boss déménageront à la plage et à la montagne quand ces zones existeront. Pas encore de zones verrouillées par les boss.
 
 ## Langues
 

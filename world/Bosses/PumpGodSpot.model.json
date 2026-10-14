@@ -1,12 +1,53 @@
 {
-  "className": "Part",
-  "properties": {
-    "Anchored": true,
-    "Size": [14, 1, 14],
-    "CFrame": { "CFrame": { "position": [76, 0.5, -38], "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]] } },
-    "Color": { "Color3uint8": [230, 180, 40] },
-    "Material": "Marble",
-    "Tags": { "Tags": ["BossSpot"] }
+ "className": "Part",
+ "properties": {
+  "Anchored": true,
+  "Size": [
+   14,
+   1,
+   14
+  ],
+  "CFrame": {
+   "CFrame": {
+    "position": [
+     246,
+     2.5,
+     -14
+    ],
+    "orientation": [
+     [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     [
+      0.0,
+      1.0,
+      0
+     ],
+     [
+      -0.0,
+      0.0,
+      -1.0
+     ]
+    ]
+   }
   },
-  "attributes": { "BossId": "PumpGod" }
+  "Color": {
+   "Color3uint8": [
+    230,
+    180,
+    40
+   ]
+  },
+  "Material": "Marble",
+  "Tags": {
+   "Tags": [
+    "BossSpot"
+   ]
+  }
+ },
+ "attributes": {
+  "BossId": "PumpGod"
+ }
 }

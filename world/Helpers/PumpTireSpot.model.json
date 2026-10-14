@@ -1,12 +1,53 @@
 {
-  "className": "Part",
-  "properties": {
-    "Anchored": true,
-    "Size": [6, 1, 6],
-    "CFrame": { "CFrame": { "position": [10, 0.5, 18], "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]] } },
-    "Color": { "Color3uint8": [60, 120, 70] },
-    "Material": "SmoothPlastic",
-    "Tags": { "Tags": ["HelperSpot"] }
+ "className": "Part",
+ "properties": {
+  "Anchored": true,
+  "Size": [
+   6,
+   1,
+   6
+  ],
+  "CFrame": {
+   "CFrame": {
+    "position": [
+     -20,
+     0.5,
+     30
+    ],
+    "orientation": [
+     [
+      1.0,
+      0.0,
+      0.0
+     ],
+     [
+      0.0,
+      1.0,
+      0
+     ],
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   }
   },
-  "attributes": { "HelpId": "PumpTire" }
+  "Color": {
+   "Color3uint8": [
+    90,
+    150,
+    100
+   ]
+  },
+  "Material": "SmoothPlastic",
+  "Tags": {
+   "Tags": [
+    "HelperSpot"
+   ]
+  }
+ },
+ "attributes": {
+  "HelpId": "PumpTire"
+ }
 }

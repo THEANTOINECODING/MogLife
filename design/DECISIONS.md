@@ -2,6 +2,11 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-14 (carte)
+
+- **D31 — Carte hybride** : la structure (bâtiments, rue, sols) est faite de blocs Roblox générés par `tools/build_map.py` et versionnés via Rojo ; les objets de décor détaillés seront modélisés dans Blender ensuite. Raison : agencement rapide à modifier et testable tout de suite, détails low poly ajoutés une fois le plan validé.
+- **D30 — La ville s'appelle Muscle City** (choix du créateur).
+
 ## 2026-10-14 (lancement de l'étape E — visuels)
 
 - **D29 — Le coach est un mentor mystérieux** (lunettes de soleil, proverbes absurdes, apparaît de nulle part).

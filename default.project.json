@@ -15,6 +15,9 @@
       },
       "Shop": {
         "$path": "world/Shop"
+      },
+      "Map": {
+        "$path": "world/Map"
       }
     },
     "ReplicatedStorage": {

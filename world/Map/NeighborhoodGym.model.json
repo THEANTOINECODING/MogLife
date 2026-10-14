@@ -1,0 +1,1188 @@
+{
+ "className": "Model",
+ "children": [
+  {
+   "name": "Floor",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     64,
+     0.2,
+     60
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       140.0,
+       0.1,
+       0.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      58,
+      58,
+      64
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "WallBack",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     65,
+     18,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       140.0,
+       9.0,
+       -30.5
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      72,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "WallLeft",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     18,
+     62
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       107.5,
+       9.0,
+       0.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      72,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "WallRight",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     18,
+     62
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       172.5,
+       9.0,
+       0.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      72,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "WallFrontL",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     24.0,
+     18,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       120.0,
+       9.0,
+       30.5
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      72,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "WallFrontR",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     24.0,
+     18,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       160.0,
+       9.0,
+       30.5
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      72,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Lintel",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     16,
+     6,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       140.0,
+       15,
+       30.5
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      72,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Window0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     18.0,
+     6,
+     0.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       120.0,
+       9,
+       31.05
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      195,
+      225
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Window1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     18.0,
+     6,
+     0.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       160.0,
+       9,
+       31.05
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      195,
+      225
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Roof",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     67,
+     1,
+     63
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       140.0,
+       18.5,
+       0.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      50,
+      44
+     ]
+    },
+    "Material": "Slate",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "CeilingLamp0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     8,
+     0.4,
+     1.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       122,
+       17.4,
+       0.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      244,
+      214
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.5,
+      "Range": 26,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.902,
+        0.7451
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "CeilingLamp1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     8,
+     0.4,
+     1.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       140.0,
+       17.4,
+       0.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      244,
+      214
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.5,
+      "Range": 26,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.902,
+        0.7451
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "CeilingLamp2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     8,
+     0.4,
+     1.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       158,
+       17.4,
+       0.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      244,
+      214
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.5,
+      "Range": 26,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.902,
+        0.7451
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "SignBar",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     24,
+     1.2,
+     1.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       140.0,
+       23,
+       26
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      180,
+      180,
+      186
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "SignPlate0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     8,
+     8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       128.0,
+       23,
+       26
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      40,
+      40,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "SignPlate1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     8,
+     8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       152.0,
+       23,
+       26
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      40,
+      40,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "CoachStage",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     14,
+     1,
+     10
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       140.0,
+       0.6,
+       8
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      170,
+      40,
+      40
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "GymMirror",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     54,
+     9,
+     0.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       140.0,
+       7,
+       -29.9
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      225,
+      240
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false,
+    "Reflectance": 0.4
+   }
+  },
+  {
+   "name": "Rack0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7,
+     2.8,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       116.0,
+       1.4,
+       -27
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      70,
+      76
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Rack1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7,
+     2.8,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       125.5,
+       1.4,
+       -27
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      70,
+      76
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Rack2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7,
+     2.8,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       135.0,
+       1.4,
+       -27
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      70,
+      76
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Rack3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7,
+     2.8,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       144.5,
+       1.4,
+       -27
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      70,
+      76
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Rack4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7,
+     2.8,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       154.0,
+       1.4,
+       -27
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      70,
+      76
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Rack5",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7,
+     2.8,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       163.5,
+       1.4,
+       -27
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      70,
+      76
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  }
+ ]
+}

@@ -1,0 +1,479 @@
+{
+ "className": "Model",
+ "children": [
+  {
+   "name": "PlazaFloor",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     84,
+     0.2,
+     72
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       220,
+       0.1,
+       -4
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      205,
+      190,
+      180
+     ]
+    },
+    "Material": "Pavement",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsStage",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     12,
+     1,
+     12
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       192,
+       0.5,
+       6
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      170,
+      40,
+      40
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingStage",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     16,
+     1,
+     16
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       216,
+       0.5,
+       6
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      40,
+      130
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingCarpet",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5,
+     0.1,
+     18
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       216,
+       0.25,
+       22
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      190,
+      30,
+      40
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "TempleBase",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     26,
+     2,
+     26
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       246,
+       1,
+       -14
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      232,
+      222
+     ]
+    },
+    "Material": "Marble",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Column0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     18,
+     3,
+     3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       235,
+       11,
+       -25
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      230
+     ]
+    },
+    "Material": "Marble",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "Column1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     18,
+     3,
+     3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       257,
+       11,
+       -25
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      230
+     ]
+    },
+    "Material": "Marble",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "Column2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     18,
+     3,
+     3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       235,
+       11,
+       -3
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      230
+     ]
+    },
+    "Material": "Marble",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "Column3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     18,
+     3,
+     3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       257,
+       11,
+       -3
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      230
+     ]
+    },
+    "Material": "Marble",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "TempleTop",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     28,
+     1.5,
+     28
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       246,
+       20.5,
+       -14
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      225,
+      200,
+      120
+     ]
+    },
+    "Material": "Marble",
+    "CanCollide": true
+   }
+  }
+ ]
+}

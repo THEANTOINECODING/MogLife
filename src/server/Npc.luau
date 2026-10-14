@@ -24,9 +24,10 @@ end
 local function addNameTag(part: BasePart, displayName: string)
 	local billboard = Instance.new("BillboardGui")
 	billboard.Name = "NameTag"
-	billboard.Size = UDim2.fromOffset(260, 40)
+	-- Taille en studs (et non en pixels) : l'étiquette rapetisse avec la distance au lieu de masquer la scène
+	billboard.Size = UDim2.fromScale(10, 1.6)
 	billboard.StudsOffsetWorldSpace = Vector3.new(0, part.Size.Y / 2 + 1, 0)
-	billboard.MaxDistance = 60
+	billboard.MaxDistance = 45
 	billboard.Adornee = part
 	local label = Instance.new("TextLabel")
 	label.Size = UDim2.fromScale(1, 1)

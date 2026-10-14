@@ -1,12 +1,53 @@
 {
-  "className": "Part",
-  "properties": {
-    "Anchored": true,
-    "Size": [6, 1, 6],
-    "CFrame": { "CFrame": { "position": [50, 0.5, 18], "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]] } },
-    "Color": { "Color3uint8": [60, 120, 70] },
-    "Material": "SmoothPlastic",
-    "Tags": { "Tags": ["HelperSpot"] }
+ "className": "Part",
+ "properties": {
+  "Anchored": true,
+  "Size": [
+   6,
+   1,
+   6
+  ],
+  "CFrame": {
+   "CFrame": {
+    "position": [
+     180,
+     1.0,
+     68
+    ],
+    "orientation": [
+     [
+      1.0,
+      0.0,
+      0.0
+     ],
+     [
+      0.0,
+      1.0,
+      0
+     ],
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   }
   },
-  "attributes": { "HelpId": "BeachChairs" }
+  "Color": {
+   "Color3uint8": [
+    90,
+    150,
+    100
+   ]
+  },
+  "Material": "SmoothPlastic",
+  "Tags": {
+   "Tags": [
+    "HelperSpot"
+   ]
+  }
+ },
+ "attributes": {
+  "HelpId": "BeachChairs"
+ }
 }

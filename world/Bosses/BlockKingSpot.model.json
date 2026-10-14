@@ -1,12 +1,53 @@
 {
-  "className": "Part",
-  "properties": {
-    "Anchored": true,
-    "Size": [8, 1, 8],
-    "CFrame": { "CFrame": { "position": [56, 0.5, -34], "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]] } },
-    "Color": { "Color3uint8": [120, 40, 40] },
-    "Material": "SmoothPlastic",
-    "Tags": { "Tags": ["BossSpot"] }
+ "className": "Part",
+ "properties": {
+  "Anchored": true,
+  "Size": [
+   8,
+   1,
+   8
+  ],
+  "CFrame": {
+   "CFrame": {
+    "position": [
+     216,
+     1.5,
+     6
+    ],
+    "orientation": [
+     [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     [
+      0.0,
+      1.0,
+      0
+     ],
+     [
+      -0.0,
+      0.0,
+      -1.0
+     ]
+    ]
+   }
   },
-  "attributes": { "BossId": "BlockKing" }
+  "Color": {
+   "Color3uint8": [
+    140,
+    40,
+    40
+   ]
+  },
+  "Material": "SmoothPlastic",
+  "Tags": {
+   "Tags": [
+    "BossSpot"
+   ]
+  }
+ },
+ "attributes": {
+  "BossId": "BlockKing"
+ }
 }

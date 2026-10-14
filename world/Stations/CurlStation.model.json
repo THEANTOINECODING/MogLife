@@ -1,74 +1,198 @@
 {
-  "className": "Part",
-  "properties": {
+ "className": "Part",
+ "properties": {
+  "Anchored": true,
+  "Size": [
+   6,
+   1,
+   6
+  ],
+  "CFrame": {
+   "CFrame": {
+    "position": [
+     -20,
+     0.5,
+     -10
+    ],
+    "orientation": [
+     [
+      1.0,
+      0.0,
+      0.0
+     ],
+     [
+      0.0,
+      1.0,
+      0
+     ],
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   }
+  },
+  "Color": {
+   "Color3uint8": [
+    90,
+    90,
+    100
+   ]
+  },
+  "Material": "SmoothPlastic",
+  "Tags": {
+   "Tags": [
+    "Station"
+   ]
+  }
+ },
+ "attributes": {
+  "ExerciseId": "Curl"
+ },
+ "children": [
+  {
+   "name": "Bar",
+   "className": "Part",
+   "properties": {
     "Anchored": true,
-    "Size": [6, 1, 6],
+    "CanCollide": false,
+    "Size": [
+     3.2,
+     0.3,
+     0.3
+    ],
     "CFrame": {
-      "CFrame": {
-        "position": [0, 0.5, -16],
-        "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
-      }
+     "CFrame": {
+      "position": [
+       -20.0,
+       2.5,
+       -10.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0.0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
     },
-    "Color": { "Color3uint8": [90, 90, 100] },
-    "Material": "SmoothPlastic",
-    "Tags": { "Tags": ["Station"] }
+    "Color": {
+     "Color3uint8": [
+      150,
+      150,
+      150
+     ]
+    },
+    "Material": "Metal"
+   }
   },
-  "attributes": {
-    "ExerciseId": "Curl"
+  {
+   "name": "MelonLeft",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "CanCollide": false,
+    "Shape": "Ball",
+    "Size": [
+     1.8,
+     1.8,
+     1.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -21.8,
+       2.5,
+       -10.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0.0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      50,
+      150,
+      50
+     ]
+    },
+    "Material": "SmoothPlastic"
+   }
   },
-  "children": [
-    {
-      "name": "Bar",
-      "className": "Part",
-      "properties": {
-        "Anchored": true,
-        "CanCollide": false,
-        "Size": [3.2, 0.3, 0.3],
-        "CFrame": {
-          "CFrame": {
-            "position": [0, 2.5, -16],
-            "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
-          }
-        },
-        "Color": { "Color3uint8": [150, 150, 150] },
-        "Material": "Metal"
-      }
+  {
+   "name": "MelonRight",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "CanCollide": false,
+    "Shape": "Ball",
+    "Size": [
+     1.8,
+     1.8,
+     1.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -18.2,
+       2.5,
+       -10.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0.0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
     },
-    {
-      "name": "MelonLeft",
-      "className": "Part",
-      "properties": {
-        "Anchored": true,
-        "CanCollide": false,
-        "Shape": "Ball",
-        "Size": [1.8, 1.8, 1.8],
-        "CFrame": {
-          "CFrame": {
-            "position": [-1.8, 2.5, -16],
-            "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
-          }
-        },
-        "Color": { "Color3uint8": [50, 150, 50] },
-        "Material": "SmoothPlastic"
-      }
+    "Color": {
+     "Color3uint8": [
+      50,
+      150,
+      50
+     ]
     },
-    {
-      "name": "MelonRight",
-      "className": "Part",
-      "properties": {
-        "Anchored": true,
-        "CanCollide": false,
-        "Shape": "Ball",
-        "Size": [1.8, 1.8, 1.8],
-        "CFrame": {
-          "CFrame": {
-            "position": [1.8, 2.5, -16],
-            "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
-          }
-        },
-        "Color": { "Color3uint8": [50, 150, 50] },
-        "Material": "SmoothPlastic"
-      }
-    }
-  ]
+    "Material": "SmoothPlastic"
+   }
+  }
+ ]
 }

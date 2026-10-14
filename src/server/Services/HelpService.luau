@@ -114,7 +114,7 @@ local function setupSpot(spot: Instance)
 	end
 	anchors[helpId] = spot
 
-	local model, root = Npc.Spawn(help.npc, Texts.Get(`Npc.{help.npc}`), spot, Vector3.new(spot.Position.X, 0, 0))
+	local model, root = Npc.Spawn(help.npc, Texts.Get(`Npc.{help.npc}`), spot, spot.Position + spot.CFrame.LookVector)
 	model:SetAttribute("HelpId", helpId)
 	CollectionService:AddTag(model, HELPER_TAG)
 

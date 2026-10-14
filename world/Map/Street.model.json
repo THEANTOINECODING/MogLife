@@ -1,0 +1,2970 @@
+{
+ "className": "Model",
+ "children": [
+  {
+   "name": "Road",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     320,
+     0.16,
+     20
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       100.0,
+       0.08,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      52,
+      52,
+      58
+     ]
+    },
+    "Material": "Asphalt",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "Dash0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -54,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -42,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -30,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -18,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -6,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash5",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       6,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash6",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       18,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash7",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       30,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash8",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       42,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash9",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       54,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash10",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       66,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash11",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       78,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash12",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       90,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash13",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       102,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash14",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       114,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash15",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       126,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash16",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       138,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash17",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       150,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash18",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       162,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash19",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       174,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash20",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       186,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash21",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       198,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash22",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       210,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash23",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       222,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash24",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       234,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Dash25",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     0.02,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       246,
+       0.17,
+       54
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      230,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "SidewalkNear",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     320,
+     0.5,
+     8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       100.0,
+       0.25,
+       40
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      196,
+      194,
+      188
+     ]
+    },
+    "Material": "Concrete",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "SidewalkFar",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     320,
+     0.5,
+     8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       100.0,
+       0.25,
+       68
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      196,
+      194,
+      188
+     ]
+    },
+    "Material": "Concrete",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "YardsFar",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     320,
+     0.1,
+     40
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       100.0,
+       0.05,
+       92
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      108,
+      160,
+      84
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "LampPost0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     12,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -50,
+       6,
+       37
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "LampHead0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     0.6,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -50,
+       12.2,
+       38
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      236,
+      190
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.2,
+      "Range": 30,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8627,
+        0.6667
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "LampPost1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     12,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -20,
+       6,
+       37
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "LampHead1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     0.6,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -20,
+       12.2,
+       38
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      236,
+      190
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.2,
+      "Range": 30,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8627,
+        0.6667
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "LampPost2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     12,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       10,
+       6,
+       37
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "LampHead2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     0.6,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       10,
+       12.2,
+       38
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      236,
+      190
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.2,
+      "Range": 30,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8627,
+        0.6667
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "LampPost3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     12,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       40,
+       6,
+       37
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "LampHead3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     0.6,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       40,
+       12.2,
+       38
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      236,
+      190
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.2,
+      "Range": 30,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8627,
+        0.6667
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "LampPost4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     12,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       70,
+       6,
+       37
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "LampHead4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     0.6,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       70,
+       12.2,
+       38
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      236,
+      190
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.2,
+      "Range": 30,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8627,
+        0.6667
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "LampPost5",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     12,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       100,
+       6,
+       37
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "LampHead5",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     0.6,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       100,
+       12.2,
+       38
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      236,
+      190
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.2,
+      "Range": 30,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8627,
+        0.6667
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "LampPost6",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     12,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       130,
+       6,
+       37
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "LampHead6",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     0.6,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       130,
+       12.2,
+       38
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      236,
+      190
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.2,
+      "Range": 30,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8627,
+        0.6667
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "LampPost7",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     12,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       160,
+       6,
+       37
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "LampHead7",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     0.6,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       160,
+       12.2,
+       38
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      236,
+      190
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.2,
+      "Range": 30,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8627,
+        0.6667
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "LampPost8",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     12,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       190,
+       6,
+       37
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "LampHead8",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     0.6,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       190,
+       12.2,
+       38
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      236,
+      190
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.2,
+      "Range": 30,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8627,
+        0.6667
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "LampPost9",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     12,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       220,
+       6,
+       37
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "LampHead9",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     0.6,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       220,
+       12.2,
+       38
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      236,
+      190
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.2,
+      "Range": 30,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8627,
+        0.6667
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "LampPost10",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     12,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       250,
+       6,
+       37
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "LampHead10",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     0.6,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       250,
+       12.2,
+       38
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      236,
+      190
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": true
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.2,
+      "Range": 30,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8627,
+        0.6667
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "CarBody",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     11,
+     2.2,
+     5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       40,
+       1.9,
+       60
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      60,
+      50
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "CarCabin",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     1.8,
+     4.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       39.5,
+       3.9,
+       60
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      180,
+      52,
+      44
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "CarWindows",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6.1,
+     1.4,
+     4.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       39.5,
+       3.9,
+       60
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      120,
+      170,
+      210
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false,
+    "Transparency": 0.3
+   }
+  },
+  {
+   "name": "Wheel0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     2,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       36.4,
+       1,
+       57.6
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      25,
+      25,
+      28
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "Wheel1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     2,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       43.6,
+       1,
+       57.6
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      25,
+      25,
+      28
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "Wheel2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     2,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       36.4,
+       1,
+       62.4
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      25,
+      25,
+      28
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "Wheel3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     2,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       43.6,
+       1,
+       62.4
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      25,
+      25,
+      28
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  }
+ ]
+}

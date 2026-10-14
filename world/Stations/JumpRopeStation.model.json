@@ -1,17 +1,104 @@
 {
-  "className": "Part",
-  "properties": {
-    "Anchored": true,
-    "Size": [6, 1, 6],
-    "CFrame": { "CFrame": { "position": [60, 0.5, -16], "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]] } },
-    "Color": { "Color3uint8": [90, 90, 100] },
-    "Material": "SmoothPlastic",
-    "Tags": { "Tags": ["Station"] }
+ "className": "Part",
+ "properties": {
+  "Anchored": true,
+  "Size": [
+   6,
+   1,
+   6
+  ],
+  "CFrame": {
+   "CFrame": {
+    "position": [
+     162,
+     0.5,
+     -18
+    ],
+    "orientation": [
+     [
+      1.0,
+      0.0,
+      0.0
+     ],
+     [
+      0.0,
+      1.0,
+      0
+     ],
+     [
+      0.0,
+      0.0,
+      1.0
+     ]
+    ]
+   }
   },
-  "attributes": { "ExerciseId": "JumpRope" },
-  "children": [
-    { "name": "Rope", "className": "Part", "properties": { "Anchored": true, "CanCollide": false, "Shape": "Cylinder", "Size": [0.2, 5, 5],
-      "CFrame": { "CFrame": { "position": [60, 3.5, -16], "orientation": [[0, 0, 1], [0, 1, 0], [-1, 0, 0]] } },
-      "Color": { "Color3uint8": [255, 90, 160] }, "Material": "Neon", "Transparency": 0.6 } }
-  ]
+  "Color": {
+   "Color3uint8": [
+    90,
+    90,
+    100
+   ]
+  },
+  "Material": "SmoothPlastic",
+  "Tags": {
+   "Tags": [
+    "Station"
+   ]
+  }
+ },
+ "attributes": {
+  "ExerciseId": "JumpRope"
+ },
+ "children": [
+  {
+   "name": "Rope",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "CanCollide": false,
+    "Shape": "Cylinder",
+    "Size": [
+     0.2,
+     5,
+     5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       162.0,
+       3.5,
+       -18.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0.0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      90,
+      160
+     ]
+    },
+    "Material": "Neon",
+    "Transparency": 0.6
+   }
+  }
+ ]
 }
