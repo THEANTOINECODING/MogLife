@@ -5,9 +5,14 @@ Ranger les images obtenues dans `assets/concepts/` (ex. `assets/concepts/kevin_2
 
 ## Le style visé (décision du créateur, 14/10/2026)
 
-Burlesque et ridicule, **simple** : dessin vectoriel plat, contours épais, aplats de couleur avec une seule ombre, formes simples, peu de détails.
-L'humour vient des **proportions** et des **expressions**, pas des détails (pas de peau réaliste, pas de textures chargées).
-Esprit des jeux comiques Flash des années 2010 — sans copier aucun jeu existant (règle 6 du projet).
+**Juste milieu** entre deux essais refusés : ni réaliste (peau, pores, textures), ni « dessin animé pour enfants » (membres en caoutchouc, dents de lapin géantes, objets qui ont des visages).
+- Proportions et anatomie **humaines crédibles**, avec seulement 2 ou 3 traits caricaturés par personnage.
+- Visage **humain** (vrais yeux, vrai nez, vraie bouche), légèrement caricaturé.
+- Couleurs **ternes et naturelles**, ombre douce en aplats, contours fins, aucune texture.
+- L'humour vient de l'**attitude pathétique, gênante ou arrogante**, pas de gags visuels.
+- Ne pas donner d'images d'un jeu existant à ChatGPT comme modèle (règle 6 du projet).
+
+⚠️ Les sections « Kevin » et « GOD MOGGER » plus bas datent de la version précédente (trop cartoon). Les prompts à jour sont dans la section **Version 3 (juste milieu)** à la fin du fichier.
 
 ## Méthode : deux images par personnage
 
@@ -102,3 +107,53 @@ Using exactly the same 3D character as in the previous image (same proportions, 
 - **Pas assez exagéré** : « Push the proportions much further: [la partie] twice as big ».
 - **Pieds coupés ou décentré** : « Full body including the feet, centered, with white space around ».
 - **Refus de ChatGPT** : retirer le mot qui pose problème et garder le reste.
+
+---
+
+# Version 3 (juste milieu) — prompts à jour
+
+## Bloc de style V3 (identique dans tous les prompts)
+
+> Art style: semi-realistic satirical caricature illustration, like an animated comedy series for adults. Believable human anatomy and proportions, with only two or three features exaggerated. Real human face (natural eyes, nose and mouth), only slightly caricatured. Muted, natural, slightly desaturated colors. Soft cel shading in flat areas, thin dark outlines, no textures, no skin pores, no gradients. The humor comes from the pathetic, awkward or arrogant attitude and body language, not from cartoon gags. NOT a children's cartoon: no rubbery limbs, no giant cartoon teeth, no objects with faces, no big cartoon eyes. NOT photorealistic either.
+
+## Kevin — V3
+
+```text
+Full-body character illustration of Kevin, the first boss of a comedy gym game: a lazy, pathetic, unlikable young man who never leaves his couch.
+
+Body: realistic human proportions, but very tall and extremely skinny: narrow bony shoulders, visible collarbones and a few ribs, thin arms with bony elbows, thin legs. Bad posture: hunched back, head pushed forward, shoulders rolled in. A small soft belly from junk food. He looks weak and out of shape.
+
+Face: a real human face, slightly caricatured: a long face, a slightly big nose, sleepy half-closed eyes with dark circles, a weak receding chin with a thin patchy beard, greasy messy dark hair that has not been washed in days. A few red pimples on his forehead and chin (small and realistic in size, not cartoon dots). Smug, bored, condescending half-smile: he thinks he is better than everyone.
+
+Clothes: an old, faded, oversized light blue striped pajama, wrinkled, with a pizza sauce stain on the chest and the shirt half unbuttoned. Old worn-out grey slippers. He holds a game controller loosely in one hand.
+
+Pose: standing, facing the camera, arms hanging slightly away from the body, full body visible including the feet.
+
+Art style: semi-realistic satirical caricature illustration, like an animated comedy series for adults. Believable human anatomy and proportions, with only two or three features exaggerated. Real human face (natural eyes, nose and mouth), only slightly caricatured. Muted, natural, slightly desaturated colors. Soft cel shading in flat areas, thin dark outlines, no textures, no skin pores, no gradients. The humor comes from the pathetic, awkward or arrogant attitude and body language, not from cartoon gags. NOT a children's cartoon: no rubbery limbs, no giant cartoon teeth, no objects with faces, no big cartoon eyes. NOT photorealistic either.
+
+Composition: one single character, full body, centered, plain white background, no text, no logo, no frame.
+```
+
+## GOD MOGGER — V3
+
+```text
+Full-body character illustration of the God Mogger, the final boss of a comedy gym game: a man with so much muscle that his body is no longer physically possible.
+
+Body: the anatomy of every muscle is drawn believably (real muscle shapes, real human skin), but there is FAR too much of it, to an absurd, impossible degree: muscles piled on muscles. His upper body is about four times as wide as a normal man. Gigantic shoulders and trapezius muscles rising above his ears, so his head is half sunk into them. A chest like two boulders. Each arm is bigger than a normal man's whole body, with enormous biceps and forearms and thick visible veins; his arms cannot touch his sides. Under this mountain, two comically short, thin legs that look like they will snap.
+
+Face: a real human face, but with a gigantic, impossibly large square jaw, twice as wide as the rest of his head, jutting forward with a deep cleft chin. Small, cold, arrogant eyes, raised eyebrow, smug self-satisfied smirk. Short slicked-back hair, perfectly styled. Deep orange-bronze fake tan, slightly shiny with oil.
+
+Clothes: small white wrestling shorts, a large golden champion belt, a thin golden laurel crown.
+
+Pose: standing, facing the camera, chest pushed out, arms held away from the body by the sheer size of the muscles, full body visible including the small feet. He looks down on the viewer with total contempt.
+
+Art style: semi-realistic satirical caricature illustration, like an animated comedy series for adults. Believable human anatomy and proportions, with only two or three features exaggerated. Real human face (natural eyes, nose and mouth), only slightly caricatured. Muted, natural, slightly desaturated colors. Soft cel shading in flat areas, thin dark outlines, no textures, no skin pores, no gradients. The humor comes from the pathetic, awkward or arrogant attitude and body language, not from cartoon gags. NOT a children's cartoon: no rubbery limbs, no giant cartoon teeth, no objects with faces, no big cartoon eyes. NOT photorealistic either.
+
+Composition: one single character, full body, centered, plain white background, no text, no logo, no frame.
+```
+
+## Réglages fins (à écrire dans la même conversation ChatGPT)
+
+- **Encore trop cartoon** : « More realistic proportions and a more natural human face, keep the muted colors and soft cel shading ».
+- **Trop réaliste** : « Simpler shading, flat color areas, thin outlines, no skin texture ».
+- **Pas assez ridicule** : « Make his posture and expression more pathetic and unlikable ».
