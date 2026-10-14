@@ -60,4 +60,18 @@ for collection, count, report in summary:
     )
     tris = sum(int(r.split(": ")[1].split(" ")[0]) for r in report)
     print(f"{collection}: {count} décors, {tris} triangles, {os.path.getsize(path) // 1024} Ko")
+# Fichier unique avec tous les décors : un seul import dans Studio
+everything = [o for _, _, col in CATEGORIES for o in bpy.data.collections[col].objects if o.type == "MESH"]
+for o in bpy.context.view_layer.objects:
+    o.select_set(False)
+for o in everything:
+    o.select_set(True)
+bpy.context.view_layer.objects.active = everything[0]
+all_path = os.path.join(OUT, "MogLife_AllProps.fbx")
+bpy.ops.export_scene.fbx(
+    filepath=all_path, use_selection=True, object_types={"MESH"},
+    axis_forward="-Z", axis_up="Y", apply_unit_scale=True, apply_scale_options="FBX_SCALE_ALL",
+    mesh_smooth_type="FACE", path_mode="RELATIVE", embed_textures=False,
+)
+print(f"tout : {len(everything)} décors dans {all_path} ({os.path.getsize(all_path) // 1024} Ko)")
 print("texture :", png)
