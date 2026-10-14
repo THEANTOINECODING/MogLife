@@ -8,6 +8,7 @@ local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 
 local DataService
+local BodyService
 
 local StatsService = {}
 
@@ -23,6 +24,10 @@ local function applyBodyScale(player: Player)
 	local character = player.Character
 	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
 	if not data or not humanoid then
+		return
+	end
+	-- Le stade a son vrai corps : c'est BodyService qui gère les proportions
+	if BodyService.BodyFor(player) then
 		return
 	end
 
@@ -109,11 +114,13 @@ end
 -- Renvoie les stats au client et met à jour l'apparence (après une modification directe des données).
 function StatsService.Refresh(player: Player)
 	sync(player)
+	BodyService.Refresh(player)
 	applyBodyScale(player)
 end
 
 function StatsService.Init(services)
 	DataService = services.DataService
+	BodyService = services.BodyService
 end
 
 function StatsService.Start()

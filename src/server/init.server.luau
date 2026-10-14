@@ -4,6 +4,7 @@
 local ORDER = {
 	"DataService",
 	"StatsService",
+	"BodyService",
 	"MinigameService",
 	"ExerciseService",
 	"BossService",
