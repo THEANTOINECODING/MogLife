@@ -284,11 +284,11 @@ local Items: { [string]: Item } = {
 		requiredStage = 5,
 		order = 3,
 		pieces = {
-			piece(V(3, 1.4, 2), V(0, 0.7, 0.5), rgb(235, 232, 222), M.Marble),
-			piece(V(1.4, 3, 1.4), V(-0.6, 2.9, 0.5), rgb(240, 238, 230), M.Marble),
-			piece(V(2.6, 1.2, 1.2), V(0.4, 4.6, 0.5), rgb(240, 238, 230), M.Marble),
-			piece(V(2, 2, 2), V(0.1, 5.6, 0.4), rgb(240, 238, 230), M.Marble, BALL),
-			piece(V(1.2, 1.4, 1.2), V(1.4, 5.6, 0.5), rgb(240, 238, 230), M.Marble, BALL),
+			-- Buste en marbre d'un « mogger » : socle, épaules énormes, tête à la mâchoire démesurée
+			piece(V(3.4, 1.4, 2.4), V(0, 0.7, 0.3), rgb(235, 232, 222), M.Marble),
+			piece(V(3.6, 1.8, 1.6), V(0, 2.3, 0.3), rgb(240, 238, 230), M.Marble),
+			piece(V(1.6, 1.6, 1.6), V(0, 4.2, 0.3), rgb(240, 238, 230), M.Marble, BALL),
+			piece(V(1.6, 0.9, 1.3), V(0, 3.6, 0.1), rgb(240, 238, 230), M.Marble),
 		},
 	},
 }

@@ -1,6 +1,6 @@
 -- Meubles : achat au comptoir du magasin de meubles (Cash + stade requis), pose sur les emplacements fixes
 -- de sa propre maison, affichage pour tout le monde (les maisons se visitent librement).
--- Purement décoratif. Visuels PROVISOIRES (blocs) en attendant les modèles Blender.
+-- Purement décoratif. Visuel : le modèle 3D « Furniture_<id> » s'il est importé (PropService), sinon des blocs.
 
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -19,6 +19,7 @@ local StatsService
 local MinigameService
 local PlotService
 local ExerciseService
+local PropService
 
 local FurnitureService = {}
 
@@ -50,6 +51,19 @@ local function render(player: Player)
 		local itemId = data.FurniturePlaced[slot]
 		local item = if itemId then Furniture.Items[itemId] else nil
 		if not item or item.slot ~= slot then
+			continue
+		end
+		-- Modèle 3D importé : posé au sol (ou au centre du mur pour les posters), dos contre le mur
+		local onWall = slot == "Poster"
+		local model =
+			PropService.Place(`Furniture_{itemId}`, slotPart.CFrame * CFrame.new(0, 0, if onWall then 0.1 else 0), {
+				collide = slot ~= "Rug" and slot ~= "Poster",
+				align = if onWall then "Back" else nil,
+				centered = onWall,
+			})
+		if model then
+			model.Name = itemId
+			model.Parent = visuals
 			continue
 		end
 		for index, piece in item.pieces do
@@ -180,6 +194,7 @@ function FurnitureService.Init(services)
 	MinigameService = services.MinigameService
 	PlotService = services.PlotService
 	ExerciseService = services.ExerciseService
+	PropService = services.PropService
 end
 
 function FurnitureService.Start()

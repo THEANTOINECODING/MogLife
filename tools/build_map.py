@@ -218,35 +218,44 @@ def building(F, w, d, h, color, material, door_w, door_h, windows=(), floor=None
     return c
 
 
-def tree(F, name, local, height=9.0, radius=4.5, color=(80, 140, 60), trunk=(110, 78, 50)):
+def tree(F, name, local, height=9.0, radius=4.5, color=(80, 140, 60), trunk=(110, 78, 50), prop=None):
     x, y, z = local
-    return [
+    blocks = [
         P(F, name + "Trunk", (x, y + height / 2, z), (height, 1.3, 1.3), trunk, "Wood", roll=90, shape="Cylinder"),
         P(F, name + "Leaves", (x, y + height + radius * 0.5, z), (radius * 2,) * 3, color, "Grass", shape="Ball"),
         P(F, name + "Leaves2", (x + radius * 0.5, y + height - radius * 0.1, z - radius * 0.3), (radius * 1.4,) * 3,
           tuple(min(255, int(v * 1.12)) for v in color), "Grass", shape="Ball"),
     ]
+    prop = prop or ("TreeRoundBig" if radius >= 5.5 else "TreeRound")
+    yaw = (sum(ord(ch) for ch in name) * 37) % 360  # chaque arbre tourné différemment
+    return [prop_slot(F, name, local, prop, blocks, yaw=yaw, height=height + radius * 1.5)]
 
 
 def bench(F, name, local, yaw=0):
     G = F.child(local, yaw)
-    return [
+    blocks = [
         P(G, name + "Seat", (0, 1.4, 0), (6, 0.4, 1.8), WOOD_LIGHT, "WoodPlanks"),
         P(G, name + "Back", (0, 2.6, 0.8), (6, 1.6, 0.3), WOOD_LIGHT, "WoodPlanks"),
         P(G, name + "LegL", (-2.6, 0.6, 0), (0.4, 1.2, 1.6), (50, 50, 56), "Metal"),
         P(G, name + "LegR", (2.6, 0.6, 0), (0.4, 1.2, 1.6), (50, 50, 56), "Metal"),
     ]
+    return [prop_slot(G, name, (0, 0, 0), "Bench", blocks)]
 
 
 def lamp_post(F, name, local, arm_dir=-1):
-    """Lampadaire ; arm_dir = sens du bras sur l'axe Z local (vers la route)."""
+    """Lampadaire ; arm_dir = sens du bras sur l'axe Z local (vers la route). La lumière reste une pièce à part
+    (tag StreetLight, allumée la nuit) pour fonctionner aussi avec le modèle 3D."""
     x, y, z = local
-    return [
+    blocks = [
         P(F, name, (x, y + 6, z), (0.5, 12, 0.5), LAMP_GREY, "Metal"),
         P(F, name + "Arm", (x, y + 11.8, z + arm_dir * 1.2), (0.4, 0.4, 2.4), LAMP_GREY, "Metal"),
         P(F, name + "Head", (x, y + 11.5, z + arm_dir * 2.2), (1.4, 0.5, 1.4), (255, 236, 190), "Neon",
-          tags=["StreetLight"], children=[light((255, 220, 170), 1.1, 28)]),
+          tags=["StreetLight"]),
     ]
+    lamp = P(F, name + "Light", (x, y + 11.2, z + arm_dir * 2.3), (0.4, 0.4, 0.4), WHITE, transparency=1,
+             collide=False, tags=["StreetLight"], extra={"CanQuery": False, "CanTouch": False},
+             children=[light((255, 220, 170), 1.1, 28)])
+    return [prop_slot(F, name + "Slot", local, "StreetLamp", blocks, yaw=180 if arm_dir > 0 else 0), lamp]
 
 
 def flowerbed(F, name, local, size=(10, 10)):
@@ -280,6 +289,9 @@ def station(F, name, local, exercise_id, yaw=0):
     R = rot(F.yaw + yaw)
     tpl["name"] = name
     tpl["properties"]["CFrame"]["CFrame"] = {"position": [round(v, 3) for v in world], "orientation": R}
+    tpl["properties"]["Tags"]["Tags"] = tpl["properties"]["Tags"]["Tags"] + ["PropSlot"]
+    tpl["attributes"]["Prop"] = STATION_PROPS[exercise_id]
+    tpl["attributes"]["PropCollide"] = False
     for child in tpl.get("children", []):
         ccf = child["properties"]["CFrame"]["CFrame"]
         rel = apply(Rt, [ccf["position"][i] - pos0[i] for i in range(3)])
@@ -298,6 +310,43 @@ def mirror(F, name, local, attributes, yaw=0):
              children=[P(G, "Frame", (0, 0, 0.3), (9, 11, 0.3), (230, 180, 40), collide=False)])
 
 
+# ------------------------------------------------------------------ emplacements de décor 3D (Blender)
+# Un emplacement (tag PropSlot) = un repère invisible (PropAnchor, au sol, orienté) + les blocs actuels (Fallback).
+# Si le modèle 3D du même nom est importé dans ServerStorage.Props, PropService le pose et retire les blocs ;
+# sinon les blocs restent. Le devant d'un modèle 3D est vers -Z du repère.
+STATION_PROPS = {"Curl": "WatermelonDumbbell", "PushUp": "PushUpMat", "BenchPress": "BenchPress",
+                 "Squat": "SquatRack", "PullUp": "PullUpBar", "JumpRope": "JumpRope"}
+
+
+def prop_slot(F, name, local, prop, fallback=(), yaw=0, height=None, collide=True, align=None):
+    anchor = P(F, "PropAnchor", local, (1, 0.2, 1), WHITE, yaw=yaw, transparency=1, collide=False,
+               extra={"CanQuery": False, "CanTouch": False})
+    attributes = {"Prop": prop}
+    if height:
+        attributes["PropHeight"] = round(height, 2)
+    if not collide:
+        attributes["PropCollide"] = False
+    if align:
+        attributes["PropAlign"] = align  # "Back" : le dos du modèle touche le repère (fenêtres, enseignes)
+    children = [anchor]
+    if fallback:
+        children.append({"name": "Fallback", "className": "Model", "children": list(fallback)})
+    return {"name": name, "className": "Model", "properties": {"Tags": {"Tags": ["PropSlot"]}},
+            "attributes": attributes, "children": children}
+
+
+def wrap(c, n0, F, name, local, prop, yaw=0, height=None, collide=True, align=None):
+    """Range les blocs ajoutés à `c` depuis l'index n0 dans un emplacement de décor."""
+    blocks = c[n0:]
+    del c[n0:]
+    c.append(prop_slot(F, name, local, prop, blocks, yaw=yaw, height=height, collide=collide, align=align))
+
+
+def decor(F, name, local, prop, yaw=0, height=None, collide=True, align=None):
+    """Décor 3D sans version en blocs : invisible tant que le modèle n'est pas importé."""
+    return prop_slot(F, name, local, prop, (), yaw=yaw, height=height, collide=collide, align=align)
+
+
 # ------------------------------------------------------------------ 1. maison de maman (une par joueur)
 SLOTS = {
     # emplacement : (x, y, z, yaw) dans le repère de la maison ; yaw = direction où regarde le meuble
@@ -312,10 +361,13 @@ SLOTS = {
 }
 
 
+CAR_PROPS = {(200, 60, 50): "CarSedanRed", (240, 200, 60): "CarPickup", (150, 60, 150): "CarSedanRed"}
+
+
 def car(F, name, local, color, yaw=0):
     C = F.child(local, yaw)
     dark = tuple(int(v * 0.88) for v in color)
-    c = [
+    blocks = [
         P(C, name + "Body", (0, 1.8, 0), (11, 2.2, 5), color),
         P(C, name + "Cabin", (-0.5, 3.8, 0), (6, 1.8, 4.6), dark),
         P(C, name + "Windows", (-0.5, 3.8, 0), (6.1, 1.4, 4.7), GLASS, "Glass", transparency=0.3, collide=False),
@@ -323,16 +375,17 @@ def car(F, name, local, color, yaw=0):
         P(C, name + "LightR", (5.55, 2, 1.6), (0.1, 0.6, 1), (255, 240, 200), "Neon", collide=False),
     ]
     for k, (dx, dz) in enumerate(((-3.6, -2.4), (3.6, -2.4), (-3.6, 2.4), (3.6, 2.4))):
-        c.append(P(C, f"{name}Wheel{k}", (dx, 1, dz), (1, 2, 2), (25, 25, 28), yaw=90, shape="Cylinder"))
-    return c
+        blocks.append(P(C, f"{name}Wheel{k}", (dx, 1, dz), (1, 2, 2), (25, 25, 28), yaw=90, shape="Cylinder"))
+    # La voiture en blocs est construite le long de X (avant vers +X) : le modèle 3D regarde donc vers +X
+    return [prop_slot(C, name, (0, 0, 0), CAR_PROPS.get(tuple(color), "CarSedan"), blocks, yaw=-90)]
 
 
 def bus_stop(F, name, local, stop_id, yaw=0):
     """Abri de bus : le panneau jaune au sol (tag BusStop) téléporte vers les autres arrêts."""
     G = F.child(local, yaw)
-    return [
-        P(G, name, (0, 0.05, 0), (8, 0.1, 3), (250, 200, 40), "SmoothPlastic", tags=["BusStop"],
-          attributes={"Stop": stop_id}),
+    pad = P(G, name, (0, 0.05, 0), (8, 0.1, 3), (250, 200, 40), "SmoothPlastic", tags=["BusStop"],
+            attributes={"Stop": stop_id})
+    blocks = [
         P(G, name + "Roof", (0, 8.2, 1.4), (9, 0.4, 3.6), (60, 110, 200), "Metal"),
         P(G, name + "Back", (0, 4.5, 3), (9, 7, 0.2), GLASS, "Glass", transparency=0.4),
         P(G, name + "PostL", (-4.3, 4, 3), (0.3, 8, 0.3), LAMP_GREY, "Metal"),
@@ -342,6 +395,7 @@ def bus_stop(F, name, local, stop_id, yaw=0):
         P(G, name + "SignDisc", (-5.2, 8.4, 0), (0.3, 2.4, 2.4), (250, 200, 40), "SmoothPlastic", yaw=90,
           shape="Cylinder"),
     ]
+    return [pad, prop_slot(G, name + "Shelter", (0.5, 0, 1.2), "BusShelter", blocks)]
 
 
 def landmark(F, name, local, icon):
@@ -371,8 +425,10 @@ def plot(index, side, offset):
     # Panneau du propriétaire (le serveur y écrit le nom) et boîte aux lettres
     c.append(P(F, "SignPost", (3.5, 1.2, 2.8), (0.4, 2.4, 0.4), WOOD, "WoodPlanks"))
     c.append(P(F, "OwnerSign", (3.5, 3.4, 2.8), (7, 2.4, 0.3), WHITE, "WoodPlanks"))
+    n0 = len(c)
     c.append(P(F, "MailboxPost", (-2.5, 1.5, 2.8), (0.4, 3, 0.4), WOOD, "WoodPlanks"))
     c.append(P(F, "Mailbox", (-2.5, 3.4, 2.8), (1.2, 1.2, 2), (40, 90, 160), "Metal"))
+    wrap(c, n0, F, "MailboxSlot", (-2.5, 0.1, 2.8), "Mailbox")
     c.append(P(F, "Spawn", (5, 3, 7), (2, 1, 2), WHITE, transparency=1, collide=False,
                extra={"CanQuery": False, "CanTouch": False}))
 
@@ -386,6 +442,7 @@ def plot(index, side, offset):
     c.append(station(G, "CurlStation", (-7, 0.8, 6.5), "Curl"))
     c.append(station(G, "PushUpStation", (7, 0.8, 6.5), "PushUp"))
     # Vieux tapis de course qui sert d'étendoir à linge (Kevin, lui, traîne en ville)
+    n0 = len(c)
     c.append(P(G, "TreadmillBase", (0, 0.8, 17), (3.4, 1, 7), (60, 60, 66), "Metal"))
     c.append(P(G, "TreadmillBelt", (0, 1.32, 17.4), (2.8, 0.05, 6), (30, 30, 34), "Rubber", collide=False))
     c.append(P(G, "TreadmillHandle", (0, 3.6, 14), (3.4, 0.4, 0.4), (60, 60, 66), "Metal"))
@@ -393,17 +450,33 @@ def plot(index, side, offset):
         c.append(P(G, f"TreadmillPost{k}", (lx, 2.3, 14), (0.3, 3, 0.3), (60, 60, 66), "Metal"))
     for k, (lx, colr) in enumerate(((-0.9, (240, 90, 90)), (0.6, (90, 140, 220)))):
         c.append(P(G, f"Laundry{k}", (lx, 2.7, 14), (1.2, 1.6, 0.1), colr, "Fabric", collide=False))
+    wrap(c, n0, G, "TreadmillSlot", (0, 0.3, 17), "Treadmill")
+    n0 = len(c)
     c.append(P(G, "CouchSeat", (0, 1.5, 24.5), (11, 2.4, 4), (122, 82, 62), "Fabric"))
     c.append(P(G, "CouchBack", (0, 3.6, 26.3), (11, 2.6, 1), (112, 74, 56), "Fabric"))
     for k, lx in enumerate((-6, 6)):
         c.append(P(G, f"CouchArm{k}", (lx, 2.6, 24.5), (1, 2.2, 4), (112, 74, 56), "Fabric"))
     c.append(P(G, "PizzaBox", (-3, 2.85, 24), (2.6, 0.3, 2.6), CARDBOARD, "Cardboard", yaw=20))
+    wrap(c, n0, G, "CouchSlot", (0, 0.3, 25), "Furniture_SaggyCouch")
+    n0 = len(c)
     c.append(P(G, "Workbench", (-10.6, 2.1, 17), (2.4, 3.6, 7), WOOD, "WoodPlanks"))
     c.append(P(G, "Toolboard", (-12.3, 7, 17), (0.3, 3.4, 7), WOOD_LIGHT, "WoodPlanks"))
+    wrap(c, n0, G, "WorkbenchSlot", (-10.6, 0.3, 17), "Garage_Workbench", yaw=-90)
+    n0 = len(c)
     c.append(P(G, "Fridge", (10.5, 3.9, 17), (3, 7.2, 3), (232, 230, 220)))
+    wrap(c, n0, G, "FridgeSlot", (10.9, 0.3, 17), "Garage_Fridge", yaw=90)
+    n0 = len(c)
     c.append(P(G, "WashingMachine", (10.5, 1.9, 21.5), (3.2, 3.2, 3.2), (220, 220, 226)))
-    for k, (lx, ly, lz, s) in enumerate(((9.5, 1.5, 26.5, 2.4), (10, 3.6, 26.6, 1.8), (-9.5, 1.3, 26.5, 2.2))):
+    wrap(c, n0, G, "WasherSlot", (10.9, 0.3, 21.5), "Garage_WashingMachine", yaw=90)
+    n0 = len(c)
+    for k, (lx, ly, lz, s) in enumerate(((9.5, 1.5, 26.5, 2.4), (10, 3.6, 26.6, 1.8))):
         c.append(P(G, f"Box{k}", (lx, ly, lz), (s, s, s), CARDBOARD, "Cardboard", yaw=k * 23))
+    wrap(c, n0, G, "BoxesSlot", (9.6, 0.3, 26.8), "Garage_BoxStack", yaw=90)
+    n0 = len(c)
+    c.append(P(G, "Box2", (-9.5, 1.3, 26.5), (2.2, 2.2, 2.2), CARDBOARD, "Cardboard", yaw=46))
+    wrap(c, n0, G, "PizzaBoxesSlot", (-9.5, 0.3, 26.5), "Garage_PizzaBoxes", yaw=30)
+    c.append(decor(G, "TireSlot", (-11.6, 0.3, 9.0), "Garage_Tire", yaw=-90))
+    c.append(decor(G, "GasCanSlot", (11.0, 0.3, 12.0), "Garage_GasCan", yaw=90))
 
     # La maison : 8 emplacements de meubles que le joueur décore
     H = F.child((14, 0, 12))
@@ -411,7 +484,12 @@ def plot(index, side, offset):
                   windows=((-8, 5.5, 4, 8), (8, 5.5, 4, 8)),
                   floor=(WOOD_LIGHT, "WoodPlanks", 0.5), roof="gable", roof_color=roof, roof_material="Slate",
                   prefix="House")
+    n0 = len(c)
     c.append(P(H, "Chimney", (7, 16.5, 22), (2.6, 7, 2.6), BRICK, "Brick"))
+    wrap(c, n0, H, "ChimneySlot", (7, 13.0, 22), "Kit_Chimney")
+    for k, lx in enumerate((-8, 8)):
+        c.append(decor(H, f"WindowSlot{k}", (lx, 3.7, 0), ["Kit_WindowShutters", "Kit_WindowFlowers"][(index + k) % 2],
+                       collide=False, align="Back"))
     c.append(P(H, "Doormat", (0, 0.12, -1.3), (4.4, 0.1, 2), (150, 60, 50), "Fabric"))
     c.append(P(H, "Porch", (0, 0.25, -0.7), (8, 0.5, 1.4), CONCRETE_LIGHT, "Concrete"))
     c.append(P(H, "DoorFrame", (0, 8.75, -0.1), (7, 0.5, 0.3), TRIM))
@@ -427,8 +505,10 @@ def plot(index, side, offset):
     # Jardin de derrière et bouche d'incendie sur le trottoir
     c += tree(F, "TreeA", (-14, 0, 56))
     c += tree(F, "TreeB", (14, 0, 60), height=7, radius=3.6, color=(96, 150, 70))
+    n0 = len(c)
     c.append(P(F, "Hydrant", (-25, WALK_TOP + 0.9, -2.5), (1.8, 0.9, 0.9), (200, 40, 40), "Metal",
                shape="Cylinder", roll=90))
+    wrap(c, n0, F, "HydrantSlot", (-25, WALK_TOP, -2.5), "Hydrant", yaw=180)
     return model(f"Plot{index:02d}", c, tags=["Plot"], attributes={"PlotIndex": index})
 
 
@@ -476,12 +556,17 @@ def ring():
                        collide=False))
         # Feux tricolores de chaque côté du passage piéton
         for k, (s, d) in enumerate(((-7, WALK_IN[1] - 1), (7, WALK_OUT[0] + 1))):
+            n0 = len(c)
             c.append(P(S, f"TrafficPole{side}{k}", (s, WALK_TOP + 4, d), (0.4, 8, 0.4), LAMP_GREY, "Metal"))
             c.append(P(S, f"TrafficBox{side}{k}", (s, WALK_TOP + 8.6, d), (1, 3, 1), (30, 30, 34)))
             for j, (colr, lit) in enumerate((((220, 40, 40), False), ((240, 190, 40), False), ((60, 220, 90), True))):
                 c.append(P(S, f"TrafficLamp{side}{k}{j}", (s, WALK_TOP + 9.6 - j * 0.95, d), (0.7, 0.7, 1.05),
                            colr if lit else tuple(v // 3 for v in colr), "Neon" if lit else "SmoothPlastic",
                            shape="Ball", collide=False))
+            wrap(c, n0, S, f"TrafficLightSlot{side}{k}", (s, WALK_TOP, d), "TrafficLight", yaw=180 if k == 0 else 0)
+        c.append(decor(S, f"TrashSlot{side}", (-12, WALK_TOP, WALK_IN[0] + 1.6), "TrashBin"))
+        c.append(decor(S, f"NewsSlot{side}", (11, WALK_TOP, WALK_IN[0] + 1.3), "NewsBox", yaw=180))
+        c.append(decor(S, f"HydrantSlotIn{side}", (-40, WALK_TOP, WALK_IN[1] - 1.4), "Hydrant", yaw=180))
         # Plaques d'égout et voitures garées le long du trottoir extérieur
         for k, s in enumerate((-60, 60)):
             c.append(P(S, f"Manhole{side}{k}", (s, 0.16, mid_road - 5), (0.02, 2.4, 2.4), (40, 40, 44), "Metal",
@@ -504,7 +589,7 @@ def ring():
         c.append(P(S, f"BorderHedge{side}", (0, 3, BORDER), (2 * BORDER + 2, 6, 2), HEDGE, "Grass"))
         for i, s in enumerate(range(-200, 201, 40)):
             c += tree(S, f"BorderTree{side}{i}", (s, 0, BORDER + 10), height=10 + (i % 3) * 2, radius=6,
-                      color=(70, 130, 56))
+                      color=(70, 130, 56), prop="Pine" if i % 2 else "TreeRoundBig")
         # Coin de rue : petit square fleuri entre deux côtés de maisons
         c += flowerbed(S, f"CornerBed{side}", (-176, 0, 176), (16, 16))
         c += tree(S, f"CornerTree{side}", (-162, 0, 192), height=11, radius=6)
@@ -523,6 +608,7 @@ def plaza():
         for k, sx in enumerate((-1, 1)):
             c += lamp_post(S, f"AvenueLamp{side}{k}", (sx * (AVENUE + 1.5), 0, PLAZA + length / 2), arm_dir=0)
     # Grande fontaine : un haltère doré
+    n0 = len(c)
     c.append(P(F, "FountainBasin", (0, 0.9, 0), (1.8, 18, 18), (200, 200, 205), "Concrete", roll=90,
                shape="Cylinder"))
     c.append(P(F, "FountainWater", (0, 1.6, 0), (0.2, 16, 16), (90, 170, 230), "Glass", roll=90, shape="Cylinder",
@@ -532,6 +618,7 @@ def plaza():
     c.append(P(F, "FountainBar", (0, 8, 0), (8, 0.9, 0.9), (230, 190, 60), "Metal", shape="Cylinder"))
     for k, dx in enumerate((-3.8, 3.8)):
         c.append(P(F, f"FountainPlate{k}", (dx, 8, 0), (0.9, 4.4, 4.4), (230, 190, 60), "Metal", shape="Cylinder"))
+    wrap(c, n0, F, "FountainSlot", (0, 0.12, 0), "Fountain")
     for k, (x, z, yaw) in enumerate(((0, -14, 0), (14, 0, 90), (-14, 0, -90))):
         c += bench(F, f"FountainBench{k}", (x, 0, z), yaw=yaw)
     # Podium des 3 plus gros moggers du serveur (statues mises à jour par le serveur, tag MogStatue)
@@ -541,10 +628,12 @@ def plaza():
                    tags=["MogStatue"], attributes={"Rank": rank}))
     for k, (x, z) in enumerate(((28, 28), (-28, 28), (28, -28), (-28, -28))):
         c += flowerbed(F, f"PlazaBed{k}", (x, 0.12, z), (8, 8))
-        c += tree(F, f"PlazaTree{k}", (x, 0.92, z), height=7, radius=3.4)
+        c += tree(F, f"PlazaTree{k}", (x, 0.92, z), height=7, radius=3.4, prop="TreeBlossom")
     # Le touriste perdu, et l'arrêt de bus de la place
     c.append(helper(F, "TouristSpot", (-12, 0.62, -20), "Directions", yaw=180))
+    n0 = len(c)
     c.append(P(F, "Suitcase", (-7.5, 1.4, -21), (2.6, 2.6, 1.2), (60, 120, 170)))
+    wrap(c, n0, F, "SuitcaseSlot", (-7.5, 0.12, -21), "Suitcase", yaw=200)
     c += bus_stop(F, "BusStopPlaza", (18, 0.12, -26), "Plaza", yaw=0)
     return c
 
@@ -570,15 +659,22 @@ def clothing_store():
                    children=[light(range_=34)]))
     tops = [(240, 90, 90), (60, 110, 200), (250, 200, 60), (40, 40, 44), (120, 200, 120)]
     for r, lx in enumerate((-16, 16)):
+        n0 = len(c)
         c.append(P(F, f"RackBar{r}", (lx, 6, 19), (0.4, 0.4, 16), (180, 180, 186), "Metal"))
         for k in range(6):
             c.append(P(F, f"Shirt{r}_{k}", (lx, 4.4, 13 + k * 2.4), (3, 3, 0.4), tops[(k + r) % 5], "Fabric",
                        yaw=90))
+        wrap(c, n0, F, f"RackSlot{r}A", (lx, 0.4, 15), "ClothesRack", yaw=-90 if lx < 0 else 90)
+        c.append(decor(F, f"RackSlot{r}B", (lx, 0.4, 23), "ClothesRack", yaw=-90 if lx < 0 else 90))
     for k, lx in enumerate((-7, 7)):
+        n0 = len(c)
         c.append(P(F, f"MannequinBody{k}", (lx, 4, 8), (2.6, 4, 1.4), tops[k + 1], "Fabric"))
         c.append(P(F, f"MannequinHead{k}", (lx, 6.8, 8), (1.4, 1.4, 1.4), (230, 220, 210), shape="Ball"))
         c.append(P(F, f"MannequinPole{k}", (lx, 1, 8), (0.3, 2, 0.3), (180, 180, 186), "Metal"))
+        wrap(c, n0, F, f"MannequinSlot{k}", (lx, 0.4, 8), "Mannequin")
+    n0 = len(c)
     c.append(P(F, "ClothesCounter", (11, 1.9, 31), (12, 3.4, 2.4), WOOD_LIGHT, "WoodPlanks"))
+    wrap(c, n0, F, "CounterSlot", (11, 0.4, 31), "ShopCounter")
     for k, lx in enumerate((-12, 0)):
         c.append(mirror(F, f"ClothesMirror{k}", (lx, 5.5, 37.3), {"Categories": "Top,Accessory", "Store": "Clothes"}))
     c.append(landmark(F, "ClothesIcon", (0, 30, 19), "Clothes"))
@@ -590,10 +686,12 @@ def barber():
     c = building(F, 36, 32, 14, (250, 236, 220), "SmoothPlastic", 8, 9,
                  windows=((-10.5, 9, 3, 9.5), (10.5, 9, 3, 9.5)), floor=((40, 40, 44), "Marble", 0.4),
                  roof_color=(150, 50, 50), prefix="Barber")
+    n0 = len(c)
     for k in range(8):
         c.append(P(F, f"Pole{k}", (6, 2 + k * 0.9, -1.2), (0.9, 1, 1), [(220, 40, 40), WHITE, (40, 80, 200)][k % 3],
                    roll=90, shape="Cylinder"))
     c.append(P(F, "PoleTop", (6, 9.4, -1.2), (1.3, 1.3, 1.3), (230, 200, 60), "Metal", shape="Ball"))
+    wrap(c, n0, F, "BarberPoleSlot", (6, 3.0, 0), "BarberPole", align="Back")
     for k, angle in enumerate((25, -25)):
         c.append(P(F, f"ScissorBlade{k}", (0, 18, 1), (1, 7, 0.6), (200, 205, 210), "Metal", roll=angle))
         c.append(P(F, f"ScissorRing{k}", (1.6 if k == 0 else -1.6, 14.4, 1), (0.6, 2, 2), (40, 40, 44),
@@ -602,13 +700,18 @@ def barber():
         c.append(P(F, f"BarberLamp{k}", (0, 13.4, lz), (10, 0.4, 2), (255, 244, 214), "Neon",
                    children=[light(range_=30)]))
     for k, lx in enumerate((-10, 0, 10)):  # fauteuils de barbier face au mur du fond
+        n0 = len(c)
         c.append(P(F, f"ChairSeat{k}", (lx, 2, 25), (3, 0.8, 3), (180, 40, 40), "Fabric"))
         c.append(P(F, f"ChairBack{k}", (lx, 3.8, 23.6), (3, 3, 0.6), (180, 40, 40), "Fabric"))
         c.append(P(F, f"ChairFoot{k}", (lx, 0.9, 25), (1.4, 1, 1), (180, 180, 186), "Metal", shape="Cylinder",
                    roll=90))
+        wrap(c, n0, F, f"BarberChairSlot{k}", (lx, 0.4, 25), "BarberChair", yaw=180)
         c.append(mirror(F, f"BarberMirror{k}", (lx, 6, 31.3), {"Categories": "Hair", "Store": "Barber"}))
     c.append(P(F, "Sink", (-15.5, 2, 13), (2, 3.4, 4), WHITE))
+    n0 = len(c)
     c.append(P(F, "WaitingSofa", (12, 1.4, 7), (8, 2, 3), (90, 60, 140), "Fabric"))
+    wrap(c, n0, F, "WaitingSofaSlot", (12, 0.4, 7.5), "Furniture_BenchSofa", yaw=180)
+    c.append(decor(F, "BarberPlantSlot", (-15.5, 0.4, 3.5), "Home_TallPlant"))
     c.append(landmark(F, "BarberIcon", (0, 27, 16), "Barber"))
     return c
 
@@ -625,15 +728,32 @@ def furniture_store():
     for k, lz in enumerate((11, 27)):
         c.append(P(F, f"FurnitureLamp{k}", (0, 15.4, lz), (12, 0.4, 2), (255, 244, 214), "Neon",
                    children=[light(range_=36)]))
+    n0 = len(c)
     c.append(P(F, "ShowSofa", (-14, 1.6, 15), (8, 2.4, 3.5), (200, 90, 60), "Fabric"))
     c.append(P(F, "ShowSofaBack", (-14, 3.4, 16.6), (8, 2.4, 0.8), (190, 80, 52), "Fabric"))
+    wrap(c, n0, F, "ShowSofaSlot", (-14, 0.4, 15.5), "Furniture_LeopardSofa")
+    n0 = len(c)
     c.append(P(F, "ShowRug", (-14, 0.45, 10), (9, 0.1, 6), (240, 200, 90), "Fabric"))
+    wrap(c, n0, F, "ShowRugSlot", (-14, 0.4, 9), "Furniture_GoldRug", collide=False)
+    n0 = len(c)
     c.append(P(F, "ShowBed", (14, 1.4, 15), (6, 2, 8), (240, 240, 245), "Fabric"))
     c.append(P(F, "ShowPillow", (14, 2.7, 18), (4, 0.8, 1.4), (120, 170, 230), "Fabric"))
+    wrap(c, n0, F, "ShowBedSlot", (14, 0.4, 15), "Furniture_RaceCarBed")
+    n0 = len(c)
     c.append(P(F, "ShowLampPole", (-6, 3.4, 24), (0.4, 6, 0.4), LAMP_GREY, "Metal"))
     c.append(P(F, "ShowLampShade", (-6, 6.8, 24), (2.4, 1.6, 2.4), (250, 220, 120), "Neon"))
+    wrap(c, n0, F, "ShowLampSlot", (-6, 0.4, 24), "Furniture_DumbbellLamp")
+    n0 = len(c)
     c.append(P(F, "ShowPlantPot", (6, 1.4, 24), (2, 2, 2), (190, 100, 60), "Concrete"))
     c.append(P(F, "ShowPlant", (6, 4, 24), (3, 3.6, 3), (80, 150, 70), "Grass", shape="Ball"))
+    wrap(c, n0, F, "ShowPlantSlot", (6, 0.4, 24), "Furniture_ShakerPlant")
+    c.append(decor(F, "ShowShelfSlot", (-22.1, 0.4, 28), "Home_Bookshelf", yaw=-90))
+    c.append(decor(F, "ShowAquariumSlot", (21.8, 0.4, 24), "Home_Aquarium", yaw=90))
+    c.append(decor(F, "ShowThroneSlot", (-16, 0.4, 30), "Furniture_ThroneSofa"))
+    c.append(decor(F, "ShowScreenSlot", (16, 0.4, 35.9), "Furniture_GiantScreen"))
+    c.append(decor(F, "ShowTvSlot", (21.6, 0.4, 10), "Furniture_TubeTv", yaw=90))
+    c.append(decor(F, "ShowPosterSlot", (-22.9, 6.0, 12), "Furniture_NeonDumbbell", yaw=-90, collide=False,
+                   align="Back"))
     c.append(P(F, "FurnitureCounter", (0, 2.1, 32), (14, 3.6, 2.6), WOOD, "WoodPlanks", tags=["FurnitureShop"]))
     c.append(P(F, "CounterTop", (0, 4, 32), (14.4, 0.3, 3), (60, 50, 44), "Marble"))
     c.append(landmark(F, "FurnitureIcon", (0, 32, 19), "Furniture"))
@@ -653,7 +773,11 @@ def grocery():
         c.append(P(F, f"Crate{k}", (lx, 1, 2.5), (3, 2, 2.4), WOOD, "WoodPlanks"))
         c.append(P(F, f"Fruit{k}", (lx, 2.3, 2.5), (2.6, 0.8, 2), colr))
     for k, lx in enumerate((-10, 0, 10)):
+        n0 = len(c)
         c.append(P(F, f"Shelf{k}", (lx, 3, 19), (2.4, 6, 12), (200, 200, 205), "Metal"))
+        wrap(c, n0, F, f"ShelfSlot{k}A", (lx - 0.72, 0.3, 16), "GroceryShelf", yaw=90)
+        for j, (dx, lz, yaw) in enumerate(((-0.72, 22, 90), (0.72, 16, -90), (0.72, 22, -90))):
+            c.append(decor(F, f"ShelfSlot{k}" + "BCD"[j], (lx + dx, 0.3, lz), "GroceryShelf", yaw=yaw))
     for k, lz in enumerate((10, 22)):
         c.append(P(F, f"GroceryLamp{k}", (0, 13.4, lz), (10, 0.4, 2), (255, 244, 214), "Neon",
                    children=[light(range_=30)]))
@@ -684,16 +808,35 @@ def gym():
     for ex, (x0, lz) in GYM_STATIONS.items():
         for k in range(3):
             c.append(station(F, f"{ex}Station{k + 1}", (x0 + k * 10, 0.8, lz), ex))
+    n0 = len(c)
     c.append(P(F, "CoachStage", (0, 0.8, 16), (16, 1, 12), (170, 40, 40), "Fabric"))
+    wrap(c, n0, F, "CoachStageSlot", (0, 0.3, 16), "BossStage")
     c.append(spot(F, "CoachTurboSpot", (0, 1.8, 16), (8, 1, 8), SPOT_BOSS, "BossSpot", {"BossId": "CoachTurbo"}))
     c.append(P(F, "GymMirror", (0, 8, 46.8), (76, 10, 0.2), (200, 225, 240), "Glass", collide=False,
                extra={"Reflectance": 0.4}))
     for k in range(7):
+        n0 = len(c)
         c.append(P(F, f"Rack{k}", (-36 + k * 12, 1.7, 45), (7, 2.8, 1.6), (70, 70, 76), "Metal"))
+        wrap(c, n0, F, f"RackSlot{k}", (-36 + k * 12, 0.3, 45.4), "DumbbellRack")
     for k, lx in enumerate((-41.4, 41.4)):
         c.append(P(F, f"Banner{k}", (lx, 12, 24), (0.3, 9, 6), (250, 200, 40) if k else (60, 110, 200), "Fabric"))
+    n0 = len(c)
     c.append(P(F, "PunchBag", (-30, 6, 10), (5, 2.4, 2.4), (150, 40, 40), "Fabric", shape="Cylinder", roll=90))
     c.append(P(F, "PunchBagChain", (-30, 13.5, 10), (0.3, 10, 0.3), (120, 120, 126), "Metal"))
+    wrap(c, n0, F, "PunchBagSlot", (-30, 0.3, 10), "PunchingBag")
+    # Équipement en plus (apparaît avec les modèles 3D) : tapis de course, vestiaires, fontaine à eau, toit
+    for k, lx in enumerate((20, 26, 32)):
+        c.append(decor(F, f"TreadmillSlot{k}", (lx, 0.3, 6.5), "Treadmill"))
+    c.append(decor(F, "LockersSlot", (39.4, 0.3, 16), "Lockers", yaw=90))
+    c.append(decor(F, "CoolerSlot", (-39.6, 0.3, 4), "WaterCooler", yaw=-90))
+    c.append(decor(F, "TubSlot", (-39.4, 0.3, 18), "ProteinTub", yaw=-90))
+    c.append(decor(F, "BallSlot", (-20, 0.3, 4), "MedicineBall"))
+    c.append(decor(F, "KettlebellSlot", (-17.5, 0.3, 4.5), "Kettlebell"))
+    c.append(decor(F, "PlatesSlot", (-39, 0.3, 32), "PlateStack"))
+    c.append(decor(F, "TrophySlot", (39.4, 0.3, 30), "GoldTrophy", yaw=90))
+    c.append(decor(F, "TankSlot", (28, 20.8, 34), "Kit_WaterTank"))
+    for k, (lx, lz) in enumerate(((-24, 30), (0, 40))):
+        c.append(decor(F, f"VentSlot{k}", (lx, 20.8, lz), "Kit_RoofVent"))
     c.append(landmark(F, "GymIcon", (0, 36, 24), "Gym"))
     return c
 
@@ -705,17 +848,25 @@ def park():
     c.append(P(F, "ParkPath", (-70, 0.11, 37), (64, 0.12, 4), (214, 196, 160), "Ground"))
     c.append(P(F, "TanDeck", (-52, 0.4, 24), (16, 0.8, 14), WOOD_LIGHT, "WoodPlanks"))
     c.append(spot(F, "BrayanSpot", (-50, 1.3, 24), (8, 1, 8), SPOT_BOSS, "BossSpot", {"BossId": "Brayan"}, yaw=-90))
+    n0 = len(c)
     c.append(P(F, "Lounger", (-57, 1.3, 21), (3, 1, 7), WHITE, "Fabric", yaw=70))
+    wrap(c, n0, F, "LoungerSlot", (-57, 0.8, 21), "Lounger", yaw=70)
+    n0 = len(c)
     c.append(P(F, "UmbrellaPole", (-57, 4, 28), (0.3, 8, 0.3), WHITE, "Metal"))
     c.append(P(F, "Umbrella", (-57, 8, 28), (0.6, 8, 8), (250, 170, 60), "Fabric", roll=90, shape="Cylinder"))
+    wrap(c, n0, F, "UmbrellaSlot", (-57, 0.8, 28), "BeachUmbrella")
     for k, lz in enumerate((18, 30)):
+        n0 = len(c)
         c.append(P(F, f"TanLamp{k}", (-43, 3, lz), (1, 6, 1), LAMP_GREY, "Metal"))
         c.append(P(F, f"TanLampHead{k}", (-43.8, 6.5, lz), (1.6, 1.6, 2.6), (255, 220, 120), "Neon",
                    children=[light((255, 200, 120), 2, 20)]))
+        wrap(c, n0, F, f"TanLampSlot{k}", (-43, 0, lz), "TanningLamp", yaw=90)
     c.append(P(F, "PoolRim", (-84, 0.4, 50), (26, 0.8, 12), WHITE, "Concrete"))
     c.append(P(F, "PoolWater", (-84, 0.85, 50), (24, 0.2, 10), (70, 170, 230), "Glass", transparency=0.25,
                collide=False))
+    n0 = len(c)
     c.append(P(F, "LifeguardChair", (-84, 4, 58.5), (2.4, 8, 2.4), WHITE, "WoodPlanks"))
+    wrap(c, n0, F, "LifeguardChairSlot", (-84, 0.1, 58.8), "LifeguardChair")
     for k in range(4):
         c.append(P(F, f"ChairStack{k}", (-62, 0.6 + k * 0.7, 54), (3, 0.5, 5), (250, 120 + k * 25, 80), "Fabric",
                    yaw=k * 9))
@@ -727,6 +878,10 @@ def park():
     c.append(helper(F, "KidSpot", (-82, 0.6, 22), "Nails", yaw=-90))
     for k, (x, z) in enumerate(((-100, 40), (-44, 58), (-72, 14))):
         c += tree(F, f"ParkTree{k}", (x, 0, z), height=8 + (k % 3), radius=4 + (k % 2))
+    c.append(decor(F, "PicnicSlot", (-60, 0.1, 60), "PicnicTable"))
+    c.append(decor(F, "FlowersSlot", (-70, 0.1, 30), "FlowerPatch", collide=False))
+    c.append(decor(F, "TanningBedSlot", (-46, 0.1, 50), "TanningBed", yaw=180))
+    c.append(decor(F, "ParkBinSlot", (-50, 0.1, 40), "TrashBin"))
     c.append(landmark(F, "ParkIcon", (-70, 26, 37), "Park"))
     return c
 
@@ -736,22 +891,38 @@ def boss_arena():
     F = Frame((0, GROUND, 0))
     c = [P(F, "ArenaFloor", (-70, 0.06, -70), (64, 0.12, 64), (196, 180, 170), "Pavement")]
     c.append(P(F, "ArenaCarpet", (-54, 0.14, -54), (6, 0.1, 34), (190, 30, 40), "Fabric", collide=False, yaw=45))
+    n0 = len(c)
     c.append(P(F, "NoLegsStage", (-92, 0.6, -46), (12, 1, 12), (170, 40, 40), "Fabric"))
+    wrap(c, n0, F, "NoLegsStageSlot", (-92, 0.1, -46), "BossStage", yaw=-90)
     c.append(spot(F, "NoLegsSpot", (-92, 1.6, -46), (8, 1, 8), SPOT_BOSS, "BossSpot", {"BossId": "NoLegs"},
                   yaw=-90))
+    n0 = len(c)
     c.append(P(F, "KingStage", (-46, 0.6, -92), (16, 1, 16), (110, 40, 130), "Fabric"))
+    wrap(c, n0, F, "KingStageSlot", (-46, 0.1, -92), "BossStage", yaw=180)
     c.append(spot(F, "BlockKingSpot", (-46, 1.6, -92), (8, 1, 8), SPOT_BOSS, "BossSpot", {"BossId": "BlockKing"},
                   yaw=180))
     T = Frame((-80, GROUND, -80), -135)
     c.append(P(T, "TempleStep", (0, 0.5, 0), (30, 1, 30), (225, 222, 212), "Marble"))
     c.append(P(T, "TempleBase", (0, 1.5, 0), (26, 1, 26), (235, 232, 222), "Marble"))
     for i, (dx, dz) in enumerate(((-11, -11), (11, -11), (-11, 11), (11, 11), (0, 11))):
+        n0 = len(c)
         c.append(P(T, f"Column{i}", (dx, 11, dz), (18, 3, 3), (240, 238, 230), "Marble", roll=90, shape="Cylinder"))
+        wrap(c, n0, T, f"ColumnSlot{i}", (dx, 2.0, dz), "GreekColumn", height=18.5)
     c.append(P(T, "TempleTop", (0, 20.75, 0), (28, 1.5, 28), (225, 200, 120), "Marble"))
     c.append(W(T, "Pediment", (0, 23, -12), (28, 3, 4), (225, 200, 120), "Marble"))
     c.append(spot(T, "PumpGodSpot", (0, 2.5, 0), (14, 1, 14), (230, 180, 40), "BossSpot", {"BossId": "PumpGod"},
                   material="Marble"))
     c.append(landmark(T, "ArenaIcon", (0, 32, 0), "Arena"))
+    # Ambiance de match (apparaît avec les modèles 3D) : projecteurs, gong, cordons, trophées des boss
+    c.append(decor(F, "SpotlightSlot0", (-100, 0.12, -40), "Spotlight", yaw=-45))
+    c.append(decor(F, "SpotlightSlot1", (-40, 0.12, -100), "Spotlight", yaw=135))
+    c.append(decor(F, "GongSlot", (-102, 0.12, -64), "Gong", yaw=-90))
+    for k, (along, side) in enumerate(((-8, 1), (8, 1), (-8, -1), (8, -1))):
+        x = -54 + along * 0.707 + side * 3.0
+        z = -54 + along * 0.707 - side * 3.0
+        c.append(decor(F, f"RopeSlot{k}", (x, 0.12, z), "StanchionRope", yaw=-45))
+    c.append(decor(F, "CrownSlot", (-60, 0.12, -98), "CrownCushion", yaw=135))
+    c.append(decor(F, "SocksSlot", (-92, 0.1, -36), "GiantSocks"))
     return c
 
 
@@ -761,13 +932,17 @@ def downtown():
     walk = sum(WALK_IN) / 2
     # Habitants devant les boutiques, sur le trottoir intérieur (face à la route)
     c.append(helper(F, "CourierSpot", (-52, WALK_TOP + 0.5, walk), "PumpTire", yaw=180))
+    n0 = len(c)
     c.append(P(F, "BikeFrame", (-47, 1.8 + WALK_TOP, walk), (0.4, 1.4, 4), (40, 160, 90), "Metal"))
     for k, dz in enumerate((-1.6, 1.6)):
         c.append(P(F, f"BikeWheel{k}", (-47, 1.4 + WALK_TOP, walk + dz), (0.3, 2.4, 2.4), (30, 30, 34),
                    shape="Cylinder"))
+    wrap(c, n0, F, "BikeSlot", (-47, WALK_TOP, walk), "Bicycle")
     c.append(helper(F, "PianoSpot", (52, WALK_TOP + 0.5, walk), "Piano", yaw=180))
+    n0 = len(c)
     c.append(P(F, "Piano", (46, 2.3 + WALK_TOP, walk), (5, 4.4, 2.4), (20, 20, 22)))
     c.append(P(F, "PianoKeys", (46, 3.1 + WALK_TOP, walk + 1.4), (4.6, 0.3, 0.6), (240, 240, 235)))
+    wrap(c, n0, F, "PianoSlot", (46, WALK_TOP, walk - 0.6), "UprightPiano", yaw=180)
     c.append(helper(F, "GrocerSpot", (70, WALK_TOP + 0.5, walk), "Groceries", yaw=180))
     # Petits squares à l'intérieur (nord-est et sud-est)
     for k, (x, z) in enumerate(((40, 40), (80, 30), (60, 52), (30, -40), (40, -80), (20, -94))):
@@ -779,18 +954,29 @@ def downtown():
     K = Frame((73, GROUND, 22), 90)  # regarde vers la place
     c.append(P(K, "KevinRug", (0, 0.05, -1), (12, 0.1, 12), (150, 120, 90), "Fabric", collide=False))
     c.append(spot(K, "KevinSpot", (0, 0.6, -4), (8, 1, 8), SPOT_BOSS, "BossSpot", {"BossId": "Kevin"}))
+    n0 = len(c)
     c.append(P(K, "KevinCouchSeat", (0, 1.2, 2.5), (11, 2.4, 4), (122, 82, 62), "Fabric"))
     c.append(P(K, "KevinCouchBack", (0, 3.3, 4.3), (11, 2.6, 1), (112, 74, 56), "Fabric"))
     for k, lx in enumerate((-6, 6)):
         c.append(P(K, f"KevinCouchArm{k}", (lx, 2.3, 2.5), (1, 2.2, 4), (112, 74, 56), "Fabric"))
+    wrap(c, n0, K, "KevinCouchSlot", (0, 0.1, 3), "Furniture_SaggyCouch")
     for k, (lx, ly, yaw) in enumerate(((-3, 2.55, 20), (7.5, 0.25, -10), (7.6, 0.55, 15), (7.4, 0.85, 40))):
         c.append(P(K, f"KevinPizza{k}", (lx, ly, 2 if k == 0 else 0), (2.6, 0.3, 2.6), CARDBOARD, "Cardboard",
                    yaw=yaw))
     # Sa vieille télé, sur le côté, tournée vers le canapé
+    n0 = len(c)
     c.append(P(K, "KevinTvStand", (-9, 1, -3), (1.6, 2, 5), WOOD, "WoodPlanks"))
     c.append(P(K, "KevinTv", (-9, 3.4, -3), (2, 2.8, 4), (60, 60, 64)))
     c.append(P(K, "KevinTvScreen", (-7.95, 3.4, -3), (0.1, 2.2, 3.4), (110, 160, 210), "Neon", collide=False))
+    wrap(c, n0, K, "KevinTvSlot", (-9, 0.1, -3), "Furniture_TubeTv", yaw=-90)
     c += bench(F, "SquareBenchSE", (40, 0, -60), yaw=-90)
+    # Aire de jeux et terrain de basket (nord-est), camion à shakes et terrasse (sud-est) : modèles 3D seulement
+    c.append(decor(F, "SwingSlot", (45, 0, 54), "SwingSet"))
+    c.append(decor(F, "SlideSlot", (30, 0, 58), "PlaygroundSlide", yaw=90))
+    c.append(decor(F, "HoopSlot", (92, 0, 60), "BasketballHoop"))
+    c.append(decor(F, "ShakeTruckSlot", (24, 0, -28), "ShakeTruck", yaw=90))
+    c.append(decor(F, "CafeSlot", (44, 0, -30), "CafeSet"))
+    c.append(decor(F, "VendingSlot", (106.2, WALK_TOP, -66), "ShakeVendingMachine", yaw=-90))
     # La voiture du voisin, en panne sur la route ouest ; le voisin attend sur le trottoir
     c += car(F, "NeighborCar", (-ROAD[0] - 5, 0.15, -40), (200, 60, 50), yaw=90)
     c.append(helper(F, "NeighborSpot", (-walk, WALK_TOP + 0.5, -32), "PushCar", yaw=90))

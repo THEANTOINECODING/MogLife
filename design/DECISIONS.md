@@ -2,6 +2,10 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-15 (décors)
+
+- **D35 — Décors générés par script dans Blender, une texture palette partagée, remplacement automatique des blocs** : chaque décor est décrit en Python (reproductible, modifiable), exporté en FBX par catégorie ; le jeu remplace les blocs de la carte par les modèles importés (`PropService`) et garde les blocs si un modèle manque. Les drapeaux et enseignes n'ont aucun texte et n'imitent aucun vrai drapeau (emblème haltère du jeu).
+
 ## 2026-10-14 (carte)
 
 - **D34 — Un seul Kevin pour toute la ville** (choix du créateur) : il traîne sur son canapé dans le square nord-est, à côté de la salle de quartier, au lieu d'un Kevin dans chaque garage. Les garages gardent le curl et les pompes.

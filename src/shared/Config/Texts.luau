@@ -213,7 +213,7 @@ local STRINGS: { [string]: string } = {
 	["Furniture.DumbbellLamp"] = "Dumbbell Lamp",
 	["Furniture.BronzeCup"] = "Participation Cup",
 	["Furniture.GoldenDumbbell"] = "Golden Dumbbell",
-	["Furniture.BicepStatue"] = "Marble Bicep Statue",
+	["Furniture.BicepStatue"] = "Marble Mogger Bust",
 
 	-- Objets de style
 	["Style.Banana"] = "Giant Banana Quiff",

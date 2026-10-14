@@ -61,6 +61,14 @@ Chaque zone a sa propre ambiance, de plus en plus absurde. Palettes **proposées
 - **Corps du personnage** : 7 modèles (un par stade) sur le même squelette compatible R15. Priorité absolue : ils font l'identité du jeu.
 - Habits et coupes : modèles qui s'adaptent à tous les corps (accessoires ou vêtements en couches ❓ à valider techniquement).
 - ~10 000 triangles max par objet, textures 1024×1024 max, export FBX dans `assets/export/`, 1 stud ≈ 0,28 m.
+- **Décors (D35)** : 198 décors low poly PS1 générés par script (`tools/blender/props_*.py`, bibliothèque `props_lib.py`),
+  une seule texture palette 512×512 partagée (`MogProps_Palette.png`). Export : `tools/blender/export_props.py` →
+  `assets/export/props/Props_<Catégorie>.fbx` + planches `catalogue_*.png`. Catégories : rue, nature, salle,
+  maison (dont les 21 meubles du magasin, `Furniture_<id>`), ville et arène, futures zones (plage, montagne, Lune,
+  Olympe), kit de façade, événements et objets des boss.
+- Intégration : les modèles importés vont dans `ServerStorage.Props` ; `PropService` les pose sur les emplacements
+  de la carte (tag `PropSlot`, générés par `tools/build_map.py`) et retire les blocs provisoires ; les meubles
+  achetés utilisent `Furniture_<id>`. Sans modèle importé, les blocs restent.
 
 ## Performance
 
