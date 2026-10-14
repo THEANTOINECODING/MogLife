@@ -45,7 +45,53 @@ local Npcs: { [string]: Look } = {
 		head = 1.1,
 	},
 
+	NoLegs = {
+		skin = rgb(235, 190, 160),
+		torso = rgb(40, 40, 45), -- débardeur noir
+		legs = rgb(255, 255, 255), -- chaussettes géantes
+		width = 1.9,
+		height = 0.8,
+		depth = 1.6,
+		head = 0.8,
+	},
+	BlockKing = {
+		skin = rgb(210, 160, 120),
+		torso = rgb(150, 60, 220), -- cape violette
+		legs = rgb(230, 180, 40), -- or
+		width = 1.7,
+		height = 1.25,
+		depth = 1.4,
+		head = 1,
+	},
+
 	-- Habitants
+	Lifeguard = {
+		skin = rgb(220, 170, 130),
+		torso = rgb(230, 40, 40),
+		legs = rgb(250, 210, 60),
+		width = 1.2,
+		height = 1.05,
+		depth = 1.1,
+		head = 1,
+	},
+	Grocer = {
+		skin = rgb(240, 200, 170),
+		torso = rgb(245, 245, 245), -- tablier
+		legs = rgb(60, 110, 60),
+		width = 1.1,
+		height = 0.95,
+		depth = 1.3,
+		head = 1.1,
+	},
+	Tourist = {
+		skin = rgb(255, 180, 160), -- coup de soleil
+		torso = rgb(60, 190, 200), -- chemise à fleurs
+		legs = rgb(230, 220, 180),
+		width = 1,
+		height = 1,
+		depth = 1,
+		head = 1.2,
+	},
 	Mom = {
 		skin = rgb(240, 205, 180),
 		torso = rgb(160, 90, 200),

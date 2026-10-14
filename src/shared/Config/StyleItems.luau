@@ -181,6 +181,30 @@ local StyleItems: { [string]: Item } = {
 			},
 		},
 	},
+	TinySocks = {
+		category = "Accessory",
+		bossId = "NoLegs",
+		order = 8,
+		pieces = {
+			{ attach = "LeftFoot", size = V(1.6, 1.2, 1.6), offset = V(0, 0.4, 0), color = rgb(255, 255, 255) },
+			{ attach = "RightFoot", size = V(1.6, 1.2, 1.6), offset = V(0, 0.4, 0), color = rgb(255, 255, 255) },
+		},
+	},
+	RoyalFan = {
+		category = "Accessory",
+		bossId = "BlockKing",
+		order = 9,
+		pieces = {
+			{
+				attach = "UpperTorso",
+				size = V(1.1, 1.1, 0.12),
+				offset = V(0, 0.2, 0.75),
+				color = rgb(150, 60, 220),
+				material = Enum.Material.Neon,
+				shape = Enum.PartType.Cylinder,
+			},
+		},
+	},
 	CoachWhistle = {
 		category = "Accessory",
 		bossId = "CoachTurbo",

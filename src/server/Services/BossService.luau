@@ -1,4 +1,5 @@
--- Boss de stade : PNJ dans le monde (tag "BossSpot" + attribut BossId), défi, Mog-off en manches,
+-- Boss de stade : PNJ dans le monde (tag "BossSpot" + attribut BossId), défi, Mog-off en manches
+-- sur le mini-jeu PROPRE au boss, boss qui joue en direct, manches de plus en plus dures,
 -- défaite automatique si le Mog est insuffisant, montée de stade à la victoire.
 -- Voir design/02_MECANIQUES/BOSS.md.
 
@@ -7,7 +8,6 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
-local Exercises = require(ReplicatedStorage.Shared.Config.Exercises)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
@@ -22,8 +22,13 @@ type Fight = {
 	round: number,
 	wins: number,
 	losses: number,
-	score: number, -- somme des scores de la manche en cours
+	score: number, -- somme des points du joueur dans la manche en cours
+	bossScore: number, -- somme des points du boss dans la manche en cours
+	bossReps: number,
+	playerDone: boolean,
+	bossDone: boolean,
 	token: number, -- change à chaque manche, pour ignorer les minuteurs périmés
+	stakes: number, -- Cash perdu en cas de défaite (annoncé avant le combat)
 }
 
 local DataService
@@ -37,7 +42,12 @@ local fights: { [Player]: Fight } = {}
 
 local BossService = {}
 
--- État du joueur face à un boss : prêt, déjà battu (revanche), et perte annoncée en cas d'échec
+local function cashLoss(cash: number, stage: number, percent: number, caps: { number }): number
+	local cap = caps[stage] or caps[#caps]
+	return math.min(math.floor(cash * percent), cap)
+end
+
+-- État du joueur face à un boss : prêt, déjà battu (revanche), et pertes annoncées
 local function assess(player: Player, bossId: string)
 	local data = DataService.Get(player)
 	local boss, stageIndex = Stages.FindBoss(bossId)
@@ -47,33 +57,18 @@ local function assess(player: Player, bossId: string)
 	local beaten = data.BossesBeaten[bossId] == true
 	local isCurrent = stageIndex == data.Stage
 	local ready = beaten or (isCurrent and data.Mog >= boss.mogRequired)
-	local cap = BOSS.DefeatCashLossCap[data.Stage] or BOSS.DefeatCashLossCap[#BOSS.DefeatCashLossCap]
-	local cashLoss = if ready then 0 else math.min(math.floor(data.Cash * BOSS.DefeatCashLossPercent), cap)
-	-- Boss à affronter avant celui-ci (si le joueur saute des stades)
 	local currentStage = Stages.List[data.Stage]
-	local blockingBossId = if not isCurrent and not beaten and currentStage.boss then currentStage.boss.id else nil
 	return {
 		boss = boss,
 		ready = ready,
 		beaten = beaten,
-		isCurrent = isCurrent,
-		cashLoss = cashLoss,
-		blockingBossId = blockingBossId,
+		-- Perte si le joueur n'est pas prêt (défaite automatique)
+		autoLoss = cashLoss(data.Cash, data.Stage, BOSS.DefeatCashLossPercent, BOSS.DefeatCashLossCap),
+		-- Perte si le joueur perd le Mog-off (aucune en revanche)
+		fightLoss = if beaten then 0 else cashLoss(data.Cash, data.Stage, BOSS.MogOffLossPercent, BOSS.MogOffLossCap),
+		blockingBossId = if not isCurrent and not beaten and currentStage.boss then currentStage.boss.id else nil,
 		mog = data.Mog,
 	}
-end
-
--- Exercices débloqués dont le mini-jeu peut servir de manche
-local function roundPool(player: Player): { string }
-	local data = DataService.Get(player)
-	local pool = {}
-	for id, exercise in Exercises do
-		if data and data.Stage >= exercise.requiredStage then
-			table.insert(pool, id)
-		end
-	end
-	table.sort(pool)
-	return pool
 end
 
 local function endFight(player: Player)
@@ -89,7 +84,14 @@ local function finishFight(player: Player, fight: Fight)
 	end
 
 	if fight.wins < BOSS.RoundsToWin then
-		Remotes.BossUpdate:FireClient(player, { state = "Defeat", bossId = fight.bossId })
+		if fight.stakes > 0 then
+			StatsService.Add(player, "Cash", -fight.stakes)
+		end
+		local model = models[fight.bossId]
+		if model then
+			Npc.Pose(model)
+		end
+		Remotes.BossUpdate:FireClient(player, { state = "Defeat", bossId = fight.bossId, cash = fight.stakes })
 		return
 	end
 
@@ -124,21 +126,24 @@ local function finishFight(player: Player, fight: Fight)
 	})
 end
 
+local function averageScore(total: number, reps: number): number
+	return math.floor(total / math.max(reps, 1) + 0.5)
+end
+
 local startRound
 
-local function onRoundEnd(player: Player, fight: Fight, reason: string)
-	if fights[player] ~= fight then
+-- Résultat de la manche, une fois que le joueur ET le boss ont fini
+local function resolveRound(player: Player, fight: Fight)
+	if fights[player] ~= fight or not fight.playerDone or not fight.bossDone then
 		return
 	end
-	if reason ~= "Completed" then
-		endFight(player)
-		Remotes.BossUpdate:FireClient(player, { state = "Aborted", bossId = fight.bossId })
-		return
-	end
+	fight.playerDone = false
+	fight.bossDone = false
 
-	local boss = Stages.FindBoss(fight.bossId)
-	local score = math.floor(fight.score / BOSS.RepsPerRound + 0.5)
-	local won = boss ~= nil and score >= boss.targetScore
+	-- Répétitions manquantes du joueur = 0 point ; le boss a toujours joué toutes les siennes
+	local score = averageScore(fight.score, BOSS.RepsPerRound)
+	local opponent = averageScore(fight.bossScore, BOSS.RepsPerRound)
+	local won = score > opponent
 	if won then
 		fight.wins += 1
 	else
@@ -149,67 +154,118 @@ local function onRoundEnd(player: Player, fight: Fight, reason: string)
 		bossId = fight.bossId,
 		round = fight.round,
 		score = score,
-		target = boss and boss.targetScore or 0,
+		opponent = opponent,
 		won = won,
 	})
 
-	if fight.wins >= BOSS.RoundsToWin or fight.losses > BOSS.Rounds - BOSS.RoundsToWin then
-		task.delay(BOSS.PauseBetweenRounds, function()
-			if fights[player] == fight then
+	local over = fight.wins >= BOSS.RoundsToWin or fight.losses > BOSS.Rounds - BOSS.RoundsToWin
+	task.delay(BOSS.PauseBetweenRounds, function()
+		if fights[player] == fight then
+			if over then
 				finishFight(player, fight)
-			end
-		end)
-	else
-		task.delay(BOSS.PauseBetweenRounds, function()
-			if fights[player] == fight then
+			else
 				startRound(player, fight)
 			end
-		end)
+		end
+	end)
+end
+
+local function onPlayerRoundEnd(player: Player, fight: Fight, reason: string)
+	if fights[player] ~= fight then
+		return
 	end
+	if reason ~= "Completed" then
+		endFight(player)
+		Remotes.BossUpdate:FireClient(player, { state = "Aborted", bossId = fight.bossId })
+		return
+	end
+	fight.playerDone = true
+	resolveRound(player, fight)
+end
+
+-- Le boss joue sa manche en direct : une répétition par intervalle, tirée selon son niveau
+local function playBoss(player: Player, fight: Fight, interval: number, token: number)
+	local boss = Stages.FindBoss(fight.bossId)
+	if not boss then
+		return
+	end
+	-- Le boss devient aussi plus précis à chaque manche
+	local bonus = (fight.round - 1) * 0.05
+	for rep = 1, BOSS.RepsPerRound do
+		task.wait(interval)
+		if fights[player] ~= fight or fight.token ~= token then
+			return
+		end
+		local roll = math.random()
+		local quality = "Miss"
+		if roll < boss.skill.perfect + bonus then
+			quality = "Perfect"
+		elseif roll < boss.skill.perfect + boss.skill.good + bonus then
+			quality = "Good"
+		end
+		fight.bossScore += BOSS.QualityScore[quality]
+		fight.bossReps = rep
+		Remotes.BossUpdate:FireClient(player, {
+			state = "Live",
+			bossId = fight.bossId,
+			score = averageScore(fight.score, BOSS.RepsPerRound),
+			opponent = averageScore(fight.bossScore, BOSS.RepsPerRound),
+		})
+	end
+	fight.bossDone = true
+	resolveRound(player, fight)
 end
 
 function startRound(player: Player, fight: Fight)
 	local boss = Stages.FindBoss(fight.bossId)
-	local pool = roundPool(player)
-	if not boss or #pool == 0 then
+	if not boss then
 		endFight(player)
 		return
 	end
 	fight.round += 1
 	fight.score = 0
+	fight.bossScore = 0
+	fight.bossReps = 0
+	fight.playerDone = false
+	fight.bossDone = false
 	fight.token += 1
 	local token = fight.token
-
-	local exerciseId = pool[math.random(1, #pool)]
-	local exercise = Exercises[exerciseId]
-	local interval = exercise.repInterval * BOSS.SpeedFactor
+	local interval = boss.interval * (BOSS.SpeedByRound[fight.round] or 1)
 
 	local started = MinigameService.StartRun(player, {
 		kind = "Boss",
 		id = fight.bossId,
-		minigame = exercise.minigame,
+		minigame = boss.minigame,
 		interval = interval,
 		total = BOSS.RepsPerRound,
 		anchor = fight.spot,
 		autoAllowed = false,
+		timingScale = BOSS.TimingScaleByRound[fight.round] or 1,
 		titleKey = "Boss.RoundTitle",
-		titleArgs = { round = fight.round, rounds = BOSS.Rounds, target = boss.targetScore },
-		onRep = function(_, quality)
+		titleArgs = { round = fight.round, rounds = BOSS.Rounds, boss = { key = `Boss.{fight.bossId}` } },
+		onRep = function(p, quality)
 			fight.score += BOSS.QualityScore[quality] or 0
+			Remotes.BossUpdate:FireClient(p, {
+				state = "Live",
+				bossId = fight.bossId,
+				score = averageScore(fight.score, BOSS.RepsPerRound),
+				opponent = averageScore(fight.bossScore, BOSS.RepsPerRound),
+			})
 			return nil
 		end,
 		onEnd = function(p, reason)
-			onRoundEnd(p, fight, reason)
+			onPlayerRoundEnd(p, fight, reason)
 		end,
 	})
 	if not started then
 		endFight(player)
 		return
 	end
+	task.spawn(playBoss, player, fight, interval, token)
 
-	-- Un joueur qui ne joue pas : la manche se termine quand même (répétitions manquantes = 0)
+	-- Un joueur qui ne joue pas : sa manche se termine quand même (répétitions manquantes = 0)
 	task.delay(interval * BOSS.RepsPerRound * 2 + 3, function()
-		if fights[player] == fight and fight.token == token then
+		if fights[player] == fight and fight.token == token and not fight.playerDone then
 			MinigameService.EndRun(player, "Completed")
 		end
 	end)
@@ -230,12 +286,12 @@ local function onChallenge(player: Player, bossId: unknown)
 
 	if not state.ready then
 		-- Défaite automatique et comique, avec la perte annoncée dans la fenêtre de défi
-		StatsService.Add(player, "Cash", -state.cashLoss)
+		StatsService.Add(player, "Cash", -state.autoLoss)
 		local model = models[bossId]
 		if model then
 			Npc.Pose(model)
 		end
-		Remotes.BossUpdate:FireClient(player, { state = "Mogged", bossId = bossId, cash = state.cashLoss })
+		Remotes.BossUpdate:FireClient(player, { state = "Mogged", bossId = bossId, cash = state.autoLoss })
 		return
 	end
 
@@ -246,9 +302,15 @@ local function onChallenge(player: Player, bossId: unknown)
 		wins = 0,
 		losses = 0,
 		score = 0,
+		bossScore = 0,
+		bossReps = 0,
+		playerDone = false,
+		bossDone = false,
 		token = 0,
+		stakes = state.fightLoss,
 	}
 	fights[player] = fight
+	Remotes.BossUpdate:FireClient(player, { state = "FightStarted", bossId = bossId })
 	startRound(player, fight)
 end
 
@@ -275,23 +337,28 @@ local function setupSpot(spot: Instance)
 	prompt.Parent = root
 
 	prompt.Triggered:Connect(function(player)
-		if fights[player] or MinigameService.IsBusy(player) then
-			return
-		end
-		local state = assess(player, bossId)
-		if not state then
-			return
-		end
-		Remotes.BossPrompt:FireClient(player, {
-			bossId = bossId,
-			mogRequired = state.boss.mogRequired,
-			mog = state.mog,
-			ready = state.ready,
-			beaten = state.beaten,
-			cashLoss = state.cashLoss,
-			blockingBossId = state.blockingBossId,
-		})
+		BossService.ShowChallenge(player, bossId)
 	end)
+end
+
+-- Envoie la fenêtre de défi au joueur (prompt du boss ; aussi utilisé par les tests de DevService)
+function BossService.ShowChallenge(player: Player, bossId: string)
+	if fights[player] or MinigameService.IsBusy(player) then
+		return
+	end
+	local state = assess(player, bossId)
+	if not state then
+		return
+	end
+	Remotes.BossPrompt:FireClient(player, {
+		bossId = bossId,
+		mogRequired = state.boss.mogRequired,
+		mog = state.mog,
+		ready = state.ready,
+		beaten = state.beaten,
+		cashLoss = if state.ready then state.fightLoss else state.autoLoss,
+		blockingBossId = state.blockingBossId,
+	})
 end
 
 function BossService.Init(services)

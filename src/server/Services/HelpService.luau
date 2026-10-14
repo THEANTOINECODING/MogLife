@@ -90,7 +90,7 @@ local function startHelp(player: Player, helpId: string)
 		id = helpId,
 		minigame = help.minigame,
 		interval = help.interval,
-		total = Balance.Helps.Reps,
+		total = help.reps or Balance.Helps.Reps,
 		anchor = anchor,
 		autoAllowed = true,
 		titleKey = `Help.{helpId}`,

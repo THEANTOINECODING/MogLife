@@ -1,0 +1,23 @@
+{
+  "className": "Part",
+  "properties": {
+    "Anchored": true,
+    "Size": [6, 1, 6],
+    "CFrame": { "CFrame": { "position": [48, 0.5, -16], "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]] } },
+    "Color": { "Color3uint8": [90, 90, 100] },
+    "Material": "SmoothPlastic",
+    "Tags": { "Tags": ["Station"] }
+  },
+  "attributes": { "ExerciseId": "PullUp" },
+  "children": [
+    { "name": "PostLeft", "className": "Part", "properties": { "Anchored": true, "CanCollide": false, "Size": [0.4, 8, 0.4],
+      "CFrame": { "CFrame": { "position": [45.5, 5, -17.5], "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]] } },
+      "Color": { "Color3uint8": [200, 200, 60] }, "Material": "Metal" } },
+    { "name": "PostRight", "className": "Part", "properties": { "Anchored": true, "CanCollide": false, "Size": [0.4, 8, 0.4],
+      "CFrame": { "CFrame": { "position": [50.5, 5, -17.5], "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]] } },
+      "Color": { "Color3uint8": [200, 200, 60] }, "Material": "Metal" } },
+    { "name": "Bar", "className": "Part", "properties": { "Anchored": true, "CanCollide": false, "Size": [5.4, 0.3, 0.3],
+      "CFrame": { "CFrame": { "position": [48, 8.9, -17.5], "orientation": [[1, 0, 0], [0, 1, 0], [0, 0, 1]] } },
+      "Color": { "Color3uint8": [150, 150, 150] }, "Material": "Metal" } }
+  ]
+}

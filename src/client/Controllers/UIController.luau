@@ -104,7 +104,9 @@ local function update(stats)
 		current = Format.Short(math.min(stats.Mog, boss.mogRequired)),
 		required = Format.Short(boss.mogRequired),
 	})
-	if stats.Mog >= boss.mogRequired then
+	if boss.comingSoon then
+		bossLabel.Text = Texts.Get("Hud.ComingSoon", { boss = bossName })
+	elseif stats.Mog >= boss.mogRequired then
 		bossLabel.Text = Texts.Get("Hud.BossReady", { boss = bossName })
 	else
 		bossLabel.Text = Texts.Get("Hud.NextBoss", { boss = bossName })

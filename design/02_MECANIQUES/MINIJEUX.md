@@ -1,62 +1,61 @@
-# Mini-jeux et exercices (mécanique principale)
+# Mini-jeux (mécanique principale)
 
-**Chaque exercice a sa propre mécanique.** Les aides en ville et les combats de boss réutilisent ces mêmes mini-jeux : c'est ce qui garde le jeu simple à produire et varié à jouer.
+**Chaque activité a son PROPRE mini-jeu** : chaque exercice, chaque aide et chaque boss se joue différemment, et aucun mini-jeu n'est réutilisé ailleurs (décision D23).
+Pour rester simple à produire, tous les mini-jeux partagent une boîte à outils commune (`src/client/MinigameKit.luau` : entrées, notation, mode auto, nettoyage).
 
-## Règles communes à tous les mini-jeux
+## Règles communes
 
 - **Une seule entrée simple** à la fois : un doigt sur mobile, souris ou clavier sur PC, équivalent manette. Jamais de multitouch obligatoire ni de clics frénétiques.
-- Chaque répétition est notée : **Raté / Bien / Parfait**.
-- Une **série** = 20 répétitions. À la fin : continuer, changer d'exercice ou aller voir le boss. Arrêter en cours ne fait rien perdre.
-- Le serveur limite la cadence (environ **1 répétition par seconde**, ❓ à ajuster par mini-jeu) : jouer plus vite que l'animation ne rapporte rien de plus.
-- Chaque mini-jeu a un **mode auto** gratuit (maintenir le bouton) qui donne le gain de base sans bonus, pour jouer détendu ou se reposer les doigts.
-- Option d'accessibilité : fenêtres de timing plus larges.
+- Chaque répétition est notée **Raté / Bien / Parfait**.
+- Le serveur applique un **quota de rythme** : jamais plus de répétitions que le temps écoulé ne le permet (+1 d'avance). Jouer plus vite ne rapporte rien de plus.
+- **Mode auto** gratuit (maintenir un bouton) pour les exercices et les aides : gain de base, sans bonus. Interdit en combat de boss.
+- Option d'accessibilité : fenêtres de timing plus larges (à faire).
 
-## Gain de Mog
+## Gain de Mog (exercices)
 
-Mog gagné = Mog de base de l'exercice × multiplicateur de qualité
+Mog gagné = Mog de base de l'exercice × multiplicateur de qualité (Raté x1, Bien x1,25, Parfait x1,6).
 
-| Qualité | Multiplicateur ❓ |
-|---|---|
-| Raté ou mode auto | x1 |
-| Bien | x1,25 |
-| Parfait | x1,6 |
+## Exercices (6)
 
-Le serveur garde les décimales ; l'interface arrondit.
+| Exercice | Mini-jeu | Mécanique | Mog/rép ❓ | Débloqué par |
+|---|---|---|---:|---|
+| Curl haltère | Swipe | Suivre la pastèque fantôme de haut en bas | 1 | Départ |
+| Pompes | Ring | Taper quand l'anneau touche le cercle | 2 | Kevin |
+| Développé couché | HoldRelease | Maintenir, relâcher dans la zone verte | 4 | Brayan |
+| Squat | Tilt | Garder la barre droite (gauche / droite) | 8 | Coach Turbo |
+| Tractions | Alternate | Une main puis l'autre, sur la pulsation | 14 | Monsieur Pas-Les-Jambes |
+| Corde à sauter | Rope | Sauter quand la corde passe, vitesse variable | 24 | Le Roi du Quartier |
 
-## Les mini-jeux
+## Aides (8)
 
-### MVP
+| Aide | Mini-jeu | Mécanique |
+|---|---|---|
+| Bocal de maman | Twist | Dévisser en tournant, un tour par pulsation |
+| Pneu du livreur | Pressure | Pomper pour garder l'aiguille dans le vert (le pneu fuit) |
+| Clous du petit voisin | Hammer | Taper quand le marteau est au-dessus du clou |
+| Voiture du voisin | Steer | Garder la voiture sur une route qui serpente |
+| Piano de Mme Do-Ré | Lanes | Chaque vague bloque 2 voies sur 3 : rejoindre la voie libre |
+| Transats du maître-nageur | Stack | Lâcher chaque transat pile sur la pile |
+| Courses de l'épicier | Catch | Rattraper les courses avec le panier |
+| Chemin du touriste | Sequence | Mémoriser 3 flèches puis les refaire |
 
-| Exercice | Mécanique | Mobile | PC | Mog/rép ❓ | Stade requis |
-|---|---|---|---|---:|---|
-| **Curl haltère** | Glisser de haut en bas en suivant le rythme de l'haltère | Glisser le doigt verticalement | Mouvement de souris | 1 | Normie |
-| **Pompes** | Taper quand le cercle qui rétrécit touche la cible | Tap | Clic / Espace | 2 | Kevin battu |
-| **Développé couché** | Maintenir pour pousser la barre, relâcher dans la zone verte | Maintenir puis relâcher | Maintenir le clic | 4 | Brayan battu |
-| **Squat** | Garder la barre en équilibre alors qu'elle penche aléatoirement | Glisser à gauche / droite | A / D (ou souris) | 8 | Coach Turbo battu |
+## Boss (5 dans le MVP)
 
-### Mises à jour suivantes
+| Boss | Mini-jeu | Mécanique |
+|---|---|---|
+| Kevin | Reaction | Copier sa pose (flèche) le plus vite possible |
+| Brayan le Bronzé | Spotlight | Rester dans le soleil qui se déplace |
+| Coach Turbo | Beats | Notes sur 2 pistes, au rythme du mégaphone |
+| Monsieur Pas-Les-Jambes | Wobble | Équilibre en 2D : ramener la bille au centre |
+| Le Roi du Quartier | Combo | Taper un combo de 4 flèches avant que son ventilateur l'efface |
+| Le Dieu du Pump | ❓ à créer | (mise à jour Olympe) |
 
-| Exercice | Mécanique |
-|---|---|
-| Tractions | Taper alternativement côté gauche / côté droit |
-| Abdos | Tracer des cercles avec le doigt |
-| Corde à sauter | Taper quand la corde passe, de plus en plus vite |
-| Pneu géant | Remplir une jauge en maintenant, puis glisser vers le haut d'un coup |
-| Soulevé de terre | Maintenir une aiguille qui tremble dans une zone étroite |
-| Haltère satellite (Lune) | Même chose que le curl… en apesanteur, l'haltère flotte |
+## Ajouter un mini-jeu
 
-Un nouvel exercice doit avoir une **mécanique nouvelle** ou une **variation visible** d'une mécanique existante, et une station au visuel absurde différent.
-
-## Réutilisation
-
-| Mini-jeu | Réutilisé par |
-|---|---|
-| Glisser haut/bas (curl) | Aide : pomper le pneu du vélo du livreur |
-| Cercle qui rétrécit (pompes) | Aide : planter les clous de la cabane |
-| Maintenir/relâcher (développé couché) | Aide : pousser la voiture du voisin |
-| Équilibre (squat) | Aide : porter le piano de Mme Do-Ré |
-| Tous | Manches de Mog-off contre les boss |
+1. Un module dans `src/client/Minigames/` basé sur `MinigameKit` (`new`, `SetAuto`, `Destroy`).
+2. Une clé `Minigame.Hint.<Nom>` dans `Texts.luau`.
+3. Le référencer dans `Exercises.luau`, `Helps.luau` ou `Stages.luau`.
 
 ## Sécurité
 
-Le client envoie « je commence la série » puis, pour chaque répétition, son moment d'entrée. Le serveur vérifie la cadence, l'exercice débloqué, la station et la plausibilité du timing, puis calcule lui-même le Mog. Le client ne transmet jamais un montant.
+Le client envoie la qualité de chaque répétition ; le serveur vérifie le quota de rythme, la distance, le déblocage, et calcule lui-même les gains. Limite connue : un tricheur peut s'attribuer des Parfait (x1,6 au maximum, et en combat il reste borné par le rythme).

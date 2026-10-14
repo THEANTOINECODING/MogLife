@@ -11,6 +11,7 @@ local DataService
 local StatsService
 local StyleService
 local HelpService
+local BossService
 
 local DevService = {}
 
@@ -44,6 +45,11 @@ local commands = {
 		HelpService.StartHelp(player, helpId)
 		return true
 	end,
+	-- Simule le prompt d'un boss (affiche la fenêtre de défi)
+	ShowChallenge = function(player: Player, bossId: string)
+		BossService.ShowChallenge(player, bossId)
+		return true
+	end,
 }
 
 function DevService.Init(services)
@@ -51,6 +57,7 @@ function DevService.Init(services)
 	StatsService = services.StatsService
 	StyleService = services.StyleService
 	HelpService = services.HelpService
+	BossService = services.BossService
 end
 
 function DevService.Start()

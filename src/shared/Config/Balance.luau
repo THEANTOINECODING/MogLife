@@ -69,13 +69,19 @@ return {
 	Boss = {
 		Rounds = 3,
 		RoundsToWin = 2,
-		RepsPerRound = 5,
-		SpeedFactor = 0.85, -- les manches sont un peu plus rapides que les séries
+		RepsPerRound = 6,
+		-- Chaque manche est plus dure : rythme plus rapide et fenêtres de timing plus serrées
+		SpeedByRound = { 1, 0.92, 0.85 }, -- multiplie l'intervalle du mini-jeu du boss
+		TimingScaleByRound = { 0.9, 0.78, 0.66 }, -- multiplie les fenêtres Perfect / Good
 		QualityScore = { Perfect = 100, Good = 70, Miss = 20 },
+		-- Le boss joue en direct : il gagne la manche en cas d'égalité
 		-- Défaite automatique (Mog insuffisant) : perte de Cash, annoncée avant le combat
 		DefeatCashLossPercent = 0.10,
 		DefeatCashLossCap = { 50, 120, 300, 600, 1_200, 2_500 }, -- par stade du joueur ❓
-		PauseBetweenRounds = 1.5,
+		-- Mog-off perdu (avec assez de Mog) : perte plus faible, annoncée aussi ❓
+		MogOffLossPercent = 0.05,
+		MogOffLossCap = { 20, 50, 120, 250, 500, 1_000 },
+		PauseBetweenRounds = 2,
 	},
 
 	-- Apparence provisoire (avatar Roblox) en attendant le personnage du jeu

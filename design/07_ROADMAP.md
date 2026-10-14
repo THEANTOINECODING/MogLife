@@ -11,6 +11,7 @@ Principe : **un petit jeu complet d'abord, puis des mises à jour régulières**
 - C : Kevin, Brayan, Coach Turbo (PNJ provisoires), Mog-off en 3 manches, défaite auto avec perte de Cash annoncée, montée de stade, récompenses idempotentes, revanche sans récompense.
 - D : 5 aides avec délai et réplique unique, badges au-dessus des habitants, miroir et boutique (15 objets + 3 de boss), visuels provisoires sur l'avatar Roblox.
 - Outil : `tools/simulate_economy.luau` (simulation de progression, à lancer dans Studio).
+- 14 octobre (retour du créateur) : 19 mini-jeux, un par activité (6 exercices, 8 aides, 5 boss) ; boss en direct avec manches plus dures et perte de Cash ; MVP prolongé jusqu'à Gigachad (D23–D26).
 - Choix provisoires faits pendant l'implémentation : voir `DECISIONS.md` (D17–D22).
 - Reste avant l'alpha : étape E (personnage, carte garage + rue, boss modélisés, sons), tutoriel des 5 premières minutes, réglage des chiffres.
 

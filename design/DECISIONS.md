@@ -2,6 +2,13 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-14 (retour du créateur après avoir joué)
+
+- **D26 — Quota de rythme côté serveur** au lieu d'un écart fixe entre répétitions : jamais plus de répétitions que le temps écoulé ne le permet (+1). Raison : les jeux de réaction peuvent produire deux réponses rapprochées sans permettre d'aller plus vite en moyenne.
+- **D25 — Le MVP va jusqu'à Gigachad** : 5 boss (Kevin → Le Roi du Quartier), 6 exercices, 8 aides. Le Dieu du Pump est annoncé « coming soon ». Raison : le jeu se terminait trop vite.
+- **D24 — Les combats de boss peuvent vraiment être perdus** : le boss joue en direct avec son propre niveau, chaque manche est plus rapide et plus exigeante, et perdre un Mog-off coûte 5 % du Cash (annoncé, plafonné ; rien en revanche). Remplace « défaite sans perte » de D13 pour le Mog-off.
+- **D23 — Chaque activité a son propre mini-jeu** (exercices, aides, boss), aucune réutilisation. Remplace D9. Raison : demande du créateur, la réutilisation rendait les activités répétitives. La simplicité est conservée grâce à `MinigameKit`.
+
 ## 2026-10-14 (nuit, implémentation autonome — choix PROVISOIRES à valider par le créateur)
 
 - **D22 — Aucun essayage gratuit au miroir pour l'instant.** Le design le prévoit ; à faire avec le vrai personnage (étape E).
@@ -23,7 +30,7 @@ Format : date — décision — raison. La plus récente en haut.
 - **D12 — Personnage cartoon propre au jeu (un corps par stade), pas l'avatar Roblox.** Raison : l'avatar Roblox ne permet pas les traits exagérés voulus ; donne du sens à la boutique de coupes et d'habits.
 - **D11 — Direction artistique très absurde, « à la Douchebag Workout », traits toujours exagérés** (designs originaux).
 - **D10 — Un boss par stade.** Le battre fait monter de stade et débloque la suite.
-- **D9 — Chaque exercice a une mécanique de mini-jeu différente ; aides et boss réutilisent ces mini-jeux.** Raison : variété pour le joueur, coût de production faible.
+- ~~**D9 — Chaque exercice a une mécanique de mini-jeu différente ; aides et boss réutilisent ces mini-jeux.**~~ → Remplacée par D23. Raison : variété pour le joueur, coût de production faible.
 - **D8 — Deux ressources : Mog (gagné par les exercices) et Cash (gagné en aidant la ville, dépensé en style). La Force disparaît.** Raison : demande du créateur ; plus simple à comprendre et à produire.
 - **D7bis — Priorité à la simplicité : un petit noyau (mini-jeux + contenu en données + personnage), puis des mises à jour à recette fixe.**
 - Remplace : D3, D4, D5, D6 ci-dessous (design « exploits », archivé dans `archive/v3_exploits/`).

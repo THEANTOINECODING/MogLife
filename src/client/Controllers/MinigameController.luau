@@ -47,6 +47,8 @@ type Current = {
 	feedback: TextLabel,
 	gainLabel: TextLabel,
 	lastLocalRep: number,
+	startedAt: number,
+	sent: number, -- répétitions envoyées au serveur
 	autoHeld: boolean,
 	gained: number, -- somme des gains confirmés par le serveur
 	connections: { RBXScriptConnection },
@@ -101,14 +103,17 @@ local function sendRep(quality: string): boolean
 		return false
 	end
 	local now = os.clock()
-	-- Marge légèrement au-dessus de la tolérance serveur pour absorber la latence
-	local minGap = if quality == "Auto"
-		then current.interval
-		else current.interval * (Balance.RepIntervalTolerance + 0.05)
-	if now - current.lastLocalRep < minGap then
+	-- Même quota que le serveur, avec une marge pour absorber la latence
+	local tolerance = Balance.RepIntervalTolerance + 0.05
+	local allowed = math.floor((now - current.startedAt) / (current.interval * tolerance)) + 1
+	if current.sent >= allowed or now - current.lastLocalRep < 0.2 then
+		return false
+	end
+	if quality == "Auto" and now - current.lastLocalRep < current.interval then
 		return false
 	end
 	current.lastLocalRep = now
+	current.sent += 1
 	Remotes.Rep:FireServer(quality)
 	pop(current.feedback, Texts.Get(`Minigame.{quality}`), QUALITY_COLORS[quality])
 	return true
@@ -216,7 +221,7 @@ local function openRun(update)
 		if current and not current.autoHeld then
 			sendRep(quality)
 		end
-	end)
+	end, { timingScale = update.timingScale })
 
 	local session: Current = {
 		kind = update.kind,
@@ -229,6 +234,8 @@ local function openRun(update)
 		feedback = feedback,
 		gainLabel = gainLabel,
 		lastLocalRep = 0,
+		startedAt = os.clock(),
+		sent = 0,
 		autoHeld = false,
 		gained = 0,
 		connections = {},

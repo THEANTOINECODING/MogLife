@@ -20,14 +20,14 @@
 
 ## Trois piliers
 
-1. **Des mini-jeux variés.** Chaque exercice a sa propre mécanique ; les aides et les boss réutilisent ces mini-jeux.
+1. **Des mini-jeux variés.** Chaque activité (exercice, aide, boss) a son propre mini-jeu : on ne refait jamais la même chose.
 2. **L'absurde exagéré.** Personnages, objets, boss et répliques sont toujours poussés à l'extrême, dans l'esprit de Douchebag Workout.
 3. **Un jeu simple qui grandit.** Un petit noyau solide, puis chaque mise à jour ajoute une zone, un boss, des exercices, des aides et du style.
 
 ## La règle de simplicité
 
 Le jeu repose sur **trois briques** seulement :
-- une **bibliothèque de mini-jeux** (un mini-jeu = un module de code) ;
+- une **bibliothèque de mini-jeux** (un mini-jeu = un petit module de code construit sur une boîte à outils commune) ;
 - du **contenu sous forme de données** (exercices, aides, boss, objets de style = des lignes de configuration + des modèles 3D) ;
 - un **personnage cartoon** (un corps par stade + des habits et coupes interchangeables).
 

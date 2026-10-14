@@ -18,6 +18,7 @@ export type RunSpec = {
 	total: number, -- nombre de répétitions du run
 	anchor: BasePart, -- le joueur doit rester près de cette pièce
 	autoAllowed: boolean,
+	timingScale: number?, -- < 1 = fenêtres de timing plus serrées (combats de boss)
 	titleKey: string?, -- texte affiché en haut du run (clé Texts)
 	titleArgs: { [string]: any }?,
 	-- Appelé pour chaque répétition validée ; renvoie le gain à afficher (ou nil)
@@ -29,8 +30,12 @@ export type RunSpec = {
 type Run = {
 	spec: RunSpec,
 	reps: number,
+	startedAt: number,
 	lastRepAt: number,
 }
+
+-- Écart minimum absolu entre deux répétitions (évite les doublons d'un même geste)
+local MIN_GAP = 0.15
 
 local runs: { [Player]: Run } = {}
 
@@ -54,7 +59,7 @@ function MinigameService.StartRun(player: Player, spec: RunSpec): boolean
 	if runs[player] then
 		return false
 	end
-	runs[player] = { spec = spec, reps = 0, lastRepAt = 0 }
+	runs[player] = { spec = spec, reps = 0, startedAt = os.clock(), lastRepAt = 0 }
 	Remotes.SeriesUpdate:FireClient(player, {
 		state = "Started",
 		kind = spec.kind,
@@ -63,6 +68,7 @@ function MinigameService.StartRun(player: Player, spec: RunSpec): boolean
 		interval = spec.interval,
 		total = spec.total,
 		autoAllowed = spec.autoAllowed,
+		timingScale = spec.timingScale,
 		titleKey = spec.titleKey,
 		titleArgs = spec.titleArgs,
 	})
@@ -102,8 +108,15 @@ local function onRep(player: Player, quality: unknown)
 		return
 	end
 
+	-- Quota : jamais plus de répétitions que le temps écoulé ne le permet (+1 d'avance).
+	-- Les jeux de réaction peuvent ainsi envoyer deux répétitions rapprochées, sans dépasser le rythme moyen.
 	local now = os.clock()
-	if now - run.lastRepAt < spec.interval * Balance.RepIntervalTolerance then
+	local allowed = math.floor((now - run.startedAt) / (spec.interval * Balance.RepIntervalTolerance)) + 1
+	if run.reps >= allowed or now - run.lastRepAt < MIN_GAP then
+		return
+	end
+	-- Le mode auto garde un rythme strictement régulier
+	if quality == "Auto" and now - run.lastRepAt < spec.interval * Balance.RepIntervalTolerance then
 		return
 	end
 	if not MinigameService.IsNear(player, spec.anchor) then
