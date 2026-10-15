@@ -2,7 +2,8 @@
 -- fait une série, son personnage fait chaque répétition que le serveur a validée, avec l'amplitude de sa
 -- qualité (Perfect : mouvement complet ; Good : presque ; Miss : à moitié et en tremblant).
 -- Chaque client anime tous les personnages localement à partir du signal Activity du serveur.
--- Une activité = un module dans src/client/Activities/ (Stand, new, Pose, Destroy).
+-- Une activité = un module dans src/client/Activities/ (Stand, new, Pose, Destroy), nommé comme l'exercice ou
+-- l'aide (Curl, OpenJar…). Pose(p, shake, u, time, count) : count = répétitions commencées (le clou s'enfonce…).
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -33,6 +34,7 @@ type Animator = {
 	activity: any,
 	interval: number,
 	reps: { Rep },
+	count: number, -- répétitions commencées depuis le début du run
 	borrowed: { [BasePart]: { cframe: CFrame, transparency: number } },
 }
 
@@ -55,11 +57,12 @@ local function effort(u: number): number
 	return smooth(1 - (u - 0.55) / 0.45)
 end
 
--- Décor de la station pris en main (barre, haltère, corde) : rendu tel quel à la fin
+-- Décor de la station pris en main (barre, haltère, corde, piano, voiture…) : rendu tel quel à la fin.
+-- radius : distance de recherche autour de la station (8 studs par défaut)
 local function borrower(animator: Animator, anchor: BasePart)
-	return function(name: string, hide: boolean?): BasePart?
+	return function(name: string, hide: boolean?, radius: number?): BasePart?
 		local folder = workspace:FindFirstChild("MapProps")
-		local best, bestDistance = nil, 8
+		local best, bestDistance = nil, radius or 8
 		for _, part in if folder then folder:GetChildren() else {} do
 			if part.Name == name and part:IsA("BasePart") then
 				local distance = (part.Position - anchor.Position).Magnitude
@@ -114,7 +117,7 @@ local function start(update)
 	local anchor = update.anchor
 	local character = player.Character
 	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-	if update.kind ~= "Exercise" or not module or not anchor or not humanoid then
+	if (update.kind ~= "Exercise" and update.kind ~= "Help") or not module or not anchor or not humanoid then
 		return
 	end
 	local rig = Rig.new(character)
@@ -139,6 +142,7 @@ local function start(update)
 		activity = nil,
 		interval = update.interval,
 		reps = {},
+		count = 0,
 		borrowed = {},
 	}
 	animator.activity = Activity.new({
@@ -148,6 +152,7 @@ local function start(update)
 		anchor = anchor,
 		top = top,
 		borrow = borrower(animator, anchor),
+		isLocal = player == localPlayer, -- seul le joueur concerné déplace son propre personnage
 	})
 	animators[player] = animator
 end
@@ -161,6 +166,7 @@ local function onRep(update)
 	local now = os.clock()
 	local last = animator.reps[#animator.reps]
 	local duration = math.clamp(animator.interval * 0.8, 0.45, 1.1)
+	animator.count += 1
 	table.insert(animator.reps, {
 		-- Une répétition ne coupe jamais la précédente : elle commence quand l'autre se termine
 		start = if last then math.max(now, last.start + last.duration) else now,
@@ -189,7 +195,7 @@ local function step()
 			shake = rep.shake
 		end
 		animator.rig:Clear()
-		animator.activity:Pose(p, shake, u, now)
+		animator.activity:Pose(p, shake, u, now, animator.count)
 		animator.rig:Apply()
 	end
 end
