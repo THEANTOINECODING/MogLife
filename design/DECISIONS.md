@@ -2,6 +2,10 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-16 (étape 4 : les PNJ, nuit en autonomie)
+
+- **D45 — Habitants, vendeurs et mentor modélisés dans le style des boss** (`build_townsfolk.py`, 12 personnages). L'humour passe par les costumes, accessoires et expressions (bigoudis et bocal de Maman, colis du livreur, carte à l'envers du touriste…), jamais par le corps des gens. Les vendeurs (Coco la styliste… noms provisoires, modifiables) ouvrent la boutique de leur magasin ; miroirs et comptoir restent en place tant que le ❓ de D38 n'est pas tranché. Le mentor attend près du podium et livre des proverbes absurdes ; ses missions viendront avec le guide (étape 5).
+
 ## 2026-10-16 (étape 3 : le style, nuit en autonomie)
 
 - **D42 — Règle d'art : jamais deux sphères de pectoraux sous un vêtement.** Sous un tissu, elles se lisent comme une poitrine (inacceptable pour un jeu tous publics) : un torse habillé a une seule poitrine large et bombée. Les pectoraux sculptés restent réservés aux torses nus, où la texture les fait lire comme des muscles.

@@ -3314,6 +3314,61 @@
    ]
   },
   {
+   "name": "MentorSpot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.6,
+     0.2,
+     1.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       19.0,
+       0.32,
+       18.0
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "MentorSpot"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
    "name": "TouristSpot",
    "className": "Part",
    "properties": {
@@ -5115,6 +5170,67 @@
      }
     }
    ]
+  },
+  {
+   "name": "ClothesVendor",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.6,
+     0.2,
+     1.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -89.0,
+       0.6,
+       70.4
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "VendorSpot"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Npc": "VendorClothes",
+    "Store": "Clothes",
+    "Tag": "Mirror",
+    "Categories": "Top,Bottom,Accessory"
+   }
   },
   {
    "name": "ClothesMirror0",
@@ -7301,6 +7417,67 @@
    ]
   },
   {
+   "name": "BarberVendor",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.6,
+     0.2,
+     1.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -44.5,
+       0.6,
+       87.0
+      ],
+      "orientation": [
+       [
+        -0.939693,
+        0.0,
+        0.34202
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.34202,
+        0.0,
+        -0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "VendorSpot"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Npc": "VendorBarber",
+    "Store": "Barber",
+    "Tag": "Mirror",
+    "Categories": "Hair,Beard,Face"
+   }
+  },
+  {
    "name": "BarberIcon",
    "className": "Part",
    "properties": {
@@ -8893,6 +9070,66 @@
     },
     "Material": "Marble",
     "CanCollide": true
+   }
+  },
+  {
+   "name": "FurnitureVendor",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.6,
+     0.2,
+     1.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       36.0,
+       0.6,
+       69.6
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "VendorSpot"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Npc": "VendorFurniture",
+    "Store": "Furniture",
+    "Tag": "FurnitureShop"
    }
   },
   {

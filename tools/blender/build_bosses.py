@@ -21,7 +21,7 @@ def build_bro(name, cfg):
     b = Builder(name, atlas, cfg.get("scale", 1.0))
     sx = (-1, 1)
     top_kind = cfg.get("top")
-    clothed = top_kind in ("tank", "jacket")
+    clothed = top_kind in ("tank", "jacket", "shirt")  # shirt : manches longues, tissu uni (habitants)
     body = "top" if clothed else "skin"
 
     # --- jambes (elles grossissent avec le reste : paramètre `leg`)
@@ -110,13 +110,13 @@ def build_bro(name, cfg):
     # --- bras : en A, ou double biceps (« flex »)
     flex = cfg.get("pose") == "flex"
     ua, fa = cfg["ua_len"], cfg["fa_len"]
-    sleeve = "top" if top_kind == "jacket" else ("veiny" if cfg.get("veins") else "skin")
-    forearm_cell = "top" if top_kind == "jacket" else ("veiny" if cfg.get("veins") else "skin")
+    sleeve = "top" if top_kind in ("jacket", "shirt") else ("veiny" if cfg.get("veins") else "skin")
+    forearm_cell = "top" if top_kind in ("jacket", "shirt") else ("veiny" if cfg.get("veins") else "skin")
     bicep, forearm, fist = cfg["bicep"], cfg["forearm"], cfg["fist"]
     arms = {}
     for s in sx:
         sh = Vector((shoulder_w / 2 * s, 0, top - 0.12))
-        b.make(lowsphere(tuple(sh), (delt, delt * 0.95, delt * 0.9)), "top" if top_kind == "jacket" else "skin")   # deltoïde
+        b.make(lowsphere(tuple(sh), (delt, delt * 0.95, delt * 0.9)), "top" if top_kind in ("jacket", "shirt") else "skin")   # deltoïde
         if flex:
             el = sh + Vector((ua * s, 0, 0.15))
             wr = el + Vector((0.08 * s, -0.05, fa))
@@ -258,12 +258,14 @@ BOSSES = {
                     extras=god_extras),
 }
 
-ONLY = globals().get("ONLY") or list(BOSSES)
-offset = 0.0
-for name in ONLY:
-    b = build_bro(name, BOSSES[name])
-    # Aperçu côte à côte (la position d'objet est ignorée à l'export : seuls les sommets comptent)
-    for o in b.col.objects:
-        o.location.x = offset
-    offset += 6 + BOSSES[name]["scale"] * 3
-    print(f"{name}: {len(b.col.objects)} pièces, {b.tris()} triangles")
+# Exécuté avec BOSSES_LIBRARY = True (ex. par build_townsfolk.py) : on ne fait que charger les définitions
+if not globals().get("BOSSES_LIBRARY"):
+    ONLY = globals().get("ONLY") or list(BOSSES)
+    offset = 0.0
+    for name in ONLY:
+        b = build_bro(name, BOSSES[name])
+        # Aperçu côte à côte (la position d'objet est ignorée à l'export : seuls les sommets comptent)
+        for o in b.col.objects:
+            o.location.x = offset
+        offset += 6 + BOSSES[name]["scale"] * 3
+        print(f"{name}: {len(b.col.objects)} pièces, {b.tris()} triangles")

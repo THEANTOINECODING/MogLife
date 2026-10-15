@@ -98,6 +98,21 @@ local STRINGS: { [string]: string } = {
 	["Npc.Lifeguard"] = "Overworked Lifeguard",
 	["Npc.Grocer"] = "Clumsy Grocer",
 	["Npc.Tourist"] = "Lost Tourist",
+	["Npc.VendorClothes"] = "Coco the Stylist",
+	["Npc.VendorBarber"] = "Big Fade Freddy",
+	["Npc.VendorFurniture"] = "Dave the Decorator",
+	["Npc.Mentor"] = "The Mysterious Coach",
+	["Mentor.Prompt"] = "Listen",
+	["Mentor.Proverb1"] = "A wise man once curled a watermelon. Then he ate it. Balance, young one.",
+	["Mentor.Proverb2"] = "Muscles grow while you rest. So rest. Then lift. Then rest harder.",
+	["Mentor.Proverb3"] = "The mirror never lies. It only exaggerates.",
+	["Mentor.Proverb4"] = "Skip leg day, and leg day will skip you.",
+	["Mentor.Proverb5"] = "Every God Mogger was once a Normie with a dream and a pickle jar.",
+	["Mentor.Proverb6"] = "Drink water. Lift heavy. Help your mother.",
+	["Mentor.Proverb7"] = "Protein is temporary. Gains are forever.",
+	["Mentor.Proverb8"] = "To mog the boss, first you must mog yourself.",
+	["Mentor.Proverb9"] = "When the bar feels heavy, the bar is right. Listen to the bar.",
+	["Mentor.Proverb10"] = "Sweat is just your muscles crying with joy.",
 	["Help.BeachChairs"] = "Stack the lifeguard's beach chairs",
 	["Help.Groceries"] = "Catch the grocer's groceries",
 	["Help.Directions"] = "Show the tourist the way",
@@ -271,6 +286,11 @@ local STRINGS: { [string]: string } = {
 }
 
 local Texts = {}
+
+-- Le texte existe-t-il ? (ex. compter les répliques numérotées d'un PNJ)
+function Texts.Has(key: string): boolean
+	return STRINGS[key] ~= nil
+end
 
 function Texts.Get(key: string, args: { [string]: any }?): string
 	local text = STRINGS[key]

@@ -319,6 +319,16 @@ def style_display(F, name, local, stage, items, kind="Mannequin", yaw=0):
              extra={"CanQuery": False, "CanTouch": False})
 
 
+def vendor(F, name, local, npc, store, tag, categories=None, yaw=0):
+    """Vendeur d'un magasin (tag VendorSpot, décision D38) : VendorService y fait apparaître le PNJ `npc`.
+    Il porte le tag `tag` du point de vente (Mirror ou FurnitureShop) : lui parler ouvre la même boutique."""
+    attributes = {"Npc": npc, "Store": store, "Tag": tag}
+    if categories:
+        attributes["Categories"] = categories
+    return P(F, name, (local[0], local[1] + 0.1, local[2]), (1.6, 0.2, 1.6), WHITE, yaw=yaw, transparency=1,
+             collide=False, tags=["VendorSpot"], attributes=attributes, extra={"CanQuery": False, "CanTouch": False})
+
+
 def mirror(F, name, local, attributes, yaw=0):
     """Miroir de boutique (tag Mirror) : ses attributs disent quelles catégories de style il vend."""
     G = F.child(local, yaw)
@@ -711,6 +721,9 @@ def plaza():
     for k, (x, z) in enumerate(((28, 28), (-28, 28), (28, -28), (-28, -28))):
         c += flowerbed(F, f"PlazaBed{k}", (x, 0.12, z), (8, 8))
         c += tree(F, f"PlazaTree{k}", (x, 0.92, z), height=7, radius=3.4, prop="TreeBlossom")
+    # Le mentor mystérieux (D29) attend près du podium, tourné vers la fontaine
+    c.append(P(F, "MentorSpot", (19, 0.22, 18), (1.6, 0.2, 1.6), WHITE, yaw=45, transparency=1, collide=False,
+               tags=["MentorSpot"], extra={"CanQuery": False, "CanTouch": False}))
     # Le touriste perdu, et l'arrêt de bus de la place
     c.append(helper(F, "TouristSpot", (-12, 0.62, -20), "Directions", yaw=180))
     n0 = len(c)
@@ -755,6 +768,7 @@ def clothing_store():
     n0 = len(c)
     c.append(P(F, "ClothesCounter", (11, 1.9, 31), (12, 3.4, 2.4), WOOD_LIGHT, "WoodPlanks"))
     wrap(c, n0, F, "CounterSlot", (11, 0.4, 31), "ShopCounter")
+    c.append(vendor(F, "ClothesVendor", (11, 0.4, 33.6), "VendorClothes", "Clothes", "Mirror", "Top,Bottom,Accessory"))
     for k, lx in enumerate((-12, 0)):
         c.append(mirror(F, f"ClothesMirror{k}", (lx, 5.5, 36.6), {"Categories": "Top,Bottom,Accessory", "Store": "Clothes"}))
     c.append(landmark(F, "ClothesIcon", (0, 30, 19), "Clothes"))
@@ -801,6 +815,7 @@ def barber():
     c.append(P(F, "WaitingSofa", (12, 1.4, 7), (8, 2, 3), (90, 60, 140), "Fabric"))
     wrap(c, n0, F, "WaitingSofaSlot", (12, 0.4, 7.5), "Furniture_BenchSofa", yaw=180)
     c.append(decor(F, "BarberPlantSlot", (-15.5, 0.4, 3.5), "Home_TallPlant"))
+    c.append(vendor(F, "BarberVendor", (14.5, 0.4, 17), "VendorBarber", "Barber", "Mirror", "Hair,Beard,Face", yaw=-20))
     c.append(landmark(F, "BarberIcon", (0, 27, 16), "Barber"))
     return c
 
@@ -843,6 +858,7 @@ def furniture_store():
                    align="Back"))
     c.append(P(F, "FurnitureCounter", (0, 2.1, 32), (14, 3.6, 2.6), WOOD, "WoodPlanks", tags=["FurnitureShop"]))
     c.append(P(F, "CounterTop", (0, 4, 32), (14.4, 0.3, 3), (60, 50, 44), "Marble"))
+    c.append(vendor(F, "FurnitureVendor", (0, 0.4, 34.4), "VendorFurniture", "Furniture", "FurnitureShop"))
     c.append(landmark(F, "FurnitureIcon", (0, 32, 19), "Furniture"))
     return c
 

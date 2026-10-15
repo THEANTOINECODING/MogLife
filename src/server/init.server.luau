@@ -18,6 +18,8 @@ local ORDER = {
 	"DayNightService",
 	"StatueService",
 	"DisplayService",
+	"VendorService",
+	"MentorService",
 	"DevService",
 }
 
