@@ -36,6 +36,7 @@ Défaite automatique et comique : le boss le mogge d'un seul regard, le joueur r
 
 ### Si le joueur a le Mog requis : le Mog-off (décision D24)
 - **3 manches** de 6 répétitions sur le **mini-jeu propre au boss** (jamais utilisé ailleurs).
+- **Le Mog-off se voit** (D37) : à chaque répétition, le joueur prend une vraie pose de culturisme (double biceps, most muscular, lat spread, pectoraux de profil, bras en V), plus ou moins réussie ; le boss se gonfle à chacune de ses répétitions.
 - **Le boss joue en direct** : son score monte en même temps que le tien (« You 72 vs 68 Brayan »). Il a un niveau propre et devient plus précis à chaque manche.
 - **Chaque manche est plus dure** : rythme plus rapide (x1 → x0,92 → x0,85) et fenêtres de timing plus serrées (x0,9 → x0,78 → x0,66).
 - Score de manche = moyenne des points (Parfait 100, Bien 70, Raté 20, répétition non jouée 0). Égalité = le boss gagne.

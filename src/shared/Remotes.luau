@@ -24,8 +24,8 @@ local NAMES = {
 	"FurnitureState", -- serveur -> client : ({ owned: { [itemId]: true }, placed: { [slot]: itemId } })
 	"GoHome", -- client -> serveur : retour à sa maison
 	"TakeBus", -- client -> serveur : (stopId: string) depuis un arrêt de bus, vers un autre arrêt
-	-- serveur -> tous les clients : ({ player, state: "Started" | "Rep" | "Ended", kind, id, anchor, interval,
-	-- quality }) pour que chacun voie l'activité se réaliser vraiment (décision D37)
+	-- serveur -> tous les clients : ({ player, state: "Started" | "Rep" | "OpponentRep" | "Ended", kind, id, anchor,
+	-- interval, quality }) pour que chacun voie l'activité se réaliser vraiment (D37) ; OpponentRep = le boss joue
 	"Activity",
 	"BodyTransform", -- serveur -> tous les clients : (player, stageId) un joueur change de corps (nouveau stade)
 }

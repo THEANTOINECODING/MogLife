@@ -113,11 +113,12 @@ end
 local function start(update)
 	local player = update.player
 	stop(player)
-	local module = Activities:FindFirstChild(update.id)
+	-- Exercices et aides : un module par activité ; combats de boss : le Mog-off (duel de poses), pour tous les boss
+	local module = Activities:FindFirstChild(if update.kind == "Boss" then "MogOff" else update.id)
 	local anchor = update.anchor
 	local character = player.Character
 	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-	if (update.kind ~= "Exercise" and update.kind ~= "Help") or not module or not anchor or not humanoid then
+	if not module or not anchor or not humanoid then
 		return
 	end
 	local rig = Rig.new(character)
@@ -209,6 +210,11 @@ function ActivityController.Start()
 			start(update)
 		elseif update.state == "Rep" then
 			onRep(update)
+		elseif update.state == "OpponentRep" then
+			local animator = animators[update.player]
+			if animator and animator.activity.OpponentRep then
+				animator.activity:OpponentRep(update.quality)
+			end
 		elseif update.state == "Ended" then
 			stop(update.player)
 		end

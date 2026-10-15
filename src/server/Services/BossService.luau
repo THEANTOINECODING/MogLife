@@ -206,6 +206,14 @@ local function playBoss(player: Player, fight: Fight, interval: number, token: n
 		end
 		fight.bossScore += BOSS.QualityScore[quality]
 		fight.bossReps = rep
+		-- Tout le monde voit le boss répliquer en direct (ActivityController : MogOff.OpponentRep)
+		Remotes.Activity:FireAllClients({
+			player = player,
+			state = "OpponentRep",
+			kind = "Boss",
+			id = fight.bossId,
+			quality = quality,
+		})
 		Remotes.BossUpdate:FireClient(player, {
 			state = "Live",
 			bossId = fight.bossId,
