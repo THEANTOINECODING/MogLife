@@ -307,8 +307,10 @@ def garage(P):
     P.prop("Garage_Interior", parts)
 
 
-def interior_door(P):
-    """Porte entre le garage et la maison (le jeu la fait pivoter quand un joueur approche)."""
+def doors(P):
+    """Portes battantes (le jeu les fait pivoter quand un joueur approche, à l'opposé de lui).
+    Convention : charnière côté -X, poignée côté +X."""
+    # Entre le garage et la maison
     parts = [(box((0, 0, 4.0), (4.8, 0.3, 8.0)), "woodlight")]
     for z in (2.0, 5.6):
         parts.append((box((0, -0.17, z), (3.6, 0.05, 2.6)), "wood"))
@@ -316,6 +318,33 @@ def interior_door(P):
     for y in (-0.3, 0.3):
         parts.append((sphere((1.8, y, 3.8), 0.2, 6, 4), "gold"))
     P.prop("Door_Interior", parts)
+
+    # Porte d'entrée de la maison : bois, deux panneaux, petite vitre en haut, poignée dorée
+    w, h = HOUSE_FRONT_DOOR[1] - HOUSE_FRONT_DOOR[0] - 0.2, HOUSE_FRONT_DOOR[3] - 0.5
+    parts = [(box((0, 0, h / 2), (w, 0.3, h)), "wood")]
+    for side in (-1, 1):
+        y = side * 0.17
+        for x in (-w / 4, w / 4):
+            parts.append((box((x, y, 1.9), (w / 2 - 0.9, 0.05, 2.4)), "woodlight"))
+        parts.append((box((0, y, h - 1.6), (w - 1.4, 0.06, 1.9)), "white"))
+        parts.append((sphere((w / 2 - 0.6, side * 0.32, h * 0.47), 0.22, 6, 4), "gold"))
+    parts.append((box((0, 0, h - 1.6), (w - 2.0, 0.42, 1.4)), "glass"))
+    P.prop("Door_House", parts)
+
+    # Magasins : deux battants vitrés par entrée (cadre sombre, barre de poussée)
+    for name, spec in SHOPS.items():
+        dw, dh = spec[3]
+        w, h = dw / 2 - 0.05, dh - 0.4
+        parts = [
+            (box((-w / 2 + 0.3, 0, h / 2), (0.6, 0.3, h)), "charcoal"),
+            (box((w / 2 - 0.3, 0, h / 2), (0.6, 0.3, h)), "charcoal"),
+            (box((0, 0, h - 0.35), (w, 0.3, 0.7)), "charcoal"),
+            (box((0, 0, 0.6), (w, 0.3, 1.2)), "charcoal"),
+            (box((0, 0, (h + 0.5) / 2), (w - 1.2, 0.1, h - 1.9)), "glass"),
+        ]
+        for side in (-1, 1):
+            parts.append((box((w / 2 - 1.0, side * 0.32, h * 0.45), (0.2, 0.2, min(4.0, h * 0.45))), "lightgrey"))
+        P.prop(f"Door_Shop_{name}", parts)
 
 
 # ------------------------------------------------------------------ magasins et salle de quartier
@@ -396,6 +425,6 @@ def shop(P, name, spec):
 def build_buildings(P):
     house(P)
     garage(P)
-    interior_door(P)
     for name, spec in SHOPS.items():
         shop(P, name, spec)
+    doors(P)

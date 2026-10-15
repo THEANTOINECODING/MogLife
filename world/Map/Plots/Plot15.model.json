@@ -2239,7 +2239,8 @@
     "Prop": "Door_Interior",
     "PropCollide": false,
     "AutoDoor": true,
-    "DoorHingeX": -2.4
+    "DoorHinge": -1,
+    "DoorSwing": 1
    },
    "children": [
     {
@@ -2274,6 +2275,75 @@
           1.0,
           0.0,
           -0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "FrontDoor",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Door_House",
+    "PropCollide": false,
+    "AutoDoor": true,
+    "DoorHinge": -1
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         98.0,
+         0.6,
+         -152.4
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
          ]
         ]
        }

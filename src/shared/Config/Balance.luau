@@ -89,10 +89,10 @@ return {
 		LightsOff = 6.5, -- et s'éteignent
 	},
 
-	-- Portes automatiques (garage ↔ maison)
+	-- Portes automatiques (maisons, garage ↔ maison, magasins)
 	Doors = {
-		OpenDistance = 7, -- studs : la porte s'ouvre quand un joueur est plus près que ça
-		OpenAngle = -100, -- degrés (le signe choisit le côté où elle s'ouvre)
+		OpenDistance = 8, -- studs : la porte s'ouvre quand un joueur est plus près que ça
+		OpenAngle = 90, -- degrés ; elle s'ouvre toujours du côté opposé au joueur
 		SwingTime = 0.35,
 		CheckInterval = 0.2,
 	},

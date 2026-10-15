@@ -1,106 +1,106 @@
 {
- "House_Walls": {
-  "center": [
-   -1.0,
-   16.0
-  ],
+ "Door_House": {
   "bottom": 0.0,
-  "size": [
-   28.0,
-   32.0,
-   19.5
-  ]
- },
- "House_Roof": {
   "center": [
    0.0,
-   16.0
+   0.0
   ],
-  "bottom": 11.308,
   "size": [
-   28.4,
-   34.4,
-   8.642
+   5.8,
+   1.08,
+   8.0
   ]
  },
- "House_Trim": {
+ "Door_Interior": {
+  "bottom": 0.0,
   "center": [
    0.0,
-   14.967
+   0.0
   ],
-  "bottom": -0.005,
   "size": [
-   29.37,
-   36.907,
-   21.305
+   4.8,
+   1.0,
+   8.0
   ]
  },
- "House_Interior_Cream": {
+ "Door_Shop_Barber": {
+  "bottom": 0.0,
   "center": [
    0.0,
-   16.0
+   0.0
   ],
-  "bottom": 0.5,
   "size": [
-   24.4,
-   30.4,
-   11.5
+   3.95,
+   0.84,
+   8.6
   ]
  },
- "House_Interior_Mint": {
+ "Door_Shop_Clothes": {
+  "bottom": 0.0,
   "center": [
    0.0,
-   16.0
+   0.0
   ],
-  "bottom": 0.5,
   "size": [
-   24.4,
-   30.4,
-   11.5
+   4.95,
+   0.84,
+   9.6
   ]
  },
- "House_Interior_Rose": {
+ "Door_Shop_Furniture": {
+  "bottom": 0.0,
   "center": [
    0.0,
-   16.0
+   0.0
   ],
-  "bottom": 0.5,
   "size": [
-   24.4,
-   30.4,
-   11.5
+   5.95,
+   0.84,
+   10.6
   ]
  },
- "House_Interior_Blue": {
+ "Door_Shop_Grocery": {
+  "bottom": 0.0,
   "center": [
    0.0,
-   16.0
+   0.0
   ],
-  "bottom": 0.5,
   "size": [
-   24.4,
-   30.4,
-   11.5
+   4.95,
+   0.84,
+   8.6
   ]
  },
- "Garage_Walls": {
+ "Door_Shop_Gym": {
+  "bottom": 0.0,
+  "center": [
+   0.0,
+   0.0
+  ],
+  "size": [
+   8.95,
+   0.84,
+   12.6
+  ]
+ },
+ "Garage_Interior": {
+  "bottom": 0.3,
   "center": [
    0.0,
    15.0
   ],
-  "bottom": 0.0,
   "size": [
-   26.0,
-   30.0,
-   15.5
+   24.4,
+   28.4,
+   11.7
   ]
  },
  "Garage_Roof": {
+  "bottom": 11.731,
   "center": [
    0.0,
    15.0
   ],
-  "bottom": 11.731,
   "size": [
    28.0,
    32.0,
@@ -108,219 +108,291 @@
   ]
  },
  "Garage_Trim": {
+  "bottom": 0.0,
   "center": [
    0.0,
    15.0
   ],
-  "bottom": 0.0,
   "size": [
    28.97,
    32.44,
    16.15
   ]
  },
- "Garage_Interior": {
+ "Garage_Walls": {
+  "bottom": 0.0,
   "center": [
    0.0,
    15.0
   ],
-  "bottom": 0.3,
+  "size": [
+   26.0,
+   30.0,
+   15.5
+  ]
+ },
+ "House_Interior_Blue": {
+  "bottom": 0.5,
+  "center": [
+   0.0,
+   16.0
+  ],
   "size": [
    24.4,
+   30.4,
+   11.5
+  ]
+ },
+ "House_Interior_Cream": {
+  "bottom": 0.5,
+  "center": [
+   0.0,
+   16.0
+  ],
+  "size": [
+   24.4,
+   30.4,
+   11.5
+  ]
+ },
+ "House_Interior_Mint": {
+  "bottom": 0.5,
+  "center": [
+   0.0,
+   16.0
+  ],
+  "size": [
+   24.4,
+   30.4,
+   11.5
+  ]
+ },
+ "House_Interior_Rose": {
+  "bottom": 0.5,
+  "center": [
+   0.0,
+   16.0
+  ],
+  "size": [
+   24.4,
+   30.4,
+   11.5
+  ]
+ },
+ "House_Roof": {
+  "bottom": 11.308,
+  "center": [
+   0.0,
+   16.0
+  ],
+  "size": [
    28.4,
-   11.7
+   34.4,
+   8.642
   ]
  },
- "Door_Interior": {
+ "House_Trim": {
+  "bottom": -0.005,
   "center": [
    0.0,
-   0.0
+   14.967
   ],
-  "bottom": 0.0,
   "size": [
-   4.8,
-   1.0,
-   8.0
+   29.37,
+   36.907,
+   21.305
   ]
  },
- "Shop_Clothes_Walls": {
-  "center": [
-   0.0,
-   19.0
-  ],
+ "House_Walls": {
   "bottom": 0.0,
+  "center": [
+   -1.0,
+   16.0
+  ],
   "size": [
-   44.0,
-   38.0,
-   17.6
+   28.0,
+   32.0,
+   19.5
   ]
  },
- "Shop_Clothes_Trim": {
+ "Shop_Barber_Interior": {
+  "bottom": 0.4,
   "center": [
    0.0,
-   18.25
+   16.0
   ],
-  "bottom": 0.0,
   "size": [
-   44.6,
-   39.9,
-   17.845
+   34.4,
+   30.4,
+   13.6
+  ]
+ },
+ "Shop_Barber_Trim": {
+  "bottom": 0.0,
+  "center": [
+   0.0,
+   15.25
+  ],
+  "size": [
+   36.6,
+   33.9,
+   15.845
+  ]
+ },
+ "Shop_Barber_Walls": {
+  "bottom": 0.0,
+  "center": [
+   0.0,
+   16.0
+  ],
+  "size": [
+   36.0,
+   32.0,
+   15.6
   ]
  },
  "Shop_Clothes_Interior": {
+  "bottom": 0.4,
   "center": [
    0.0,
    19.0
   ],
-  "bottom": 0.4,
   "size": [
    42.4,
    36.4,
    15.6
   ]
  },
- "Shop_Barber_Walls": {
-  "center": [
-   0.0,
-   16.0
-  ],
+ "Shop_Clothes_Trim": {
   "bottom": 0.0,
-  "size": [
-   36.0,
-   32.0,
-   15.6
-  ]
- },
- "Shop_Barber_Trim": {
-  "center": [
-   0.0,
-   15.25
-  ],
-  "bottom": 0.0,
-  "size": [
-   36.6,
-   33.9,
-   15.845
-  ]
- },
- "Shop_Barber_Interior": {
-  "center": [
-   0.0,
-   16.0
-  ],
-  "bottom": 0.4,
-  "size": [
-   34.4,
-   30.4,
-   13.6
-  ]
- },
- "Shop_Furniture_Walls": {
-  "center": [
-   0.0,
-   19.0
-  ],
-  "bottom": 0.0,
-  "size": [
-   48.0,
-   38.0,
-   17.6
-  ]
- },
- "Shop_Furniture_Trim": {
   "center": [
    0.0,
    18.25
   ],
-  "bottom": 0.0,
   "size": [
-   48.6,
+   44.6,
    39.9,
    17.845
   ]
  },
- "Shop_Furniture_Interior": {
+ "Shop_Clothes_Walls": {
+  "bottom": 0.0,
   "center": [
    0.0,
    19.0
   ],
+  "size": [
+   44.0,
+   38.0,
+   17.6
+  ]
+ },
+ "Shop_Furniture_Interior": {
   "bottom": 0.4,
+  "center": [
+   0.0,
+   19.0
+  ],
   "size": [
    46.4,
    36.4,
    15.6
   ]
  },
- "Shop_Grocery_Walls": {
+ "Shop_Furniture_Trim": {
+  "bottom": 0.0,
   "center": [
    0.0,
-   16.0
+   18.25
   ],
-  "bottom": 0.0,
   "size": [
-   36.0,
-   32.0,
-   15.6
+   48.6,
+   39.9,
+   17.845
   ]
  },
- "Shop_Grocery_Trim": {
+ "Shop_Furniture_Walls": {
+  "bottom": 0.0,
   "center": [
    0.0,
-   15.25
+   19.0
   ],
-  "bottom": 0.0,
   "size": [
-   36.6,
-   33.9,
-   15.845
+   48.0,
+   38.0,
+   17.6
   ]
  },
  "Shop_Grocery_Interior": {
+  "bottom": 0.4,
   "center": [
    0.0,
    16.0
   ],
-  "bottom": 0.4,
   "size": [
    34.4,
    30.4,
    13.6
   ]
  },
- "Shop_Gym_Walls": {
+ "Shop_Grocery_Trim": {
+  "bottom": 0.0,
+  "center": [
+   0.0,
+   15.25
+  ],
+  "size": [
+   36.6,
+   33.9,
+   15.845
+  ]
+ },
+ "Shop_Grocery_Walls": {
+  "bottom": 0.0,
+  "center": [
+   0.0,
+   16.0
+  ],
+  "size": [
+   36.0,
+   32.0,
+   15.6
+  ]
+ },
+ "Shop_Gym_Interior": {
+  "bottom": 0.4,
   "center": [
    0.0,
    24.0
   ],
-  "bottom": 0.0,
   "size": [
-   84.0,
-   48.0,
-   21.6
+   82.4,
+   46.4,
+   19.6
   ]
  },
  "Shop_Gym_Trim": {
+  "bottom": 0.0,
   "center": [
    0.0,
    23.25
   ],
-  "bottom": 0.0,
   "size": [
    84.6,
    49.9,
    21.845
   ]
  },
- "Shop_Gym_Interior": {
+ "Shop_Gym_Walls": {
+  "bottom": 0.0,
   "center": [
    0.0,
    24.0
   ],
-  "bottom": 0.4,
   "size": [
-   82.4,
-   46.4,
-   19.6
+   84.0,
+   48.0,
+   21.6
   ]
  }
 }

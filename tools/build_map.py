@@ -363,6 +363,17 @@ def piece(F, name, prop, tint=None, material=None, collide=True, attributes=None
 
 
 SHOP_DIMS = {"Clothes": (44, 38), "Barber": (36, 32), "Furniture": (48, 38), "Grocery": (36, 32), "Gym": (84, 48)}
+SHOP_DOOR_WIDTH = {"Clothes": 10, "Barber": 8, "Furniture": 12, "Grocery": 10, "Gym": 18}  # = props_building.SHOPS
+
+
+def auto_door(F, name, local, prop, yaw=0, swing=None):
+    """Porte battante modélisée dans Blender (charnière côté -X du modèle, poignée côté +X).
+    DoorService la fait pivoter à l'opposé du joueur qui approche ; on la traverse toujours (pas de collision)."""
+    slot = prop_slot(F, name, local, prop, yaw=yaw, collide=False)
+    slot["attributes"].update({"AutoDoor": True, "DoorHinge": -1})
+    if swing:
+        slot["attributes"]["DoorSwing"] = swing  # 1 : s'ouvre toujours vers le +Z du repère de la porte
+    return slot
 
 
 def shop_shell(F, name, color, material, floor):
@@ -374,6 +385,9 @@ def shop_shell(F, name, color, material, floor):
         piece(F, name + "Walls", f"Shop_{name}_Walls", tint=color, material=material),
         piece(F, name + "Trim", f"Shop_{name}_Trim", collide=False),
         piece(F, name + "Interior", f"Shop_{name}_Interior", collide=False),
+        # Deux battants vitrés, poignées au milieu (le battant de droite est retourné)
+        auto_door(F, name + "DoorLeft", (-SHOP_DOOR_WIDTH[name] / 4, ft, 0.4), f"Door_Shop_{name}"),
+        auto_door(F, name + "DoorRight", (SHOP_DOOR_WIDTH[name] / 4, ft, 0.4), f"Door_Shop_{name}", yaw=180),
     ]
 
 
@@ -538,12 +552,11 @@ def plot(index, side, offset):
                    collide=False))
     # Passage couvert vers le garage, et porte qui s'ouvre toute seule quand un joueur approche (DoorService)
     c.append(P(H, "LinkFloor", (-14, 0.2, 22), (2.4, 0.4, 5.6), CONCRETE_LIGHT, "Concrete"))
-    c.append(piece(H, "InteriorDoor", "Door_Interior", collide=False,
-                   attributes={"AutoDoor": True, "DoorHingeX": -2.4}))
-    door = c[-1]
-    # La porte est dans le mur gauche de la maison : on la recale dans l'ouverture (largeur le long de Z)
-    door["children"][0]["properties"]["CFrame"]["CFrame"] = {
-        "position": [round(v, 3) for v in H.p((-12.6, 0.2, 22))], "orientation": rot(H.yaw + 90)}
+    # (dans le mur gauche de la maison : sa largeur est le long de Z)
+    # (le passage côté garage est étroit : elle s'ouvre toujours vers le salon)
+    c.append(auto_door(H, "InteriorDoor", (-12.6, 0.2, 22), "Door_Interior", yaw=90, swing=1))
+    # Porte d'entrée, sur le seuil du porche
+    c.append(auto_door(H, "FrontDoor", (0, 0.5, 0.4), "Door_House"))
     for k, lz in enumerate((9, 22)):
         c.append(P(H, f"HouseLamp{k}", (0, 11.6, lz), (4, 0.4, 4), (255, 244, 214), "Neon",
                    children=[light(brightness=0.8, range_=20)]))

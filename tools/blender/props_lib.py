@@ -494,7 +494,10 @@ def _uv(bm, spec, pal):
 class Props:
     """Crée les décors dans une collection, alignés sur une grille pour les regarder."""
 
-    def __init__(self, pal, collection="Props", spacing=14, columns=8):
+    def __init__(self, pal, collection="Props", spacing=14, columns=8, mirror_x=False):
+        # mirror_x : l'import FBX de Roblox inverse la gauche et la droite. Les décors symétriques s'en moquent,
+        # mais pas les bâtiments (une porte doit être du bon côté) : on les retourne d'avance.
+        self.mirror_x = mirror_x
         self.pal = pal
         self.mat = pal.material()
         self.col = bpy.data.collections.get(collection) or bpy.data.collections.new(collection)
@@ -533,6 +536,10 @@ class Props:
                            "size": [round(max(xs) - min(xs), 3), round(max(ys) - min(ys), 3), round(max(zs) - min(zs), 3)]}
         for v in total.verts:
             v.co -= offset
+            if self.mirror_x:
+                v.co.x = -v.co.x
+        if self.mirror_x:
+            bmesh.ops.reverse_faces(total, faces=total.faces)
         bmesh.ops.remove_doubles(total, verts=total.verts, dist=0.0005)
         me = bpy.data.meshes.get(name)
         if me:
