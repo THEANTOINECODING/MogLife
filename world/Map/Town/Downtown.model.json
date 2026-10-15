@@ -4866,7 +4866,7 @@
    },
    "attributes": {
     "Stage": "GymRat",
-    "Items": "Hawaiian,DumbbellShades",
+    "Items": "Hawaiian,FluoShorts,DumbbellShades",
     "Kind": "Mannequin"
    }
   },
@@ -4926,7 +4926,7 @@
    },
    "attributes": {
     "Stage": "Bro",
-    "Items": "TrackJacket,Sweatbands",
+    "Items": "TrackJacket,VelvetJoggers,Sweatbands",
     "Kind": "Mannequin"
    }
   },
@@ -5046,7 +5046,7 @@
    },
    "attributes": {
     "Stage": "Chad",
-    "Items": "MogTank,GoldChain",
+    "Items": "MogTank,LeatherPants,GoldChain",
     "Kind": "Mannequin"
    }
   },
@@ -5169,7 +5169,7 @@
     "Reflectance": 0.5
    },
    "attributes": {
-    "Categories": "Top,Accessory",
+    "Categories": "Top,Bottom,Accessory",
     "Store": "Clothes"
    },
    "children": [
@@ -5275,7 +5275,7 @@
     "Reflectance": 0.5
    },
    "attributes": {
-    "Categories": "Top,Accessory",
+    "Categories": "Top,Bottom,Accessory",
     "Store": "Clothes"
    },
    "children": [

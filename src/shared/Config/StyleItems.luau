@@ -17,7 +17,7 @@ export type Piece = {
 }
 
 export type Item = {
-	category: "Hair" | "Beard" | "Top" | "Accessory",
+	category: "Hair" | "Beard" | "Top" | "Bottom" | "Accessory",
 	price: number?,
 	bossId: string?,
 	order: number, -- ordre d'affichage dans la boutique
@@ -146,6 +146,34 @@ local StyleItems: { [string]: Item } = {
 		},
 	},
 	PajamaTop = { category = "Top", bossId = "Kevin", order = 6, pieces = { torsoShell(rgb(110, 150, 230), 1.5) } },
+
+	-- Bas
+	FluoShorts = {
+		category = "Bottom",
+		price = 35,
+		order = 1,
+		pieces = {
+			{ attach = "LowerTorso", size = V(1.1, 1.6, 1.15), offset = V(0, -0.2, 0), color = rgb(140, 255, 40) },
+		},
+	},
+	VelvetJoggers = {
+		category = "Bottom",
+		price = 75,
+		order = 2,
+		pieces = {
+			{ attach = "LeftUpperLeg", size = V(1.12, 1, 1.12), offset = V(0, 0, 0), color = rgb(110, 35, 140) },
+			{ attach = "RightUpperLeg", size = V(1.12, 1, 1.12), offset = V(0, 0, 0), color = rgb(110, 35, 140) },
+		},
+	},
+	LeatherPants = {
+		category = "Bottom",
+		price = 110,
+		order = 3,
+		pieces = {
+			{ attach = "LeftUpperLeg", size = V(1.1, 1, 1.1), offset = V(0, 0, 0), color = rgb(25, 22, 20) },
+			{ attach = "RightUpperLeg", size = V(1.1, 1, 1.1), offset = V(0, 0, 0), color = rgb(25, 22, 20) },
+		},
+	},
 
 	-- Accessoires
 	Headband = {

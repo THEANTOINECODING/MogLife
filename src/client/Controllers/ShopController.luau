@@ -1,20 +1,24 @@
 -- Boutiques de style (miroir de la boutique de vêtements ou du coiffeur) : catégories vendues par ce miroir,
--- achat avec confirmation, porter / retirer.
+-- achat avec confirmation, porter / retirer, et ESSAYAGE GRATUIT : un aperçu 3D (son propre corps de stade, ce
+-- qu'on porte + l'article choisi) tourne à gauche de la liste. Toucher un article l'essaie.
 -- Le serveur vérifie tout (prix, Cash, possession) ; ce contrôleur n'affiche que l'état reçu.
 
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
+local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local StyleItems = require(ReplicatedStorage.Shared.Config.StyleItems)
+local Outfit = require(ReplicatedStorage.Shared.Outfit)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Format = require(ReplicatedStorage.Shared.Format)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Ui = require(script.Parent.Parent.Ui)
 
 local MIRROR_TAG = "Mirror"
-local ALL_CATEGORIES = { "Hair", "Beard", "Top", "Accessory" }
+local ALL_CATEGORIES = { "Hair", "Beard", "Top", "Bottom", "Accessory" }
 
 local player = Players.LocalPlayer
 
@@ -24,7 +28,16 @@ local panel: Frame
 local titleLabel: TextLabel
 local cashLabel: TextLabel
 local list: ScrollingFrame
+local tabArea: Frame
 local tabs: { [string]: TextButton } = {}
+local viewport: ViewportFrame
+local world: WorldModel
+local previewLabel: TextLabel
+local previewModel: Model? = nil
+local previewKey = ""
+local previewing: string? = nil -- article essayé (nil : sa tenue actuelle)
+local stageIndex = 1
+local spin = 0
 
 local categories: { string } = ALL_CATEGORIES
 local category = "Hair"
@@ -48,9 +61,48 @@ local function sortedItems(cat: string): { string }
 	return ids
 end
 
+-- Aperçu : son corps de stade, sa tenue, et l'article essayé à la place de celui de la même catégorie
+local function refreshPreview()
+	local outfit = table.clone(equipped)
+	local name = Texts.Get("Shop.YourLook")
+	if previewing then
+		outfit[StyleItems[previewing].category] = previewing
+		name = Texts.Get("Shop.TryingOn", { item = Texts.Get(`Style.{previewing}`) })
+	end
+	previewLabel.Text = name
+	local stage = Stages.List[stageIndex]
+	local items = {}
+	for _, itemId in outfit do
+		table.insert(items, itemId)
+	end
+	table.sort(items)
+	local key = `{stage and stage.id}:{table.concat(items, ",")}`
+	if key == previewKey then
+		return
+	end
+	previewKey = key
+	if previewModel then
+		previewModel:Destroy()
+		previewModel = nil
+	end
+	local model = stage and Outfit.Build(stage.id, items)
+	if not model then
+		return
+	end
+	model.Parent = world
+	previewModel = model
+	-- Cadrage : tout le corps, quel que soit le stade
+	local head = Outfit.HeadCenter(stage.id) :: Vector3
+	local center = head.Y * 0.55
+	local distance = head.Y * 1.75 + 2
+	local camera = viewport.CurrentCamera :: Camera
+	camera.CFrame = CFrame.lookAt(Vector3.new(0, center + 0.4, -distance), Vector3.new(0, center, 0))
+end
+
 local render
 
 local function onItemButton(itemId: string)
+	previewing = itemId
 	local item = StyleItems[itemId]
 	if equipped[item.category] == itemId then
 		Remotes.EquipStyle:FireServer(item.category, nil)
@@ -73,23 +125,32 @@ function render()
 		tab.BackgroundColor3 = if cat == category then Color3.fromRGB(220, 120, 30) else Color3.fromRGB(70, 70, 80)
 	end
 	for _, child in list:GetChildren() do
-		if child:IsA("Frame") then
+		if child:IsA("GuiButton") then
 			child:Destroy()
 		end
 	end
+	refreshPreview()
 
 	for index, itemId in sortedItems(category) do
 		local item = StyleItems[itemId]
-		local row = Ui.create("Frame", {
+		local row = Ui.create("TextButton", {
+			Text = "",
+			AutoButtonColor = false,
 			Name = itemId,
 			Size = UDim2.new(1, -12, 0, 58),
-			BackgroundColor3 = Color3.fromRGB(40, 35, 55),
+			BackgroundColor3 = if previewing == itemId then Color3.fromRGB(80, 60, 120) else Color3.fromRGB(40, 35, 55),
 			BackgroundTransparency = 0.2,
 			LayoutOrder = index,
 			Parent = list,
 		}, { Ui.corner(UDim.new(0, 10)) })
+		-- Toucher la ligne : essayer l'article
+		row.Activated:Connect(function()
+			previewing = itemId
+			confirming = nil
+			render()
+		end)
 
-		-- Pastille de couleur : aperçu simple de l'objet
+		-- Pastille de couleur : rappel de la couleur de l'objet
 		Ui.create("Frame", {
 			AnchorPoint = Vector2.new(0, 0.5),
 			Position = UDim2.new(0, 10, 0.5, 0),
@@ -100,7 +161,7 @@ function render()
 
 		Ui.label({
 			Position = UDim2.fromOffset(56, 8),
-			Size = UDim2.new(1, -250, 1, -16),
+			Size = UDim2.new(1, -200, 1, -16),
 			TextXAlignment = Enum.TextXAlignment.Left,
 			Text = Texts.Get(`Style.{itemId}`),
 			Parent = row,
@@ -129,7 +190,7 @@ function render()
 			Name = "Action",
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -8, 0.5, 0),
-			Size = UDim2.fromOffset(180, 44),
+			Size = UDim2.fromOffset(132, 44),
 			BackgroundColor3 = color,
 			Text = text,
 			Parent = row,
@@ -150,14 +211,15 @@ local function buildTabs()
 	for index, cat in categories do
 		local tab = Ui.button({
 			Name = `Tab{cat}`,
-			Position = UDim2.new((index - 1) / count, if index == 1 then 16 else 6, 0, 82),
-			Size = UDim2.new(1 / count, if count == 1 then -32 else -16, 0, 44),
+			Position = UDim2.new((index - 1) / count, 3, 0, 0),
+			Size = UDim2.new(1 / count, -6, 1, 0),
 			Text = Texts.Get(`Shop.Category.{cat}`),
-			Parent = panel,
+			Parent = tabArea,
 		})
 		tab.Activated:Connect(function()
 			category = cat
 			confirming = nil
+			previewing = nil
 			render()
 		end)
 		tabs[cat] = tab
@@ -179,6 +241,7 @@ local function open(mirror: Instance)
 		categories = ALL_CATEGORIES
 	end
 	category = categories[1]
+	previewing = nil
 	titleLabel.Text = Texts.Get(if typeof(store) == "string" then `Shop.Title.{store}` else "Shop.Title")
 	buildTabs()
 	confirming = nil
@@ -195,14 +258,16 @@ end
 local function buildGui()
 	local gui = Ui.create("ScreenGui", { Name = "Shop", ResetOnSpawn = false, DisplayOrder = 4 })
 
+	-- Taille relative à l'écran (mobile d'abord), bornée sur grand écran
 	panel = Ui.panel({
 		Name = "Panel",
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.55),
-		Size = UDim2.fromOffset(560, 470),
+		Position = UDim2.fromScale(0.5, 0.53),
+		Size = UDim2.fromScale(0.94, 0.86),
 		Visible = false,
 		Parent = gui,
 	})
+	Ui.create("UISizeConstraint", { MaxSize = Vector2.new(900, 560), MinSize = Vector2.new(320, 260), Parent = panel })
 	titleLabel = Ui.label({
 		Position = UDim2.fromOffset(16, 12),
 		Size = UDim2.new(0.6, -16, 0, 40),
@@ -220,18 +285,48 @@ local function buildGui()
 		Parent = panel,
 	})
 	Ui.label({
-		Position = UDim2.fromOffset(16, 52),
-		Size = UDim2.new(1, -32, 0, 22),
+		Position = UDim2.fromOffset(16, 50),
+		Size = UDim2.new(1, -32, 0, 20),
 		Font = Enum.Font.GothamMedium,
 		TextColor3 = Color3.fromRGB(200, 200, 210),
 		Text = Texts.Get("Shop.Cosmetic"),
 		Parent = panel,
 	})
 
+	-- Essayage : aperçu 3D à gauche
+	viewport = Ui.create("ViewportFrame", {
+		Name = "Preview",
+		Position = UDim2.fromOffset(16, 78),
+		Size = UDim2.new(0.36, -16, 1, -184),
+		BackgroundColor3 = Color3.fromRGB(30, 26, 44),
+		BackgroundTransparency = 0.1,
+		Ambient = Color3.fromRGB(150, 150, 160),
+		LightColor = Color3.fromRGB(255, 245, 230),
+		LightDirection = Vector3.new(-0.5, -1, 0.6),
+		Parent = panel,
+	}, { Ui.corner(UDim.new(0, 12)) })
+	world = Ui.create("WorldModel", { Parent = viewport })
+	viewport.CurrentCamera = Ui.create("Camera", { FieldOfView = 35, Parent = viewport })
+	previewLabel = Ui.label({
+		Position = UDim2.new(0, 16, 1, -104),
+		Size = UDim2.new(0.36, -16, 0, 26),
+		TextColor3 = Color3.fromRGB(255, 220, 120),
+		Text = Texts.Get("Shop.YourLook"),
+		Parent = panel,
+	})
+
+	-- Liste à droite : onglets des catégories, puis les articles
+	tabArea = Ui.create("Frame", {
+		Name = "Tabs",
+		Position = UDim2.new(0.36, 8, 0, 78),
+		Size = UDim2.new(0.64, -24, 0, 40),
+		BackgroundTransparency = 1,
+		Parent = panel,
+	})
 	list = Ui.create("ScrollingFrame", {
 		Name = "List",
-		Position = UDim2.fromOffset(16, 134),
-		Size = UDim2.new(1, -32, 1, -214),
+		Position = UDim2.new(0.36, 8, 0, 126),
+		Size = UDim2.new(0.64, -24, 1, -200),
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
 		ScrollBarThickness = 6,
@@ -246,7 +341,7 @@ local function buildGui()
 		Name = "Close",
 		AnchorPoint = Vector2.new(0.5, 1),
 		Position = UDim2.new(0.5, 0, 1, -14),
-		Size = UDim2.fromOffset(200, 52),
+		Size = UDim2.fromOffset(200, 50),
 		BackgroundColor3 = Color3.fromRGB(90, 90, 90),
 		Text = Texts.Get("Shop.Close"),
 		Parent = panel,
@@ -254,6 +349,11 @@ local function buildGui()
 	closeButton.Activated:Connect(close)
 
 	gui.Parent = player:WaitForChild("PlayerGui")
+end
+
+-- Ouvre la boutique d'un miroir (ou, plus tard, d'un vendeur : mêmes attributs Store et Categories)
+function ShopController.Open(mirror: Instance)
+	open(mirror)
 end
 
 function ShopController.Init(controllers)
@@ -269,8 +369,16 @@ function ShopController.Start()
 			open(parent)
 		end
 	end)
+	-- L'aperçu tourne lentement
+	RunService.RenderStepped:Connect(function(dt)
+		if panel.Visible and previewModel then
+			spin += dt * 0.7
+			previewModel:PivotTo(CFrame.Angles(0, spin, 0))
+		end
+	end)
 	Remotes.StatsChanged.OnClientEvent:Connect(function(stats)
 		cash = stats.Cash
+		stageIndex = stats.Stage or stageIndex
 		if panel.Visible then
 			render()
 		end

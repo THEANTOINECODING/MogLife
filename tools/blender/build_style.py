@@ -111,6 +111,17 @@ def paint_style_atlas():
     a.cell("ribbon", 2, 3, lambda x, y: (0.15, 0.3, 0.75) if x < 16 else (0.85, 0.15, 0.18))
     a.cell("pajama_front", 3, 3, lambda x, y: (0.96, 0.96, 1.0) if x in (15, 16) and y % 8 < 3 else pajama(x, y))
     a.cell("hawaiian_front", 4, 3, lambda x, y: (0.93, 0.72, 0.56) if abs(x - 15.5) < (y - 14) * 0.6 else hawaiian(x, y))
+    a.cell("fluo", 5, 3, lambda x, y: lit((0.95, 0.95, 0.95) if x in (2, 3) else noise((0.55, 1.0, 0.15), 0.03), y, 0.15))
+
+    def velvet(x, y):                                 # velours violet : côtes verticales
+        c = (0.42, 0.14, 0.55) if x % 4 else (0.32, 0.1, 0.42)
+        return lit(noise(c, 0.02), y, 0.2)
+    a.cell("velvet", 6, 3, velvet)
+
+    def leather(x, y):                                # cuir noir brillant : reflet en bande
+        k = 0.12 + 0.35 * max(0.0, math.sin((x * 0.5 + y * 0.15)))
+        return (k * 0.6, k * 0.55, k * 0.5)
+    a.cell("leather", 7, 3, leather)
     return a
 
 
@@ -218,6 +229,38 @@ def build_tops(w, g):
     torso_cover(w, g, "satin", None, t * 2.2, sleeves="short", robe=True)
     w.start("PajamaTop")
     torso_cover(w, g, "pajama", "pajama_front", t * 1.4, sleeves="long")
+
+
+# ------------------------------------------------------------------ bas (recouvrent le short de base)
+def legs_cover(w, g, cell, t, length):
+    """length : "short" (mi-cuisse), "long" (jusqu'aux chevilles)."""
+    J, cfg = g["J"], g["cfg"]
+    root = J["Root"]
+    thigh, calf = cfg["thigh"], cfg["calf"]
+    w.make("LowerTorso", lowsphere((0, 0.02, root.z + 0.1), (g["hip_w"] * 0.5 + t, g["depth"] * 0.45 + t, 0.38 + t)), cell)
+    for side, _ in sides():
+        hip, knee, ankle = J[side + "Hip"], J[side + "Knee"], J[side + "Ankle"]
+        x = hip.x
+        if length == "short":
+            w.make(side + "UpperLeg", limb((x, 0, hip.z + 0.05), (x, 0, hip.z - (hip.z - knee.z) * 0.55),
+                                           thigh * 1.08 + t, thigh * 1.14 + t, thigh * 1.12 + t), cell)
+        else:
+            w.make(side + "UpperLeg", limb((x, 0, knee.z), (x, 0, hip.z + 0.05), calf * 0.8 + t, thigh + t, thigh * 1.08 + t,
+                                           bulge_dir=(0, -1, 0), bulge=thigh * 0.15), cell)
+            w.make(side + "LowerLeg", limb((x, 0, ankle.z + 0.12), (x, 0, knee.z), calf * 0.6 + t, calf + t, calf * 0.8 + t,
+                                           mid_t=0.62, bulge_dir=(0, 1, 0), bulge=calf * 0.25), cell)
+            w.make(side + "LowerLeg", lowsphere((x, -0.03, knee.z), (calf * 0.8 + t, calf * 0.78 + t, calf * 0.75 + t), 6, 4),
+                   cell)
+
+
+def build_bottoms(w, g):
+    t = 0.05 + g["cfg"]["thigh"] * 0.05
+    w.start("FluoShorts")        # short de sport fluo, liseré blanc
+    legs_cover(w, g, "fluo", t, "short")
+    w.start("VelvetJoggers")     # jogging en velours violet
+    legs_cover(w, g, "velvet", t, "long")
+    w.start("LeatherPants")      # pantalon de cuir (qui grince)
+    legs_cover(w, g, "leather", t * 0.8, "long")
 
 
 # ------------------------------------------------------------------ coupes (remplacent la coupe de base)
@@ -404,6 +447,7 @@ for i, stage in enumerate(ORDER):
     builder = Builder("Style_" + stage, atlas)
     w = Wardrobe(builder)
     build_tops(w, g)
+    build_bottoms(w, g)
     build_hair(w, g)
     build_beards(w, g)
     build_accessories(w, g)

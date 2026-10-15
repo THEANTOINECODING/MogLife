@@ -747,16 +747,16 @@ def clothing_store():
         wrap(c, n0, F, f"RackSlot{r}A", (lx, 0.4, 15), "ClothesRack", yaw=-90 if lx < 0 else 90)
         c.append(decor(F, f"RackSlot{r}B", (lx, 0.4, 23), "ClothesRack", yaw=-90 if lx < 0 else 90))
     # Vitrine : quatre mannequins de gabarits croissants portent les vrais articles (DisplayService)
-    for k, (lx, stage, items) in enumerate(((-12.5, "GymRat", ("Hawaiian", "DumbbellShades")),
-                                            (-4.5, "Bro", ("TrackJacket", "Sweatbands")),
+    for k, (lx, stage, items) in enumerate(((-12.5, "GymRat", ("Hawaiian", "FluoShorts", "DumbbellShades")),
+                                            (-4.5, "Bro", ("TrackJacket", "VelvetJoggers", "Sweatbands")),
                                             (4.5, "Alpha", ("BoxerRobe", "Headband")),
-                                            (12.5, "Chad", ("MogTank", "GoldChain")))):
+                                            (12.5, "Chad", ("MogTank", "LeatherPants", "GoldChain")))):
         c.append(style_display(F, f"ClothesDisplay{k}", (lx, 0.4, 7.5), stage, items))
     n0 = len(c)
     c.append(P(F, "ClothesCounter", (11, 1.9, 31), (12, 3.4, 2.4), WOOD_LIGHT, "WoodPlanks"))
     wrap(c, n0, F, "CounterSlot", (11, 0.4, 31), "ShopCounter")
     for k, lx in enumerate((-12, 0)):
-        c.append(mirror(F, f"ClothesMirror{k}", (lx, 5.5, 36.6), {"Categories": "Top,Accessory", "Store": "Clothes"}))
+        c.append(mirror(F, f"ClothesMirror{k}", (lx, 5.5, 36.6), {"Categories": "Top,Bottom,Accessory", "Store": "Clothes"}))
     c.append(landmark(F, "ClothesIcon", (0, 30, 19), "Clothes"))
     return c
 
