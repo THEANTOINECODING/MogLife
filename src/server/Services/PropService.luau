@@ -4,6 +4,8 @@
 --   PropHeight  : hauteur voulue (le modèle est agrandi ou réduit uniformément)
 --   PropCollide : false = on passe à travers (stations, tapis, décors au ras du sol)
 --   PropAlign   : "Back" = le dos du modèle touche le repère (fenêtres, enseignes contre un mur)
+--   PropColor / PropMaterial : pièce « teintable » (murs, toits) : la texture est retirée, et la couleur et le
+--                 matériau Roblox (Plaster, Slate, Brick…) sont appliqués. Une seule maison, vingt couleurs.
 -- Une station d'exercice (BasePart) peut aussi être un emplacement : le modèle se pose sur la dalle.
 --
 -- Les copies vont dans Workspace.MapProps, un dossier que Rojo ne gère pas (la carte, elle, vient des fichiers :
@@ -59,6 +61,14 @@ function PropService.Place(name: string, base: CFrame, options: { [string]: any 
 	end
 	clone.CanCollide = opts.collide ~= false
 	clone.CanTouch = false
+	if typeof(opts.color) == "Color3" and clone:IsA("MeshPart") then
+		clone.TextureID = ""
+		clone.Color = opts.color
+		local ok, material = pcall(function()
+			return (Enum.Material :: any)[opts.material]
+		end)
+		clone.Material = if ok and material then material else Enum.Material.SmoothPlastic
+	end
 	local offsetZ = if opts.align == "Back" then -clone.Size.Z / 2 else 0
 	local offsetY = if opts.centered then 0 else clone.Size.Y / 2
 	clone.CFrame = base * CFrame.new(0, offsetY, offsetZ)
@@ -107,6 +117,8 @@ local function setup(slot: Instance)
 		height = slot:GetAttribute("PropHeight"),
 		collide = slot:GetAttribute("PropCollide"),
 		align = slot:GetAttribute("PropAlign"),
+		color = slot:GetAttribute("PropColor"),
+		material = slot:GetAttribute("PropMaterial"),
 	})
 	if not visual then
 		return
@@ -115,6 +127,11 @@ local function setup(slot: Instance)
 	visual.Name = name
 	visual.Parent = getFolder()
 	visuals[slot] = visual
+end
+
+-- Copie posée pour cet emplacement (nil si aucune), par exemple pour animer une porte
+function PropService.GetVisual(slot: Instance): BasePart?
+	return visuals[slot]
 end
 
 -- Pose (ou repose) les décors 3D de tous les emplacements. Renvoie le nombre de décors posés.

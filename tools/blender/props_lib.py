@@ -253,6 +253,17 @@ def build_palette():
     P.pattern("palmbark", lambda x, y: mix(hexrgb("9a7a4a"), hexrgb("6a5030"), 0.8 if y % 5 == 0 else rnd.random() * 0.25))
     P.pattern("rope", lambda x, y: mix(hexrgb("d8c08a"), hexrgb("9a8050"), 0.7 if (x + y) % 6 < 2 else 0.1))
     P.pattern("crate", lambda x, y: hexrgb("6a4a2c") if x < 3 or x > 28 or y < 3 or y > 28 or abs(x - y) < 2 else mix(hexrgb("b88a58"), hexrgb("a07444"), rnd.random()))
+    # --- Ajouts de l'étape 1 (bâtiments). TOUJOURS ajouter à la fin : les décors déjà importés gardent leurs cases.
+    P.pattern("wallpaper_cream", lambda x, y: hexrgb("efe2c4") if (x // 4) % 2 == 0 else hexrgb("e6d6b4"))
+    P.pattern("wallpaper_mint", lambda x, y: hexrgb("cfe8d8") if not (x % 8 == 4 and y % 8 == 4) else hexrgb("8ec4a4"))
+    P.pattern("wallpaper_rose", lambda x, y: hexrgb("f2d4d8") if (x + y) % 8 not in (0, 1) else hexrgb("e4b4bc"))
+    P.pattern("wallpaper_blue", lambda x, y: hexrgb("d4e2f2") if (x // 3) % 3 else hexrgb("b4c8e2"))
+    P.pattern("garagewall", noisy("b8bcc0", 0.04, "9a9ea4", 0.06))
+    P.pattern("shopwall_white", noisy("f2f0ea", 0.02, "e2e0da", 0.04))
+    P.pattern("gymwall", lambda x, y: hexrgb("3a3a44") if y < 12 else (hexrgb("d23a2e") if y < 15 else hexrgb("e8e6e2")))
+    P.pattern("shingles", lambda x, y: mix(hexrgb("7a3a32"), hexrgb("5a2a24"), 0.7 if y % 5 == 0 else ((x + (y // 5) * 3) % 6 == 0) * 0.5))
+    P.pattern("stonebase", lambda x, y: hexrgb("8a8478") if (y % 8 == 0 or (x + (y // 8) * 5) % 11 == 0) else mix(hexrgb("b8b0a0"), hexrgb("a49c8c"), rnd.random()))
+    P.pattern("rubberfloor", noisy("2e2e34", 0.03, "e8c840", 0.02))
     return P
 
 
@@ -492,6 +503,7 @@ class Props:
         self.spacing, self.columns = spacing, columns
         self.count = 0
         self.report = []
+        self.meta = {}
 
     def clear(self):
         for o in list(self.col.objects):
@@ -515,6 +527,10 @@ class Props:
         ys = [v.co.y for v in total.verts]
         zs = [v.co.z for v in total.verts]
         offset = Vector(((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2, min(zs) if ground else 0))
+        # Où était le décor dans son repère de conception : le générateur de carte en a besoin pour les pièces
+        # d'un même bâtiment (murs, toit, façade) qui doivent se recaler ensemble
+        self.meta[name] = {"center": [round(offset.x, 3), round(offset.y, 3)], "bottom": round(min(zs), 3),
+                           "size": [round(max(xs) - min(xs), 3), round(max(ys) - min(ys), 3), round(max(zs) - min(zs), 3)]}
         for v in total.verts:
             v.co -= offset
         bmesh.ops.remove_doubles(total, verts=total.verts, dist=0.0005)

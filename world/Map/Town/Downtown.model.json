@@ -3603,666 +3603,211 @@
    }
   },
   {
-   "name": "ClothesWallBack",
-   "className": "Part",
+   "name": "ClothesWalls",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     44,
-     16,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -78.0,
-       8.1,
-       66.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      120,
-      170,
-      210
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Clothes_Walls",
+    "PropColor": {
+     "Color3": [
+      0.4706,
+      0.6667,
+      0.8235
      ]
     },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    "PropMaterial": "Plaster"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -78.0,
+         0.1,
+         85.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
-   "name": "ClothesWallLeft",
-   "className": "Part",
+   "name": "ClothesTrim",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     1.0,
-     16,
-     38
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -56.5,
-       8.1,
-       85.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      120,
-      170,
-      210
+    "Tags": {
+     "Tags": [
+      "PropSlot"
      ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Clothes_Trim"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -78.0,
+         0.1,
+         85.75
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
-   "name": "ClothesWallRight",
-   "className": "Part",
+   "name": "ClothesInterior",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     1.0,
-     16,
-     38
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -99.5,
-       8.1,
-       85.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      120,
-      170,
-      210
+    "Tags": {
+     "Tags": [
+      "PropSlot"
      ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "ClothesWallFrontL",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     17.0,
-     16,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -64.5,
-       8.1,
-       103.5
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Clothes_Interior",
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -78.0,
+         0.5,
+         85.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
-    },
-    "Color": {
-     "Color3uint8": [
-      120,
-      170,
-      210
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "ClothesWallFrontR",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     17.0,
-     16,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -91.5,
-       8.1,
-       103.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      120,
-      170,
-      210
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "ClothesLintel",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     10,
-     6,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -78.0,
-       13.1,
-       103.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      120,
-      170,
-      210
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "ClothesWindow0_0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     12,
-     8.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -64.5,
-       6.85,
-       104.06
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "ClothesWindow0_1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     12,
-     8.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -64.5,
-       6.85,
-       102.94
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "ClothesSill0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     12.6,
-     0.3,
-     0.6
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -64.5,
-       2.45,
-       104.2
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "ClothesWindow1_0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     12,
-     8.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -91.5,
-       6.85,
-       104.06
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "ClothesWindow1_1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     12,
-     8.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -91.5,
-       6.85,
-       102.94
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "ClothesSill1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     12.6,
-     0.3,
-     0.6
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -91.5,
-       2.45,
-       104.2
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "ClothesRoof",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     45.5,
-     0.8,
-     39.5
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -78.0,
-       16.5,
-       85.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      70,
-      80,
-      100
-     ]
-    },
-    "Material": "Slate",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "ClothesRoofTrim",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     45.5,
-     0.6,
-     0.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -78.0,
-       15.9,
-       104.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    }
+   ]
   },
   {
    "name": "ClothesAwning0",
@@ -4278,7 +3823,7 @@
      "CFrame": {
       "position": [
        -60.0,
-       12.5,
+       13.7,
        105.6
       ],
       "orientation": [
@@ -4325,7 +3870,7 @@
      "CFrame": {
       "position": [
        -66.0,
-       12.5,
+       13.7,
        105.6
       ],
       "orientation": [
@@ -4372,7 +3917,7 @@
      "CFrame": {
       "position": [
        -72.0,
-       12.5,
+       13.7,
        105.6
       ],
       "orientation": [
@@ -4419,7 +3964,7 @@
      "CFrame": {
       "position": [
        -78.0,
-       12.5,
+       13.7,
        105.6
       ],
       "orientation": [
@@ -4466,7 +4011,7 @@
      "CFrame": {
       "position": [
        -84.0,
-       12.5,
+       13.7,
        105.6
       ],
       "orientation": [
@@ -4513,7 +4058,7 @@
      "CFrame": {
       "position": [
        -90.0,
-       12.5,
+       13.7,
        105.6
       ],
       "orientation": [
@@ -4560,7 +4105,7 @@
      "CFrame": {
       "position": [
        -96.0,
-       12.5,
+       13.7,
        105.6
       ],
       "orientation": [
@@ -5642,666 +5187,211 @@
    }
   },
   {
-   "name": "BarberWallBack",
-   "className": "Part",
+   "name": "BarberWalls",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     36,
-     14,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -30.0,
-       7.1,
-       72.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      250,
-      236,
-      220
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Barber_Walls",
+    "PropColor": {
+     "Color3": [
+      0.9804,
+      0.9255,
+      0.8627
      ]
     },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    "PropMaterial": "Plaster"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -30.0,
+         0.1,
+         88.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
-   "name": "BarberWallLeft",
-   "className": "Part",
+   "name": "BarberTrim",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     1.0,
-     14,
-     32
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -12.5,
-       7.1,
-       88.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      250,
-      236,
-      220
+    "Tags": {
+     "Tags": [
+      "PropSlot"
      ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Barber_Trim"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -30.0,
+         0.1,
+         88.75
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
-   "name": "BarberWallRight",
-   "className": "Part",
+   "name": "BarberInterior",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     1.0,
-     14,
-     32
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -47.5,
-       7.1,
-       88.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      250,
-      236,
-      220
+    "Tags": {
+     "Tags": [
+      "PropSlot"
      ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "BarberWallFrontL",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     14.0,
-     14,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -19.0,
-       7.1,
-       103.5
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Barber_Interior",
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -30.0,
+         0.5,
+         88.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
-    },
-    "Color": {
-     "Color3uint8": [
-      250,
-      236,
-      220
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "BarberWallFrontR",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     14.0,
-     14,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -41.0,
-       7.1,
-       103.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      250,
-      236,
-      220
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "BarberLintel",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     8,
-     5,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -30.0,
-       11.6,
-       103.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      250,
-      236,
-      220
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "BarberWindow0_0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     9,
-     6.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -19.5,
-       6.35,
-       104.06
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "BarberWindow0_1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     9,
-     6.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -19.5,
-       6.35,
-       102.94
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "BarberSill0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     9.6,
-     0.3,
-     0.6
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -19.5,
-       2.95,
-       104.2
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "BarberWindow1_0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     9,
-     6.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -40.5,
-       6.35,
-       104.06
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "BarberWindow1_1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     9,
-     6.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -40.5,
-       6.35,
-       102.94
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "BarberSill1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     9.6,
-     0.3,
-     0.6
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -40.5,
-       2.95,
-       104.2
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "BarberRoof",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     37.5,
-     0.8,
-     33.5
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -30.0,
-       14.5,
-       88.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      50,
-      50
-     ]
-    },
-    "Material": "Slate",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "BarberRoofTrim",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     37.5,
-     0.6,
-     0.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -30.0,
-       13.9,
-       104.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    }
+   ]
   },
   {
    "name": "BarberPoleSlot",
@@ -6331,9 +5421,9 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         -36.0,
+         -35.2,
          3.1,
-         104.0
+         104.4
         ],
         "orientation": [
          [
@@ -7489,666 +6579,211 @@
    }
   },
   {
-   "name": "FurnitureWallBack",
-   "className": "Part",
+   "name": "FurnitureWalls",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     48,
-     16,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       36.0,
-       8.1,
-       66.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      230,
-      200,
-      140
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Furniture_Walls",
+    "PropColor": {
+     "Color3": [
+      0.902,
+      0.7843,
+      0.549
      ]
     },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    "PropMaterial": "Plaster"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         36.0,
+         0.1,
+         85.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
-   "name": "FurnitureWallLeft",
-   "className": "Part",
+   "name": "FurnitureTrim",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     1.0,
-     16,
-     38
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       59.5,
-       8.1,
-       85.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      230,
-      200,
-      140
+    "Tags": {
+     "Tags": [
+      "PropSlot"
      ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Furniture_Trim"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         36.0,
+         0.1,
+         85.75
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
-   "name": "FurnitureWallRight",
-   "className": "Part",
+   "name": "FurnitureInterior",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     1.0,
-     16,
-     38
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       12.5,
-       8.1,
-       85.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      230,
-      200,
-      140
+    "Tags": {
+     "Tags": [
+      "PropSlot"
      ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "FurnitureWallFrontL",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     18.0,
-     16,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       51.0,
-       8.1,
-       103.5
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Furniture_Interior",
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         36.0,
+         0.5,
+         85.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
-    },
-    "Color": {
-     "Color3uint8": [
-      230,
-      200,
-      140
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "FurnitureWallFrontR",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     18.0,
-     16,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       21.0,
-       8.1,
-       103.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      230,
-      200,
-      140
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "FurnitureLintel",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     12,
-     5,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       36.0,
-       13.6,
-       103.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      230,
-      200,
-      140
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "FurnitureWindow0_0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     14,
-     9.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       51.0,
-       7.35,
-       104.06
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "FurnitureWindow0_1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     14,
-     9.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       51.0,
-       7.35,
-       102.94
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "FurnitureSill0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     14.6,
-     0.3,
-     0.6
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       51.0,
-       2.45,
-       104.2
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "FurnitureWindow1_0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     14,
-     9.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       21.0,
-       7.35,
-       104.06
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "FurnitureWindow1_1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     14,
-     9.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       21.0,
-       7.35,
-       102.94
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "FurnitureSill1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     14.6,
-     0.3,
-     0.6
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       21.0,
-       2.45,
-       104.2
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "FurnitureRoof",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     49.5,
-     0.8,
-     39.5
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       36.0,
-       16.5,
-       85.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      110,
-      80,
-      60
-     ]
-    },
-    "Material": "Slate",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "FurnitureRoofTrim",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     49.5,
-     0.6,
-     0.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       36.0,
-       15.9,
-       104.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    }
+   ]
   },
   {
    "name": "SignSeat",
@@ -9400,666 +8035,211 @@
    }
   },
   {
-   "name": "GroceryWallBack",
-   "className": "Part",
+   "name": "GroceryWalls",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     36,
-     14,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       82.0,
-       7.1,
-       72.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      250,
-      240,
-      210
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Grocery_Walls",
+    "PropColor": {
+     "Color3": [
+      0.9804,
+      0.9412,
+      0.8235
      ]
     },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    "PropMaterial": "Plaster"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         82.0,
+         0.1,
+         88.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
-   "name": "GroceryWallLeft",
-   "className": "Part",
+   "name": "GroceryTrim",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     1.0,
-     14,
-     32
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       99.5,
-       7.1,
-       88.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      250,
-      240,
-      210
+    "Tags": {
+     "Tags": [
+      "PropSlot"
      ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Grocery_Trim"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         82.0,
+         0.1,
+         88.75
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
-   "name": "GroceryWallRight",
-   "className": "Part",
+   "name": "GroceryInterior",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     1.0,
-     14,
-     32
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       64.5,
-       7.1,
-       88.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      250,
-      240,
-      210
+    "Tags": {
+     "Tags": [
+      "PropSlot"
      ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GroceryWallFrontL",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     13.0,
-     14,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       93.5,
-       7.1,
-       103.5
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Grocery_Interior",
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         82.0,
+         0.5,
+         88.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
-    },
-    "Color": {
-     "Color3uint8": [
-      250,
-      240,
-      210
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GroceryWallFrontR",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     13.0,
-     14,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       70.5,
-       7.1,
-       103.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      250,
-      240,
-      210
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GroceryLintel",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     10,
-     5,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       82.0,
-       11.6,
-       103.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      250,
-      240,
-      210
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GroceryWindow0_0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     10,
-     6.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       93.0,
-       5.85,
-       104.06
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "GroceryWindow0_1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     10,
-     6.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       93.0,
-       5.85,
-       102.94
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "GrocerySill0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     10.6,
-     0.3,
-     0.6
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       93.0,
-       2.45,
-       104.2
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GroceryWindow1_0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     10,
-     6.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       71.0,
-       5.85,
-       104.06
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "GroceryWindow1_1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     10,
-     6.5,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       71.0,
-       5.85,
-       102.94
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "GrocerySill1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     10.6,
-     0.3,
-     0.6
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       71.0,
-       2.45,
-       104.2
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GroceryRoof",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     37.5,
-     0.8,
-     33.5
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       82.0,
-       14.5,
-       88.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      60,
-      120,
-      70
-     ]
-    },
-    "Material": "Slate",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GroceryRoofTrim",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     37.5,
-     0.6,
-     0.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       82.0,
-       13.9,
-       104.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    }
+   ]
   },
   {
    "name": "GroceryAwning0",
@@ -10075,7 +8255,7 @@
      "CFrame": {
       "position": [
        97.0,
-       10.7,
+       12.6,
        105.6
       ],
       "orientation": [
@@ -10122,7 +8302,7 @@
      "CFrame": {
       "position": [
        92.0,
-       10.7,
+       12.6,
        105.6
       ],
       "orientation": [
@@ -10169,7 +8349,7 @@
      "CFrame": {
       "position": [
        87.0,
-       10.7,
+       12.6,
        105.6
       ],
       "orientation": [
@@ -10216,7 +8396,7 @@
      "CFrame": {
       "position": [
        82.0,
-       10.7,
+       12.6,
        105.6
       ],
       "orientation": [
@@ -10263,7 +8443,7 @@
      "CFrame": {
       "position": [
        77.0,
-       10.7,
+       12.6,
        105.6
       ],
       "orientation": [
@@ -10310,7 +8490,7 @@
      "CFrame": {
       "position": [
        72.0,
-       10.7,
+       12.6,
        105.6
       ],
       "orientation": [
@@ -10357,7 +8537,7 @@
      "CFrame": {
       "position": [
        67.0,
-       10.7,
+       12.6,
        105.6
       ],
       "orientation": [
@@ -11934,666 +10114,211 @@
    }
   },
   {
-   "name": "GymWallBack",
-   "className": "Part",
+   "name": "GymWalls",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     84,
-     20,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       56.5,
-       10.1,
-       -54.0
-      ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      72,
-      60
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Gym_Walls",
+    "PropColor": {
+     "Color3": [
+      0.5882,
+      0.2824,
+      0.2353
      ]
     },
-    "Material": "Brick",
-    "CanCollide": true
-   }
+    "PropMaterial": "Brick"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         80.0,
+         0.1,
+         -54.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
-   "name": "GymWallLeft",
-   "className": "Part",
+   "name": "GymTrim",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     1.0,
-     20,
-     48
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       80.0,
-       10.1,
-       -95.5
-      ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      72,
-      60
+    "Tags": {
+     "Tags": [
+      "PropSlot"
      ]
-    },
-    "Material": "Brick",
-    "CanCollide": true
-   }
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Gym_Trim"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         80.75,
+         0.1,
+         -54.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
-   "name": "GymWallRight",
-   "className": "Part",
+   "name": "GymInterior",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     1.0,
-     20,
-     48
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       80.0,
-       10.1,
-       -12.5
-      ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      72,
-      60
+    "Tags": {
+     "Tags": [
+      "PropSlot"
      ]
-    },
-    "Material": "Brick",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GymWallFrontL",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     33.0,
-     20,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       103.5,
-       10.1,
-       -79.5
+    }
+   },
+   "attributes": {
+    "Prop": "Shop_Gym_Interior",
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         80.0,
+         0.5,
+         -54.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      72,
-      60
-     ]
-    },
-    "Material": "Brick",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GymWallFrontR",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     33.0,
-     20,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       103.5,
-       10.1,
-       -28.5
-      ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      72,
-      60
-     ]
-    },
-    "Material": "Brick",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GymLintel",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     18,
-     7,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       103.5,
-       16.6,
-       -54.0
-      ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      72,
-      60
-     ]
-    },
-    "Material": "Brick",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GymWindow0_0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     16,
-     9,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       104.06,
-       7.6,
-       -80.0
-      ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "GymWindow0_1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     16,
-     9,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       102.94,
-       7.6,
-       -80.0
-      ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "GymSill0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     16.6,
-     0.3,
-     0.6
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       104.2,
-       2.95,
-       -80.0
-      ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GymWindow1_0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     16,
-     9,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       104.06,
-       7.6,
-       -28.0
-      ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "GymWindow1_1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     16,
-     9,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       102.94,
-       7.6,
-       -28.0
-      ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "GymSill1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     16.6,
-     0.3,
-     0.6
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       104.2,
-       2.95,
-       -28.0
-      ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GymRoof",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     85.5,
-     0.8,
-     49.5
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       80.0,
-       20.5,
-       -54.0
-      ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      90,
-      50,
-      44
-     ]
-    },
-    "Material": "Slate",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GymRoofTrim",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     85.5,
-     0.6,
-     0.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       104.5,
-       19.9,
-       -54.0
-      ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    }
+   ]
   },
   {
    "name": "GymLamp00",
@@ -13137,7 +10862,7 @@
      "CFrame": {
       "position": [
        105.5,
-       14.1,
+       16.9,
        -54.0
       ],
       "orientation": [
@@ -19809,21 +17534,21 @@
    ]
   },
   {
-   "name": "SquareBedSE",
+   "name": "OutdoorGymMat",
    "className": "Part",
    "properties": {
     "Anchored": true,
     "Size": [
-     10,
-     0.8,
-     10
+     40,
+     0.12,
+     30
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       30.0,
-       0.5,
-       -64.0
+       33.0,
+       0.16,
+       -56.0
       ],
       "orientation": [
        [
@@ -19846,286 +17571,478 @@
     },
     "Color": {
      "Color3uint8": [
-      110,
-      80,
-      60
+      46,
+      46,
+      52
      ]
     },
-    "Material": "Ground",
+    "Material": "Rubber",
     "CanCollide": true
    }
   },
   {
-   "name": "SquareBedSEFlowerSlot0",
-   "className": "Model",
+   "className": "Part",
    "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     1,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       18.0,
+       0.72,
+       -49.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      90,
+      100
+     ]
+    },
+    "Material": "SmoothPlastic",
     "Tags": {
      "Tags": [
+      "Station",
       "PropSlot"
      ]
     }
    },
    "attributes": {
-    "Prop": "FlowerPatch",
-    "PropHeight": 1.3,
+    "ExerciseId": "Curl",
+    "Prop": "WatermelonDumbbell",
     "PropCollide": false
    },
-   "children": [
-    {
-     "name": "PropAnchor",
-     "className": "Part",
-     "properties": {
-      "Anchored": true,
-      "Size": [
-       1,
-       0.2,
-       1
-      ],
-      "CFrame": {
-       "CFrame": {
-        "position": [
-         27.5,
-         0.9,
-         -66.5
-        ],
-        "orientation": [
-         [
-          1.0,
-          0.0,
-          0.0
-         ],
-         [
-          0.0,
-          1.0,
-          0
-         ],
-         [
-          0.0,
-          0.0,
-          1.0
-         ]
-        ]
-       }
-      },
-      "Color": {
-       "Color3uint8": [
-        240,
-        238,
-        232
-       ]
-      },
-      "Material": "SmoothPlastic",
-      "CanCollide": false,
-      "Transparency": 1,
-      "CanQuery": false,
-      "CanTouch": false
-     }
-    }
-   ]
+   "children": [],
+   "name": "OutdoorCurlStation0"
   },
   {
-   "name": "SquareBedSEFlowerSlot1",
-   "className": "Model",
+   "className": "Part",
    "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     1,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       28.0,
+       0.72,
+       -49.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      90,
+      100
+     ]
+    },
+    "Material": "SmoothPlastic",
     "Tags": {
      "Tags": [
+      "Station",
       "PropSlot"
      ]
     }
    },
    "attributes": {
-    "Prop": "FlowerPatch",
-    "PropHeight": 1.3,
+    "ExerciseId": "PushUp",
+    "Prop": "PushUpMat",
     "PropCollide": false
    },
-   "children": [
-    {
-     "name": "PropAnchor",
-     "className": "Part",
-     "properties": {
-      "Anchored": true,
-      "Size": [
-       1,
-       0.2,
-       1
-      ],
-      "CFrame": {
-       "CFrame": {
-        "position": [
-         32.5,
-         0.9,
-         -66.5
-        ],
-        "orientation": [
-         [
-          0.0,
-          0.0,
-          1.0
-         ],
-         [
-          0.0,
-          1.0,
-          0
-         ],
-         [
-          -1.0,
-          0.0,
-          0.0
-         ]
-        ]
-       }
-      },
-      "Color": {
-       "Color3uint8": [
-        240,
-        238,
-        232
-       ]
-      },
-      "Material": "SmoothPlastic",
-      "CanCollide": false,
-      "Transparency": 1,
-      "CanQuery": false,
-      "CanTouch": false
-     }
-    }
-   ]
+   "children": [],
+   "name": "OutdoorPushUpStation1"
   },
   {
-   "name": "SquareBedSEFlowerSlot2",
-   "className": "Model",
+   "className": "Part",
    "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     1,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       38.0,
+       0.72,
+       -49.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      90,
+      100
+     ]
+    },
+    "Material": "SmoothPlastic",
     "Tags": {
      "Tags": [
+      "Station",
       "PropSlot"
      ]
     }
    },
    "attributes": {
-    "Prop": "FlowerPatch",
-    "PropHeight": 1.3,
+    "ExerciseId": "BenchPress",
+    "Prop": "BenchPress",
     "PropCollide": false
    },
-   "children": [
-    {
-     "name": "PropAnchor",
-     "className": "Part",
-     "properties": {
-      "Anchored": true,
-      "Size": [
-       1,
-       0.2,
-       1
-      ],
-      "CFrame": {
-       "CFrame": {
-        "position": [
-         27.5,
-         0.9,
-         -61.5
-        ],
-        "orientation": [
-         [
-          -1.0,
-          0.0,
-          0.0
-         ],
-         [
-          0.0,
-          1.0,
-          0
-         ],
-         [
-          -0.0,
-          0.0,
-          -1.0
-         ]
-        ]
-       }
-      },
-      "Color": {
-       "Color3uint8": [
-        240,
-        238,
-        232
-       ]
-      },
-      "Material": "SmoothPlastic",
-      "CanCollide": false,
-      "Transparency": 1,
-      "CanQuery": false,
-      "CanTouch": false
-     }
-    }
-   ]
+   "children": [],
+   "name": "OutdoorBenchPressStation2"
   },
   {
-   "name": "SquareBedSEFlowerSlot3",
-   "className": "Model",
+   "className": "Part",
    "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     1,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       48.0,
+       0.72,
+       -49.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      90,
+      100
+     ]
+    },
+    "Material": "SmoothPlastic",
     "Tags": {
      "Tags": [
+      "Station",
       "PropSlot"
      ]
     }
    },
    "attributes": {
-    "Prop": "FlowerPatch",
-    "PropHeight": 1.3,
+    "ExerciseId": "Squat",
+    "Prop": "SquatRack",
     "PropCollide": false
    },
-   "children": [
-    {
-     "name": "PropAnchor",
-     "className": "Part",
-     "properties": {
-      "Anchored": true,
-      "Size": [
-       1,
-       0.2,
-       1
+   "children": [],
+   "name": "OutdoorSquatStation3"
+  },
+  {
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     1,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       18.0,
+       0.72,
+       -63.0
       ],
-      "CFrame": {
-       "CFrame": {
-        "position": [
-         32.5,
-         0.9,
-         -61.5
-        ],
-        "orientation": [
-         [
-          -0.0,
-          0.0,
-          -1.0
-         ],
-         [
-          0.0,
-          1.0,
-          0
-         ],
-         [
-          1.0,
-          0.0,
-          -0.0
-         ]
-        ]
-       }
-      },
-      "Color": {
-       "Color3uint8": [
-        240,
-        238,
-        232
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
        ]
-      },
-      "Material": "SmoothPlastic",
-      "CanCollide": false,
-      "Transparency": 1,
-      "CanQuery": false,
-      "CanTouch": false
+      ]
      }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      90,
+      100
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "Tags": {
+     "Tags": [
+      "Station",
+      "PropSlot"
+     ]
     }
-   ]
+   },
+   "attributes": {
+    "ExerciseId": "PullUp",
+    "Prop": "PullUpBar",
+    "PropCollide": false
+   },
+   "children": [],
+   "name": "OutdoorPullUpStation4"
+  },
+  {
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     1,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       28.0,
+       0.72,
+       -63.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      90,
+      100
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "Tags": {
+     "Tags": [
+      "Station",
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "ExerciseId": "JumpRope",
+    "Prop": "JumpRope",
+    "PropCollide": false
+   },
+   "children": [],
+   "name": "OutdoorJumpRopeStation5"
+  },
+  {
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     1,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       38.0,
+       0.72,
+       -63.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      90,
+      100
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "Tags": {
+     "Tags": [
+      "Station",
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "ExerciseId": "Curl",
+    "Prop": "WatermelonDumbbell",
+    "PropCollide": false
+   },
+   "children": [],
+   "name": "OutdoorCurlStation6"
+  },
+  {
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     1,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       48.0,
+       0.72,
+       -63.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      90,
+      100
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "Tags": {
+     "Tags": [
+      "Station",
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "ExerciseId": "PushUp",
+    "Prop": "PushUpMat",
+    "PropCollide": false
+   },
+   "children": [],
+   "name": "OutdoorPushUpStation7"
   },
   {
    "name": "SquareBenchNE",
@@ -20595,72 +18512,6 @@
           0.0,
           0.0,
           1.0
-         ]
-        ]
-       }
-      },
-      "Color": {
-       "Color3uint8": [
-        240,
-        238,
-        232
-       ]
-      },
-      "Material": "SmoothPlastic",
-      "CanCollide": false,
-      "Transparency": 1,
-      "CanQuery": false,
-      "CanTouch": false
-     }
-    }
-   ]
-  },
-  {
-   "name": "SquareBenchSE",
-   "className": "Model",
-   "properties": {
-    "Tags": {
-     "Tags": [
-      "PropSlot"
-     ]
-    }
-   },
-   "attributes": {
-    "Prop": "Bench"
-   },
-   "children": [
-    {
-     "name": "PropAnchor",
-     "className": "Part",
-     "properties": {
-      "Anchored": true,
-      "Size": [
-       1,
-       0.2,
-       1
-      ],
-      "CFrame": {
-       "CFrame": {
-        "position": [
-         40.0,
-         0.1,
-         -60.0
-        ],
-        "orientation": [
-         [
-          0.0,
-          0.0,
-          -1.0
-         ],
-         [
-          0.0,
-          1.0,
-          0
-         ],
-         [
-          1.0,
-          0.0,
-          0.0
          ]
         ]
        }

@@ -342,6 +342,41 @@ def prop_slot(F, name, local, prop, fallback=(), yaw=0, height=None, collide=Tru
             "attributes": attributes, "children": children}
 
 
+# Positions des pièces de bâtiment dans leur repère de conception (écrit par tools/blender/props_building.py)
+with open(os.path.join(ROOT, "assets", "export", "props", "buildings_manifest.json"), encoding="utf-8") as _f:
+    BUILDING_MANIFEST = json.load(_f)
+
+
+def piece(F, name, prop, tint=None, material=None, collide=True, attributes=None):
+    """Pièce d'un bâtiment (murs, toit, façade, intérieur) recalée dans le repère F du bâtiment.
+    tint / material : le jeu retire la texture et applique cette couleur et ce matériau Roblox."""
+    m = BUILDING_MANIFEST[prop]
+    cx, cy = m["center"]
+    slot = prop_slot(F, name, (cx, m["bottom"], cy), prop, collide=collide)
+    if tint:
+        slot["attributes"]["PropColor"] = {"Color3": [round(v / 255, 4) for v in tint]}
+    if material:
+        slot["attributes"]["PropMaterial"] = material
+    if attributes:
+        slot["attributes"].update(attributes)
+    return slot
+
+
+SHOP_DIMS = {"Clothes": (44, 38), "Barber": (36, 32), "Furniture": (48, 38), "Grocery": (36, 32), "Gym": (84, 48)}
+
+
+def shop_shell(F, name, color, material, floor):
+    """Magasin modélisé dans Blender : sol en bloc + murs teintés, façade (vitrines, enseigne) et intérieur."""
+    w, d = SHOP_DIMS[name]
+    fcol, fmat, ft = floor
+    return [
+        P(F, name + "Floor", (0, ft / 2, d / 2), (w, ft, d), fcol, fmat),
+        piece(F, name + "Walls", f"Shop_{name}_Walls", tint=color, material=material),
+        piece(F, name + "Trim", f"Shop_{name}_Trim"),
+        piece(F, name + "Interior", f"Shop_{name}_Interior", collide=False),
+    ]
+
+
 def wrap(c, n0, F, name, local, prop, yaw=0, height=None, collide=True, align=None):
     """Range les blocs ajoutés à `c` depuis l'index n0 dans un emplacement de décor."""
     blocks = c[n0:]
@@ -441,11 +476,14 @@ def plot(index, side, offset):
 
     # Le garage : curl, pompes, et Kevin sur le canapé défoncé (assez grand pour recevoir des visiteurs)
     G = F.child((-14, 0, 8))
-    c += building(G, 26, 30, 14, TIN, "Metal", 18, 10, floor=(CONCRETE, "Concrete", 0.3),
-                  roof_color=TIN_DARK, roof_material="CorrodedMetal", prefix="Garage")
-    c.append(P(G, "GarageDoor", (0, 11.8, 1.2), (18, 1.6, 1.4), (190, 192, 188), "Metal"))
+    # Garage modélisé dans Blender, de la couleur de la maison (murs en plâtre, toit en ardoise)
+    c.append(P(G, "GarageFloor", (0, 0.15, 15), (26, 0.3, 30), CONCRETE, "Concrete"))
+    c.append(piece(G, "GarageWalls", "Garage_Walls", tint=wall, material="Plaster"))
+    c.append(piece(G, "GarageRoof", "Garage_Roof", tint=roof, material="Slate"))
+    c.append(piece(G, "GarageTrim", "Garage_Trim"))
+    c.append(piece(G, "GarageInterior", "Garage_Interior", collide=False))
     for k, lz in enumerate((8, 20)):
-        c.append(P(G, f"GarageLamp{k}", (0, 13.6, lz), (8, 0.4, 1), (255, 244, 214), "Neon",
+        c.append(P(G, f"GarageLamp{k}", (0, 11.5, lz), (8, 0.4, 1), (255, 244, 214), "Neon",
                    children=[light(brightness=0.8, range_=20)]))
     c.append(station(G, "CurlStation", (-7, 0.8, 6.5), "Curl"))
     c.append(station(G, "PushUpStation", (7, 0.8, 6.5), "PushUp"))
@@ -471,36 +509,41 @@ def plot(index, side, offset):
     c.append(P(G, "Toolboard", (-12.3, 7, 17), (0.3, 3.4, 7), WOOD_LIGHT, "WoodPlanks"))
     wrap(c, n0, G, "WorkbenchSlot", (-10.6, 0.3, 17), "Garage_Workbench", yaw=-90)
     n0 = len(c)
-    c.append(P(G, "Fridge", (10.5, 3.9, 17), (3, 7.2, 3), (232, 230, 220)))
-    wrap(c, n0, G, "FridgeSlot", (10.9, 0.3, 17), "Garage_Fridge", yaw=90)
+    # Côté droit dégagé au fond : la porte vers la maison s'y trouve (z 23,5 → 28,5)
     n0 = len(c)
-    c.append(P(G, "WashingMachine", (10.5, 1.9, 21.5), (3.2, 3.2, 3.2), (220, 220, 226)))
-    wrap(c, n0, G, "WasherSlot", (10.9, 0.3, 21.5), "Garage_WashingMachine", yaw=90)
+    c.append(P(G, "Fridge", (10.5, 3.9, 12), (3, 7.2, 3), (232, 230, 220)))
+    wrap(c, n0, G, "FridgeSlot", (10.6, 0.3, 12), "Garage_Fridge", yaw=90)
     n0 = len(c)
-    for k, (lx, ly, lz, s) in enumerate(((9.5, 1.5, 26.5, 2.4), (10, 3.6, 26.6, 1.8))):
+    c.append(P(G, "WashingMachine", (10.5, 1.9, 16.5), (3.2, 3.2, 3.2), (220, 220, 226)))
+    wrap(c, n0, G, "WasherSlot", (10.6, 0.3, 16.5), "Garage_WashingMachine", yaw=90)
+    n0 = len(c)
+    for k, (lx, ly, lz, s) in enumerate(((9.5, 1.5, 20.5, 2.4), (10, 3.6, 20.6, 1.8))):
         c.append(P(G, f"Box{k}", (lx, ly, lz), (s, s, s), CARDBOARD, "Cardboard", yaw=k * 23))
-    wrap(c, n0, G, "BoxesSlot", (9.6, 0.3, 26.8), "Garage_BoxStack", yaw=90)
+    wrap(c, n0, G, "BoxesSlot", (10.0, 0.3, 20.5), "Garage_BoxStack", yaw=90)
     n0 = len(c)
     c.append(P(G, "Box2", (-9.5, 1.3, 26.5), (2.2, 2.2, 2.2), CARDBOARD, "Cardboard", yaw=46))
     wrap(c, n0, G, "PizzaBoxesSlot", (-9.5, 0.3, 26.5), "Garage_PizzaBoxes", yaw=30)
-    c.append(decor(G, "TireSlot", (-11.6, 0.3, 9.0), "Garage_Tire", yaw=-90))
-    c.append(decor(G, "GasCanSlot", (11.0, 0.3, 12.0), "Garage_GasCan", yaw=90, height=2.2))
+    c.append(decor(G, "TireSlot", (-11.6, 0.3, 23.0), "Garage_Tire", yaw=-90))
+    c.append(decor(G, "GasCanSlot", (-11.0, 0.3, 11.0), "Garage_GasCan", yaw=-90, height=2.2))
 
     # La maison : 8 emplacements de meubles que le joueur décore
     H = F.child((14, 0, 12))
-    c += building(H, 26, 32, 12, wall, "SmoothPlastic", 6, 8.5,
-                  windows=((-8, 5.5, 4, 8), (8, 5.5, 4, 8)),
-                  floor=(WOOD_LIGHT, "WoodPlanks", 0.5), roof="gable", roof_color=roof, roof_material="Slate",
-                  prefix="House")
-    n0 = len(c)
-    c.append(P(H, "Chimney", (7, 16.5, 22), (2.6, 7, 2.6), BRICK, "Brick"))
-    wrap(c, n0, H, "ChimneySlot", (7, 13.0, 22), "Kit_Chimney")
-    for k, lx in enumerate((-8, 8)):
-        c.append(decor(H, f"WindowSlot{k}", (lx, 3.7, 0), ["Kit_WindowShutters", "Kit_WindowFlowers"][(index + k) % 2],
-                       collide=False, align="Back"))
-    c.append(P(H, "Doormat", (0, 0.12, -1.3), (4.4, 0.1, 2), (150, 60, 50), "Fabric"))
-    c.append(P(H, "Porch", (0, 0.25, -0.7), (8, 0.5, 1.4), CONCRETE_LIGHT, "Concrete"))
-    c.append(P(H, "DoorFrame", (0, 8.75, -0.1), (7, 0.5, 0.3), TRIM))
+    # Maison modélisée dans Blender : murs en plâtre de couleur pastel, toit en ardoise, façade et porche,
+    # papier peint intérieur (4 motifs en alternance)
+    c.append(P(H, "HouseFloor", (0, 0.25, 16), (26, 0.5, 32), WOOD_LIGHT, "WoodPlanks"))
+    c.append(piece(H, "HouseWalls", "House_Walls", tint=wall, material="Plaster"))
+    c.append(piece(H, "HouseRoof", "House_Roof", tint=roof, material="Slate"))
+    c.append(piece(H, "HouseTrim", "House_Trim"))
+    c.append(piece(H, "HouseInterior", "House_Interior_" + ("Cream", "Mint", "Rose", "Blue")[index % 4],
+                   collide=False))
+    # Passage couvert vers le garage, et porte qui s'ouvre toute seule quand un joueur approche (DoorService)
+    c.append(P(H, "LinkFloor", (-14, 0.2, 22), (2.4, 0.4, 5.6), CONCRETE_LIGHT, "Concrete"))
+    c.append(piece(H, "InteriorDoor", "Door_Interior", collide=False,
+                   attributes={"AutoDoor": True, "DoorHingeX": -2.4}))
+    door = c[-1]
+    # La porte est dans le mur gauche de la maison : on la recale dans l'ouverture (largeur le long de Z)
+    door["children"][0]["properties"]["CFrame"]["CFrame"] = {
+        "position": [round(v, 3) for v in H.p((-12.6, 0.2, 22))], "orientation": rot(H.yaw + 90)}
     for k, lz in enumerate((9, 22)):
         c.append(P(H, f"HouseLamp{k}", (0, 11.6, lz), (4, 0.4, 4), (255, 244, 214), "Neon",
                    children=[light(brightness=0.8, range_=20)]))
@@ -654,11 +697,9 @@ def shop_frame(cx):
 
 def clothing_store():
     F = shop_frame(-78)
-    c = building(F, 44, 38, 16, (120, 170, 210), "SmoothPlastic", 10, 10,
-                 windows=((-13.5, 12, 2.5, 11), (13.5, 12, 2.5, 11)), floor=((236, 230, 220), "Marble", 0.4),
-                 roof_color=(70, 80, 100), prefix="Clothes")
+    c = shop_shell(F, "Clothes", (120, 170, 210), "Plaster", ((236, 230, 220), "Marble", 0.4))
     for k in range(7):  # auvent rayé
-        c.append(P(F, f"ClothesAwning{k}", (-18 + k * 6, 12.4, -1.6), (6, 0.4, 3.2),
+        c.append(P(F, f"ClothesAwning{k}", (-18 + k * 6, 13.6, -1.6), (6, 0.4, 3.2),
                    (60, 110, 200) if k % 2 == 0 else WHITE, "Fabric"))
     c.append(P(F, "SignShirt", (0, 20.5, 1), (7, 8, 1), (240, 90, 90)))
     for k, sx in enumerate((-1, 1)):
@@ -692,15 +733,13 @@ def clothing_store():
 
 def barber():
     F = shop_frame(-30)
-    c = building(F, 36, 32, 14, (250, 236, 220), "SmoothPlastic", 8, 9,
-                 windows=((-10.5, 9, 3, 9.5), (10.5, 9, 3, 9.5)), floor=((40, 40, 44), "Marble", 0.4),
-                 roof_color=(150, 50, 50), prefix="Barber")
+    c = shop_shell(F, "Barber", (250, 236, 220), "Plaster", ((40, 40, 44), "Marble", 0.4))
     n0 = len(c)
     for k in range(8):
-        c.append(P(F, f"Pole{k}", (6, 2 + k * 0.9, -1.2), (0.9, 1, 1), [(220, 40, 40), WHITE, (40, 80, 200)][k % 3],
+        c.append(P(F, f"Pole{k}", (5.2, 2 + k * 0.9, -1.2), (0.9, 1, 1), [(220, 40, 40), WHITE, (40, 80, 200)][k % 3],
                    roll=90, shape="Cylinder"))
-    c.append(P(F, "PoleTop", (6, 9.4, -1.2), (1.3, 1.3, 1.3), (230, 200, 60), "Metal", shape="Ball"))
-    wrap(c, n0, F, "BarberPoleSlot", (6, 3.0, 0), "BarberPole", align="Back")
+    c.append(P(F, "PoleTop", (5.2, 9.4, -1.2), (1.3, 1.3, 1.3), (230, 200, 60), "Metal", shape="Ball"))
+    wrap(c, n0, F, "BarberPoleSlot", (5.2, 3.0, -0.4), "BarberPole", align="Back")
     for k, angle in enumerate((25, -25)):
         c.append(P(F, f"ScissorBlade{k}", (0, 18, 1), (1, 7, 0.6), (200, 205, 210), "Metal", roll=angle))
         c.append(P(F, f"ScissorRing{k}", (1.6 if k == 0 else -1.6, 14.4, 1), (0.6, 2, 2), (40, 40, 44),
@@ -727,9 +766,7 @@ def barber():
 
 def furniture_store():
     F = shop_frame(36)
-    c = building(F, 48, 38, 16, (230, 200, 140), "SmoothPlastic", 12, 11,
-                 windows=((-15, 14, 2.5, 12), (15, 14, 2.5, 12)), floor=((190, 150, 110), "WoodPlanks", 0.4),
-                 roof_color=(110, 80, 60), prefix="Furniture")
+    c = shop_shell(F, "Furniture", (230, 200, 140), "Plaster", ((190, 150, 110), "WoodPlanks", 0.4))
     c.append(P(F, "SignSeat", (0, 18, 2), (9, 2, 5), (90, 140, 200), "Fabric"))
     c.append(P(F, "SignBack", (0, 21, 4), (9, 5, 1.4), (90, 140, 200), "Fabric"))
     for k, sx in enumerate((-1, 1)):
@@ -771,11 +808,9 @@ def furniture_store():
 
 def grocery():
     F = shop_frame(82)
-    c = building(F, 36, 32, 14, (250, 240, 210), "SmoothPlastic", 10, 9,
-                 windows=((-11, 10, 2.5, 9), (11, 10, 2.5, 9)), floor=(WHITE, "SmoothPlastic", 0.3),
-                 roof_color=(60, 120, 70), prefix="Grocery")
+    c = shop_shell(F, "Grocery", (250, 240, 210), "Plaster", (WHITE, "SmoothPlastic", 0.3))
     for k in range(7):
-        c.append(P(F, f"GroceryAwning{k}", (-15 + k * 5, 10.6, -1.6), (5, 0.4, 3.2),
+        c.append(P(F, f"GroceryAwning{k}", (-15 + k * 5, 12.5, -1.6), (5, 0.4, 3.2),
                    (210, 50, 50) if k % 2 == 0 else WHITE, "Fabric"))
     for k, colr in enumerate(((220, 60, 50), (250, 200, 60), (120, 180, 60), (250, 140, 40))):
         lx = -14 + k * 3.4 if k < 2 else 8 + (k - 2) * 3.4
@@ -803,9 +838,7 @@ GYM_STATIONS = {"BenchPress": (-34, 26), "Squat": (-34, 38), "PullUp": (14, 26),
 def gym():
     """Salle de quartier (côté est) : façade sur la route, 3 exemplaires de chaque station pour 20 joueurs."""
     F = Frame((CENTER, GROUND, -54), -90)
-    c = building(F, 84, 48, 20, BRICK, "Brick", 18, 13,
-                 windows=((-26, 16, 3, 12), (26, 16, 3, 12)), floor=((58, 58, 64), "Rubber", 0.3),
-                 roof_color=(90, 50, 44), prefix="Gym")
+    c = shop_shell(F, "Gym", BRICK, "Brick", ((58, 58, 64), "Rubber", 0.3))
     for i, lx in enumerate((-24, 0, 24)):
         for j, lz in enumerate((14, 34)):
             c.append(P(F, f"GymLamp{i}{j}", (lx, 19.4, lz), (10, 0.4, 1.4), (255, 244, 214), "Neon",
@@ -813,7 +846,7 @@ def gym():
     c.append(P(F, "SignBar", (0, 25, 6), (26, 1.2, 1.2), (180, 180, 186), "Metal", shape="Cylinder"))
     for k, dx in enumerate((-13, 13)):
         c.append(P(F, f"SignPlate{k}", (dx, 25, 6), (2, 9, 9), (40, 40, 44), "Metal", shape="Cylinder"))
-    c.append(P(F, "GymAwning", (0, 14, -1.5), (22, 0.5, 3), (200, 40, 40), "Fabric"))
+    c.append(P(F, "GymAwning", (0, 16.8, -1.5), (22, 0.5, 3), (200, 40, 40), "Fabric"))
     for ex, (x0, lz) in GYM_STATIONS.items():
         for k in range(3):
             c.append(station(F, f"{ex}Station{k + 1}", (x0 + k * 10, 0.8, lz), ex))
@@ -957,7 +990,12 @@ def downtown():
     for k, (x, z) in enumerate(((40, 40), (80, 30), (60, 52), (30, -40), (40, -80), (20, -94))):
         c += tree(F, f"SquareTree{k}", (x, 0, z), height=8 + (k % 3), radius=4 + (k % 2))
     c += flowerbed(F, "SquareBedNE", (70, 0, 44), (10, 10))
-    c += flowerbed(F, "SquareBedSE", (30, 0, -64), (10, 10))
+    # Salle de sport en plein air : 8 machines de plus, pour que les joueurs ne se marchent pas dessus
+    c.append(P(F, "OutdoorGymMat", (33, 0.06, -56), (40, 0.12, 30), (46, 46, 52), "Rubber"))
+    for k, (ex, x, z) in enumerate((("Curl", 18, -49), ("PushUp", 28, -49), ("BenchPress", 38, -49),
+                                    ("Squat", 48, -49), ("PullUp", 18, -63), ("JumpRope", 28, -63),
+                                    ("Curl", 38, -63), ("PushUp", 48, -63))):
+        c.append(station(F, f"Outdoor{ex}Station{k}", (x, 0.62, z), ex, yaw=180))
     c += bench(F, "SquareBenchNE", (56, 0, 30), yaw=0)
     # Kevin « je commence demain » : un seul pour toute la ville, affalé sur son canapé juste à côté de la salle
     K = Frame((73, GROUND, 22), 90)  # regarde vers la place
@@ -978,7 +1016,6 @@ def downtown():
     c.append(P(K, "KevinTv", (-9, 3.4, -3), (2, 2.8, 4), (60, 60, 64)))
     c.append(P(K, "KevinTvScreen", (-7.95, 3.4, -3), (0.1, 2.2, 3.4), (110, 160, 210), "Neon", collide=False))
     wrap(c, n0, K, "KevinTvSlot", (-9, 0.1, -3), "Furniture_TubeTv", yaw=-90)
-    c += bench(F, "SquareBenchSE", (40, 0, -60), yaw=-90)
     # Aire de jeux et terrain de basket (nord-est), camion à shakes et terrasse (sud-est) : modèles 3D seulement
     c.append(decor(F, "SwingSlot", (45, 0, 54), "SwingSet"))
     c.append(decor(F, "SlideSlot", (30, 0, 58), "PlaygroundSlide", yaw=90))

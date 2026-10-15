@@ -7,6 +7,8 @@
 	- L'importateur lit le FBX en centimètres : tout arrive 100 fois trop grand, on divise donc la taille par 100.
 	- Chaque MeshPart garde son nom (Bench, StreetLamp, Furniture_SaggyCouch…), est ancrée et rangée.
 	- Un décor déjà présent du même nom est remplacé (pour réimporter après une modification).
+	- Murs et façades des bâtiments (*_Walls, *_Trim) : collision précise, sinon Roblox entoure la maison d'une
+	  coque pleine et on ne peut plus passer les portes.
 	Enregistrer ensuite la place (Ctrl+S) : les modèles vivent dans la place, pas dans les fichiers.
 ]]
 
@@ -36,6 +38,9 @@ for _, part in imported:GetDescendants() do
 		end
 		part.Size *= IMPORT_SCALE
 		part.Anchored = true
+		if part.Name:match("_Walls$") or part.Name:match("_Trim$") then
+			part.CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition
+		end
 		part.CFrame = CFrame.new(0, part.Size.Y / 2, 0)
 		part.Parent = folder
 		count += 1

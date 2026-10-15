@@ -729,427 +729,285 @@
    }
   },
   {
-   "name": "GarageWallBack",
-   "className": "Part",
+   "name": "GarageWalls",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     26,
-     14,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -42.0,
-       7.1,
-       -177.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      170,
-      182
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Garage_Walls",
+    "PropColor": {
+     "Color3": [
+      0.7843,
+      0.7294,
+      0.8941
      ]
     },
-    "Material": "Metal",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GarageWallLeft",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     1.0,
-     14,
-     30
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -29.5,
-       7.1,
-       -163.0
+    "PropMaterial": "Plaster"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -42.0,
+         0.1,
+         -163.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      170,
-      182
-     ]
-    },
-    "Material": "Metal",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GarageWallRight",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     1.0,
-     14,
-     30
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -54.5,
-       7.1,
-       -163.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      170,
-      182
-     ]
-    },
-    "Material": "Metal",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GarageWallFrontL",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     4.0,
-     14,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -31.0,
-       7.1,
-       -148.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      170,
-      182
-     ]
-    },
-    "Material": "Metal",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GarageWallFrontR",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     4.0,
-     14,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -53.0,
-       7.1,
-       -148.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      170,
-      182
-     ]
-    },
-    "Material": "Metal",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "GarageLintel",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     18,
-     4,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -42.0,
-       12.1,
-       -148.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      170,
-      182
-     ]
-    },
-    "Material": "Metal",
-    "CanCollide": true
-   }
+    }
+   ]
   },
   {
    "name": "GarageRoof",
-   "className": "Part",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     27.5,
-     0.8,
-     31.5
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -42.0,
-       14.5,
-       -163.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      96,
-      108,
-      118
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Garage_Roof",
+    "PropColor": {
+     "Color3": [
+      0.3529,
+      0.3765,
+      0.4706
      ]
     },
-    "Material": "CorrodedMetal",
-    "CanCollide": true
-   }
+    "PropMaterial": "Slate"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -42.0,
+         11.831,
+         -163.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
-   "name": "GarageRoofTrim",
-   "className": "Part",
+   "name": "GarageTrim",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     27.5,
-     0.6,
-     0.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -42.0,
-       13.9,
-       -147.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
+    "Tags": {
+     "Tags": [
+      "PropSlot"
      ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    }
+   },
+   "attributes": {
+    "Prop": "Garage_Trim"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -42.0,
+         0.1,
+         -163.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
-   "name": "GarageDoor",
-   "className": "Part",
+   "name": "GarageInterior",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     18,
-     1.6,
-     1.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -42.0,
-       11.9,
-       -149.2
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      190,
-      192,
-      188
+    "Tags": {
+     "Tags": [
+      "PropSlot"
      ]
-    },
-    "Material": "Metal",
-    "CanCollide": true
-   }
+    }
+   },
+   "attributes": {
+    "Prop": "Garage_Interior",
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -42.0,
+         0.4,
+         -163.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
    "name": "GarageLamp0",
@@ -1165,7 +1023,7 @@
      "CFrame": {
       "position": [
        -42.0,
-       13.7,
+       11.6,
        -156.0
       ],
       "orientation": [
@@ -1229,7 +1087,7 @@
      "CFrame": {
       "position": [
        -42.0,
-       13.7,
+       11.6,
        -168.0
       ],
       "orientation": [
@@ -1620,9 +1478,9 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         -52.9,
+         -52.6,
          0.4,
-         -165.0
+         -160.0
         ],
         "orientation": [
          [
@@ -1686,9 +1544,9 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         -52.9,
+         -52.6,
          0.4,
-         -169.5
+         -164.5
         ],
         "orientation": [
          [
@@ -1752,9 +1610,9 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         -51.6,
+         -52.0,
          0.4,
-         -174.8
+         -168.5
         ],
         "orientation": [
          [
@@ -1886,7 +1744,7 @@
         "position": [
          -30.4,
          0.4,
-         -157.0
+         -171.0
         ],
         "orientation": [
          [
@@ -1951,15 +1809,15 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         -53.0,
+         -31.0,
          0.4,
-         -160.0
+         -159.0
         ],
         "orientation": [
          [
-          -0.0,
           0.0,
-          -1.0
+          0.0,
+          1.0
          ],
          [
           0.0,
@@ -1967,9 +1825,9 @@
           0
          ],
          [
-          1.0,
+          -1.0,
           0.0,
-          -0.0
+          0.0
          ]
         ]
        }
@@ -2038,716 +1896,7 @@
    }
   },
   {
-   "name": "HouseWallBack",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     26,
-     12,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -70.0,
-       6.1,
-       -183.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      200,
-      186,
-      228
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "HouseWallLeft",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     1.0,
-     12,
-     32
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -57.5,
-       6.1,
-       -168.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      200,
-      186,
-      228
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "HouseWallRight",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     1.0,
-     12,
-     32
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -82.5,
-       6.1,
-       -168.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      200,
-      186,
-      228
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "HouseWallFrontL",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     10.0,
-     12,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -62.0,
-       6.1,
-       -152.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      200,
-      186,
-      228
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "HouseWallFrontR",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     10.0,
-     12,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -78.0,
-       6.1,
-       -152.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      200,
-      186,
-      228
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "HouseLintel",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     6,
-     3.5,
-     1.0
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -70.0,
-       10.35,
-       -152.5
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      200,
-      186,
-      228
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "HouseWindow0_0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     5.5,
-     4,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -62.0,
-       6.1,
-       -151.94
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "HouseWindow0_1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     5.5,
-     4,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -62.0,
-       6.1,
-       -153.06
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "HouseSill0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     6.1,
-     0.3,
-     0.6
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -62.0,
-       3.95,
-       -151.8
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "HouseWindow1_0",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     5.5,
-     4,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -78.0,
-       6.1,
-       -151.94
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "HouseWindow1_1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     5.5,
-     4,
-     0.1
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -78.0,
-       6.1,
-       -153.06
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      195,
-      225
-     ]
-    },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Reflectance": 0.15
-   }
-  },
-  {
-   "name": "HouseSill1",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     6.1,
-     0.3,
-     0.6
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -78.0,
-       3.95,
-       -151.8
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "HouseRoof0",
-   "className": "WedgePart",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     34,
-     7.8,
-     13.5
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -63.25,
-       16.0,
-       -168.0
-      ],
-      "orientation": [
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        -0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      90,
-      96,
-      120
-     ]
-    },
-    "Material": "Slate",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "HouseRoof1",
-   "className": "WedgePart",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     34,
-     7.8,
-     13.5
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -76.75,
-       16.0,
-       -168.0
-      ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -1.0,
-        0.0,
-        0.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      90,
-      96,
-      120
-     ]
-    },
-    "Material": "Slate",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "HouseEave",
-   "className": "Part",
-   "properties": {
-    "Anchored": true,
-    "Size": [
-     27,
-     0.3,
-     33
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -70.0,
-       11.95,
-       -168.0
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
-     ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
-  },
-  {
-   "name": "ChimneySlot",
+   "name": "HouseWalls",
    "className": "Model",
    "properties": {
     "Tags": {
@@ -2757,7 +1906,15 @@
     }
    },
    "attributes": {
-    "Prop": "Kit_Chimney"
+    "Prop": "House_Walls",
+    "PropColor": {
+     "Color3": [
+      0.7843,
+      0.7294,
+      0.8941
+     ]
+    },
+    "PropMaterial": "Plaster"
    },
    "children": [
     {
@@ -2773,9 +1930,9 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         -77.0,
-         13.1,
-         -174.0
+         -69.0,
+         0.1,
+         -168.0
         ],
         "orientation": [
          [
@@ -2813,7 +1970,7 @@
    ]
   },
   {
-   "name": "WindowSlot0",
+   "name": "HouseRoof",
    "className": "Model",
    "properties": {
     "Tags": {
@@ -2823,9 +1980,15 @@
     }
    },
    "attributes": {
-    "Prop": "Kit_WindowFlowers",
-    "PropCollide": false,
-    "PropAlign": "Back"
+    "Prop": "House_Roof",
+    "PropColor": {
+     "Color3": [
+      0.3529,
+      0.3765,
+      0.4706
+     ]
+    },
+    "PropMaterial": "Slate"
    },
    "children": [
     {
@@ -2841,9 +2004,9 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         -62.0,
-         3.8,
-         -152.0
+         -70.0,
+         11.408,
+         -168.0
         ],
         "orientation": [
          [
@@ -2881,7 +2044,7 @@
    ]
   },
   {
-   "name": "WindowSlot1",
+   "name": "HouseTrim",
    "className": "Model",
    "properties": {
     "Tags": {
@@ -2891,9 +2054,7 @@
     }
    },
    "attributes": {
-    "Prop": "Kit_WindowShutters",
-    "PropCollide": false,
-    "PropAlign": "Back"
+    "Prop": "House_Trim"
    },
    "children": [
     {
@@ -2909,9 +2070,9 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         -78.0,
-         3.8,
-         -152.0
+         -70.0,
+         0.095,
+         -166.967
         ],
         "orientation": [
          [
@@ -2949,68 +2110,88 @@
    ]
   },
   {
-   "name": "Doormat",
-   "className": "Part",
+   "name": "HouseInterior",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     4.4,
-     0.1,
-     2
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -70.0,
-       0.22,
-       -150.7
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      150,
-      60,
-      50
+    "Tags": {
+     "Tags": [
+      "PropSlot"
      ]
-    },
-    "Material": "Fabric",
-    "CanCollide": true
-   }
+    }
+   },
+   "attributes": {
+    "Prop": "House_Interior_Blue",
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -70.0,
+         0.6,
+         -168.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
-   "name": "Porch",
+   "name": "LinkFloor",
    "className": "Part",
    "properties": {
     "Anchored": true,
     "Size": [
-     8,
-     0.5,
-     1.4
+     2.4,
+     0.4,
+     5.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       -70.0,
-       0.35,
-       -151.3
+       -56.0,
+       0.3,
+       -174.0
       ],
       "orientation": [
        [
@@ -3043,51 +2224,73 @@
    }
   },
   {
-   "name": "DoorFrame",
-   "className": "Part",
+   "name": "InteriorDoor",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     7,
-     0.5,
-     0.3
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -70.0,
-       8.85,
-       -151.9
-      ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
-       ]
-      ]
-     }
-    },
-    "Color": {
-     "Color3uint8": [
-      245,
-      245,
-      240
+    "Tags": {
+     "Tags": [
+      "PropSlot"
      ]
-    },
-    "Material": "SmoothPlastic",
-    "CanCollide": true
-   }
+    }
+   },
+   "attributes": {
+    "Prop": "Door_Interior",
+    "PropCollide": false,
+    "AutoDoor": true,
+    "DoorHingeX": -2.4
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -57.4,
+         0.3,
+         -174.0
+        ],
+        "orientation": [
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          -0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
    "name": "HouseLamp0",

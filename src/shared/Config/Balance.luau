@@ -89,6 +89,14 @@ return {
 		LightsOff = 6.5, -- et s'éteignent
 	},
 
+	-- Portes automatiques (garage ↔ maison)
+	Doors = {
+		OpenDistance = 7, -- studs : la porte s'ouvre quand un joueur est plus près que ça
+		OpenAngle = -100, -- degrés (le signe choisit le côté où elle s'ouvre)
+		SwingTime = 0.35,
+		CheckInterval = 0.2,
+	},
+
 	-- Statues des 3 plus gros moggers du serveur, sur la place
 	Statues = {
 		RefreshSeconds = 20,

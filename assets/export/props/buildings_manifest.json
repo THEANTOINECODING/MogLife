@@ -1,0 +1,326 @@
+{
+ "House_Walls": {
+  "center": [
+   -1.0,
+   16.0
+  ],
+  "bottom": 0.0,
+  "size": [
+   28.0,
+   32.0,
+   19.5
+  ]
+ },
+ "House_Roof": {
+  "center": [
+   0.0,
+   16.0
+  ],
+  "bottom": 11.308,
+  "size": [
+   28.4,
+   34.4,
+   8.642
+  ]
+ },
+ "House_Trim": {
+  "center": [
+   0.0,
+   14.967
+  ],
+  "bottom": -0.005,
+  "size": [
+   29.37,
+   36.907,
+   21.305
+  ]
+ },
+ "House_Interior_Cream": {
+  "center": [
+   0.0,
+   16.0
+  ],
+  "bottom": 0.5,
+  "size": [
+   24.4,
+   30.4,
+   11.5
+  ]
+ },
+ "House_Interior_Mint": {
+  "center": [
+   0.0,
+   16.0
+  ],
+  "bottom": 0.5,
+  "size": [
+   24.4,
+   30.4,
+   11.5
+  ]
+ },
+ "House_Interior_Rose": {
+  "center": [
+   0.0,
+   16.0
+  ],
+  "bottom": 0.5,
+  "size": [
+   24.4,
+   30.4,
+   11.5
+  ]
+ },
+ "House_Interior_Blue": {
+  "center": [
+   0.0,
+   16.0
+  ],
+  "bottom": 0.5,
+  "size": [
+   24.4,
+   30.4,
+   11.5
+  ]
+ },
+ "Garage_Walls": {
+  "center": [
+   0.0,
+   15.0
+  ],
+  "bottom": 0.0,
+  "size": [
+   26.0,
+   30.0,
+   15.5
+  ]
+ },
+ "Garage_Roof": {
+  "center": [
+   0.0,
+   15.0
+  ],
+  "bottom": 11.731,
+  "size": [
+   28.0,
+   32.0,
+   4.169
+  ]
+ },
+ "Garage_Trim": {
+  "center": [
+   0.0,
+   15.0
+  ],
+  "bottom": 0.0,
+  "size": [
+   28.97,
+   32.44,
+   16.15
+  ]
+ },
+ "Garage_Interior": {
+  "center": [
+   0.0,
+   15.0
+  ],
+  "bottom": 0.3,
+  "size": [
+   24.4,
+   28.4,
+   11.7
+  ]
+ },
+ "Door_Interior": {
+  "center": [
+   0.0,
+   0.0
+  ],
+  "bottom": 0.0,
+  "size": [
+   4.8,
+   1.0,
+   8.0
+  ]
+ },
+ "Shop_Clothes_Walls": {
+  "center": [
+   0.0,
+   19.0
+  ],
+  "bottom": 0.0,
+  "size": [
+   44.0,
+   38.0,
+   17.6
+  ]
+ },
+ "Shop_Clothes_Trim": {
+  "center": [
+   0.0,
+   18.25
+  ],
+  "bottom": 0.0,
+  "size": [
+   44.6,
+   39.9,
+   17.845
+  ]
+ },
+ "Shop_Clothes_Interior": {
+  "center": [
+   0.0,
+   19.0
+  ],
+  "bottom": 0.4,
+  "size": [
+   42.4,
+   36.4,
+   15.6
+  ]
+ },
+ "Shop_Barber_Walls": {
+  "center": [
+   0.0,
+   16.0
+  ],
+  "bottom": 0.0,
+  "size": [
+   36.0,
+   32.0,
+   15.6
+  ]
+ },
+ "Shop_Barber_Trim": {
+  "center": [
+   0.0,
+   15.25
+  ],
+  "bottom": 0.0,
+  "size": [
+   36.6,
+   33.9,
+   15.845
+  ]
+ },
+ "Shop_Barber_Interior": {
+  "center": [
+   0.0,
+   16.0
+  ],
+  "bottom": 0.4,
+  "size": [
+   34.4,
+   30.4,
+   13.6
+  ]
+ },
+ "Shop_Furniture_Walls": {
+  "center": [
+   0.0,
+   19.0
+  ],
+  "bottom": 0.0,
+  "size": [
+   48.0,
+   38.0,
+   17.6
+  ]
+ },
+ "Shop_Furniture_Trim": {
+  "center": [
+   0.0,
+   18.25
+  ],
+  "bottom": 0.0,
+  "size": [
+   48.6,
+   39.9,
+   17.845
+  ]
+ },
+ "Shop_Furniture_Interior": {
+  "center": [
+   0.0,
+   19.0
+  ],
+  "bottom": 0.4,
+  "size": [
+   46.4,
+   36.4,
+   15.6
+  ]
+ },
+ "Shop_Grocery_Walls": {
+  "center": [
+   0.0,
+   16.0
+  ],
+  "bottom": 0.0,
+  "size": [
+   36.0,
+   32.0,
+   15.6
+  ]
+ },
+ "Shop_Grocery_Trim": {
+  "center": [
+   0.0,
+   15.25
+  ],
+  "bottom": 0.0,
+  "size": [
+   36.6,
+   33.9,
+   15.845
+  ]
+ },
+ "Shop_Grocery_Interior": {
+  "center": [
+   0.0,
+   16.0
+  ],
+  "bottom": 0.4,
+  "size": [
+   34.4,
+   30.4,
+   13.6
+  ]
+ },
+ "Shop_Gym_Walls": {
+  "center": [
+   0.0,
+   24.0
+  ],
+  "bottom": 0.0,
+  "size": [
+   84.0,
+   48.0,
+   21.6
+  ]
+ },
+ "Shop_Gym_Trim": {
+  "center": [
+   0.0,
+   23.25
+  ],
+  "bottom": 0.0,
+  "size": [
+   84.6,
+   49.9,
+   21.845
+  ]
+ },
+ "Shop_Gym_Interior": {
+  "center": [
+   0.0,
+   24.0
+  ],
+  "bottom": 0.4,
+  "size": [
+   82.4,
+   46.4,
+   19.6
+  ]
+ }
+}
