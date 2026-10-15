@@ -26,7 +26,7 @@ Remplace la suite de l'étape E ci-dessous. Chaque étape prépare la suivante (
 4. 🟡 **Les PNJ** (16/10 : 12 habitants/vendeurs/mentor modélisés, vendeurs et mentor en place, les 8 aides et le Mog-off animés ; reste : import des modèles et vérification à l'image) : habitants et boss refaits, mentor, **vendeurs dans chaque magasin** (D38) ; **aides et combats de boss animés pour de vrai** (D37).
 5. ✅ **Le guide et le tutoriel** (16/10, D46 ; ❓ premier achat du tutoriel) : le mentor explique chaque nouveau stade et chaque magasin ; flèches pour les nouveaux joueurs.
 6. **Le gameplay** : mini-jeux améliorés ; boissons et aliments comiques qui donnent un boost (❓ énergie, voir D36).
-7. **Le son** : musique par zone, effets pour chaque activité.
+7. 🟡 **Le son** (16/10 : système en place, sons branchés sur les événements ; ❓ choisir les sons, voir Config/Sounds.luau) : musique par zone, effets pour chaque activité.
 8. **Alpha** : testeurs, vrais téléphones, réglage de l'économie.
 9. **Faire revenir les joueurs** : récompenses hebdomadaires, duels entre joueurs à chances égales (même mini-jeu).
 
