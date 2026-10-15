@@ -1,14 +1,15 @@
 -- Décors 3D (modélisés dans Blender, importés dans ServerStorage.Props) : chaque emplacement de la carte
--- (tag "PropSlot", attribut Prop = nom du modèle) reçoit une copie du modèle, posée sur son repère, et les
--- blocs provisoires (enfant « Fallback ») sont retirés. Sans modèle importé, les blocs restent : rien ne casse.
+-- (tag "PropSlot", attribut Prop = nom du modèle) reçoit une copie du modèle, posée sur son repère.
 -- Attributs optionnels d'un emplacement :
 --   PropHeight  : hauteur voulue (le modèle est agrandi ou réduit uniformément)
 --   PropCollide : false = on passe à travers (stations, tapis, décors au ras du sol)
 --   PropAlign   : "Back" = le dos du modèle touche le repère (fenêtres, enseignes contre un mur)
--- Une station d'exercice (BasePart) peut aussi être un emplacement : le modèle se pose sur la dalle et
--- remplace ses accessoires en blocs.
--- Les décors peuvent aussi être posés dans Studio en mode édition (tools/bake_props.luau) pour voir la ville
--- finale ; au démarrage, le serveur les repose de toute façon.
+-- Une station d'exercice (BasePart) peut aussi être un emplacement : le modèle se pose sur la dalle.
+--
+-- Les copies vont dans Workspace.MapProps, un dossier que Rojo ne gère pas (la carte, elle, vient des fichiers :
+-- Rojo efface tout ce qu'on ajoute à l'intérieur). Dans Studio, tools/bake_props.luau les pose en mode édition
+-- pour voir la ville finale ; au démarrage, le serveur les repose de toute façon (la carte a pu changer).
+-- Si une carte est régénérée avec les blocs de secours (« Fallback »), ils sont retirés quand le modèle existe.
 
 local CollectionService = game:GetService("CollectionService")
 local ServerStorage = game:GetService("ServerStorage")
@@ -16,9 +17,21 @@ local ServerStorage = game:GetService("ServerStorage")
 local SLOT_TAG = "PropSlot"
 local ANCHOR_NAME = "PropAnchor"
 local FALLBACK_NAME = "Fallback"
-local VISUAL_NAME = "PropVisual"
+local FOLDER_NAME = "MapProps"
+
+local visuals: { [Instance]: BasePart } = {}
 
 local PropService = {}
+
+local function getFolder(): Folder
+	local folder = workspace:FindFirstChild(FOLDER_NAME)
+	if not folder then
+		folder = Instance.new("Folder")
+		folder.Name = FOLDER_NAME
+		folder.Parent = workspace
+	end
+	return folder :: Folder
+end
 
 -- Modèle importé portant ce nom (une MeshPart), ou nil
 function PropService.GetTemplate(name: string): BasePart?
@@ -30,7 +43,8 @@ function PropService.GetTemplate(name: string): BasePart?
 	return nil
 end
 
--- Copie du modèle posée sur `base` (au sol, devant vers -Z du repère), ou nil si le modèle n'existe pas
+-- Copie du modèle posée sur `base` (au sol, devant vers -Z du repère), ou nil si le modèle n'existe pas.
+-- La copie n'a pas de parent : à l'appelant de la ranger.
 function PropService.Place(name: string, base: CFrame, options: { [string]: any }?): BasePart?
 	local template = PropService.GetTemplate(name)
 	if not template then
@@ -38,7 +52,6 @@ function PropService.Place(name: string, base: CFrame, options: { [string]: any 
 	end
 	local opts = options or {}
 	local clone = template:Clone()
-	clone.Name = VISUAL_NAME
 	clone.Anchored = true
 	local height = opts.height
 	if typeof(height) == "number" and height > 0 and clone.Size.Y > 0 then
@@ -56,7 +69,7 @@ end
 local function removeFallback(slot: Instance)
 	if slot:IsA("BasePart") then
 		for _, child in slot:GetChildren() do
-			if child:IsA("BasePart") and child.Name ~= VISUAL_NAME then
+			if child:IsA("BasePart") then
 				child:Destroy()
 			end
 		end
@@ -73,15 +86,14 @@ local function setup(slot: Instance)
 	if typeof(name) ~= "string" then
 		return
 	end
-	-- Déjà posé (dans Studio par tools/bake_props.luau) : on le repose, au cas où l'emplacement a bougé
-	local existing = slot:FindFirstChild(VISUAL_NAME)
-	if existing then
-		existing:Destroy()
+	local old = visuals[slot]
+	if old then
+		old:Destroy()
+		visuals[slot] = nil
 	end
 
 	local base: CFrame
 	if slot:IsA("BasePart") then
-		-- Station : le modèle se pose sur la dalle
 		base = slot.CFrame * CFrame.new(0, slot.Size.Y / 2, 0)
 	else
 		local anchor = slot:FindFirstChild(ANCHOR_NAME)
@@ -100,16 +112,22 @@ local function setup(slot: Instance)
 		return
 	end
 	removeFallback(slot)
-	visual.Parent = slot
+	visual.Name = name
+	visual.Parent = getFolder()
+	visuals[slot] = visual
 end
 
--- Pose les décors 3D dans tous les emplacements (appelé au démarrage du serveur, et dans Studio en mode édition
--- par tools/bake_props.luau pour voir la ville finale sans lancer le jeu)
+-- Pose (ou repose) les décors 3D de tous les emplacements. Renvoie le nombre de décors posés.
 function PropService.PlaceAll(): number
+	local existing = workspace:FindFirstChild(FOLDER_NAME)
+	if existing then
+		existing:Destroy()
+	end
+	table.clear(visuals)
 	local count = 0
 	for _, slot in CollectionService:GetTagged(SLOT_TAG) do
 		setup(slot)
-		if slot:FindFirstChild(VISUAL_NAME) then
+		if visuals[slot] then
 			count += 1
 		end
 	end
