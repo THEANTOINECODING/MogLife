@@ -293,6 +293,8 @@ def station(F, name, local, exercise_id, yaw=0):
     tpl["properties"]["Tags"]["Tags"] = tpl["properties"]["Tags"]["Tags"] + ["PropSlot"]
     tpl["attributes"]["Prop"] = STATION_PROPS[exercise_id]
     tpl["attributes"]["PropCollide"] = False
+    if not FALLBACK_BLOCKS:
+        tpl["children"] = []
     for child in tpl.get("children", []):
         ccf = child["properties"]["CFrame"]["CFrame"]
         rel = apply(Rt, [ccf["position"][i] - pos0[i] for i in range(3)])
@@ -315,6 +317,10 @@ def mirror(F, name, local, attributes, yaw=0):
 # Un emplacement (tag PropSlot) = un repère invisible (PropAnchor, au sol, orienté) + les blocs actuels (Fallback).
 # Si le modèle 3D du même nom est importé dans ServerStorage.Props, PropService le pose et retire les blocs ;
 # sinon les blocs restent. Le devant d'un modèle 3D est vers -Z du repère.
+# Les modèles 3D sont importés (ServerStorage.Props) : les blocs de secours ne sont plus écrits dans la carte.
+# Remettre True pour retrouver la ville en blocs (par exemple sur une place où les modèles n'ont pas été importés).
+FALLBACK_BLOCKS = False
+
 STATION_PROPS = {"Curl": "WatermelonDumbbell", "PushUp": "PushUpMat", "BenchPress": "BenchPress",
                  "Squat": "SquatRack", "PullUp": "PullUpBar", "JumpRope": "JumpRope"}
 
@@ -330,7 +336,7 @@ def prop_slot(F, name, local, prop, fallback=(), yaw=0, height=None, collide=Tru
     if align:
         attributes["PropAlign"] = align  # "Back" : le dos du modèle touche le repère (fenêtres, enseignes)
     children = [anchor]
-    if fallback:
+    if fallback and FALLBACK_BLOCKS:
         children.append({"name": "Fallback", "className": "Model", "children": list(fallback)})
     return {"name": name, "className": "Model", "properties": {"Tags": {"Tags": ["PropSlot"]}},
             "attributes": attributes, "children": children}

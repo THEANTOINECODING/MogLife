@@ -7,6 +7,8 @@
 --   PropAlign   : "Back" = le dos du modèle touche le repère (fenêtres, enseignes contre un mur)
 -- Une station d'exercice (BasePart) peut aussi être un emplacement : le modèle se pose sur la dalle et
 -- remplace ses accessoires en blocs.
+-- Les décors peuvent aussi être posés dans Studio en mode édition (tools/bake_props.luau) pour voir la ville
+-- finale ; au démarrage, le serveur les repose de toute façon.
 
 local CollectionService = game:GetService("CollectionService")
 local ServerStorage = game:GetService("ServerStorage")
@@ -50,10 +52,31 @@ function PropService.Place(name: string, base: CFrame, options: { [string]: any 
 	return clone
 end
 
+-- Retire les blocs provisoires d'un emplacement qui a son modèle 3D
+local function removeFallback(slot: Instance)
+	if slot:IsA("BasePart") then
+		for _, child in slot:GetChildren() do
+			if child:IsA("BasePart") and child.Name ~= VISUAL_NAME then
+				child:Destroy()
+			end
+		end
+	else
+		local fallback = slot:FindFirstChild(FALLBACK_NAME)
+		if fallback then
+			fallback:Destroy()
+		end
+	end
+end
+
 local function setup(slot: Instance)
 	local name = slot:GetAttribute("Prop")
-	if typeof(name) ~= "string" or slot:FindFirstChild(VISUAL_NAME) then
+	if typeof(name) ~= "string" then
 		return
+	end
+	-- Déjà posé (dans Studio par tools/bake_props.luau) : on le repose, au cas où l'emplacement a bougé
+	local existing = slot:FindFirstChild(VISUAL_NAME)
+	if existing then
+		existing:Destroy()
 	end
 
 	local base: CFrame
@@ -76,25 +99,25 @@ local function setup(slot: Instance)
 	if not visual then
 		return
 	end
-	if slot:IsA("BasePart") then
-		for _, child in slot:GetChildren() do
-			if child:IsA("BasePart") then
-				child:Destroy()
-			end
-		end
-	else
-		local fallback = slot:FindFirstChild(FALLBACK_NAME)
-		if fallback then
-			fallback:Destroy()
-		end
-	end
+	removeFallback(slot)
 	visual.Parent = slot
 end
 
-function PropService.Start()
+-- Pose les décors 3D dans tous les emplacements (appelé au démarrage du serveur, et dans Studio en mode édition
+-- par tools/bake_props.luau pour voir la ville finale sans lancer le jeu)
+function PropService.PlaceAll(): number
+	local count = 0
 	for _, slot in CollectionService:GetTagged(SLOT_TAG) do
 		setup(slot)
+		if slot:FindFirstChild(VISUAL_NAME) then
+			count += 1
+		end
 	end
+	return count
+end
+
+function PropService.Start()
+	PropService.PlaceAll()
 	CollectionService:GetInstanceAddedSignal(SLOT_TAG):Connect(setup)
 end
 

@@ -5,7 +5,8 @@
     "Workspace": {
       "$ignoreUnknownInstances": true,
       "Map": {
-        "$path": "world/Map"
+        "$path": "world/Map",
+        "$ignoreUnknownInstances": true
       }
     },
     "Lighting": {
