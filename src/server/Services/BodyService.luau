@@ -210,8 +210,10 @@ local function applySizes(player: Player)
 	end
 end
 
--- Applique (ou retire) le corps du stade sur le personnage actuel du joueur
-function BodyService.Refresh(player: Player)
+-- Applique (ou retire) le corps du stade sur le personnage actuel du joueur.
+-- force : tout reconstruire même si rien n'a changé (ex. l'apparence Roblox vient de finir de charger et a pu
+-- remettre des accessoires ou des parties visibles)
+function BodyService.Refresh(player: Player, force: boolean?)
 	local character = player.Character
 	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
 	if not character or not humanoid then
@@ -230,7 +232,7 @@ function BodyService.Refresh(player: Player)
 	local styleItems = equippedStyle(player, stageId)
 	local styleKey = table.concat(styleItems, ",")
 	local sameCharacter = previous ~= nil and previous.character == character
-	if sameCharacter and previous.stageId == stageId then
+	if sameCharacter and previous.stageId == stageId and not force then
 		-- Même corps : on ne reconstruit que si les objets équipés ont changé
 		if previous.styleKey ~= styleKey then
 			previous.pieces = buildShell(character, stageId, styleItems)
@@ -250,7 +252,7 @@ function BodyService.Refresh(player: Player)
 	}
 	applySizes(player)
 	-- Nouveau stade sur le même personnage : transformation (effet visuel chez tout le monde)
-	if sameCharacter then
+	if sameCharacter and previous.stageId ~= stageId then
 		Remotes.BodyTransform:FireAllClients(player, stageId)
 	end
 end
@@ -298,10 +300,10 @@ end
 function BodyService.Start()
 	DataService.PlayerLoaded:Connect(function(player)
 		player.CharacterAppearanceLoaded:Connect(function()
-			BodyService.Refresh(player)
+			BodyService.Refresh(player, true)
 		end)
 		if player.Character and player:HasAppearanceLoaded() then
-			task.spawn(BodyService.Refresh, player)
+			task.spawn(BodyService.Refresh, player, true)
 		end
 	end)
 	Players.PlayerRemoving:Connect(function(player)
