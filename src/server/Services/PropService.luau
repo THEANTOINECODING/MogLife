@@ -7,6 +7,7 @@
 --   PropColor / PropMaterial : pièce « teintable » (murs, toits) : la texture est retirée, et la couleur et le
 --                 matériau Roblox (Plaster, Slate, Brick…) sont appliqués. Une seule maison, vingt couleurs.
 -- Une station d'exercice (BasePart) peut aussi être un emplacement : le modèle se pose sur la dalle.
+-- Les murs des bâtiments (*_Walls) ne collisionnent pas eux-mêmes : des blocs invisibles exacts les doublent.
 --
 -- Les copies vont dans Workspace.MapProps, un dossier que Rojo ne gère pas (la carte, elle, vient des fichiers :
 -- Rojo efface tout ce qu'on ajoute à l'intérieur). Dans Studio, tools/bake_props.luau les pose en mode édition
@@ -15,6 +16,8 @@
 
 local CollectionService = game:GetService("CollectionService")
 local ServerStorage = game:GetService("ServerStorage")
+
+local PropColliders = require(script.Parent.Parent.PropColliders)
 
 local SLOT_TAG = "PropSlot"
 local ANCHOR_NAME = "PropAnchor"
@@ -33,6 +36,27 @@ local function getFolder(): Folder
 		folder.Parent = workspace
 	end
 	return folder :: Folder
+end
+
+-- Murs de bâtiment : la collision calculée par Roblox rebouche certaines ouvertures (portes). On la remplace par
+-- des blocs invisibles exacts (src/server/PropColliders.luau, généré par tools/gen_colliders.py).
+local function addColliders(visual: BasePart, name: string, scale: number)
+	local boxes = PropColliders[name]
+	if not boxes or not visual.CanCollide then
+		return
+	end
+	visual.CanCollide = false
+	for _, b in boxes do
+		local part = Instance.new("Part")
+		part.Name = "Collider"
+		part.Anchored = true
+		part.Transparency = 1
+		part.CanTouch = false
+		part.CastShadow = false
+		part.Size = Vector3.new(b[4], b[5], b[6]) * scale
+		part.CFrame = visual.CFrame * CFrame.new(Vector3.new(b[1], b[2], b[3]) * scale)
+		part.Parent = visual
+	end
 end
 
 -- Modèle importé portant ce nom (une MeshPart), ou nil
@@ -72,6 +96,7 @@ function PropService.Place(name: string, base: CFrame, options: { [string]: any 
 	local offsetZ = if opts.align == "Back" then -clone.Size.Z / 2 else 0
 	local offsetY = if opts.centered then 0 else clone.Size.Y / 2
 	clone.CFrame = base * CFrame.new(0, offsetY, offsetZ)
+	addColliders(clone, name, clone.Size.Y / template.Size.Y)
 	return clone
 end
 

@@ -372,7 +372,7 @@ def shop_shell(F, name, color, material, floor):
     return [
         P(F, name + "Floor", (0, ft / 2, d / 2), (w, ft, d), fcol, fmat),
         piece(F, name + "Walls", f"Shop_{name}_Walls", tint=color, material=material),
-        piece(F, name + "Trim", f"Shop_{name}_Trim"),
+        piece(F, name + "Trim", f"Shop_{name}_Trim", collide=False),
         piece(F, name + "Interior", f"Shop_{name}_Interior", collide=False),
     ]
 
@@ -480,7 +480,7 @@ def plot(index, side, offset):
     c.append(P(G, "GarageFloor", (0, 0.15, 15), (26, 0.3, 30), CONCRETE, "Concrete"))
     c.append(piece(G, "GarageWalls", "Garage_Walls", tint=wall, material="Plaster"))
     c.append(piece(G, "GarageRoof", "Garage_Roof", tint=roof, material="Slate"))
-    c.append(piece(G, "GarageTrim", "Garage_Trim"))
+    c.append(piece(G, "GarageTrim", "Garage_Trim", collide=False))
     c.append(piece(G, "GarageInterior", "Garage_Interior", collide=False))
     for k, lz in enumerate((8, 20)):
         c.append(P(G, f"GarageLamp{k}", (0, 11.5, lz), (8, 0.4, 1), (255, 244, 214), "Neon",
@@ -533,7 +533,7 @@ def plot(index, side, offset):
     c.append(P(H, "HouseFloor", (0, 0.25, 16), (26, 0.5, 32), WOOD_LIGHT, "WoodPlanks"))
     c.append(piece(H, "HouseWalls", "House_Walls", tint=wall, material="Plaster"))
     c.append(piece(H, "HouseRoof", "House_Roof", tint=roof, material="Slate"))
-    c.append(piece(H, "HouseTrim", "House_Trim"))
+    c.append(piece(H, "HouseTrim", "House_Trim", collide=False))
     c.append(piece(H, "HouseInterior", "House_Interior_" + ("Cream", "Mint", "Rose", "Blue")[index % 4],
                    collide=False))
     # Passage couvert vers le garage, et porte qui s'ouvre toute seule quand un joueur approche (DoorService)
@@ -571,7 +571,7 @@ def plot_list():
 
 # ------------------------------------------------------------------ 2. route en anneau et bordure
 # Objets posés sur le trottoir intérieur : pas de lampadaire ni d'arbre devant eux (position le long du côté)
-KEEP_CLEAR = {"N": (-52, -47, 20, 46, 52, 70), "E": (20,), "S": (20,), "W": (20, -32, -40)}
+KEEP_CLEAR = {"N": (-52, -47, 20, 46, 52, 70), "E": (20, 54), "S": (20,), "W": (20, -32, -40)}
 CAR_COLORS = [(60, 110, 200), (240, 200, 60), (90, 170, 90), (230, 230, 235), (150, 60, 150)]
 
 
@@ -987,7 +987,7 @@ def downtown():
     wrap(c, n0, F, "PianoSlot", (46, WALK_TOP, walk - 0.6), "UprightPiano", yaw=180)
     c.append(helper(F, "GrocerSpot", (70, WALK_TOP + 0.5, walk), "Groceries", yaw=180))
     # Petits squares à l'intérieur (nord-est et sud-est)
-    for k, (x, z) in enumerate(((40, 40), (80, 30), (60, 52), (30, -40), (40, -80), (20, -94))):
+    for k, (x, z) in enumerate(((40, 40), (80, 30), (60, 52), (8, -52), (40, -80), (20, -94))):
         c += tree(F, f"SquareTree{k}", (x, 0, z), height=8 + (k % 3), radius=4 + (k % 2))
     c += flowerbed(F, "SquareBedNE", (70, 0, 44), (10, 10))
     # Salle de sport en plein air : 8 machines de plus, pour que les joueurs ne se marchent pas dessus

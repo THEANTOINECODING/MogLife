@@ -3687,7 +3687,8 @@
     }
    },
    "attributes": {
-    "Prop": "Shop_Clothes_Trim"
+    "Prop": "Shop_Clothes_Trim",
+    "PropCollide": false
    },
    "children": [
     {
@@ -5271,7 +5272,8 @@
     }
    },
    "attributes": {
-    "Prop": "Shop_Barber_Trim"
+    "Prop": "Shop_Barber_Trim",
+    "PropCollide": false
    },
    "children": [
     {
@@ -6663,7 +6665,8 @@
     }
    },
    "attributes": {
-    "Prop": "Shop_Furniture_Trim"
+    "Prop": "Shop_Furniture_Trim",
+    "PropCollide": false
    },
    "children": [
     {
@@ -8119,7 +8122,8 @@
     }
    },
    "attributes": {
-    "Prop": "Shop_Grocery_Trim"
+    "Prop": "Shop_Grocery_Trim",
+    "PropCollide": false
    },
    "children": [
     {
@@ -10198,7 +10202,8 @@
     }
    },
    "attributes": {
-    "Prop": "Shop_Gym_Trim"
+    "Prop": "Shop_Gym_Trim",
+    "PropCollide": false
    },
    "children": [
     {
@@ -17041,9 +17046,9 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         30.0,
+         8.0,
          0.1,
-         -40.0
+         -52.0
         ],
         "orientation": [
          [
