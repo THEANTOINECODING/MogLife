@@ -108,6 +108,7 @@ function StatsService.Add(player: Player, stat: "Mog" | "Cash", amount: number)
 
 	if stat == "Mog" then
 		applyBodyScale(player)
+		BodyService.UpdateGrowth(player)
 	end
 end
 

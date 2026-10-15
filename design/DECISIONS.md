@@ -4,6 +4,12 @@ Format : date — décision — raison. La plus récente en haut.
 
 ## 2026-10-15 (suite du plan)
 
+- **D40 — Le personnage prend du muscle à chaque séance** (choix du créateur), en trois effets visibles par tous :
+  1. **Pump** : chaque répétition validée gonfle les muscles travaillés (plus si Perfect), cumulé pendant la série, puis redescend en ~20 s.
+  2. **Croissance permanente dans le stade** : le corps grossit avec la progression du Mog vers le boss suivant (0 % = corps du stade, 100 % = presque le corps suivant). Le Mog ne baisse jamais : la croissance non plus.
+  3. **Transformation** en battant le boss : passage au corps suivant avec un effet visuel.
+  Le serveur calcule tout (taille des pièces de la coque) ; aucun avantage en Mog-off.
+
 - **D39 — Corps des stades dans le style des boss** (choix du créateur) : low poly PS1, anatomie réaliste mais exagérée, texture « éclairage cuit ». Un corps par stade, découpé selon les 15 parties du squelette R15 pour suivre les animations (D28, D37).
 - **D38 — Des vendeurs dans les magasins** (choix du créateur) : chaque magasin (vêtements, coiffeur, meubles, épicerie) a un vendeur PNJ derrière son comptoir ; c'est lui qu'on aborde pour acheter (il ouvre la boutique, commente les achats, réagit au stade du joueur). Réalisé avec les PNJ (étape 4). ❓ Le miroir et le comptoir actuels deviennent-ils le vendeur, ou restent-ils en plus ?
 

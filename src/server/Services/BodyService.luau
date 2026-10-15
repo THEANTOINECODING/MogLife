@@ -1,17 +1,35 @@
--- Corps du personnage du joueur selon son stade : proportions du squelette R15 + coque Blender.
+-- Corps du personnage du joueur selon son stade : proportions du squelette R15 + coque Blender (D28, D39).
 -- Les parties Roblox d'origine deviennent invisibles ; chaque pièce de la coque est soudée à sa partie,
--- donc les animations Roblox standard fonctionnent telles quelles.
--- Si le modèle d'un stade n'est pas encore importé, l'apparence provisoire de StatsService s'applique.
+-- donc les animations (Roblox et ActivityController) la font suivre.
+-- Le personnage prend du muscle à chaque séance (D40) : chaque pièce est épaissie selon
+--   - la croissance permanente du stade (progression du Mog vers le boss suivant),
+--   - le pump des muscles travaillés pendant une série (redescend en quelques secondes).
+-- Changer de stade = transformation (signal BodyTransform à tous les clients pour l'effet visuel).
+-- Si le corps d'un stade n'est pas importé, l'apparence provisoire de StatsService s'applique.
 
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local BodyPieces = require(ReplicatedStorage.Shared.Config.BodyPieces)
 local Bodies = require(ReplicatedStorage.Shared.Config.Bodies)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
+local Remotes = require(ReplicatedStorage.Shared.Remotes)
 
 local SHELL_NAME = "BodyShell"
+local GROWTH = Balance.Growth
+
+type Piece = { part: BasePart, kind: string, size: Vector3 }
+type State = {
+	character: Model,
+	stageId: string,
+	pieces: { Piece },
+	pump: { [string]: number }, -- gonflement en cours par type de muscle (UpperArm, UpperTorso…)
+}
 
 local DataService
+
+local states: { [Player]: State } = {}
 
 local BodyService = {}
 
@@ -25,6 +43,22 @@ function BodyService.BodyFor(player: Player): (Bodies.Body?, string?)
 		return body, stage.id
 	end
 	return nil, nil
+end
+
+-- Progression (0 à 1) du Mog entre le boss battu précédent et le boss du stade actuel
+function BodyService.Progress(player: Player): number
+	local data = DataService.Get(player)
+	if not data then
+		return 0
+	end
+	local stage = Stages.List[data.Stage]
+	local previous = Stages.List[data.Stage - 1]
+	if not stage or not stage.boss then
+		return 1
+	end
+	local from = if previous and previous.boss then previous.boss.mogRequired else 0
+	local to = stage.boss.mogRequired
+	return math.clamp((data.Mog - from) / math.max(to - from, 1), 0, 1)
 end
 
 local function applyProportions(humanoid: Humanoid, body: Bodies.Body)
@@ -63,7 +97,14 @@ local function hideOriginalBody(character: Model)
 	end
 end
 
-local function buildShell(character: Model, stageId: string)
+-- Type de muscle d'une pièce : LeftUpperArm -> UpperArm, Head_Hair -> Head_Hair
+local function kindOf(piece: string): string
+	local kind = string.gsub(piece, "^Left", "")
+	kind = string.gsub(kind, "^Right", "")
+	return kind
+end
+
+local function buildShell(character: Model, stageId: string): { Piece }
 	local old = character:FindFirstChild(SHELL_NAME)
 	if old then
 		old:Destroy()
@@ -71,6 +112,7 @@ local function buildShell(character: Model, stageId: string)
 	local folder = ReplicatedStorage:FindFirstChild("Bodies") :: Folder
 	local shell = Instance.new("Model")
 	shell.Name = SHELL_NAME
+	local pieces = {}
 	-- Chaque pièce est soudée à sa partie R15, à son décalage de repos (BodyPieces) : elle suit les animations
 	for piece, offset in BodyPieces[stageId] or {} do
 		local template = folder:FindFirstChild(`{stageId}_{piece}`)
@@ -85,13 +127,32 @@ local function buildShell(character: Model, stageId: string)
 		clone.CanTouch = false
 		clone.Massless = true
 		clone.CFrame = target.CFrame * CFrame.new(offset)
-		local weld = Instance.new("WeldConstraint")
+		local weld = Instance.new("Weld")
 		weld.Part0 = target
 		weld.Part1 = clone
+		weld.C0 = CFrame.new(offset)
 		weld.Parent = clone
 		clone.Parent = shell
+		table.insert(pieces, { part = clone, kind = kindOf(piece), size = template.Size })
 	end
 	shell.Parent = character
+	return pieces
+end
+
+-- Épaisseur de chaque pièce = croissance permanente du stade + pump en cours
+local function applySizes(player: Player)
+	local state = states[player]
+	if not state then
+		return
+	end
+	local growth = GROWTH.MaxScale * BodyService.Progress(player)
+	for _, piece in state.pieces do
+		local weight = GROWTH.Weights[piece.kind] or 0
+		local extra = (growth + (state.pump[piece.kind] or 0)) * weight
+		local thick = 1 + extra
+		local long = 1 + extra * GROWTH.LengthShare
+		piece.part.Size = piece.size * Vector3.new(thick, long, thick)
+	end
 end
 
 -- Applique (ou retire) le corps du stade sur le personnage actuel du joueur
@@ -102,16 +163,69 @@ function BodyService.Refresh(player: Player)
 		return
 	end
 	local body, stageId = BodyService.BodyFor(player)
+	local previous = states[player]
 	if not body or not stageId then
 		local old = character:FindFirstChild(SHELL_NAME)
 		if old then
 			old:Destroy()
 		end
+		states[player] = nil
+		return
+	end
+	local sameCharacter = previous ~= nil and previous.character == character
+	if sameCharacter and previous.stageId == stageId then
+		applySizes(player)
 		return
 	end
 	applyProportions(humanoid, body)
 	hideOriginalBody(character)
-	buildShell(character, stageId)
+	states[player] = {
+		character = character,
+		stageId = stageId,
+		pieces = buildShell(character, stageId),
+		pump = if sameCharacter then previous.pump else {},
+	}
+	applySizes(player)
+	-- Nouveau stade sur le même personnage : transformation (effet visuel chez tout le monde)
+	if sameCharacter then
+		Remotes.BodyTransform:FireAllClients(player, stageId)
+	end
+end
+
+-- Le Mog a changé : la croissance permanente suit
+function BodyService.UpdateGrowth(player: Player)
+	applySizes(player)
+end
+
+-- Une répétition d'exercice validée gonfle les muscles travaillés
+function BodyService.Pump(player: Player, exerciseId: string, quality: string)
+	local state = states[player]
+	local muscles = GROWTH.PumpMuscles[exerciseId]
+	local amount = GROWTH.PumpPerRep[quality]
+	if not state or not muscles or not amount then
+		return
+	end
+	for _, muscle in muscles do
+		state.pump[muscle] = math.min((state.pump[muscle] or 0) + amount, GROWTH.PumpMax)
+	end
+	applySizes(player)
+end
+
+-- Le pump redescend doucement
+local function decayPump()
+	local step = GROWTH.PumpMax / GROWTH.PumpDecayTime * GROWTH.PumpUpdateInterval
+	for player, state in states do
+		local changed = false
+		for muscle, value in state.pump do
+			if value > 0 then
+				state.pump[muscle] = math.max(value - step, 0)
+				changed = true
+			end
+		end
+		if changed then
+			applySizes(player)
+		end
+	end
 end
 
 function BodyService.Init(services)
@@ -125,6 +239,15 @@ function BodyService.Start()
 		end)
 		if player.Character and player:HasAppearanceLoaded() then
 			task.spawn(BodyService.Refresh, player)
+		end
+	end)
+	Players.PlayerRemoving:Connect(function(player)
+		states[player] = nil
+	end)
+	task.spawn(function()
+		while true do
+			task.wait(GROWTH.PumpUpdateInterval)
+			decayPump()
 		end
 	end)
 end

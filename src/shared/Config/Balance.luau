@@ -131,4 +131,39 @@ return {
 		MaxDepth = 1.8,
 		MogForMax = 45_000, -- taille max atteinte au niveau du Dieu du Pump
 	},
+
+	-- Le personnage prend du muscle à chaque séance (décision D40). Échelles des pièces de la coque.
+	Growth = {
+		-- Croissance permanente : +X % d'épaisseur quand le Mog atteint celui du boss suivant
+		MaxScale = 0.22,
+		-- Part de la croissance (et du pump) que prend chaque pièce
+		Weights = {
+			UpperArm = 1,
+			LowerArm = 0.8,
+			UpperTorso = 1,
+			LowerTorso = 0.4,
+			UpperLeg = 0.7,
+			LowerLeg = 0.6,
+			Hand = 0.3,
+			Foot = 0,
+			Head = 0,
+			Head_Hair = 0,
+		},
+		-- Les os s'allongent beaucoup moins que les muscles ne s'épaississent (les articulations restent en place)
+		LengthShare = 0.25,
+		-- Pump : gonflement par répétition validée, plafond, temps pour redescendre du plafond à zéro
+		PumpPerRep = { Perfect = 0.035, Good = 0.025, Auto = 0.02, Miss = 0.01 },
+		PumpMax = 0.2,
+		PumpDecayTime = 20,
+		PumpUpdateInterval = 0.25,
+		-- Muscles travaillés par exercice
+		PumpMuscles = {
+			Curl = { "UpperArm", "LowerArm" },
+			PushUp = { "UpperTorso", "UpperArm" },
+			BenchPress = { "UpperTorso", "UpperArm", "LowerArm" },
+			Squat = { "UpperLeg", "LowerLeg" },
+			PullUp = { "UpperTorso", "UpperArm", "LowerArm" },
+			JumpRope = { "LowerLeg", "UpperLeg" },
+		},
+	},
 }

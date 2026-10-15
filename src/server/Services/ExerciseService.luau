@@ -14,6 +14,7 @@ local STATION_TAG = "Station"
 local DataService
 local StatsService
 local MinigameService
+local BodyService
 
 local ExerciseService = {}
 
@@ -72,6 +73,8 @@ local function startSeries(player: Player, exerciseId: unknown)
 		onRep = function(p, quality)
 			local gain = exercise.mogPerRep * Balance.Quality[quality]
 			StatsService.Add(p, "Mog", gain)
+			-- Les muscles travaillés gonflent (D40)
+			BodyService.Pump(p, exerciseId, quality)
 			return gain
 		end,
 	})
@@ -103,6 +106,7 @@ function ExerciseService.Init(services)
 	DataService = services.DataService
 	StatsService = services.StatsService
 	MinigameService = services.MinigameService
+	BodyService = services.BodyService
 end
 
 function ExerciseService.Start()

@@ -27,6 +27,7 @@ local NAMES = {
 	-- serveur -> tous les clients : ({ player, state: "Started" | "Rep" | "Ended", kind, id, anchor, interval,
 	-- quality }) pour que chacun voie l'activité se réaliser vraiment (décision D37)
 	"Activity",
+	"BodyTransform", -- serveur -> tous les clients : (player, stageId) un joueur change de corps (nouveau stade)
 }
 
 local isServer = RunService:IsServer()
@@ -79,4 +80,5 @@ return remotes :: {
 	GoHome: RemoteEvent,
 	TakeBus: RemoteEvent,
 	Activity: RemoteEvent,
+	BodyTransform: RemoteEvent,
 }
