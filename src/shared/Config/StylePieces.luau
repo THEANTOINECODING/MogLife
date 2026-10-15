@@ -32,6 +32,9 @@ return {
 			LowerTorso = Vector3.new(-0, -0.1, 0.02),
 			RightUpperLeg = Vector3.new(0, 0.22, 0),
 		},
+		FrownBrows = {
+			Head = Vector3.new(-0, 0.272, -0.753),
+		},
 		Goatee = {
 			Head = Vector3.new(-0, -0.576, -0.687),
 		},
@@ -58,6 +61,9 @@ return {
 		},
 		LumberBeard = {
 			Head = Vector3.new(-0, -0.618, -0.297),
+		},
+		MegaJaw = {
+			Head = Vector3.new(-0, -0.515, -0.285),
 		},
 		MogTank = {
 			UpperTorso = Vector3.new(0, -0.016, -0.039),
@@ -86,6 +92,9 @@ return {
 		},
 		ShinyBald = {
 			Head = Vector3.new(-0, 0.46, -0.035),
+		},
+		SparkleSmile = {
+			Head = Vector3.new(-0, -0.422, -0.642),
 		},
 		Sweatbands = {
 			LeftLowerArm = Vector3.new(0, -0.364, 0),
@@ -142,6 +151,9 @@ return {
 			LowerTorso = Vector3.new(-0, -0.1, 0.02),
 			RightUpperLeg = Vector3.new(-0, 0.22, 0),
 		},
+		FrownBrows = {
+			Head = Vector3.new(-0, 0.26, -0.728),
+		},
 		Goatee = {
 			Head = Vector3.new(-0, -0.574, -0.698),
 		},
@@ -168,6 +180,9 @@ return {
 		},
 		LumberBeard = {
 			Head = Vector3.new(-0, -0.62, -0.317),
+		},
+		MegaJaw = {
+			Head = Vector3.new(-0, -0.506, -0.302),
 		},
 		MogTank = {
 			UpperTorso = Vector3.new(0, -0.016, -0.042),
@@ -196,6 +211,9 @@ return {
 		},
 		ShinyBald = {
 			Head = Vector3.new(-0, 0.438, -0.045),
+		},
+		SparkleSmile = {
+			Head = Vector3.new(-0, -0.402, -0.653),
 		},
 		Sweatbands = {
 			LeftLowerArm = Vector3.new(-0, -0.364, 0),
@@ -252,6 +270,9 @@ return {
 			LowerTorso = Vector3.new(-0, -0.11, 0.02),
 			RightUpperLeg = Vector3.new(0, 0.23, 0),
 		},
+		FrownBrows = {
+			Head = Vector3.new(-0, 0.247, -0.709),
+		},
 		Goatee = {
 			Head = Vector3.new(-0, -0.577, -0.734),
 		},
@@ -278,6 +299,9 @@ return {
 		},
 		LumberBeard = {
 			Head = Vector3.new(-0, -0.629, -0.351),
+		},
+		MegaJaw = {
+			Head = Vector3.new(-0, -0.501, -0.336),
 		},
 		MogTank = {
 			UpperTorso = Vector3.new(-0, -0.017, -0.062),
@@ -306,6 +330,9 @@ return {
 		},
 		ShinyBald = {
 			Head = Vector3.new(-0, 0.415, -0.06),
+		},
+		SparkleSmile = {
+			Head = Vector3.new(-0, -0.384, -0.689),
 		},
 		Sweatbands = {
 			LeftLowerArm = Vector3.new(0.001, -0.383, 0),
@@ -362,6 +389,9 @@ return {
 			LowerTorso = Vector3.new(-0, -0.12, 0.02),
 			RightUpperLeg = Vector3.new(-0, 0.239, 0),
 		},
+		FrownBrows = {
+			Head = Vector3.new(-0, 0.241, -0.711),
+		},
 		Goatee = {
 			Head = Vector3.new(-0, -0.592, -0.789),
 		},
@@ -388,6 +418,9 @@ return {
 		},
 		LumberBeard = {
 			Head = Vector3.new(-0, -0.649, -0.392),
+		},
+		MegaJaw = {
+			Head = Vector3.new(-0, -0.507, -0.382),
 		},
 		MogTank = {
 			UpperTorso = Vector3.new(-0, -0.018, -0.086),
@@ -416,6 +449,9 @@ return {
 		},
 		ShinyBald = {
 			Head = Vector3.new(-0, 0.403, -0.08),
+		},
+		SparkleSmile = {
+			Head = Vector3.new(-0, -0.377, -0.744),
 		},
 		Sweatbands = {
 			LeftLowerArm = Vector3.new(0.001, -0.402, 0),
@@ -472,6 +508,9 @@ return {
 			LowerTorso = Vector3.new(-0, -0.13, 0.02),
 			RightUpperLeg = Vector3.new(0, 0.249, 0),
 		},
+		FrownBrows = {
+			Head = Vector3.new(-0, 0.235, -0.719),
+		},
 		Goatee = {
 			Head = Vector3.new(-0, -0.612, -0.87),
 		},
@@ -498,6 +537,9 @@ return {
 		},
 		LumberBeard = {
 			Head = Vector3.new(-0, -0.677, -0.449),
+		},
+		MegaJaw = {
+			Head = Vector3.new(-0, -0.517, -0.444),
 		},
 		MogTank = {
 			UpperTorso = Vector3.new(-0, -0.018, -0.106),
@@ -526,6 +568,9 @@ return {
 		},
 		ShinyBald = {
 			Head = Vector3.new(-0, 0.392, -0.105),
+		},
+		SparkleSmile = {
+			Head = Vector3.new(-0, -0.372, -0.825),
 		},
 		Sweatbands = {
 			LeftLowerArm = Vector3.new(0.001, -0.419, 0),
@@ -582,6 +627,9 @@ return {
 			LowerTorso = Vector3.new(-0, -0.14, 0.02),
 			RightUpperLeg = Vector3.new(-0, 0.259, 0),
 		},
+		FrownBrows = {
+			Head = Vector3.new(-0, 0.228, -0.727),
+		},
 		Goatee = {
 			Head = Vector3.new(-0, -0.633, -0.961),
 		},
@@ -608,6 +656,9 @@ return {
 		},
 		LumberBeard = {
 			Head = Vector3.new(-0, -0.704, -0.51),
+		},
+		MegaJaw = {
+			Head = Vector3.new(-0, -0.527, -0.513),
 		},
 		MogTank = {
 			UpperTorso = Vector3.new(-0, -0.019, -0.126),
@@ -636,6 +687,9 @@ return {
 		},
 		ShinyBald = {
 			Head = Vector3.new(-0, 0.381, -0.13),
+		},
+		SparkleSmile = {
+			Head = Vector3.new(-0, -0.366, -0.915),
 		},
 		Sweatbands = {
 			LeftLowerArm = Vector3.new(0.001, -0.437, 0),
@@ -692,6 +746,9 @@ return {
 			LowerTorso = Vector3.new(-0, -0.16, 0.02),
 			RightUpperLeg = Vector3.new(0, 0.278, 0),
 		},
+		FrownBrows = {
+			Head = Vector3.new(-0, 0.222, -0.744),
+		},
 		Goatee = {
 			Head = Vector3.new(-0, -0.664, -1.081),
 		},
@@ -718,6 +775,9 @@ return {
 		},
 		LumberBeard = {
 			Head = Vector3.new(-0, -0.744, -0.591),
+		},
+		MegaJaw = {
+			Head = Vector3.new(-0, -0.545, -0.604),
 		},
 		MogTank = {
 			UpperTorso = Vector3.new(-0, -0.021, -0.152),
@@ -746,6 +806,9 @@ return {
 		},
 		ShinyBald = {
 			Head = Vector3.new(-0, 0.369, -0.165),
+		},
+		SparkleSmile = {
+			Head = Vector3.new(-0, -0.363, -1.036),
 		},
 		Sweatbands = {
 			LeftLowerArm = Vector3.new(0.001, -0.474, 0),

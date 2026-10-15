@@ -6283,7 +6283,7 @@
     "Reflectance": 0.5
    },
    "attributes": {
-    "Categories": "Hair,Beard",
+    "Categories": "Hair,Beard,Face",
     "Store": "Barber"
    },
    "children": [
@@ -6455,7 +6455,7 @@
     "Reflectance": 0.5
    },
    "attributes": {
-    "Categories": "Hair,Beard",
+    "Categories": "Hair,Beard,Face",
     "Store": "Barber"
    },
    "children": [
@@ -6627,7 +6627,7 @@
     "Reflectance": 0.5
    },
    "attributes": {
-    "Categories": "Hair,Beard",
+    "Categories": "Hair,Beard,Face",
     "Store": "Barber"
    },
    "children": [
@@ -6984,7 +6984,7 @@
    },
    "attributes": {
     "Stage": "Alpha",
-    "Items": "Pompadour,ChinStrap",
+    "Items": "Pompadour,ChinStrap,FrownBrows",
     "Kind": "Bust"
    }
   },
@@ -7164,7 +7164,7 @@
    },
    "attributes": {
     "Stage": "Gigachad",
-    "Items": "ShinyBald,LumberBeard",
+    "Items": "ShinyBald,MegaJaw,SparkleSmile",
     "Kind": "Bust"
    }
   },

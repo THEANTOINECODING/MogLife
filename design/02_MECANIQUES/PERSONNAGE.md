@@ -23,7 +23,7 @@ Le Cash sert **uniquement à l'apparence**. Aucun objet ne donne d'avantage.
 | **Bas** (vêtements) | Short de sport fluo, jogging en velours, pantalon de cuir (ajoutés le 16/10) |
 | **Accessoires** | Lunettes de soleil haltères, chaîne en or géante, bandeau, sifflet de coach |
 | **Bronzage** | Naturel, doré, orange fluo (comme Brayan), « coup de soleil » |
-| **Visage** | Sourcils froncés, sourire éclatant, mâchoire encore plus carrée |
+| **Visage** (coiffeur) | Sourcils froncés, sourire éclatant, mâchoire encore plus carrée (ajoutés le 16/10) |
 
 - Le **miroir** du magasin ouvre la boutique et l'essayage gratuit : un aperçu 3D (son propre corps de stade + sa tenue) montre l'article touché avant de l'acheter.
 - Chaque objet est modélisé pour les 7 corps (il épouse un Normie comme un GOD MOGGER) et suit le pump et la croissance (D41).

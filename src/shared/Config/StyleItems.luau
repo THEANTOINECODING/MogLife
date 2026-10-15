@@ -17,7 +17,7 @@ export type Piece = {
 }
 
 export type Item = {
-	category: "Hair" | "Beard" | "Top" | "Bottom" | "Accessory",
+	category: "Hair" | "Beard" | "Face" | "Top" | "Bottom" | "Accessory",
 	price: number?,
 	bossId: string?,
 	order: number, -- ordre d'affichage dans la boutique
@@ -122,6 +122,32 @@ local StyleItems: { [string]: Item } = {
 		order = 4,
 		pieces = {
 			{ attach = "Head", size = V(1.02, 0.15, 1.02), offset = V(0, -0.45, 0), color = rgb(20, 18, 18) },
+		},
+	},
+
+	-- Visage (chez le coiffeur)
+	FrownBrows = {
+		category = "Face",
+		price = 25,
+		order = 1,
+		pieces = {
+			{ attach = "Head", size = V(0.8, 0.12, 0.1), offset = V(0, 0.2, -0.55), color = rgb(30, 20, 12) },
+		},
+	},
+	SparkleSmile = {
+		category = "Face",
+		price = 60,
+		order = 2,
+		pieces = {
+			{ attach = "Head", size = V(0.6, 0.15, 0.08), offset = V(0, -0.3, -0.55), color = rgb(255, 255, 250) },
+		},
+	},
+	MegaJaw = {
+		category = "Face",
+		price = 120,
+		order = 3,
+		pieces = {
+			{ attach = "Head", size = V(1.2, 0.45, 1.05), offset = V(0, -0.4, -0.05), color = rgb(238, 189, 153) },
 		},
 	},
 

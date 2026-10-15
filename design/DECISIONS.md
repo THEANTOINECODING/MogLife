@@ -5,6 +5,7 @@ Format : date — décision — raison. La plus récente en haut.
 ## 2026-10-16 (étape 3 : le style, nuit en autonomie)
 
 - **D42 — Règle d'art : jamais deux sphères de pectoraux sous un vêtement.** Sous un tissu, elles se lisent comme une poitrine (inacceptable pour un jeu tous publics) : un torse habillé a une seule poitrine large et bombée. Les pectoraux sculptés restent réservés aux torses nus, où la texture les fait lire comme des muscles.
+- **D44 — Catégorie Visage** (sourcils froncés, sourire éclatant, méga-mâchoire), listée dans le design, vendue chez le coiffeur. ❓ Prix (25 à 120 Cash) : hypothèses. Le bronzage (design) reste à faire : il demande une texture de peau par teinte et par corps.
 - **D43 — Catégorie Bas** (short fluo, jogging en velours, pantalon de cuir), listée dans le design (PERSONNAGE.md) et ajoutée au magasin de vêtements. ❓ Prix (35 à 110 Cash) : hypothèses. Boutique adaptée à l'écran (mobile d'abord) avec essayage 3D.
 - **D41 — Objets de style modélisés pour chaque corps de stade** (même pipeline que les corps : `build_style.py`), soudés pièce par pièce, ils suivent animations, pump et croissance. Ajout de la catégorie **Barbes** (4 barbes, vendues chez le coiffeur) : prévue dans le plan validé (étape 3 « coiffures, barbes et tenues »). ❓ Prix des barbes (30 à 65 Cash) : hypothèses à calibrer comme les autres prix. Présentoirs : 4 mannequins au magasin de vêtements, 5 têtes chez le coiffeur, qui portent les vrais articles.
 

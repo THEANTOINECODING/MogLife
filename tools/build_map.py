@@ -784,7 +784,7 @@ def barber():
         c.append(P(F, f"ChairFoot{k}", (lx, 0.9, 25), (1.4, 1, 1), (180, 180, 186), "Metal", shape="Cylinder",
                    roll=90))
         wrap(c, n0, F, f"BarberChairSlot{k}", (lx, 0.4, 25), "BarberChair", yaw=180)
-        c.append(mirror(F, f"BarberMirror{k}", (lx, 6, 30.6), {"Categories": "Hair,Beard", "Store": "Barber"}))
+        c.append(mirror(F, f"BarberMirror{k}", (lx, 6, 30.6), {"Categories": "Hair,Beard,Face", "Store": "Barber"}))
     c.append(P(F, "Sink", (-15.5, 2, 13), (2, 3.4, 4), WHITE))
     # Table des coupes : cinq têtes coiffées (et barbues) exposent les vrais articles (DisplayService)
     # (contre le mur de gauche, hors du passage entre la porte et les fauteuils)
@@ -792,10 +792,10 @@ def barber():
     for k, lx in enumerate((-15, -3.4)):
         c.append(P(F, f"BustTableLeg{k}", (lx, 0.95, 5), (0.4, 1.1, 2), (60, 60, 66), "Metal"))
     for k, (lx, stage, items) in enumerate(((-14.4, "Bro", ("Banana", "Goatee")),
-                                            (-11.8, "Alpha", ("Pompadour", "ChinStrap")),
+                                            (-11.8, "Alpha", ("Pompadour", "ChinStrap", "FrownBrows")),
                                             (-9.2, "Chad", ("Mohawk", "Handlebar")),
                                             (-6.6, "GymRat", ("Mullet", "LumberBeard")),
-                                            (-4.0, "Gigachad", ("ShinyBald", "LumberBeard")))):
+                                            (-4.0, "Gigachad", ("ShinyBald", "MegaJaw", "SparkleSmile")))):
         c.append(style_display(F, f"BarberBust{k}", (lx, 1.9, 5), stage, items, kind="Bust"))
     n0 = len(c)
     c.append(P(F, "WaitingSofa", (12, 1.4, 7), (8, 2, 3), (90, 60, 140), "Fabric"))

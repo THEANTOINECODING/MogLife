@@ -12,7 +12,7 @@ local Remotes = require(ReplicatedStorage.Shared.Remotes)
 
 local MIRROR_TAG = "Mirror"
 local VISUALS_NAME = "StyleVisuals"
-local CATEGORIES = { Hair = true, Beard = true, Top = true, Bottom = true, Accessory = true }
+local CATEGORIES = { Hair = true, Beard = true, Face = true, Top = true, Bottom = true, Accessory = true }
 
 local DataService
 local StatsService

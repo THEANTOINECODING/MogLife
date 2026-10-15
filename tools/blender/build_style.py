@@ -122,6 +122,17 @@ def paint_style_atlas():
         k = 0.12 + 0.35 * max(0.0, math.sin((x * 0.5 + y * 0.15)))
         return (k * 0.6, k * 0.55, k * 0.5)
     a.cell("leather", 7, 3, leather)
+
+    a.cell("skin", 0, 4, lambda x, y: lit(noise((0.93, 0.72, 0.56), 0.02), y, 0.15))
+    a.cell("brow_dark", 1, 4, lambda x, y: noise((0.12, 0.08, 0.05), 0.04))
+
+    def teeth(x, y):                                  # dents éclatantes, avec une étincelle
+        c = (0.82, 0.8, 0.76) if x % 6 == 0 else (1.0, 1.0, 0.97)
+        if (x - 25) ** 2 + (y - 22) ** 2 < 6:
+            c = (1.0, 1.0, 1.0)
+        return c
+    a.cell("teeth_white", 2, 4, teeth)
+    a.cell("lips", 3, 4, lambda x, y: noise((0.62, 0.36, 0.32), 0.02))
     return a
 
 
@@ -297,6 +308,32 @@ def build_hair(w, g):
     w.make("Head", lowsphere((0, front, z + r * 1.6), (r * 0.6, r * 0.6, r * 0.65), 8, 6), "hair_black")
 
 
+# ------------------------------------------------------------------ visage (chez le coiffeur)
+def build_faces(w, g):
+    cfg = g["cfg"]
+    r, hy, z = g["head_r"], g["hy"], g["head_z"]
+    jw, jh = cfg["jaw_w"], cfg["jaw_h"]
+    jf, jz, jy, jd = g["jaw_front"], g["jaw_z"], g["jaw_y"], g["jaw_depth"]
+    brow_y = hy - r * 0.86 - 0.08
+    brow_z = z + r * 0.3
+
+    w.start("FrownBrows")        # sourcils froncés : deux barres épaisses en V
+    for sx in (-1, 1):
+        inner = Vector((sx * r * 0.1, brow_y, brow_z - r * 0.08))
+        outer = Vector((sx * r * 0.62, brow_y + 0.02, brow_z + r * 0.12))
+        w.make("Head", prism(tuple(inner), tuple(outer), 0.07 + r * 0.05, 0.06 + r * 0.04, sides=4), "brow_dark")
+
+    w.start("SparkleSmile")      # sourire éclatant : une rangée de dents immense
+    w.make("Head", block((0, jf - 0.05, jz + jh * 0.12), (jw * 0.72, 0.08, jh * 0.22)), "teeth_white")
+    for sx in (-1, 1):
+        w.make("Head", block((sx * jw * 0.38, jf - 0.04, jz + jh * 0.2), (jw * 0.08, 0.08, jh * 0.14)), "teeth_white")
+
+    w.start("MegaJaw")           # mâchoire encore plus carrée : un bloc qui déborde de partout
+    w.make("Head", block((0, jy - jd * 0.08, jz - jh * 0.12), (jw * 1.28, jd * 1.12, jh * 1.05), taper_top=0.9), "skin")
+    w.make("Head", block((0, jf - jd * 0.2, jz + jh * 0.1), (jw * 0.5, 0.06, jh * 0.18)), "lips")
+    w.make("Head", block((0, jf - jd * 0.22, jz + jh * 0.11), (jw * 0.4, 0.04, jh * 0.08)), "teeth_white")
+
+
 # ------------------------------------------------------------------ barbes (nouvelle catégorie, chez le coiffeur)
 def build_beards(w, g):
     cfg = g["cfg"]
@@ -450,6 +487,7 @@ for i, stage in enumerate(ORDER):
     build_bottoms(w, g)
     build_hair(w, g)
     build_beards(w, g)
+    build_faces(w, g)
     build_accessories(w, g)
     sk = SKELETONS[stage]["parts"]
     manifest[stage] = {}

@@ -18,7 +18,7 @@ local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Ui = require(script.Parent.Parent.Ui)
 
 local MIRROR_TAG = "Mirror"
-local ALL_CATEGORIES = { "Hair", "Beard", "Top", "Bottom", "Accessory" }
+local ALL_CATEGORIES = { "Hair", "Beard", "Face", "Top", "Bottom", "Accessory" }
 
 local player = Players.LocalPlayer
 
