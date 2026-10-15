@@ -3910,196 +3910,492 @@
    }
   },
   {
-   "name": "PlazaBed0Flowers0",
-   "className": "Part",
+   "name": "PlazaBed0FlowerSlot0",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       26.0,
-       1.42,
-       26.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         26.0,
+         1.02,
+         26.0
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      240,
-      90,
-      120
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed0Flowers0",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           26.0,
+           1.42,
+           26.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          90,
+          120
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "PlazaBed0Flowers1",
-   "className": "Part",
+   "name": "PlazaBed0FlowerSlot1",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       30.0,
-       1.42,
-       26.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         30.0,
+         1.02,
+         26.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      210,
-      70
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed0Flowers1",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           30.0,
+           1.42,
+           26.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          210,
+          70
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "PlazaBed0Flowers2",
-   "className": "Part",
+   "name": "PlazaBed0FlowerSlot2",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       26.0,
-       1.42,
-       30.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         26.0,
+         1.02,
+         30.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      180,
-      120,
-      230
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed0Flowers2",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           26.0,
+           1.42,
+           30.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          180,
+          120,
+          230
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "PlazaBed0Flowers3",
-   "className": "Part",
+   "name": "PlazaBed0FlowerSlot3",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       30.0,
-       1.42,
-       30.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         30.0,
+         1.02,
+         30.0
+        ],
+        "orientation": [
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          -0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      150,
-      60
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed0Flowers3",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           30.0,
+           1.42,
+           30.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          150,
+          60
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
    "name": "PlazaTree0",
@@ -4366,196 +4662,492 @@
    }
   },
   {
-   "name": "PlazaBed1Flowers0",
-   "className": "Part",
+   "name": "PlazaBed1FlowerSlot0",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -30.0,
-       1.42,
-       26.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -30.0,
+         1.02,
+         26.0
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      240,
-      90,
-      120
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed1Flowers0",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -30.0,
+           1.42,
+           26.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          90,
+          120
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "PlazaBed1Flowers1",
-   "className": "Part",
+   "name": "PlazaBed1FlowerSlot1",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -26.0,
-       1.42,
-       26.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -26.0,
+         1.02,
+         26.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      210,
-      70
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed1Flowers1",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -26.0,
+           1.42,
+           26.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          210,
+          70
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "PlazaBed1Flowers2",
-   "className": "Part",
+   "name": "PlazaBed1FlowerSlot2",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -30.0,
-       1.42,
-       30.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -30.0,
+         1.02,
+         30.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      180,
-      120,
-      230
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed1Flowers2",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -30.0,
+           1.42,
+           30.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          180,
+          120,
+          230
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "PlazaBed1Flowers3",
-   "className": "Part",
+   "name": "PlazaBed1FlowerSlot3",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -26.0,
-       1.42,
-       30.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -26.0,
+         1.02,
+         30.0
+        ],
+        "orientation": [
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          -0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      150,
-      60
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed1Flowers3",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -26.0,
+           1.42,
+           30.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          150,
+          60
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
    "name": "PlazaTree1",
@@ -4822,196 +5414,492 @@
    }
   },
   {
-   "name": "PlazaBed2Flowers0",
-   "className": "Part",
+   "name": "PlazaBed2FlowerSlot0",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       26.0,
-       1.42,
-       -30.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         26.0,
+         1.02,
+         -30.0
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      240,
-      90,
-      120
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed2Flowers0",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           26.0,
+           1.42,
+           -30.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          90,
+          120
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "PlazaBed2Flowers1",
-   "className": "Part",
+   "name": "PlazaBed2FlowerSlot1",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       30.0,
-       1.42,
-       -30.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         30.0,
+         1.02,
+         -30.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      210,
-      70
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed2Flowers1",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           30.0,
+           1.42,
+           -30.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          210,
+          70
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "PlazaBed2Flowers2",
-   "className": "Part",
+   "name": "PlazaBed2FlowerSlot2",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       26.0,
-       1.42,
-       -26.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         26.0,
+         1.02,
+         -26.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      180,
-      120,
-      230
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed2Flowers2",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           26.0,
+           1.42,
+           -26.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          180,
+          120,
+          230
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "PlazaBed2Flowers3",
-   "className": "Part",
+   "name": "PlazaBed2FlowerSlot3",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       30.0,
-       1.42,
-       -26.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         30.0,
+         1.02,
+         -26.0
+        ],
+        "orientation": [
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          -0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      150,
-      60
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed2Flowers3",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           30.0,
+           1.42,
+           -26.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          150,
+          60
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
    "name": "PlazaTree2",
@@ -5278,196 +6166,492 @@
    }
   },
   {
-   "name": "PlazaBed3Flowers0",
-   "className": "Part",
+   "name": "PlazaBed3FlowerSlot0",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -30.0,
-       1.42,
-       -30.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -30.0,
+         1.02,
+         -30.0
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      240,
-      90,
-      120
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed3Flowers0",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -30.0,
+           1.42,
+           -30.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          90,
+          120
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "PlazaBed3Flowers1",
-   "className": "Part",
+   "name": "PlazaBed3FlowerSlot1",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -26.0,
-       1.42,
-       -30.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -26.0,
+         1.02,
+         -30.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      210,
-      70
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed3Flowers1",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -26.0,
+           1.42,
+           -30.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          210,
+          70
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "PlazaBed3Flowers2",
-   "className": "Part",
+   "name": "PlazaBed3FlowerSlot2",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -30.0,
-       1.42,
-       -26.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -30.0,
+         1.02,
+         -26.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      180,
-      120,
-      230
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed3Flowers2",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -30.0,
+           1.42,
+           -26.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          180,
+          120,
+          230
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "PlazaBed3Flowers3",
-   "className": "Part",
+   "name": "PlazaBed3FlowerSlot3",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -26.0,
-       1.42,
-       -26.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -26.0,
+         1.02,
+         -26.0
+        ],
+        "orientation": [
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          -0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      150,
-      60
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "PlazaBed3Flowers3",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -26.0,
+           1.42,
+           -26.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          150,
+          60
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
    "name": "PlazaTree3",
@@ -7548,7 +8732,7 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
+      "Brightness": 0.9,
       "Range": 34,
       "Color": {
        "Color3": [
@@ -7612,7 +8796,7 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
+      "Brightness": 0.9,
       "Range": 34,
       "Color": {
        "Color3": [
@@ -9121,7 +10305,7 @@
       "position": [
        -66.0,
        5.6,
-       66.7
+       67.4
       ],
       "orientation": [
        [
@@ -9178,7 +10362,7 @@
         "position": [
          -66.0,
          5.6,
-         66.4
+         67.1
         ],
         "orientation": [
          [
@@ -9227,7 +10411,7 @@
       "position": [
        -78.0,
        5.6,
-       66.7
+       67.4
       ],
       "orientation": [
        [
@@ -9284,7 +10468,7 @@
         "position": [
          -78.0,
          5.6,
-         66.4
+         67.1
         ],
         "orientation": [
          [
@@ -10831,7 +12015,7 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
+      "Brightness": 0.85,
       "Range": 30,
       "Color": {
        "Color3": [
@@ -10895,7 +12079,7 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
+      "Brightness": 0.85,
       "Range": 30,
       "Color": {
        "Color3": [
@@ -11137,7 +12321,7 @@
       "position": [
        -20.0,
        6.1,
-       72.7
+       73.4
       ],
       "orientation": [
        [
@@ -11194,7 +12378,7 @@
         "position": [
          -20.0,
          6.1,
-         72.4
+         73.1
         ],
         "orientation": [
          [
@@ -11457,7 +12641,7 @@
       "position": [
        -30.0,
        6.1,
-       72.7
+       73.4
       ],
       "orientation": [
        [
@@ -11514,7 +12698,7 @@
         "position": [
          -30.0,
          6.1,
-         72.4
+         73.1
         ],
         "orientation": [
          [
@@ -11777,7 +12961,7 @@
       "position": [
        -40.0,
        6.1,
-       72.7
+       73.4
       ],
       "orientation": [
        [
@@ -11834,7 +13018,7 @@
         "position": [
          -40.0,
          6.1,
-         72.4
+         73.1
         ],
         "orientation": [
          [
@@ -13106,7 +14290,7 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
+      "Brightness": 0.9,
       "Range": 36,
       "Color": {
        "Color3": [
@@ -13170,7 +14354,7 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
+      "Brightness": 0.9,
       "Range": 36,
       "Color": {
        "Color3": [
@@ -16939,7 +18123,7 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
+      "Brightness": 0.85,
       "Range": 30,
       "Color": {
        "Color3": [
@@ -17003,7 +18187,7 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
+      "Brightness": 0.85,
       "Range": 30,
       "Color": {
        "Color3": [
@@ -17976,8 +19160,8 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
-      "Range": 26,
+      "Brightness": 1.3,
+      "Range": 40,
       "Color": {
        "Color3": [
         1.0,
@@ -18040,8 +19224,8 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
-      "Range": 26,
+      "Brightness": 1.3,
+      "Range": 40,
       "Color": {
        "Color3": [
         1.0,
@@ -18104,8 +19288,8 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
-      "Range": 26,
+      "Brightness": 1.3,
+      "Range": 40,
       "Color": {
        "Color3": [
         1.0,
@@ -18168,8 +19352,8 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
-      "Range": 26,
+      "Brightness": 1.3,
+      "Range": 40,
       "Color": {
        "Color3": [
         1.0,
@@ -18232,8 +19416,8 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
-      "Range": 26,
+      "Brightness": 1.3,
+      "Range": 40,
       "Color": {
        "Color3": [
         1.0,
@@ -18296,8 +19480,8 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
-      "Range": 26,
+      "Brightness": 1.3,
+      "Range": 40,
       "Color": {
        "Color3": [
         1.0,
@@ -29539,196 +30723,492 @@
    }
   },
   {
-   "name": "SquareBedNEFlowers0",
-   "className": "Part",
+   "name": "SquareBedNEFlowerSlot0",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       67.5,
-       1.3,
-       41.5
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         67.5,
+         0.9,
+         41.5
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      240,
-      90,
-      120
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "SquareBedNEFlowers0",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           67.5,
+           1.3,
+           41.5
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          90,
+          120
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "SquareBedNEFlowers1",
-   "className": "Part",
+   "name": "SquareBedNEFlowerSlot1",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       72.5,
-       1.3,
-       41.5
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         72.5,
+         0.9,
+         41.5
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      210,
-      70
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "SquareBedNEFlowers1",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           72.5,
+           1.3,
+           41.5
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          210,
+          70
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "SquareBedNEFlowers2",
-   "className": "Part",
+   "name": "SquareBedNEFlowerSlot2",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       67.5,
-       1.3,
-       46.5
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         67.5,
+         0.9,
+         46.5
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      180,
-      120,
-      230
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "SquareBedNEFlowers2",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           67.5,
+           1.3,
+           46.5
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          180,
+          120,
+          230
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "SquareBedNEFlowers3",
-   "className": "Part",
+   "name": "SquareBedNEFlowerSlot3",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       72.5,
-       1.3,
-       46.5
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         72.5,
+         0.9,
+         46.5
+        ],
+        "orientation": [
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          -0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      150,
-      60
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "SquareBedNEFlowers3",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           72.5,
+           1.3,
+           46.5
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          150,
+          60
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
    "name": "SquareBedSE",
@@ -29778,196 +31258,492 @@
    }
   },
   {
-   "name": "SquareBedSEFlowers0",
-   "className": "Part",
+   "name": "SquareBedSEFlowerSlot0",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       27.5,
-       1.3,
-       -66.5
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         27.5,
+         0.9,
+         -66.5
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      240,
-      90,
-      120
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "SquareBedSEFlowers0",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           27.5,
+           1.3,
+           -66.5
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          90,
+          120
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "SquareBedSEFlowers1",
-   "className": "Part",
+   "name": "SquareBedSEFlowerSlot1",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       32.5,
-       1.3,
-       -66.5
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         32.5,
+         0.9,
+         -66.5
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      210,
-      70
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "SquareBedSEFlowers1",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           32.5,
+           1.3,
+           -66.5
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          210,
+          70
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "SquareBedSEFlowers2",
-   "className": "Part",
+   "name": "SquareBedSEFlowerSlot2",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       27.5,
-       1.3,
-       -61.5
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         27.5,
+         0.9,
+         -61.5
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      180,
-      120,
-      230
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "SquareBedSEFlowers2",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           27.5,
+           1.3,
+           -61.5
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          180,
+          120,
+          230
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "SquareBedSEFlowers3",
-   "className": "Part",
+   "name": "SquareBedSEFlowerSlot3",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       32.5,
-       1.3,
-       -61.5
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         32.5,
+         0.9,
+         -61.5
+        ],
+        "orientation": [
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          -0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      150,
-      60
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "SquareBedSEFlowers3",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           32.5,
+           1.3,
+           -61.5
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          150,
+          60
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
    "name": "SquareBenchNE",
@@ -31477,9 +33253,9 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         24.0,
+         46.0,
          0.1,
-         -28.0
+         -88.0
         ],
         "orientation": [
          [

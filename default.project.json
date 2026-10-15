@@ -43,9 +43,9 @@
       "MuscleCityBloom": {
         "$className": "BloomEffect",
         "$properties": {
-          "Intensity": 0.35,
+          "Intensity": 0.25,
           "Size": 22,
-          "Threshold": 1.6
+          "Threshold": 2.2
         }
       }
     },

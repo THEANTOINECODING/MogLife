@@ -1302,8 +1302,8 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
-      "Range": 26,
+      "Brightness": 0.8,
+      "Range": 20,
       "Color": {
        "Color3": [
         1.0,
@@ -1366,8 +1366,8 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
-      "Range": 26,
+      "Brightness": 0.8,
+      "Range": 20,
       "Color": {
        "Color3": [
         1.0,
@@ -3208,7 +3208,8 @@
     }
    },
    "attributes": {
-    "Prop": "Garage_GasCan"
+    "Prop": "Garage_GasCan",
+    "PropHeight": 2.2
    },
    "children": [
     {
@@ -4466,8 +4467,8 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
-      "Range": 26,
+      "Brightness": 0.8,
+      "Range": 20,
       "Color": {
        "Color3": [
         1.0,
@@ -4530,8 +4531,8 @@
      "name": "Light",
      "className": "PointLight",
      "properties": {
-      "Brightness": 1.4,
-      "Range": 26,
+      "Brightness": 0.8,
+      "Range": 20,
       "Color": {
        "Color3": [
         1.0,

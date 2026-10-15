@@ -8387,196 +8387,492 @@
    }
   },
   {
-   "name": "CornerBedNFlowers0",
-   "className": "Part",
+   "name": "CornerBedNFlowerSlot0",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -180.0,
-       1.3,
-       172.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -180.0,
+         0.9,
+         172.0
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      240,
-      90,
-      120
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedNFlowers0",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -180.0,
+           1.3,
+           172.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          90,
+          120
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "CornerBedNFlowers1",
-   "className": "Part",
+   "name": "CornerBedNFlowerSlot1",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -172.0,
-       1.3,
-       172.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -172.0,
+         0.9,
+         172.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      210,
-      70
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedNFlowers1",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -172.0,
+           1.3,
+           172.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          210,
+          70
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "CornerBedNFlowers2",
-   "className": "Part",
+   "name": "CornerBedNFlowerSlot2",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -180.0,
-       1.3,
-       180.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -180.0,
+         0.9,
+         180.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      180,
-      120,
-      230
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedNFlowers2",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -180.0,
+           1.3,
+           180.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          180,
+          120,
+          230
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "CornerBedNFlowers3",
-   "className": "Part",
+   "name": "CornerBedNFlowerSlot3",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -172.0,
-       1.3,
-       180.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        0.0,
-        0.0,
-        1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -172.0,
+         0.9,
+         180.0
+        ],
+        "orientation": [
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          -0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      150,
-      60
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedNFlowers3",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -172.0,
+           1.3,
+           180.0
+          ],
+          "orientation": [
+           [
+            1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          150,
+          60
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
    "name": "CornerTreeN",
@@ -18988,196 +19284,492 @@
    }
   },
   {
-   "name": "CornerBedEFlowers0",
-   "className": "Part",
+   "name": "CornerBedEFlowerSlot0",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       172.0,
-       1.3,
-       180.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -1.0,
-        0.0,
-        0.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         172.0,
+         0.9,
+         180.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      240,
-      90,
-      120
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedEFlowers0",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           172.0,
+           1.3,
+           180.0
+          ],
+          "orientation": [
+           [
+            0.0,
+            0.0,
+            1.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            -1.0,
+            0.0,
+            0.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          90,
+          120
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "CornerBedEFlowers1",
-   "className": "Part",
+   "name": "CornerBedEFlowerSlot1",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       172.0,
-       1.3,
-       172.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -1.0,
-        0.0,
-        0.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         172.0,
+         0.9,
+         172.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      210,
-      70
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedEFlowers1",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           172.0,
+           1.3,
+           172.0
+          ],
+          "orientation": [
+           [
+            0.0,
+            0.0,
+            1.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            -1.0,
+            0.0,
+            0.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          210,
+          70
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "CornerBedEFlowers2",
-   "className": "Part",
+   "name": "CornerBedEFlowerSlot2",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       180.0,
-       1.3,
-       180.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -1.0,
-        0.0,
-        0.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         180.0,
+         0.9,
+         180.0
+        ],
+        "orientation": [
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          -0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      180,
-      120,
-      230
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedEFlowers2",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           180.0,
+           1.3,
+           180.0
+          ],
+          "orientation": [
+           [
+            0.0,
+            0.0,
+            1.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            -1.0,
+            0.0,
+            0.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          180,
+          120,
+          230
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "CornerBedEFlowers3",
-   "className": "Part",
+   "name": "CornerBedEFlowerSlot3",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       180.0,
-       1.3,
-       172.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -1.0,
-        0.0,
-        0.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         180.0,
+         0.9,
+         172.0
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          -0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      150,
-      60
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedEFlowers3",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           180.0,
+           1.3,
+           172.0
+          ],
+          "orientation": [
+           [
+            0.0,
+            0.0,
+            1.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            -1.0,
+            0.0,
+            0.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          150,
+          60
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
    "name": "CornerTreeE",
@@ -29589,196 +30181,492 @@
    }
   },
   {
-   "name": "CornerBedSFlowers0",
-   "className": "Part",
+   "name": "CornerBedSFlowerSlot0",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       180.0,
-       1.3,
-       -172.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         180.0,
+         0.9,
+         -172.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      240,
-      90,
-      120
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedSFlowers0",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           180.0,
+           1.3,
+           -172.0
+          ],
+          "orientation": [
+           [
+            -1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            -0.0,
+            0.0,
+            -1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          90,
+          120
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "CornerBedSFlowers1",
-   "className": "Part",
+   "name": "CornerBedSFlowerSlot1",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       172.0,
-       1.3,
-       -172.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         172.0,
+         0.9,
+         -172.0
+        ],
+        "orientation": [
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          -0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      210,
-      70
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedSFlowers1",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           172.0,
+           1.3,
+           -172.0
+          ],
+          "orientation": [
+           [
+            -1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            -0.0,
+            0.0,
+            -1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          210,
+          70
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "CornerBedSFlowers2",
-   "className": "Part",
+   "name": "CornerBedSFlowerSlot2",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       180.0,
-       1.3,
-       -180.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         180.0,
+         0.9,
+         -180.0
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          -0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      180,
-      120,
-      230
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedSFlowers2",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           180.0,
+           1.3,
+           -180.0
+          ],
+          "orientation": [
+           [
+            -1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            -0.0,
+            0.0,
+            -1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          180,
+          120,
+          230
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "CornerBedSFlowers3",
-   "className": "Part",
+   "name": "CornerBedSFlowerSlot3",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       172.0,
-       1.3,
-       -180.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        -1.0,
-        0.0,
-        0.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        -0.0,
-        0.0,
-        -1.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         172.0,
+         0.9,
+         -180.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      150,
-      60
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedSFlowers3",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           172.0,
+           1.3,
+           -180.0
+          ],
+          "orientation": [
+           [
+            -1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            -0.0,
+            0.0,
+            -1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          150,
+          60
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
    "name": "CornerTreeS",
@@ -40190,196 +41078,492 @@
    }
   },
   {
-   "name": "CornerBedWFlowers0",
-   "className": "Part",
+   "name": "CornerBedWFlowerSlot0",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -172.0,
-       1.3,
-       -180.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -172.0,
+         0.9,
+         -180.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      240,
-      90,
-      120
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedWFlowers0",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -172.0,
+           1.3,
+           -180.0
+          ],
+          "orientation": [
+           [
+            0.0,
+            0.0,
+            -1.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            1.0,
+            0.0,
+            0.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          90,
+          120
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "CornerBedWFlowers1",
-   "className": "Part",
+   "name": "CornerBedWFlowerSlot1",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -172.0,
-       1.3,
-       -172.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -172.0,
+         0.9,
+         -172.0
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      210,
-      70
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedWFlowers1",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -172.0,
+           1.3,
+           -172.0
+          ],
+          "orientation": [
+           [
+            0.0,
+            0.0,
+            -1.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            1.0,
+            0.0,
+            0.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          210,
+          70
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "CornerBedWFlowers2",
-   "className": "Part",
+   "name": "CornerBedWFlowerSlot2",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -180.0,
-       1.3,
-       -180.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -180.0,
+         0.9,
+         -180.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      180,
-      120,
-      230
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedWFlowers2",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -180.0,
+           1.3,
+           -180.0
+          ],
+          "orientation": [
+           [
+            0.0,
+            0.0,
+            -1.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            1.0,
+            0.0,
+            0.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          180,
+          120,
+          230
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
-   "name": "CornerBedWFlowers3",
-   "className": "Part",
+   "name": "CornerBedWFlowerSlot3",
+   "className": "Model",
    "properties": {
-    "Anchored": true,
-    "Size": [
-     2.4,
-     1.2,
-     2.4
-    ],
-    "CFrame": {
-     "CFrame": {
-      "position": [
-       -180.0,
-       1.3,
-       -172.0
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
       ],
-      "orientation": [
-       [
-        0.0,
-        0.0,
-        -1.0
-       ],
-       [
-        0.0,
-        1.0,
-        0
-       ],
-       [
-        1.0,
-        0.0,
-        0.0
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -180.0,
+         0.9,
+         -172.0
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
        ]
-      ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
      }
     },
-    "Color": {
-     "Color3uint8": [
-      250,
-      150,
-      60
+    {
+     "name": "Fallback",
+     "className": "Model",
+     "children": [
+      {
+       "name": "CornerBedWFlowers3",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         2.4,
+         1.2,
+         2.4
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           -180.0,
+           1.3,
+           -172.0
+          ],
+          "orientation": [
+           [
+            0.0,
+            0.0,
+            -1.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            1.0,
+            0.0,
+            0.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          250,
+          150,
+          60
+         ]
+        },
+        "Material": "Grass",
+        "CanCollide": true,
+        "Shape": "Ball"
+       }
+      }
      ]
-    },
-    "Material": "Grass",
-    "CanCollide": true,
-    "Shape": "Ball"
-   }
+    }
+   ]
   },
   {
    "name": "CornerTreeW",

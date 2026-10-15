@@ -265,8 +265,9 @@ def flowerbed(F, name, local, size=(10, 10)):
     for k in range(4):
         dx = (k % 2 - 0.5) * size[0] * 0.5
         dz = (k // 2 - 0.5) * size[1] * 0.5
-        c.append(P(F, f"{name}Flowers{k}", (x + dx, y + 1.2, z + dz), (2.4, 1.2, 2.4), colors[k], "Grass",
-                   shape="Ball"))
+        ball = P(F, f"{name}Flowers{k}", (x + dx, y + 1.2, z + dz), (2.4, 1.2, 2.4), colors[k], "Grass", shape="Ball")
+        c.append(prop_slot(F, f"{name}FlowerSlot{k}", (x + dx, y + 0.8, z + dz), "FlowerPatch", [ball],
+                           yaw=k * 90, height=1.3, collide=False))
     return c
 
 
@@ -438,7 +439,8 @@ def plot(index, side, offset):
                   roof_color=TIN_DARK, roof_material="CorrodedMetal", prefix="Garage")
     c.append(P(G, "GarageDoor", (0, 11.8, 1.2), (18, 1.6, 1.4), (190, 192, 188), "Metal"))
     for k, lz in enumerate((8, 20)):
-        c.append(P(G, f"GarageLamp{k}", (0, 13.6, lz), (8, 0.4, 1), (255, 244, 214), "Neon", children=[light()]))
+        c.append(P(G, f"GarageLamp{k}", (0, 13.6, lz), (8, 0.4, 1), (255, 244, 214), "Neon",
+                   children=[light(brightness=0.8, range_=20)]))
     c.append(station(G, "CurlStation", (-7, 0.8, 6.5), "Curl"))
     c.append(station(G, "PushUpStation", (7, 0.8, 6.5), "PushUp"))
     # Vieux tapis de course qui sert d'étendoir à linge (Kevin, lui, traîne en ville)
@@ -476,7 +478,7 @@ def plot(index, side, offset):
     c.append(P(G, "Box2", (-9.5, 1.3, 26.5), (2.2, 2.2, 2.2), CARDBOARD, "Cardboard", yaw=46))
     wrap(c, n0, G, "PizzaBoxesSlot", (-9.5, 0.3, 26.5), "Garage_PizzaBoxes", yaw=30)
     c.append(decor(G, "TireSlot", (-11.6, 0.3, 9.0), "Garage_Tire", yaw=-90))
-    c.append(decor(G, "GasCanSlot", (11.0, 0.3, 12.0), "Garage_GasCan", yaw=90))
+    c.append(decor(G, "GasCanSlot", (11.0, 0.3, 12.0), "Garage_GasCan", yaw=90, height=2.2))
 
     # La maison : 8 emplacements de meubles que le joueur décore
     H = F.child((14, 0, 12))
@@ -494,7 +496,8 @@ def plot(index, side, offset):
     c.append(P(H, "Porch", (0, 0.25, -0.7), (8, 0.5, 1.4), CONCRETE_LIGHT, "Concrete"))
     c.append(P(H, "DoorFrame", (0, 8.75, -0.1), (7, 0.5, 0.3), TRIM))
     for k, lz in enumerate((9, 22)):
-        c.append(P(H, f"HouseLamp{k}", (0, 11.6, lz), (4, 0.4, 4), (255, 244, 214), "Neon", children=[light()]))
+        c.append(P(H, f"HouseLamp{k}", (0, 11.6, lz), (4, 0.4, 4), (255, 244, 214), "Neon",
+                   children=[light(brightness=0.8, range_=20)]))
     for slot, (lx, ly, lz, yaw) in SLOTS.items():
         c.append(P(H, f"Slot{slot}", (lx, ly, lz), (1, 1, 1), WHITE, yaw=yaw, transparency=1, collide=False,
                    tags=["FurnitureSlot"], attributes={"Slot": slot}, extra={"CanTouch": False}))
@@ -656,7 +659,7 @@ def clothing_store():
         c.append(P(F, f"SignSleeve{k}", (sx * 4.8, 22.7, 1), (3.4, 3.4, 1), (240, 90, 90)))
     for k, lz in enumerate((11, 27)):
         c.append(P(F, f"ClothesLamp{k}", (0, 15.4, lz), (12, 0.4, 2), (255, 244, 214), "Neon",
-                   children=[light(range_=34)]))
+                   children=[light(brightness=0.9, range_=34)]))
     tops = [(240, 90, 90), (60, 110, 200), (250, 200, 60), (40, 40, 44), (120, 200, 120)]
     for r, lx in enumerate((-16, 16)):
         n0 = len(c)
@@ -676,7 +679,7 @@ def clothing_store():
     c.append(P(F, "ClothesCounter", (11, 1.9, 31), (12, 3.4, 2.4), WOOD_LIGHT, "WoodPlanks"))
     wrap(c, n0, F, "CounterSlot", (11, 0.4, 31), "ShopCounter")
     for k, lx in enumerate((-12, 0)):
-        c.append(mirror(F, f"ClothesMirror{k}", (lx, 5.5, 37.3), {"Categories": "Top,Accessory", "Store": "Clothes"}))
+        c.append(mirror(F, f"ClothesMirror{k}", (lx, 5.5, 36.6), {"Categories": "Top,Accessory", "Store": "Clothes"}))
     c.append(landmark(F, "ClothesIcon", (0, 30, 19), "Clothes"))
     return c
 
@@ -698,7 +701,7 @@ def barber():
                    shape="Cylinder", yaw=90))
     for k, lz in enumerate((10, 22)):
         c.append(P(F, f"BarberLamp{k}", (0, 13.4, lz), (10, 0.4, 2), (255, 244, 214), "Neon",
-                   children=[light(range_=30)]))
+                   children=[light(brightness=0.85, range_=30)]))
     for k, lx in enumerate((-10, 0, 10)):  # fauteuils de barbier face au mur du fond
         n0 = len(c)
         c.append(P(F, f"ChairSeat{k}", (lx, 2, 25), (3, 0.8, 3), (180, 40, 40), "Fabric"))
@@ -706,7 +709,7 @@ def barber():
         c.append(P(F, f"ChairFoot{k}", (lx, 0.9, 25), (1.4, 1, 1), (180, 180, 186), "Metal", shape="Cylinder",
                    roll=90))
         wrap(c, n0, F, f"BarberChairSlot{k}", (lx, 0.4, 25), "BarberChair", yaw=180)
-        c.append(mirror(F, f"BarberMirror{k}", (lx, 6, 31.3), {"Categories": "Hair", "Store": "Barber"}))
+        c.append(mirror(F, f"BarberMirror{k}", (lx, 6, 30.6), {"Categories": "Hair", "Store": "Barber"}))
     c.append(P(F, "Sink", (-15.5, 2, 13), (2, 3.4, 4), WHITE))
     n0 = len(c)
     c.append(P(F, "WaitingSofa", (12, 1.4, 7), (8, 2, 3), (90, 60, 140), "Fabric"))
@@ -727,7 +730,7 @@ def furniture_store():
         c.append(P(F, f"SignArm{k}", (sx * 4.9, 19.5, 2.2), (1.2, 3, 5), (70, 120, 180), "Fabric"))
     for k, lz in enumerate((11, 27)):
         c.append(P(F, f"FurnitureLamp{k}", (0, 15.4, lz), (12, 0.4, 2), (255, 244, 214), "Neon",
-                   children=[light(range_=36)]))
+                   children=[light(brightness=0.9, range_=36)]))
     n0 = len(c)
     c.append(P(F, "ShowSofa", (-14, 1.6, 15), (8, 2.4, 3.5), (200, 90, 60), "Fabric"))
     c.append(P(F, "ShowSofaBack", (-14, 3.4, 16.6), (8, 2.4, 0.8), (190, 80, 52), "Fabric"))
@@ -780,7 +783,7 @@ def grocery():
             c.append(decor(F, f"ShelfSlot{k}" + "BCD"[j], (lx + dx, 0.3, lz), "GroceryShelf", yaw=yaw))
     for k, lz in enumerate((10, 22)):
         c.append(P(F, f"GroceryLamp{k}", (0, 13.4, lz), (10, 0.4, 2), (255, 244, 214), "Neon",
-                   children=[light(range_=30)]))
+                   children=[light(brightness=0.85, range_=30)]))
     c.append(P(F, "SignApple", (0, 17.5, 2), (5, 5, 5), (220, 40, 40), shape="Ball"))
     c.append(P(F, "SignStem", (0, 20.5, 2), (0.5, 1.6, 0.5), WOOD))
     c.append(P(F, "SignLeaf", (0.9, 20.5, 2), (1.6, 0.3, 0.9), (90, 170, 70)))
@@ -800,7 +803,7 @@ def gym():
     for i, lx in enumerate((-24, 0, 24)):
         for j, lz in enumerate((14, 34)):
             c.append(P(F, f"GymLamp{i}{j}", (lx, 19.4, lz), (10, 0.4, 1.4), (255, 244, 214), "Neon",
-                       children=[light()]))
+                       children=[light(brightness=1.3, range_=40)]))
     c.append(P(F, "SignBar", (0, 25, 6), (26, 1.2, 1.2), (180, 180, 186), "Metal", shape="Cylinder"))
     for k, dx in enumerate((-13, 13)):
         c.append(P(F, f"SignPlate{k}", (dx, 25, 6), (2, 9, 9), (40, 40, 44), "Metal", shape="Cylinder"))
@@ -974,7 +977,7 @@ def downtown():
     c.append(decor(F, "SwingSlot", (45, 0, 54), "SwingSet"))
     c.append(decor(F, "SlideSlot", (30, 0, 58), "PlaygroundSlide", yaw=90))
     c.append(decor(F, "HoopSlot", (92, 0, 60), "BasketballHoop"))
-    c.append(decor(F, "ShakeTruckSlot", (24, 0, -28), "ShakeTruck", yaw=90))
+    c.append(decor(F, "ShakeTruckSlot", (46, 0, -88), "ShakeTruck", yaw=90))
     c.append(decor(F, "CafeSlot", (44, 0, -30), "CafeSet"))
     c.append(decor(F, "VendingSlot", (106.2, WALK_TOP, -66), "ShakeVendingMachine", yaw=-90))
     # La voiture du voisin, en panne sur la route ouest ; le voisin attend sur le trottoir
