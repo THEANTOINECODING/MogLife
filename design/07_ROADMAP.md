@@ -21,8 +21,8 @@ Remplace la suite de l'étape E ci-dessous. Chaque étape prépare la suivante (
 **Règle transversale (D37) : chaque activité se joue vraiment dans le monde**, le personnage (et l'objet, le PNJ ou le boss) réalise le mouvement en suivant le résultat de chaque répétition du mini-jeu.
 
 1. ✅ **La ville** (15/10) : maisons, garages, magasins et salle modélisés dans Blender, portes automatiques (entrée, garage ↔ salon, magasins), salle en plein air, collisions exactes.
-2. **Le personnage du joueur** : un corps par stade (Normie → God Mogger), prise de muscle satisfaisante (transformation animée, effet à chaque stade, gonflement progressif) et **les 6 exercices animés pour de vrai** selon le jeu du joueur (D37).
-3. **Le style** : coiffures, barbes, tenues adaptées à tous les corps ; présentoirs dans les magasins.
+2. ✅ **Le personnage du joueur** (16/10) : un corps par stade (Normie → God Mogger), prise de muscle satisfaisante (transformation animée, effet à chaque stade, gonflement progressif) et **les 6 exercices animés pour de vrai** selon le jeu du joueur (D37).
+3. 🟡 **Le style** (16/10 : objets modélisés pour les 7 corps, barbes, présentoirs ; reste : import et vérification en jeu, bas/bronzage/visage du design) : coiffures, barbes, tenues adaptées à tous les corps ; présentoirs dans les magasins.
 4. **Les PNJ** : habitants et boss refaits, mentor, **vendeurs dans chaque magasin** (D38) ; **aides et combats de boss animés pour de vrai** (D37).
 5. **Le guide et le tutoriel** : le mentor explique chaque nouveau stade et chaque magasin ; flèches pour les nouveaux joueurs.
 6. **Le gameplay** : mini-jeux améliorés ; boissons et aliments comiques qui donnent un boost (❓ énergie, voir D36).

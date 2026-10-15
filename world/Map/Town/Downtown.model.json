@@ -4811,136 +4811,244 @@
    ]
   },
   {
-   "name": "MannequinSlot0",
-   "className": "Model",
+   "name": "ClothesDisplay0",
+   "className": "Part",
    "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     0.2,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -65.5,
+       0.6,
+       96.5
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
     "Tags": {
      "Tags": [
-      "PropSlot"
+      "StyleDisplay"
      ]
-    }
+    },
+    "CanQuery": false,
+    "CanTouch": false
    },
    "attributes": {
-    "Prop": "Mannequin"
-   },
-   "children": [
-    {
-     "name": "PropAnchor",
-     "className": "Part",
-     "properties": {
-      "Anchored": true,
-      "Size": [
-       1,
-       0.2,
-       1
-      ],
-      "CFrame": {
-       "CFrame": {
-        "position": [
-         -71.0,
-         0.5,
-         96.0
-        ],
-        "orientation": [
-         [
-          -1.0,
-          0.0,
-          0.0
-         ],
-         [
-          0.0,
-          1.0,
-          0
-         ],
-         [
-          -0.0,
-          0.0,
-          -1.0
-         ]
-        ]
-       }
-      },
-      "Color": {
-       "Color3uint8": [
-        240,
-        238,
-        232
-       ]
-      },
-      "Material": "SmoothPlastic",
-      "CanCollide": false,
-      "Transparency": 1,
-      "CanQuery": false,
-      "CanTouch": false
-     }
-    }
-   ]
+    "Stage": "GymRat",
+    "Items": "Hawaiian,DumbbellShades",
+    "Kind": "Mannequin"
+   }
   },
   {
-   "name": "MannequinSlot1",
-   "className": "Model",
+   "name": "ClothesDisplay1",
+   "className": "Part",
    "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     0.2,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -73.5,
+       0.6,
+       96.5
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
     "Tags": {
      "Tags": [
-      "PropSlot"
+      "StyleDisplay"
      ]
-    }
+    },
+    "CanQuery": false,
+    "CanTouch": false
    },
    "attributes": {
-    "Prop": "Mannequin"
-   },
-   "children": [
-    {
-     "name": "PropAnchor",
-     "className": "Part",
-     "properties": {
-      "Anchored": true,
-      "Size": [
-       1,
-       0.2,
-       1
+    "Stage": "Bro",
+    "Items": "TrackJacket,Sweatbands",
+    "Kind": "Mannequin"
+   }
+  },
+  {
+   "name": "ClothesDisplay2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     0.2,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -82.5,
+       0.6,
+       96.5
       ],
-      "CFrame": {
-       "CFrame": {
-        "position": [
-         -85.0,
-         0.5,
-         96.0
-        ],
-        "orientation": [
-         [
-          -1.0,
-          0.0,
-          0.0
-         ],
-         [
-          0.0,
-          1.0,
-          0
-         ],
-         [
-          -0.0,
-          0.0,
-          -1.0
-         ]
-        ]
-       }
-      },
-      "Color": {
-       "Color3uint8": [
-        240,
-        238,
-        232
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
        ]
-      },
-      "Material": "SmoothPlastic",
-      "CanCollide": false,
-      "Transparency": 1,
-      "CanQuery": false,
-      "CanTouch": false
+      ]
      }
-    }
-   ]
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "StyleDisplay"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Stage": "Alpha",
+    "Items": "BoxerRobe,Headband",
+    "Kind": "Mannequin"
+   }
+  },
+  {
+   "name": "ClothesDisplay3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     0.2,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -90.5,
+       0.6,
+       96.5
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "StyleDisplay"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Stage": "Chad",
+    "Items": "MogTank,GoldChain",
+    "Kind": "Mannequin"
+   }
   },
   {
    "name": "CounterSlot",
@@ -6175,7 +6283,7 @@
     "Reflectance": 0.5
    },
    "attributes": {
-    "Categories": "Hair",
+    "Categories": "Hair,Beard",
     "Store": "Barber"
    },
    "children": [
@@ -6347,7 +6455,7 @@
     "Reflectance": 0.5
    },
    "attributes": {
-    "Categories": "Hair",
+    "Categories": "Hair,Beard",
     "Store": "Barber"
    },
    "children": [
@@ -6519,7 +6627,7 @@
     "Reflectance": 0.5
    },
    "attributes": {
-    "Categories": "Hair",
+    "Categories": "Hair,Beard",
     "Store": "Barber"
    },
    "children": [
@@ -6617,6 +6725,447 @@
     },
     "Material": "SmoothPlastic",
     "CanCollide": true
+   }
+  },
+  {
+   "name": "BustTable",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     12.6,
+     0.4,
+     2.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -20.8,
+       1.8,
+       99.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      132,
+      88
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "BustTableLeg0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.4,
+     1.1,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -15.0,
+       1.05,
+       99.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "BustTableLeg1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.4,
+     1.1,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -26.6,
+       1.05,
+       99.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "BarberBust0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     0.2,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -15.6,
+       2.1,
+       99.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "StyleDisplay"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Stage": "Bro",
+    "Items": "Banana,Goatee",
+    "Kind": "Bust"
+   }
+  },
+  {
+   "name": "BarberBust1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     0.2,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -18.2,
+       2.1,
+       99.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "StyleDisplay"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Stage": "Alpha",
+    "Items": "Pompadour,ChinStrap",
+    "Kind": "Bust"
+   }
+  },
+  {
+   "name": "BarberBust2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     0.2,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -20.8,
+       2.1,
+       99.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "StyleDisplay"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Stage": "Chad",
+    "Items": "Mohawk,Handlebar",
+    "Kind": "Bust"
+   }
+  },
+  {
+   "name": "BarberBust3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     0.2,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -23.4,
+       2.1,
+       99.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "StyleDisplay"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Stage": "GymRat",
+    "Items": "Mullet,LumberBeard",
+    "Kind": "Bust"
+   }
+  },
+  {
+   "name": "BarberBust4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     0.2,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -26.0,
+       2.1,
+       99.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "StyleDisplay"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Stage": "Gigachad",
+    "Items": "ShinyBald,LumberBeard",
+    "Kind": "Bust"
    }
   },
   {

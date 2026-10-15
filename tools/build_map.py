@@ -311,6 +311,14 @@ def station(F, name, local, exercise_id, yaw=0):
     return tpl
 
 
+def style_display(F, name, local, stage, items, kind="Mannequin", yaw=0):
+    """Présentoir de la boutique (tag StyleDisplay) : DisplayService y monte un mannequin (ou une tête) blanc
+    au corps du stade `stage`, qui porte les vrais objets `items`."""
+    return P(F, name, (local[0], local[1] + 0.1, local[2]), (1, 0.2, 1), WHITE, yaw=yaw, transparency=1, collide=False,
+             tags=["StyleDisplay"], attributes={"Stage": stage, "Items": ",".join(items), "Kind": kind},
+             extra={"CanQuery": False, "CanTouch": False})
+
+
 def mirror(F, name, local, attributes, yaw=0):
     """Miroir de boutique (tag Mirror) : ses attributs disent quelles catégories de style il vend."""
     G = F.child(local, yaw)
@@ -738,12 +746,12 @@ def clothing_store():
                        yaw=90))
         wrap(c, n0, F, f"RackSlot{r}A", (lx, 0.4, 15), "ClothesRack", yaw=-90 if lx < 0 else 90)
         c.append(decor(F, f"RackSlot{r}B", (lx, 0.4, 23), "ClothesRack", yaw=-90 if lx < 0 else 90))
-    for k, lx in enumerate((-7, 7)):
-        n0 = len(c)
-        c.append(P(F, f"MannequinBody{k}", (lx, 4, 8), (2.6, 4, 1.4), tops[k + 1], "Fabric"))
-        c.append(P(F, f"MannequinHead{k}", (lx, 6.8, 8), (1.4, 1.4, 1.4), (230, 220, 210), shape="Ball"))
-        c.append(P(F, f"MannequinPole{k}", (lx, 1, 8), (0.3, 2, 0.3), (180, 180, 186), "Metal"))
-        wrap(c, n0, F, f"MannequinSlot{k}", (lx, 0.4, 8), "Mannequin")
+    # Vitrine : quatre mannequins de gabarits croissants portent les vrais articles (DisplayService)
+    for k, (lx, stage, items) in enumerate(((-12.5, "GymRat", ("Hawaiian", "DumbbellShades")),
+                                            (-4.5, "Bro", ("TrackJacket", "Sweatbands")),
+                                            (4.5, "Alpha", ("BoxerRobe", "Headband")),
+                                            (12.5, "Chad", ("MogTank", "GoldChain")))):
+        c.append(style_display(F, f"ClothesDisplay{k}", (lx, 0.4, 7.5), stage, items))
     n0 = len(c)
     c.append(P(F, "ClothesCounter", (11, 1.9, 31), (12, 3.4, 2.4), WOOD_LIGHT, "WoodPlanks"))
     wrap(c, n0, F, "CounterSlot", (11, 0.4, 31), "ShopCounter")
@@ -776,8 +784,19 @@ def barber():
         c.append(P(F, f"ChairFoot{k}", (lx, 0.9, 25), (1.4, 1, 1), (180, 180, 186), "Metal", shape="Cylinder",
                    roll=90))
         wrap(c, n0, F, f"BarberChairSlot{k}", (lx, 0.4, 25), "BarberChair", yaw=180)
-        c.append(mirror(F, f"BarberMirror{k}", (lx, 6, 30.6), {"Categories": "Hair", "Store": "Barber"}))
+        c.append(mirror(F, f"BarberMirror{k}", (lx, 6, 30.6), {"Categories": "Hair,Beard", "Store": "Barber"}))
     c.append(P(F, "Sink", (-15.5, 2, 13), (2, 3.4, 4), WHITE))
+    # Table des coupes : cinq têtes coiffées (et barbues) exposent les vrais articles (DisplayService)
+    # (contre le mur de gauche, hors du passage entre la porte et les fauteuils)
+    c.append(P(F, "BustTable", (-9.2, 1.7, 5), (12.6, 0.4, 2.6), WOOD_LIGHT, "WoodPlanks"))
+    for k, lx in enumerate((-15, -3.4)):
+        c.append(P(F, f"BustTableLeg{k}", (lx, 0.95, 5), (0.4, 1.1, 2), (60, 60, 66), "Metal"))
+    for k, (lx, stage, items) in enumerate(((-14.4, "Bro", ("Banana", "Goatee")),
+                                            (-11.8, "Alpha", ("Pompadour", "ChinStrap")),
+                                            (-9.2, "Chad", ("Mohawk", "Handlebar")),
+                                            (-6.6, "GymRat", ("Mullet", "LumberBeard")),
+                                            (-4.0, "Gigachad", ("ShinyBald", "LumberBeard")))):
+        c.append(style_display(F, f"BarberBust{k}", (lx, 1.9, 5), stage, items, kind="Bust"))
     n0 = len(c)
     c.append(P(F, "WaitingSofa", (12, 1.4, 7), (8, 2, 3), (90, 60, 140), "Fabric"))
     wrap(c, n0, F, "WaitingSofaSlot", (12, 0.4, 7.5), "Furniture_BenchSofa", yaw=180)

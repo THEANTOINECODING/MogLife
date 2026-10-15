@@ -8,8 +8,9 @@ du squelette (+ les cheveux à part, que la boutique remplacera) : chaque pièce
 les animations (D28, D37).
 
 Écrit :
-- assets/export/bodies/MogLife_Bodies.fbx + une texture PNG par stade (import : Accueil -> Importer 3D,
-  puis tools/install_bodies.luau)
+- assets/export/bodies/MogLife_Bodies.fbx + une texture PNG par stade (corps seuls ; pour le jeu, lancer ensuite
+  build_style.py qui exporte corps + style dans assets/export/characters/MogLife_Characters.fbx, un seul import,
+  puis tools/install_characters.luau)
 - src/shared/Config/BodyPieces.luau : décalage de chaque pièce par rapport à sa partie (BodyService)
 Dans Blender : exec(open(r"...\\tools\\blender\\build_bodies.py", encoding="utf-8").read())
 Variable optionnelle ONLY = ["Normie", ...] pour ne reconstruire que certains stades (l'export prend tout).
@@ -83,6 +84,31 @@ class Body:
         return obj
 
 
+def geometry(name):
+    """Mesures du corps d'un stade (coordonnées Blender), partagées avec les vêtements (build_style.py)."""
+    cfg = STAGES[name]
+    sk = SKELETONS[name]
+    g = dict(cfg=cfg, J={k: B(v) for k, v in sk["joints"].items()}, PC={k: B(v["center"]) for k, v in sk["parts"].items()})
+    J = g["J"]
+    g["hip_w"] = abs(J["LeftHip"].x - J["RightHip"].x) + cfg["thigh"] * 2
+    g["depth"] = cfg["depth"]
+    g["h"] = J["Neck"].z - J["Waist"].z
+    g["chest_w"] = max(cfg["chest_w"], abs(J["LeftShoulder"].x) * 2.1)
+    g["waist_w"] = max(g["hip_w"] * 0.95, g["chest_w"] * 0.62)
+    g["belly"] = cfg.get("belly", 0)
+    head_r = cfg["head_r"]
+    g["head_r"] = head_r
+    g["hy"] = g["PC"]["Head"].y - 0.05 - cfg["trap"] * 0.1
+    g["head_z"] = g["PC"]["Head"].z + 0.05
+    jaw_depth = head_r * 1.15 + cfg["jaw_fwd"]
+    g["jaw_y"] = g["hy"] - head_r * 0.15 - cfg["jaw_fwd"] * 0.5
+    g["jaw_z"] = g["head_z"] - head_r * 0.6 - cfg["jaw_h"] * 0.25
+    g["jaw_depth"] = jaw_depth
+    g["jaw_front"] = g["jaw_y"] - jaw_depth / 2
+    g["jaw_top"] = g["jaw_z"] + cfg["jaw_h"] / 2
+    return g
+
+
 def build_body(name):
     cfg = STAGES[name]
     sk = SKELETONS[name]
@@ -126,16 +152,19 @@ def build_body(name):
     belly = cfg.get("belly", 0)
     body.make("UpperTorso", lowsphere((0, -belly, waist.z + h * 0.32), (waist_w / 2, depth * 0.45 + belly, h * 0.42)),
               trunk, front_cell="top_front" if clothed else "abs")
-    body.make("UpperTorso", lowsphere((0, 0.02, neck.z - h * 0.36), (chest_w / 2, depth * 0.55, h * 0.44), 10, 8),
+    # Habillé : une seule poitrine large et bombée (deux sphères sous un tissu se liraient comme une poitrine)
+    chest_depth = depth * 0.55 + (cfg["pec"] * 0.45 if clothed else 0)
+    body.make("UpperTorso", lowsphere((0, 0.02 - (cfg["pec"] * 0.2 if clothed else 0), neck.z - h * 0.36),
+                                      (chest_w / 2, chest_depth, h * 0.44), 10, 8),
               trunk, front_cell="top_front" if clothed else "chest")
     for sx in (-1, 1):
         if cfg["lat"] > 0:
             body.make("UpperTorso", lowsphere((chest_w * 0.38 * sx, 0.1, neck.z - h * 0.45),
                                               (cfg["lat"], depth * 0.38, h * 0.32)), trunk)
-        if cfg["pec"] > 0 and top != "tee":
+        if cfg["pec"] > 0 and not clothed:
             pec = cfg["pec"]
             body.make("UpperTorso", lowsphere((chest_w * 0.2 * sx, -depth * 0.47, neck.z - h * 0.24),
-                                              (pec, pec * 0.42, pec * 0.62)), "top" if top == "tank" else "chest")
+                                              (pec, pec * 0.42, pec * 0.62)), "chest")
     # Trapèzes : de la nuque vers les épaules (ils grossissent beaucoup)
     trap, neck_r = cfg["trap"], cfg["neck"]
     for side in ("Left", "Right"):
@@ -266,58 +295,65 @@ def offsets(name, pieces):
     return out
 
 
-ONLY = globals().get("ONLY") or ORDER
-manifest = {}
-for i, name in enumerate(ORDER):
-    if name in ONLY:
-        body = build_body(name)
-        pieces = merge(body)
-        # Aperçu côte à côte dans Blender (la position d'objet est ignorée à l'export)
-        for obj in pieces.values():
-            obj.location.x = i * 7
-        img = body.atlas and bpy.data.images.get(f"Body{name}_Atlas")
-        png = os.path.join(OUT, f"Body_{name}.png")
-        img.filepath_raw = png
-        img.file_format = "PNG"
-        img.save()
-        tris = sum(sum(len(p.vertices) - 2 for p in o.data.polygons) for o in pieces.values())
-        print(f"{name}: {len(pieces)} pièces, {tris} triangles")
-    col = bpy.data.collections.get("Body_" + name)
-    manifest[name] = offsets(name, {o.name.split("_", 1)[1]: o for o in col.objects if o.type == "MESH"})
+# Exécuté avec BODIES_LIBRARY = True (ex. par build_style.py) : on ne fait que charger les définitions
+if not globals().get("BODIES_LIBRARY"):
+    ONLY = globals().get("ONLY") or ORDER
+    manifest = {}
+    for i, name in enumerate(ORDER):
+        if name in ONLY:
+            body = build_body(name)
+            pieces = merge(body)
+            # Aperçu côte à côte dans Blender (la position d'objet est ignorée à l'export)
+            for obj in pieces.values():
+                obj.location.x = i * 7
+            img = body.atlas and bpy.data.images.get(f"Body{name}_Atlas")
+            png = os.path.join(OUT, f"Body_{name}.png")
+            img.filepath_raw = png
+            img.file_format = "PNG"
+            img.save()
+            tris = sum(sum(len(p.vertices) - 2 for p in o.data.polygons) for o in pieces.values())
+            print(f"{name}: {len(pieces)} pièces, {tris} triangles")
+        col = bpy.data.collections.get("Body_" + name)
+        manifest[name] = offsets(name, {o.name.split("_", 1)[1]: o for o in col.objects if o.type == "MESH"})
 
-# Export : toutes les pièces de tous les stades, positions remises à zéro
-objs = [o for name in ORDER for o in bpy.data.collections["Body_" + name].objects if o.type == "MESH"]
-saved = {o: o.location.copy() for o in objs}
-for o in bpy.context.view_layer.objects:
-    o.select_set(False)
-for o in objs:
-    o.location = (0, 0, 0)
-    o.select_set(True)
-bpy.context.view_layer.objects.active = objs[0]
-fbx = os.path.join(OUT, "MogLife_Bodies.fbx")
-bpy.ops.export_scene.fbx(
-    filepath=fbx, use_selection=True, object_types={"MESH"},
-    axis_forward="-Z", axis_up="Y", apply_unit_scale=True, apply_scale_options="FBX_SCALE_ALL",
-    mesh_smooth_type="FACE", path_mode="RELATIVE", embed_textures=False,
-)
-for o, loc in saved.items():
-    o.location = loc
-print(f"{len(objs)} pièces exportées dans {fbx}")
+    # Export : toutes les pièces de tous les stades, positions remises à zéro
+    objs = [o for name in ORDER for o in bpy.data.collections["Body_" + name].objects if o.type == "MESH"]
+    # Les objets masqués (aperçus) ne seraient pas exportés : tout est réaffiché avant l'export
+    for lc in bpy.context.view_layer.layer_collection.children:
+        lc.hide_viewport = False
+        lc.exclude = False
+    saved = {o: o.location.copy() for o in objs}
+    for o in bpy.context.view_layer.objects:
+        o.select_set(False)
+    for o in objs:
+        o.location = (0, 0, 0)
+        o.hide_set(False)
+        o.select_set(True)
+    bpy.context.view_layer.objects.active = objs[0]
+    fbx = os.path.join(OUT, "MogLife_Bodies.fbx")
+    bpy.ops.export_scene.fbx(
+        filepath=fbx, use_selection=True, object_types={"MESH"},
+        axis_forward="-Z", axis_up="Y", apply_unit_scale=True, apply_scale_options="FBX_SCALE_ALL",
+        mesh_smooth_type="FACE", path_mode="RELATIVE", embed_textures=False,
+    )
+    for o, loc in saved.items():
+        o.location = loc
+    print(f"{len(objs)} pièces exportées dans {fbx}")
 
-# Décalages pour BodyService
-lines = [
-    "-- Fichier généré par tools/blender/build_bodies.py : ne pas modifier à la main.",
-    "-- Décalage (studs) du centre de chaque pièce de corps par rapport au centre de sa partie R15, au repos.",
-    "",
-    "return {",
-]
-for name in ORDER:
-    lines.append(f"\t{name} = {{")
-    for part in sorted(manifest[name]):
-        x, y, z = manifest[name][part]
-        lines.append(f"\t\t{part} = Vector3.new({x:g}, {y:g}, {z:g}),")
-    lines.append("\t},")
-lines.append("}")
-with open(os.path.join(ROOT, "src", "shared", "Config", "BodyPieces.luau"), "w", encoding="utf-8", newline="\n") as f:
-    f.write("\n".join(lines) + "\n")
-print("BodyPieces.luau écrit")
+    # Décalages pour BodyService
+    lines = [
+        "-- Fichier généré par tools/blender/build_bodies.py : ne pas modifier à la main.",
+        "-- Décalage (studs) du centre de chaque pièce de corps par rapport au centre de sa partie R15, au repos.",
+        "",
+        "return {",
+    ]
+    for name in ORDER:
+        lines.append(f"\t{name} = {{")
+        for part in sorted(manifest[name]):
+            x, y, z = manifest[name][part]
+            lines.append(f"\t\t{part} = Vector3.new({x:g}, {y:g}, {z:g}),")
+        lines.append("\t},")
+    lines.append("}")
+    with open(os.path.join(ROOT, "src", "shared", "Config", "BodyPieces.luau"), "w", encoding="utf-8", newline="\n") as f:
+        f.write("\n".join(lines) + "\n")
+    print("BodyPieces.luau écrit")

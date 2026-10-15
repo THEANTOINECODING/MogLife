@@ -12,15 +12,11 @@ local Remotes = require(ReplicatedStorage.Shared.Remotes)
 
 local MIRROR_TAG = "Mirror"
 local VISUALS_NAME = "StyleVisuals"
-local CATEGORIES = { Hair = true, Top = true, Accessory = true }
+local CATEGORIES = { Hair = true, Beard = true, Top = true, Accessory = true }
 
 local DataService
 local StatsService
 local BodyService
-
--- Sur un vrai corps de stade (BodyService), les hauts et coupes provisoires (blocs) ne vont pas : ils seront
--- refaits pour ces corps à l'étape 3 (style). En attendant, seuls les accessoires restent affichés.
-local PLACEHOLDER_ON_REAL_BODY = { Top = false, Hair = false, Accessory = true }
 
 local StyleService = {}
 
@@ -57,15 +53,19 @@ local function buildVisuals(player: Player)
 		old:Destroy()
 	end
 
+	-- Corps de stade : les vrais modèles sont portés par le corps lui-même (BodyService)
+	if BodyService.BodyFor(player) and BodyService.HasStyleModels() then
+		BodyService.Refresh(player)
+		setAvatarHairHidden(character, data.StyleEquipped.Hair ~= nil)
+		return
+	end
+
+	-- Sinon (avatar Roblox, ou modèles pas encore importés) : blocs de secours
 	local folder = Instance.new("Model")
 	folder.Name = VISUALS_NAME
-	local realBody = BodyService.BodyFor(player) ~= nil
 	for category, itemId in data.StyleEquipped do
 		local item = StyleItems[itemId]
 		if not item or item.category ~= category then
-			continue
-		end
-		if realBody and not PLACEHOLDER_ON_REAL_BODY[category] then
 			continue
 		end
 		for index, piece in item.pieces do

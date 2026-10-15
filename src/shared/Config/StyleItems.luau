@@ -1,8 +1,9 @@
 -- Objets de style (purement esthétiques). Voir design/02_MECANIQUES/PERSONNAGE.md.
 -- price = nil : objet exclusif, obtenu en battant un boss (bossId).
--- Visuels PROVISOIRES : des blocs collés sur l'avatar Roblox, en attendant le personnage du jeu (étape E).
--- Chaque pièce : attach (partie du corps), size et offset en multiples de la taille de cette partie
--- (devant = -Z), color, material, shape optionnelle, transparency optionnelle.
+-- Visuels : sur les corps de stade, les VRAIS modèles (tools/blender/build_style.py, un par corps, pièces dans
+-- ReplicatedStorage.Style et décalages dans StylePieces.luau). Les `pieces` ci-dessous sont les blocs de secours,
+-- utilisés seulement sur un avatar Roblox sans corps de stade : attach (partie du corps), size et offset en
+-- multiples de la taille de cette partie (devant = -Z), color, material, shape et transparency optionnelles.
 -- ❓ Prix de départ, à calibrer après simulation de l'économie.
 
 export type Piece = {
@@ -16,7 +17,7 @@ export type Piece = {
 }
 
 export type Item = {
-	category: "Hair" | "Top" | "Accessory",
+	category: "Hair" | "Beard" | "Top" | "Accessory",
 	price: number?,
 	bossId: string?,
 	order: number, -- ordre d'affichage dans la boutique
@@ -87,6 +88,40 @@ local StyleItems: { [string]: Item } = {
 		order = 5,
 		pieces = {
 			{ attach = "Head", size = V(1, 0.8, 1.5), offset = V(0, 0.75, -0.55), color = rgb(25, 25, 30) },
+		},
+	},
+
+	-- Barbes (chez le coiffeur)
+	LumberBeard = {
+		category = "Beard",
+		price = 45,
+		order = 1,
+		pieces = {
+			{ attach = "Head", size = V(0.9, 0.45, 0.4), offset = V(0, -0.45, -0.35), color = rgb(80, 45, 20) },
+		},
+	},
+	Goatee = {
+		category = "Beard",
+		price = 30,
+		order = 2,
+		pieces = {
+			{ attach = "Head", size = V(0.25, 0.3, 0.2), offset = V(0, -0.5, -0.5), color = rgb(20, 18, 18) },
+		},
+	},
+	Handlebar = {
+		category = "Beard",
+		price = 65,
+		order = 3,
+		pieces = {
+			{ attach = "Head", size = V(0.8, 0.12, 0.12), offset = V(0, -0.2, -0.55), color = rgb(200, 95, 30) },
+		},
+	},
+	ChinStrap = {
+		category = "Beard",
+		price = 55,
+		order = 4,
+		pieces = {
+			{ attach = "Head", size = V(1.02, 0.15, 1.02), offset = V(0, -0.45, 0), color = rgb(20, 18, 18) },
 		},
 	},
 

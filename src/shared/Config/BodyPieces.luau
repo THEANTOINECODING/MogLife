@@ -36,7 +36,7 @@ return {
 		RightLowerLeg = Vector3.new(-0, -0.012, 0.035),
 		RightUpperArm = Vector3.new(-0.134, 0.116, -0.023),
 		RightUpperLeg = Vector3.new(-0, 0.035, -0.002),
-		UpperTorso = Vector3.new(-0, 0.078, -0.002),
+		UpperTorso = Vector3.new(-0, 0.078, -0.02),
 	},
 	Bro = {
 		Head = Vector3.new(-0, 0.009, -0.154),
@@ -54,7 +54,7 @@ return {
 		RightLowerLeg = Vector3.new(-0, -0.002, 0.045),
 		RightUpperArm = Vector3.new(-0.132, 0.158, -0.037),
 		RightUpperLeg = Vector3.new(-0, 0.035, -0.002),
-		UpperTorso = Vector3.new(-0, 0.076, -0.017),
+		UpperTorso = Vector3.new(-0, 0.076, -0.04),
 	},
 	Alpha = {
 		Head = Vector3.new(-0, -0.013, -0.198),

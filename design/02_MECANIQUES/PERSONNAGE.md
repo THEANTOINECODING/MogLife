@@ -18,6 +18,7 @@ Le Cash sert **uniquement à l'apparence**. Aucun objet ne donne d'avantage.
 | Catégorie | Exemples absurdes |
 |---|---|
 | **Coupes** | Banane géante, mulet, crête iroquoise, pompadour d'un mètre, chauve brillant (reflet animé) |
+| **Barbes** (coiffeur) | Barbe de bûcheron, bouc diabolique, moustache en guidon, collier « du destin » |
 | **Hauts** | Débardeur trop petit, débardeur « MOG », chemise hawaïenne, peignoir de boxeur |
 | **Bas** | Short de sport fluo, jogging en velours, pantalon de cuir |
 | **Accessoires** | Lunettes de soleil haltères, chaîne en or géante, bandeau, sifflet de coach |
@@ -25,6 +26,8 @@ Le Cash sert **uniquement à l'apparence**. Aucun objet ne donne d'avantage.
 | **Visage** | Sourcils froncés, sourire éclatant, mâchoire encore plus carrée |
 
 - Le **miroir** du garage (puis de chaque zone) ouvre la boutique et l'essayage gratuit.
+- Chaque objet est modélisé pour les 7 corps (il épouse un Normie comme un GOD MOGGER) et suit le pump et la croissance (D41).
+- Présentoirs : le magasin de vêtements expose des mannequins habillés (4 gabarits), le coiffeur des têtes coiffées et barbues.
 - Chaque boss vaincu donne un objet exclusif.
 - Prix affichés clairement, achat confirmé, objets conservés pour toujours.
 - MVP : environ 15 objets (5 coupes, 5 hauts, 5 accessoires). Chaque mise à jour en ajoute une série à thème (plage, Lune, Olympe…).

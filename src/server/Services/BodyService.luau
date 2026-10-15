@@ -5,6 +5,9 @@
 --   - la croissance permanente du stade (progression du Mog vers le boss suivant),
 --   - le pump des muscles travaillés pendant une série (redescend en quelques secondes).
 -- Changer de stade = transformation (signal BodyTransform à tous les clients pour l'effet visuel).
+-- Les objets de style équipés (coupes, barbes, hauts, accessoires) sont des pièces modélisées pour chaque corps
+-- (ReplicatedStorage.Style, StylePieces.luau) : soudées comme le corps, elles suivent pump et croissance.
+-- Une coupe équipée remplace la coupe de base du corps.
 -- Si le corps d'un stade n'est pas importé, l'apparence provisoire de StatsService s'applique.
 
 local Players = game:GetService("Players")
@@ -13,6 +16,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local BodyPieces = require(ReplicatedStorage.Shared.Config.BodyPieces)
 local Bodies = require(ReplicatedStorage.Shared.Config.Bodies)
+local StyleItems = require(ReplicatedStorage.Shared.Config.StyleItems)
+local StylePieces = require(ReplicatedStorage.Shared.Config.StylePieces)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 
@@ -23,6 +28,7 @@ type Piece = { part: BasePart, kind: string, size: Vector3 }
 type State = {
 	character: Model,
 	stageId: string,
+	styleKey: string, -- objets équipés au moment de la construction (pour savoir s'il faut reconstruire)
 	pieces: { Piece },
 	pump: { [string]: number }, -- gonflement en cours par type de muscle (UpperArm, UpperTorso…)
 }
@@ -104,22 +110,71 @@ local function kindOf(piece: string): string
 	return kind
 end
 
-local function buildShell(character: Model, stageId: string): { Piece }
+-- Objets de style équipés dont les modèles existent pour ce stade
+local function equippedStyle(player: Player, stageId: string): { string }
+	local data = DataService.Get(player)
+	local folder = ReplicatedStorage:FindFirstChild("Style")
+	local items = {}
+	if not data or not folder then
+		return items
+	end
+	for category, itemId in data.StyleEquipped do
+		local item = StyleItems[itemId]
+		local pieces = StylePieces[stageId] and StylePieces[stageId][itemId]
+		if item and item.category == category and pieces then
+			table.insert(items, itemId)
+		end
+	end
+	table.sort(items)
+	return items
+end
+
+-- Les objets de style ont-ils leurs modèles importés ? (sinon StyleService garde les blocs de secours)
+function BodyService.HasStyleModels(): boolean
+	return ReplicatedStorage:FindFirstChild("Style") ~= nil
+end
+
+local function buildShell(character: Model, stageId: string, styleItems: { string }): { Piece }
 	local old = character:FindFirstChild(SHELL_NAME)
 	if old then
 		old:Destroy()
 	end
-	local folder = ReplicatedStorage:FindFirstChild("Bodies") :: Folder
+	local bodies = ReplicatedStorage:FindFirstChild("Bodies") :: Folder
+	local styles = ReplicatedStorage:FindFirstChild("Style")
 	local shell = Instance.new("Model")
 	shell.Name = SHELL_NAME
 	local pieces = {}
-	-- Chaque pièce est soudée à sa partie R15, à son décalage de repos (BodyPieces) : elle suit les animations
+
+	-- Liste des pièces : le corps, puis les objets équipés (une coupe remplace la coupe de base)
+	local wanted: { { template: Instance?, part: string, offset: Vector3 } } = {}
+	local hasHair = false
+	for _, itemId in styleItems do
+		if StyleItems[itemId].category == "Hair" then
+			hasHair = true
+		end
+		for part, offset in StylePieces[stageId][itemId] do
+			local template = styles and styles:FindFirstChild(`{stageId}__{itemId}__{part}`)
+			table.insert(wanted, { template = template, part = part, offset = offset })
+		end
+	end
 	for piece, offset in BodyPieces[stageId] or {} do
-		local template = folder:FindFirstChild(`{stageId}_{piece}`)
-		local target = character:FindFirstChild(string.split(piece, "_")[1])
+		if not (hasHair and piece == "Head_Hair") then
+			local part = string.split(piece, "_")[1]
+			table.insert(
+				wanted,
+				{ template = bodies:FindFirstChild(`{stageId}_{piece}`), part = part, offset = offset }
+			)
+		end
+	end
+
+	-- Chaque pièce est soudée à sa partie R15, à son décalage de repos : elle suit les animations
+	for _, entry in wanted do
+		local template = entry.template
+		local target = character:FindFirstChild(entry.part)
 		if not template or not template:IsA("BasePart") or not target or not target:IsA("BasePart") then
 			continue
 		end
+		local offset = entry.offset
 		local clone = template:Clone()
 		clone.Anchored = false
 		clone.CanCollide = false
@@ -133,7 +188,7 @@ local function buildShell(character: Model, stageId: string): { Piece }
 		weld.C0 = CFrame.new(offset)
 		weld.Parent = clone
 		clone.Parent = shell
-		table.insert(pieces, { part = clone, kind = kindOf(piece), size = template.Size })
+		table.insert(pieces, { part = clone, kind = kindOf(entry.part), size = template.Size })
 	end
 	shell.Parent = character
 	return pieces
@@ -172,8 +227,15 @@ function BodyService.Refresh(player: Player)
 		states[player] = nil
 		return
 	end
+	local styleItems = equippedStyle(player, stageId)
+	local styleKey = table.concat(styleItems, ",")
 	local sameCharacter = previous ~= nil and previous.character == character
 	if sameCharacter and previous.stageId == stageId then
+		-- Même corps : on ne reconstruit que si les objets équipés ont changé
+		if previous.styleKey ~= styleKey then
+			previous.pieces = buildShell(character, stageId, styleItems)
+			previous.styleKey = styleKey
+		end
 		applySizes(player)
 		return
 	end
@@ -182,7 +244,8 @@ function BodyService.Refresh(player: Player)
 	states[player] = {
 		character = character,
 		stageId = stageId,
-		pieces = buildShell(character, stageId),
+		styleKey = styleKey,
+		pieces = buildShell(character, stageId, styleItems),
 		pump = if sameCharacter then previous.pump else {},
 	}
 	applySizes(player)
