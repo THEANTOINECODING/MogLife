@@ -44,7 +44,14 @@ Déjà fait : plusieurs stations par exercice, bouton Maison et bus, icônes et 
 - **Objets de décor dans Blender** (canapés, voitures, piano, fontaine, temple, arbres) pour remplacer les blocs.
 - **Performance mobile** : réduire le nombre de lumières si les tests sur téléphone le demandent.
 
+- **Bronzage** (catégorie du design) : demande une texture de peau par teinte et par corps (7 × 4), à importer comme images puis à échanger sur les pièces du corps.
+- **Vendeurs bavards** : une réplique différente selon le stade du joueur (« Un Gigachad dans ma boutique ! »), comme les habitants.
+- **Le mentor surgit de nulle part** (D29) : apparaître près de la cible de l'étape du tutoriel (derrière une poubelle, dans un frigo), visible seulement du joueur guidé.
+- **Le pneu qui gonfle** pendant l'aide du livreur (le vélo est un seul modèle aujourd'hui).
+- **Miniature 3D de chaque article** dans la liste de la boutique (en plus de l'essayage).
+- **Réglage du son** (musique / effets) dans un petit menu.
+
 ## Questions ouvertes
 
-- Comment déformer légèrement le corps à l'intérieur d'un stade (os, formes) ?
-- Habits en couches ou accessoires rigides : quelle technique fonctionne sur 7 corps très différents ?
+- ~~Comment déformer légèrement le corps à l'intérieur d'un stade (os, formes) ?~~ → Mise à l'échelle des pièces de la coque (D40).
+- ~~Habits en couches ou accessoires rigides : quelle technique fonctionne sur 7 corps très différents ?~~ → Chaque objet modélisé pour chaque corps (D41).
