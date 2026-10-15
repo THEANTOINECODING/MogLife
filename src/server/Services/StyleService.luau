@@ -17,6 +17,7 @@ local CATEGORIES = { Hair = true, Beard = true, Face = true, Top = true, Bottom 
 local DataService
 local StatsService
 local BodyService
+local TutorialService
 
 local StyleService = {}
 
@@ -179,6 +180,10 @@ local function setupMirror(mirror: Instance)
 	prompt.MaxActivationDistance = 10
 	prompt.RequiresLineOfSight = false
 	prompt.Parent = mirror
+	-- Tutoriel et conseil du mentor à la première visite de chaque boutique
+	prompt.Triggered:Connect(function(player)
+		TutorialService.OnEvent(player, "ShopOpened", if typeof(store) == "string" then store else "Mirror")
+	end)
 end
 
 local function onPlayerLoaded(player: Player)
@@ -204,6 +209,7 @@ function StyleService.Init(services)
 	DataService = services.DataService
 	StatsService = services.StatsService
 	BodyService = services.BodyService
+	TutorialService = services.TutorialService
 end
 
 function StyleService.Start()

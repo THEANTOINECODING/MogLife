@@ -28,6 +28,9 @@ local NAMES = {
 	-- interval, quality }) pour que chacun voie l'activité se réaliser vraiment (D37) ; OpponentRep = le boss joue
 	"Activity",
 	"BodyTransform", -- serveur -> tous les clients : (player, stageId) un joueur change de corps (nouveau stade)
+	"Tutorial", -- serveur -> client : ({ step, total, done }) étape du tutoriel
+	"TutorialAction", -- client -> serveur : ("Skip") passer le tutoriel
+	"MentorSay", -- serveur -> client : ({ key, args }) le mentor parle (tutoriel, conseils)
 }
 
 local isServer = RunService:IsServer()
@@ -81,4 +84,7 @@ return remotes :: {
 	TakeBus: RemoteEvent,
 	Activity: RemoteEvent,
 	BodyTransform: RemoteEvent,
+	Tutorial: RemoteEvent,
+	TutorialAction: RemoteEvent,
+	MentorSay: RemoteEvent,
 }

@@ -18,6 +18,7 @@ local DataService
 local StatsService
 local MinigameService
 local ExerciseService
+local TutorialService
 
 -- Heure serveur (workspace:GetServerTimeNow) où chaque aide redevient disponible, par joueur
 local readyAt: { [Player]: { [string]: number } } = {}
@@ -53,6 +54,7 @@ local function complete(player: Player, helpId: string)
 			cash = help.cash,
 		},
 	})
+	TutorialService.OnEvent(player, "HelpCompleted", helpId)
 end
 
 local function startHelp(player: Player, helpId: string)
@@ -146,6 +148,7 @@ function HelpService.Init(services)
 	StatsService = services.StatsService
 	MinigameService = services.MinigameService
 	ExerciseService = services.ExerciseService
+	TutorialService = services.TutorialService
 end
 
 function HelpService.Start()

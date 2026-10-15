@@ -24,7 +24,7 @@ Remplace la suite de l'étape E ci-dessous. Chaque étape prépare la suivante (
 2. ✅ **Le personnage du joueur** (16/10) : un corps par stade (Normie → God Mogger), prise de muscle satisfaisante (transformation animée, effet à chaque stade, gonflement progressif) et **les 6 exercices animés pour de vrai** selon le jeu du joueur (D37).
 3. 🟡 **Le style** (16/10 : objets modélisés pour les 7 corps, barbes, présentoirs ; reste : import et vérification en jeu, bas/bronzage/visage du design) : coiffures, barbes, tenues adaptées à tous les corps ; présentoirs dans les magasins.
 4. 🟡 **Les PNJ** (16/10 : 12 habitants/vendeurs/mentor modélisés, vendeurs et mentor en place, les 8 aides et le Mog-off animés ; reste : import des modèles et vérification à l'image) : habitants et boss refaits, mentor, **vendeurs dans chaque magasin** (D38) ; **aides et combats de boss animés pour de vrai** (D37).
-5. **Le guide et le tutoriel** : le mentor explique chaque nouveau stade et chaque magasin ; flèches pour les nouveaux joueurs.
+5. ✅ **Le guide et le tutoriel** (16/10, D46 ; ❓ premier achat du tutoriel) : le mentor explique chaque nouveau stade et chaque magasin ; flèches pour les nouveaux joueurs.
 6. **Le gameplay** : mini-jeux améliorés ; boissons et aliments comiques qui donnent un boost (❓ énergie, voir D36).
 7. **Le son** : musique par zone, effets pour chaque activité.
 8. **Alpha** : testeurs, vrais téléphones, réglage de l'économie.

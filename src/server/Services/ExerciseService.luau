@@ -15,6 +15,7 @@ local DataService
 local StatsService
 local MinigameService
 local BodyService
+local TutorialService
 
 local ExerciseService = {}
 
@@ -77,6 +78,11 @@ local function startSeries(player: Player, exerciseId: unknown)
 			BodyService.Pump(p, exerciseId, quality)
 			return gain
 		end,
+		onEnd = function(p, reason)
+			if reason == "Completed" then
+				TutorialService.OnEvent(p, "SeriesCompleted", exerciseId)
+			end
+		end,
 	})
 end
 
@@ -107,6 +113,7 @@ function ExerciseService.Init(services)
 	StatsService = services.StatsService
 	MinigameService = services.MinigameService
 	BodyService = services.BodyService
+	TutorialService = services.TutorialService
 end
 
 function ExerciseService.Start()

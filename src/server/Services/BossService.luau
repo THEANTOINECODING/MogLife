@@ -35,6 +35,7 @@ local DataService
 local StatsService
 local MinigameService
 local StyleService
+local TutorialService
 
 -- Un même boss peut avoir plusieurs emplacements (Kevin dans le garage de chaque maison)
 local spots: { [string]: { BasePart } } = {}
@@ -125,6 +126,9 @@ local function finishFight(player: Player, fight: Fight)
 		cash = boss.firstWinCash,
 		styleItem = boss.styleReward,
 	})
+	-- Le mentor annonce ce qui se débloque ; le tutoriel se termine sur Kevin
+	TutorialService.OnEvent(player, "BossBeaten", fight.bossId)
+	TutorialService.OnEvent(player, "StageUp", data.Stage)
 end
 
 local function averageScore(total: number, reps: number): number
@@ -397,6 +401,7 @@ function BossService.Init(services)
 	StatsService = services.StatsService
 	MinigameService = services.MinigameService
 	StyleService = services.StyleService
+	TutorialService = services.TutorialService
 end
 
 function BossService.Start()

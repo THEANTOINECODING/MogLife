@@ -2,6 +2,11 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-16 (étape 5 : le guide et le tutoriel, nuit en autonomie)
+
+- **D46 — Tutoriel guidé par le mentor** (Config/Tutorial.luau) : 4 étapes (série de curls dans son garage → bocal de Maman → essayer un look chez le coiffeur → 50 Mog et Kevin), une carte d'objectif, un trait lumineux vers la cible, le mentor qui parle en bas de l'écran. Quittable (« Passer »), rejouable (le mentor le relance : « Show me the ropes »). Les joueurs qui ont déjà progressé ne le voient pas d'office. Conseils du mentor la première fois qu'on ouvre chaque boutique, et à chaque nouveau stade (exercices et aides débloqués, prochain boss).
+  Écart avec 01_BOUCLES.md : le design prévoit un **premier achat** à 2–3 min, mais la première aide rapporte 5 Cash et l'objet le moins cher en coûte 25. Le tutoriel fait donc **essayer** un look (gratuit). ❓ Faut-il un objet de départ à 5 Cash, ou plus de Cash pour le bocal de Maman ?
+
 ## 2026-10-16 (étape 4 : les PNJ, nuit en autonomie)
 
 - **D45 — Habitants, vendeurs et mentor modélisés dans le style des boss** (`build_townsfolk.py`, 12 personnages). L'humour passe par les costumes, accessoires et expressions (bigoudis et bocal de Maman, colis du livreur, carte à l'envers du touriste…), jamais par le corps des gens. Les vendeurs (Coco la styliste… noms provisoires, modifiables) ouvrent la boutique de leur magasin ; miroirs et comptoir restent en place tant que le ❓ de D38 n'est pas tranché. Le mentor attend près du podium et livre des proverbes absurdes ; ses missions viendront avec le guide (étape 5).

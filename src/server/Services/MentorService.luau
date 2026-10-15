@@ -14,6 +14,8 @@ local Npc = require(ServerScriptService.Server.Npc)
 local SPOT_TAG = "MentorSpot"
 local LOOK = "Mentor"
 
+local TutorialService
+
 local MentorService = {}
 
 -- Proverbes Mentor.Proverb1, Proverb2… (on les compte dans Texts : en ajouter n'exige pas de toucher au code)
@@ -55,6 +57,24 @@ local function spawnMentor(spot: Instance)
 	Players.PlayerRemoving:Connect(function(player)
 		last[player] = nil
 	end)
+
+	-- Deuxième invite : rejouer le tutoriel
+	local replay = Instance.new("ProximityPrompt")
+	replay.ActionText = Texts.Get("Mentor.TutorialPrompt")
+	replay.ObjectText = Texts.Get(`Npc.{LOOK}`)
+	replay.KeyboardKeyCode = Enum.KeyCode.F
+	replay.GamepadKeyCode = Enum.KeyCode.ButtonY
+	replay.MaxActivationDistance = 10
+	replay.RequiresLineOfSight = false
+	replay.UIOffset = Vector2.new(0, 80)
+	replay.Parent = body
+	replay.Triggered:Connect(function(player)
+		TutorialService.Restart(player)
+	end)
+end
+
+function MentorService.Init(services)
+	TutorialService = services.TutorialService
 end
 
 function MentorService.Start()

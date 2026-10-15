@@ -14,6 +14,8 @@ return {
 		StyleEquipped = {},
 		FurnitureOwned = {}, -- meubles achetés
 		FurniturePlaced = {}, -- emplacement de la maison -> meuble posé
+		Tutorial = { Step = 1, Done = false }, -- tutoriel des 5 premières minutes (TutorialService)
+		Tips = {}, -- conseils du mentor déjà donnés
 	},
 
 	-- Séries d'exercices

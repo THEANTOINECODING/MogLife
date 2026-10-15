@@ -39,5 +39,6 @@ Le prochain boss, les objets de style qu'on veut, et les **mises à jour** (nouv
 | 3–5 min | 50 Mog atteints → Mog-off contre Kevin. Victoire, scène absurde, débloquage des pompes (nouveau mini-jeu). Au loin, Brayan le Bronzé attend. | « Il y a un boss à chaque stade, et je veux voir le suivant. » |
 
 Le tutoriel est contextuel, rejouable et quittable. Aucun paiement nécessaire.
+Implémenté (D46) : le mentor guide ces étapes ; à 2–3 min le joueur **essaie** un look chez le coiffeur (l'achat demanderait 25 Cash alors que le bocal en rapporte 5 : ❓ à trancher).
 
 **Moment signature :** la victoire contre Kevin. Il est « moggé » si fort qu'il traverse le toit du garage, les serviettes volent, le coach annonce : « Le garage n'était pas prêt. » Scène de 2–3 s, quittable.

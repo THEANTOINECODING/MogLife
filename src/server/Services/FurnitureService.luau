@@ -20,6 +20,7 @@ local MinigameService
 local PlotService
 local ExerciseService
 local PropService
+local TutorialService
 
 local FurnitureService = {}
 
@@ -163,6 +164,9 @@ local function setupCounter(counter: Instance)
 	prompt.MaxActivationDistance = 10
 	prompt.RequiresLineOfSight = false
 	prompt.Parent = counter
+	prompt.Triggered:Connect(function(player)
+		TutorialService.OnEvent(player, "ShopOpened", "Furniture")
+	end)
 end
 
 -- Chaque emplacement a un prompt « Décorer » ; le client le cache dans les maisons des autres
@@ -195,6 +199,7 @@ function FurnitureService.Init(services)
 	PlotService = services.PlotService
 	ExerciseService = services.ExerciseService
 	PropService = services.PropService
+	TutorialService = services.TutorialService
 end
 
 function FurnitureService.Start()

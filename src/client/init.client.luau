@@ -12,6 +12,7 @@ local ORDER = {
 	"TravelController",
 	"WayfindingController",
 	"AmbienceController",
+	"TutorialController",
 }
 
 local controllers = {}
