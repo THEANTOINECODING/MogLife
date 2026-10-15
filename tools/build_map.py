@@ -302,6 +302,12 @@ def station(F, name, local, exercise_id, yaw=0):
         ccf["position"] = [round(world[i] + d[i], 3) for i in range(3)]
         rel_o = mul(Rt, ccf.get("orientation", rot()))
         ccf["orientation"] = [[round(v, 6) for v in row] for row in mul(R, rel_o)]
+    # Barre posée sur les crochets (décor à part : le client la fait bouger pendant la série)
+    if exercise_id in STATION_BARS:
+        bar_height, bar_z = STATION_BARS[exercise_id]
+        G = F.child(local, yaw)
+        tpl.setdefault("children", []).append(
+            prop_slot(G, "StationBar", (0, 0.5 + bar_height - BARBELL_RADIUS, bar_z), "Barbell", collide=False))
     return tpl
 
 
@@ -323,6 +329,9 @@ FALLBACK_BLOCKS = False
 
 STATION_PROPS = {"Curl": "WatermelonDumbbell", "PushUp": "PushUpMat", "BenchPress": "BenchPress",
                  "Squat": "SquatRack", "PullUp": "PullUpBar", "JumpRope": "JumpRope"}
+# Hauteur de la barre au-dessus de la dalle et position avant/arrière (props_gym.py : bench_press, squat_rack)
+STATION_BARS = {"BenchPress": (4.0, -2.5), "Squat": (4.75, -1.95)}
+BARBELL_RADIUS = 1.4  # rayon des disques du modèle Barbell (son repère est sous les disques)
 
 
 def prop_slot(F, name, local, prop, fallback=(), yaw=0, height=None, collide=True, align=None):

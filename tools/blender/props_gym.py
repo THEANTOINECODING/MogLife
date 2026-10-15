@@ -92,7 +92,7 @@ def bench_press(P):
         parts.append((box((x, -2.3, 2.3), (0.3, 0.3, 4.6)), "darkgrey"))
         parts.append((box((x, -2.55, 3.7), (0.3, 0.5, 0.2)), "darkgrey"))
         parts.append((box((x, -2.3, 0.15), (0.5, 1.6, 0.3)), "darkgrey"))
-    parts += [(rotate(bm, 0, "Z"), c) for bm, c in barbell_parts(4.0, 9.0, 1.4, 2, y=-2.55)]
+    # La barre est un décor à part (Barbell, posé sur les crochets par la carte) : elle bouge pendant la série
     P.prop("BenchPress", parts)
 
 
@@ -108,7 +108,7 @@ def squat_rack(P):
     parts.append((box((0, -1.6, 7.9), (5.2, 0.35, 0.3)), "red"))
     parts.append((box((0, 1.6, 7.9), (5.2, 0.35, 0.3)), "red"))
     parts.append((cylinder((-2.6, -1.6, 7.6), 0.1, 5.2, 8, axis="X"), "chrome"))
-    parts += barbell_parts(4.75, 9.5, 1.5, 3, y=-1.95)
+    # La barre est un décor à part (Barbell, posé sur les crochets par la carte) : elle bouge pendant la série
     P.prop("SquatRack", parts)
 
 

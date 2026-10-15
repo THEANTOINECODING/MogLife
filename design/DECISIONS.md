@@ -2,6 +2,11 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-15 (suite du plan)
+
+- **D37 — Les activités se jouent vraiment dans le monde** (choix du créateur) : pendant un mini-jeu, le personnage réalise réellement l'activité dans Roblox, et le mouvement suit la façon dont le joueur joue. Exemple : aux pompes, chaque répétition réussie fait une vraie pompe, une répétition parfaite est ample et propre, une ratée est une pompe molle ou un effondrement comique. S'applique à tout : exercices (le personnage et l'agrès bougent), aides (le bocal se dévisse, le piano avance, les transats s'empilent) et boss (le boss fait son mouvement en direct, face au joueur). Le serveur décide toujours du résultat de chaque répétition ; l'animation ne fait que l'illustrer.
+- **D36 — Plan de production en 9 étapes** (validé par le créateur) : ville → personnage → style → PNJ → guide → gameplay → son → alpha → rétention. Voir `07_ROADMAP.md`. Pas de « drogues » (règles Roblox, tous publics) : boissons et aliments comiques à la place. ❓ Énergie : le design refuse une énergie qui bloque (D2) ; proposition = boosts temporaires, à trancher par le créateur.
+
 ## 2026-10-15 (décors)
 
 - **D35 — Décors générés par script dans Blender, une texture palette partagée, remplacement automatique des blocs** : chaque décor est décrit en Python (reproductible, modifiable), exporté en FBX par catégorie ; le jeu remplace les blocs de la carte par les modèles importés (`PropService`) et garde les blocs si un modèle manque. Les drapeaux et enseignes n'ont aucun texte et n'imitent aucun vrai drapeau (emblème haltère du jeu).

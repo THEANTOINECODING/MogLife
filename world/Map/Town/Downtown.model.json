@@ -11645,7 +11645,75 @@
     "Prop": "BenchPress",
     "PropCollide": false
    },
-   "children": [],
+   "children": [
+    {
+     "name": "StationBar",
+     "className": "Model",
+     "properties": {
+      "Tags": {
+       "Tags": [
+        "PropSlot"
+       ]
+      }
+     },
+     "attributes": {
+      "Prop": "Barbell",
+      "PropCollide": false
+     },
+     "children": [
+      {
+       "name": "PropAnchor",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         1,
+         0.2,
+         1
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           80.5,
+           4.0,
+           -88.0
+          ],
+          "orientation": [
+           [
+            0.0,
+            0.0,
+            -1.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            1.0,
+            0.0,
+            0.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          238,
+          232
+         ]
+        },
+        "Material": "SmoothPlastic",
+        "CanCollide": false,
+        "Transparency": 1,
+        "CanQuery": false,
+        "CanTouch": false
+       }
+      }
+     ]
+    }
+   ],
    "name": "BenchPressStation1"
   },
   {
@@ -11703,7 +11771,75 @@
     "Prop": "BenchPress",
     "PropCollide": false
    },
-   "children": [],
+   "children": [
+    {
+     "name": "StationBar",
+     "className": "Model",
+     "properties": {
+      "Tags": {
+       "Tags": [
+        "PropSlot"
+       ]
+      }
+     },
+     "attributes": {
+      "Prop": "Barbell",
+      "PropCollide": false
+     },
+     "children": [
+      {
+       "name": "PropAnchor",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         1,
+         0.2,
+         1
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           80.5,
+           4.0,
+           -78.0
+          ],
+          "orientation": [
+           [
+            0.0,
+            0.0,
+            -1.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            1.0,
+            0.0,
+            0.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          238,
+          232
+         ]
+        },
+        "Material": "SmoothPlastic",
+        "CanCollide": false,
+        "Transparency": 1,
+        "CanQuery": false,
+        "CanTouch": false
+       }
+      }
+     ]
+    }
+   ],
    "name": "BenchPressStation2"
   },
   {
@@ -11761,7 +11897,75 @@
     "Prop": "BenchPress",
     "PropCollide": false
    },
-   "children": [],
+   "children": [
+    {
+     "name": "StationBar",
+     "className": "Model",
+     "properties": {
+      "Tags": {
+       "Tags": [
+        "PropSlot"
+       ]
+      }
+     },
+     "attributes": {
+      "Prop": "Barbell",
+      "PropCollide": false
+     },
+     "children": [
+      {
+       "name": "PropAnchor",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         1,
+         0.2,
+         1
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           80.5,
+           4.0,
+           -68.0
+          ],
+          "orientation": [
+           [
+            0.0,
+            0.0,
+            -1.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            1.0,
+            0.0,
+            0.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          238,
+          232
+         ]
+        },
+        "Material": "SmoothPlastic",
+        "CanCollide": false,
+        "Transparency": 1,
+        "CanQuery": false,
+        "CanTouch": false
+       }
+      }
+     ]
+    }
+   ],
    "name": "BenchPressStation3"
   },
   {
@@ -11819,7 +12023,75 @@
     "Prop": "SquatRack",
     "PropCollide": false
    },
-   "children": [],
+   "children": [
+    {
+     "name": "StationBar",
+     "className": "Model",
+     "properties": {
+      "Tags": {
+       "Tags": [
+        "PropSlot"
+       ]
+      }
+     },
+     "attributes": {
+      "Prop": "Barbell",
+      "PropCollide": false
+     },
+     "children": [
+      {
+       "name": "PropAnchor",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         1,
+         0.2,
+         1
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           67.95,
+           4.75,
+           -88.0
+          ],
+          "orientation": [
+           [
+            0.0,
+            0.0,
+            -1.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            1.0,
+            0.0,
+            0.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          238,
+          232
+         ]
+        },
+        "Material": "SmoothPlastic",
+        "CanCollide": false,
+        "Transparency": 1,
+        "CanQuery": false,
+        "CanTouch": false
+       }
+      }
+     ]
+    }
+   ],
    "name": "SquatStation1"
   },
   {
@@ -11877,7 +12149,75 @@
     "Prop": "SquatRack",
     "PropCollide": false
    },
-   "children": [],
+   "children": [
+    {
+     "name": "StationBar",
+     "className": "Model",
+     "properties": {
+      "Tags": {
+       "Tags": [
+        "PropSlot"
+       ]
+      }
+     },
+     "attributes": {
+      "Prop": "Barbell",
+      "PropCollide": false
+     },
+     "children": [
+      {
+       "name": "PropAnchor",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         1,
+         0.2,
+         1
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           67.95,
+           4.75,
+           -78.0
+          ],
+          "orientation": [
+           [
+            0.0,
+            0.0,
+            -1.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            1.0,
+            0.0,
+            0.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          238,
+          232
+         ]
+        },
+        "Material": "SmoothPlastic",
+        "CanCollide": false,
+        "Transparency": 1,
+        "CanQuery": false,
+        "CanTouch": false
+       }
+      }
+     ]
+    }
+   ],
    "name": "SquatStation2"
   },
   {
@@ -11935,7 +12275,75 @@
     "Prop": "SquatRack",
     "PropCollide": false
    },
-   "children": [],
+   "children": [
+    {
+     "name": "StationBar",
+     "className": "Model",
+     "properties": {
+      "Tags": {
+       "Tags": [
+        "PropSlot"
+       ]
+      }
+     },
+     "attributes": {
+      "Prop": "Barbell",
+      "PropCollide": false
+     },
+     "children": [
+      {
+       "name": "PropAnchor",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         1,
+         0.2,
+         1
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           67.95,
+           4.75,
+           -68.0
+          ],
+          "orientation": [
+           [
+            0.0,
+            0.0,
+            -1.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            1.0,
+            0.0,
+            0.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          238,
+          232
+         ]
+        },
+        "Material": "SmoothPlastic",
+        "CanCollide": false,
+        "Transparency": 1,
+        "CanQuery": false,
+        "CanTouch": false
+       }
+      }
+     ]
+    }
+   ],
    "name": "SquatStation3"
   },
   {
@@ -18446,7 +18854,75 @@
     "Prop": "BenchPress",
     "PropCollide": false
    },
-   "children": [],
+   "children": [
+    {
+     "name": "StationBar",
+     "className": "Model",
+     "properties": {
+      "Tags": {
+       "Tags": [
+        "PropSlot"
+       ]
+      }
+     },
+     "attributes": {
+      "Prop": "Barbell",
+      "PropCollide": false
+     },
+     "children": [
+      {
+       "name": "PropAnchor",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         1,
+         0.2,
+         1
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           38.0,
+           3.82,
+           -46.5
+          ],
+          "orientation": [
+           [
+            -1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            -0.0,
+            0.0,
+            -1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          238,
+          232
+         ]
+        },
+        "Material": "SmoothPlastic",
+        "CanCollide": false,
+        "Transparency": 1,
+        "CanQuery": false,
+        "CanTouch": false
+       }
+      }
+     ]
+    }
+   ],
    "name": "OutdoorBenchPressStation2"
   },
   {
@@ -18504,7 +18980,75 @@
     "Prop": "SquatRack",
     "PropCollide": false
    },
-   "children": [],
+   "children": [
+    {
+     "name": "StationBar",
+     "className": "Model",
+     "properties": {
+      "Tags": {
+       "Tags": [
+        "PropSlot"
+       ]
+      }
+     },
+     "attributes": {
+      "Prop": "Barbell",
+      "PropCollide": false
+     },
+     "children": [
+      {
+       "name": "PropAnchor",
+       "className": "Part",
+       "properties": {
+        "Anchored": true,
+        "Size": [
+         1,
+         0.2,
+         1
+        ],
+        "CFrame": {
+         "CFrame": {
+          "position": [
+           48.0,
+           4.57,
+           -47.05
+          ],
+          "orientation": [
+           [
+            -1.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            1.0,
+            0
+           ],
+           [
+            -0.0,
+            0.0,
+            -1.0
+           ]
+          ]
+         }
+        },
+        "Color": {
+         "Color3uint8": [
+          240,
+          238,
+          232
+         ]
+        },
+        "Material": "SmoothPlastic",
+        "CanCollide": false,
+        "Transparency": 1,
+        "CanQuery": false,
+        "CanTouch": false
+       }
+      }
+     ]
+    }
+   ],
    "name": "OutdoorSquatStation3"
   },
   {

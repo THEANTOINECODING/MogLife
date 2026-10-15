@@ -2,6 +2,7 @@
 -- Le client envoie seulement la qualité de chaque répétition ; ce moteur vérifie la cadence, la distance,
 -- le mode auto, puis délègue la récompense au service qui a lancé le run (onRep / onEnd).
 
+local PhysicsService = game:GetService("PhysicsService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -41,6 +42,19 @@ local runs: { [Player]: Run } = {}
 
 local MinigameService = {}
 
+-- Tout le monde voit l'activité se réaliser : le personnage fait la répétition que le serveur a validée
+local function broadcast(player: Player, spec: RunSpec, state: string, quality: string?)
+	Remotes.Activity:FireAllClients({
+		player = player,
+		state = state,
+		kind = spec.kind,
+		id = spec.id,
+		anchor = spec.anchor,
+		interval = spec.interval,
+		quality = quality,
+	})
+end
+
 function MinigameService.IsNear(player: Player, part: BasePart, maxDistance: number?): boolean
 	local character = player.Character
 	local root = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
@@ -72,6 +86,7 @@ function MinigameService.StartRun(player: Player, spec: RunSpec): boolean
 		titleKey = spec.titleKey,
 		titleArgs = spec.titleArgs,
 	})
+	broadcast(player, spec, "Started")
 	return true
 end
 
@@ -81,6 +96,7 @@ function MinigameService.EndRun(player: Player, reason: EndReason)
 		return
 	end
 	runs[player] = nil
+	broadcast(player, run.spec, "Ended")
 	if reason ~= "Left" then
 		Remotes.SeriesUpdate:FireClient(player, {
 			state = "Ended",
@@ -139,12 +155,18 @@ local function onRep(player: Player, quality: unknown)
 		quality = quality,
 		gain = gain,
 	})
+	broadcast(player, spec, "Rep", quality)
 	if run.reps >= spec.total then
 		MinigameService.EndRun(player, "Completed")
 	end
 end
 
 function MinigameService.Start()
+	-- Corps du joueur pendant une activité (ActivityController) : allongé sur un banc ou suspendu à une barre,
+	-- il traverse le décor au lieu de pousser le personnage
+	PhysicsService:RegisterCollisionGroup("ActivityBody")
+	PhysicsService:CollisionGroupSetCollidable("ActivityBody", "Default", false)
+	PhysicsService:CollisionGroupSetCollidable("ActivityBody", "ActivityBody", false)
 	Remotes.Rep.OnServerEvent:Connect(onRep)
 	Remotes.StopSeries.OnServerEvent:Connect(function(player)
 		MinigameService.EndRun(player, "Stopped")

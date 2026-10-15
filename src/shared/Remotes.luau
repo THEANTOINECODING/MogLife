@@ -24,6 +24,9 @@ local NAMES = {
 	"FurnitureState", -- serveur -> client : ({ owned: { [itemId]: true }, placed: { [slot]: itemId } })
 	"GoHome", -- client -> serveur : retour à sa maison
 	"TakeBus", -- client -> serveur : (stopId: string) depuis un arrêt de bus, vers un autre arrêt
+	-- serveur -> tous les clients : ({ player, state: "Started" | "Rep" | "Ended", kind, id, anchor, interval,
+	-- quality }) pour que chacun voie l'activité se réaliser vraiment (décision D37)
+	"Activity",
 }
 
 local isServer = RunService:IsServer()
@@ -75,4 +78,5 @@ return remotes :: {
 	FurnitureState: RemoteEvent,
 	GoHome: RemoteEvent,
 	TakeBus: RemoteEvent,
+	Activity: RemoteEvent,
 }

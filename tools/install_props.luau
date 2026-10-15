@@ -15,6 +15,7 @@
 local ServerStorage = game:GetService("ServerStorage")
 
 local imported = workspace:FindFirstChild("props")
+	or workspace:FindFirstChild("MogLife_GymStations")
 	or workspace:FindFirstChild("MogLife_AllProps")
 	or workspace:FindFirstChild("MogLife_Buildings")
 if not imported then

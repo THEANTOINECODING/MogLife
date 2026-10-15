@@ -15,6 +15,21 @@ Principe : **un petit jeu complet d'abord, puis des mises à jour régulières**
 - Choix provisoires faits pendant l'implémentation : voir `DECISIONS.md` (D17–D22).
 - Reste avant l'alpha : étape E (personnage, carte garage + rue, boss modélisés, sons), tutoriel des 5 premières minutes, réglage des chiffres.
 
+## Plan en 9 étapes (15 octobre 2026, décision D36)
+
+Remplace la suite de l'étape E ci-dessous. Chaque étape prépare la suivante (le corps avant les habits, la ville et les PNJ avant le tutoriel).
+**Règle transversale (D37) : chaque activité se joue vraiment dans le monde**, le personnage (et l'objet, le PNJ ou le boss) réalise le mouvement en suivant le résultat de chaque répétition du mini-jeu.
+
+1. ✅ **La ville** (15/10) : maisons, garages, magasins et salle modélisés dans Blender, portes automatiques (entrée, garage ↔ salon, magasins), salle en plein air, collisions exactes.
+2. **Le personnage du joueur** : un corps par stade (Normie → God Mogger), prise de muscle satisfaisante (transformation animée, effet à chaque stade, gonflement progressif) et **les 6 exercices animés pour de vrai** selon le jeu du joueur (D37).
+3. **Le style** : coiffures, barbes, tenues adaptées à tous les corps ; présentoirs dans les magasins.
+4. **Les PNJ** : habitants et boss refaits, mentor ; **aides et combats de boss animés pour de vrai** (D37).
+5. **Le guide et le tutoriel** : le mentor explique chaque nouveau stade et chaque magasin ; flèches pour les nouveaux joueurs.
+6. **Le gameplay** : mini-jeux améliorés ; boissons et aliments comiques qui donnent un boost (❓ énergie, voir D36).
+7. **Le son** : musique par zone, effets pour chaque activité.
+8. **Alpha** : testeurs, vrais téléphones, réglage de l'économie.
+9. **Faire revenir les joueurs** : récompenses hebdomadaires, duels entre joueurs à chances égales (même mini-jeu).
+
 ## MVP
 
 ### Étape A — Socle et premier mini-jeu
