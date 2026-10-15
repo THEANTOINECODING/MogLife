@@ -4,6 +4,9 @@ Format : date — décision — raison. La plus récente en haut.
 
 ## 2026-10-15 (suite du plan)
 
+- **D39 — Corps des stades dans le style des boss** (choix du créateur) : low poly PS1, anatomie réaliste mais exagérée, texture « éclairage cuit ». Un corps par stade, découpé selon les 15 parties du squelette R15 pour suivre les animations (D28, D37).
+- **D38 — Des vendeurs dans les magasins** (choix du créateur) : chaque magasin (vêtements, coiffeur, meubles, épicerie) a un vendeur PNJ derrière son comptoir ; c'est lui qu'on aborde pour acheter (il ouvre la boutique, commente les achats, réagit au stade du joueur). Réalisé avec les PNJ (étape 4). ❓ Le miroir et le comptoir actuels deviennent-ils le vendeur, ou restent-ils en plus ?
+
 - **D37 — Les activités se jouent vraiment dans le monde** (choix du créateur) : pendant un mini-jeu, le personnage réalise réellement l'activité dans Roblox, et le mouvement suit la façon dont le joueur joue. Exemple : aux pompes, chaque répétition réussie fait une vraie pompe, une répétition parfaite est ample et propre, une ratée est une pompe molle ou un effondrement comique. S'applique à tout : exercices (le personnage et l'agrès bougent), aides (le bocal se dévisse, le piano avance, les transats s'empilent) et boss (le boss fait son mouvement en direct, face au joueur). Le serveur décide toujours du résultat de chaque répétition ; l'animation ne fait que l'illustrer.
 - **D36 — Plan de production en 9 étapes** (validé par le créateur) : ville → personnage → style → PNJ → guide → gameplay → son → alpha → rétention. Voir `07_ROADMAP.md`. Pas de « drogues » (règles Roblox, tous publics) : boissons et aliments comiques à la place. ❓ Énergie : le design refuse une énergie qui bloque (D2) ; proposition = boosts temporaires, à trancher par le créateur.
 

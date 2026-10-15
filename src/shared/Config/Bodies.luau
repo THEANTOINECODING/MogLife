@@ -1,44 +1,26 @@
--- Corps du personnage du joueur, un par stade (voir design/05_ART_SON.md, décision D28).
--- Squelette R15 standard aux proportions du stade + « coque » modélisée dans Blender
--- (modèle ReplicatedStorage.Bodies.<model>, pièces nommées <model>_<PartieR15>[_<Détail>]).
+-- Corps du personnage du joueur, un par stade (design/02_MECANIQUES/PERSONNAGE.md, décisions D28 et D39).
+-- Squelette R15 standard aux proportions du stade + « coque » modélisée dans Blender (tools/blender/build_bodies.py) :
+-- une pièce par partie du squelette, rangée dans ReplicatedStorage.Bodies sous le nom <stade>_<PartieR15>
+-- (+ <stade>_Head_Hair, la coupe de base). Décalages des pièces : BodyPieces.luau (généré).
+-- ⚠ Si on change des proportions ici, il faut relever le squelette dans Studio
+-- (assets/export/bodies/skeletons.json) puis relancer build_bodies.py, sinon les pièces seront décalées.
 -- Un stade absent de cette liste garde l'apparence provisoire (avatar Roblox élargi par le Mog).
 
 export type Body = {
-	model: string,
 	width: number, -- proportions du squelette R15 (HumanoidDescription)
 	height: number,
 	depth: number,
 	head: number,
-	-- Couleur de chaque pièce (le nom sans le préfixe du modèle), le reste prend `skin`
-	colors: { [string]: Color3 },
-	skin: Color3,
 }
 
-local SKIN = Color3.fromRGB(238, 189, 153)
-local SHIRT = Color3.fromRGB(140, 145, 153)
-
 local Bodies: { [string]: Body } = {
-	Normie = {
-		model = "Normie",
-		width = 0.5,
-		height = 1,
-		depth = 0.6,
-		head = 1.22,
-		skin = SKIN,
-		colors = {
-			UpperTorso = SHIRT,
-			LeftUpperArm_Sleeve = SHIRT,
-			RightUpperArm_Sleeve = SHIRT,
-			LowerTorso = Color3.fromRGB(38, 77, 191),
-			Head_Eyes = Color3.fromRGB(242, 242, 242),
-			Head_Pupils = Color3.fromRGB(8, 8, 10),
-			Head_Face = Color3.fromRGB(46, 26, 15),
-			LeftFoot = Color3.fromRGB(242, 242, 242),
-			RightFoot = Color3.fromRGB(242, 242, 242),
-			LeftFoot_Sole = Color3.fromRGB(217, 31, 31),
-			RightFoot_Sole = Color3.fromRGB(217, 31, 31),
-		},
-	},
+	Normie = { width = 0.75, height = 1.0, depth = 0.8, head = 1.1 },
+	GymRat = { width = 0.9, height = 1.0, depth = 0.9, head = 1.05 },
+	Bro = { width = 1.05, height = 1.05, depth = 1.0, head = 1.0 },
+	Alpha = { width = 1.2, height = 1.1, depth = 1.1, head = 1.0 },
+	Chad = { width = 1.35, height = 1.15, depth = 1.2, head = 0.95 },
+	Gigachad = { width = 1.5, height = 1.2, depth = 1.3, head = 0.95 },
+	GodMogger = { width = 1.7, height = 1.3, depth = 1.45, head = 0.9 },
 }
 
 return Bodies
