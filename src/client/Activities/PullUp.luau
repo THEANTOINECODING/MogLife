@@ -27,8 +27,8 @@ function PullUp:Pose(p: number, shake: number, _u: number, time: number)
 	local ctx = self.ctx
 	local rig, m, top = ctx.rig, ctx.measures, ctx.top
 	local bar = top * Vector3.new(0, BAR, 0)
-	local hang = BAR - m.armLength * 0.97 - 0.2
-	local chin = BAR - m.armLength * 0.32
+	local hang = BAR - m.verticalReach * 0.97 - 0.2
+	local chin = BAR - m.verticalReach * 0.32
 	local height = hang + (chin - hang) * p
 	local sway = shake * math.sin(time * 9) * 0.25
 	local rotation = top.Rotation * CFrame.Angles(sway * 0.4, 0, 0)
@@ -41,7 +41,7 @@ function PullUp:Pose(p: number, shake: number, _u: number, time: number)
 	rig:Set("RightKnee", CFrame.Angles(-1.0, 0, 0))
 	rig:Set("Neck", CFrame.Angles(0.25 * (1 - p), 0, 0))
 	for _, side in { -1, 1 } do
-		local grip = bar + top.RightVector * side * (m.shoulderWidth * 0.9) - top.UpVector * 0.15
+		local grip = bar + top.RightVector * side * m.handSpread - top.UpVector * 0.15
 		rig:Reach(if side < 0 then "LeftArm" else "RightArm", grip, top.RightVector * side - top.UpVector * 0.6)
 	end
 end

@@ -61,7 +61,7 @@ function Squat:Pose(p: number, shake: number, _u: number, time: number)
 	local unrack = math.clamp((os.clock() - self.started) / UNRACK_TIME, 0, 1)
 	local center = self.rack:Lerp(onBack, unrack)
 	for _, side in { -1, 1 } do
-		local grip = center + root.RightVector * side * (m.shoulderWidth * 1.05)
+		local grip = center + root.RightVector * side * (m.handSpread * 1.1)
 		rig:Reach(if side < 0 then "LeftArm" else "RightArm", grip, -root.UpVector + root.LookVector * -0.6)
 	end
 	if self.bar then

@@ -85,7 +85,7 @@ function JumpRope:Pose(p: number, shake: number, u: number, time: number)
 	for _, side in { -1, 1 } do
 		-- Petits cercles des poignets qui font tourner la corde
 		local circle = direction * 0.18
-		local wrist = hips + up * 0.2 + root.RightVector * side * (m.shoulderWidth * 0.95) - back * 0.35 + circle
+		local wrist = hips + up * 0.2 + root.RightVector * side * (m.handSpread * 1.05) - back * 0.35 + circle
 		rig:Reach(if side < 0 then "LeftArm" else "RightArm", wrist, back + root.RightVector * side * 0.5)
 		local hand = if side < 0 then self.left else self.right
 		local tip = if side < 0 then self.leftTip else self.rightTip

@@ -40,7 +40,7 @@ function BenchPress:Pose(p: number, shake: number, _u: number, time: number)
 
 	-- Barre : décrochée au début, puis entre bras tendus et poitrine
 	local shoulders = (rig:JointFrame("LeftShoulder").Position + rig:JointFrame("RightShoulder").Position) / 2
-	local lockout = shoulders + up * (m.armLength * 0.93)
+	local lockout = shoulders + up * (m.verticalReach * 0.95)
 	local chest = shoulders + up * 0.55 - top.LookVector * 0.35
 	local tremble = shake * math.sin(time * 42) * 0.12
 	local center = lockout:Lerp(chest, p) + up * tremble
@@ -48,11 +48,14 @@ function BenchPress:Pose(p: number, shake: number, _u: number, time: number)
 	center = self.rack:Lerp(center, unrack)
 
 	for _, side in { -1, 1 } do
-		local grip = center + top.RightVector * side * (m.shoulderWidth * 0.95)
+		local grip = center + top.RightVector * side * m.handSpread
 		rig:Reach(if side < 0 then "LeftArm" else "RightArm", grip, -up + top.RightVector * side * 0.7)
 	end
+	-- La barre est toujours dans les mains (même si un bras court n'atteint pas tout à fait la cible)
 	if self.bar then
-		self.bar.CFrame = CFrame.new(center) * top.Rotation
+		local hands = (rig:JointFrame("LeftWrist").Position + rig:JointFrame("RightWrist").Position) / 2
+		local held = if unrack < 1 then center else hands + up * 0.2
+		self.bar.CFrame = CFrame.new(held) * top.Rotation
 	end
 end
 

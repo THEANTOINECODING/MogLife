@@ -201,6 +201,8 @@ export type Measures = {
 	shoulderHeight: number,
 	shoulderWidth: number, -- écart entre les deux épaules
 	armLength: number, -- épaule -> poignet
+	handSpread: number, -- demi-écart des poignets bras ballants (prise naturelle d'une barre)
+	verticalReach: number, -- hauteur atteinte bras tendus vers le haut, mains à cet écart
 	legLength: number, -- hanche -> cheville
 	ankleHeight: number, -- cheville au-dessus du sol
 }
@@ -221,7 +223,12 @@ function Rig.Measure(self: Rig, humanoid: Humanoid): Measures
 		armLength = boneLength(self, "LeftShoulder", "LeftElbow") + boneLength(self, "LeftElbow", "LeftWrist"),
 		legLength = boneLength(self, "LeftHip", "LeftKnee") + boneLength(self, "LeftKnee", "LeftAnkle"),
 		ankleHeight = height("LeftAnkle"),
+		handSpread = math.abs(rootCF:PointToObjectSpace(self:JointFrame("LeftWrist").Position).X),
+		verticalReach = 0,
 	}
+	-- Bras tendu vers une prise décalée de l'épaule : la hauteur atteignable diminue
+	local offset = math.max(measures.handSpread - measures.shoulderWidth / 2, 0)
+	measures.verticalReach = math.sqrt(math.max(measures.armLength ^ 2 - offset ^ 2, 0.01))
 	self.pose = saved
 	return measures
 end
