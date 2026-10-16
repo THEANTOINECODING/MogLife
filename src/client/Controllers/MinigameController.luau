@@ -24,6 +24,14 @@ local QUALITY_COLORS = {
 	Auto = Color3.fromRGB(120, 180, 255),
 }
 
+-- Couleur du combo selon son multiplicateur (x1.2, x1.5, x2)
+local COMBO_COLORS = {
+	Color3.fromRGB(255, 255, 255),
+	Color3.fromRGB(120, 220, 255),
+	Color3.fromRGB(255, 200, 60),
+	Color3.fromRGB(255, 90, 40),
+}
+
 local player = Players.LocalPlayer
 
 local UIController
@@ -46,6 +54,8 @@ type Current = {
 	counter: TextLabel,
 	feedback: TextLabel,
 	gainLabel: TextLabel,
+	comboLabel: TextLabel,
+	streak: number,
 	lastLocalRep: number,
 	startedAt: number,
 	sent: number, -- répétitions envoyées au serveur
@@ -57,6 +67,7 @@ type Current = {
 local current: Current? = nil
 
 local MinigameController = {}
+MinigameController.LastCombo = 1
 
 -- Bloque le personnage sur place (le client contrôle son propre personnage).
 -- On n'utilise pas PlayerModule : les versions récentes de Roblox ne le fournissent plus.
@@ -189,6 +200,16 @@ local function openRun(update)
 		TextStrokeTransparency = 1,
 		Parent = root,
 	})
+	-- Combo (D49) : grossit et change de couleur à chaque palier, « ON FIRE » au dernier
+	local comboLabel = Ui.label({
+		Name = "Combo",
+		AnchorPoint = Vector2.new(0.5, 0),
+		Position = UDim2.new(0.5, 0, 0, 204),
+		Size = UDim2.fromOffset(320, 34),
+		TextColor3 = COMBO_COLORS[1],
+		Text = "",
+		Parent = root,
+	})
 	local gainLabel = Ui.label({
 		Name = "Gain",
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -233,6 +254,8 @@ local function openRun(update)
 		counter = counter,
 		feedback = feedback,
 		gainLabel = gainLabel,
+		comboLabel = comboLabel,
+		streak = 0,
 		lastLocalRep = 0,
 		startedAt = os.clock(),
 		sent = 0,
@@ -303,11 +326,63 @@ local function openRun(update)
 	)
 end
 
+-- Petit coup de zoom de la caméra (répétition parfaite, palier de combo)
+local function punch(strength: number)
+	local camera = workspace.CurrentCamera
+	if not camera then
+		return
+	end
+	local base = camera.FieldOfView
+	camera.FieldOfView = base - strength
+	TweenService:Create(camera, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		FieldOfView = base,
+	}):Play()
+end
+
+local function showCombo(session: Current, streak: number, combo: number)
+	local label = session.comboLabel
+	local previous = session.streak
+	session.streak = streak
+	if streak == 0 then
+		if previous >= 5 then
+			pop(label, Texts.Get("Minigame.ComboBroken"), Color3.fromRGB(200, 200, 200))
+		else
+			label.Text = ""
+		end
+		return
+	end
+	local tier = if combo >= 2 then 4 elseif combo >= 1.5 then 3 elseif combo > 1 then 2 else 1
+	-- Un nouveau tween annule le fondu de « Combo broken » encore en cours
+	TweenService:Create(label, TweenInfo.new(0), { TextTransparency = 0, TextStrokeTransparency = 0.3 }):Play()
+	label.TextColor3 = COMBO_COLORS[tier]
+	label.Text = if tier == 4
+		then `{Texts.Get("Minigame.OnFire")}  {Texts.Get("Minigame.Combo", { multiplier = combo })}`
+		elseif combo > 1 then Texts.Get("Minigame.Combo", { multiplier = combo })
+		else Texts.Get("Minigame.Streak", { streak = streak })
+	-- Le label « saute » à chaque répétition, plus fort quand on passe un palier
+	local tierUp = combo > MinigameController.LastCombo
+	local grow = if tierUp then 1.5 else 1.15
+	label.Size = UDim2.fromOffset(320 * grow, 34 * grow)
+	TweenService:Create(label, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+		Size = UDim2.fromOffset(320, 34),
+	}):Play()
+	if tierUp then
+		punch(6)
+	end
+end
+
 local function onRepConfirmed(update)
 	if not current then
 		return
 	end
 	current.counter.Text = Texts.Get("Minigame.RepCounter", { reps = update.reps, total = current.total })
+	if update.streak then
+		showCombo(current, update.streak, update.combo or 1)
+		MinigameController.LastCombo = if update.streak == 0 then 1 else update.combo or 1
+	end
+	if update.quality == "Perfect" then
+		punch(2.5)
+	end
 	if update.gain then
 		current.gained += update.gain
 		pop(

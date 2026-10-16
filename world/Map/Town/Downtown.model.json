@@ -20954,6 +20954,114 @@
    ]
   },
   {
+   "name": "BoostShop0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     6,
+     4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       40.0,
+       3.1,
+       -88.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "BoostShop"
+     ]
+    },
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "BoostShop1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     6,
+     4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       103.4,
+       3.7,
+       -66.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "BoostShop"
+     ]
+    },
+    "CanTouch": false
+   }
+  },
+  {
    "name": "NeighborCar",
    "className": "Model",
    "properties": {

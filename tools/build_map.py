@@ -1080,6 +1080,10 @@ def downtown():
     c.append(decor(F, "ShakeTruckSlot", (46, 0, -88), "ShakeTruck", yaw=90))
     c.append(decor(F, "CafeSlot", (44, 0, -30), "CafeSet"))
     c.append(decor(F, "VendingSlot", (106.2, WALK_TOP, -66), "ShakeVendingMachine", yaw=-90))
+    # Boosts (D47) : on les achète au camion à shakes et au distributeur (tag BoostShop, BoostService)
+    for k, pos in enumerate(((40, 3, -88), (103.4, WALK_TOP + 3, -66))):
+        c.append(P(F, f"BoostShop{k}", pos, (2, 6, 4), WHITE, transparency=1, collide=False, tags=["BoostShop"],
+                   extra={"CanTouch": False}))
     # La voiture du voisin, en panne sur la route ouest ; le voisin attend sur le trottoir
     c += car(F, "NeighborCar", (-ROAD[0] - 5, 0.15, -40), (200, 60, 50), yaw=90)
     c.append(helper(F, "NeighborSpot", (-walk, WALK_TOP + 0.5, -32), "PushCar", yaw=90))

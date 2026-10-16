@@ -22,8 +22,9 @@ export type RunSpec = {
 	timingScale: number?, -- < 1 = fenêtres de timing plus serrées (combats de boss)
 	titleKey: string?, -- texte affiché en haut du run (clé Texts)
 	titleArgs: { [string]: any }?,
-	-- Appelé pour chaque répétition validée ; renvoie le gain à afficher (ou nil)
-	onRep: ((player: Player, quality: string) -> number?)?,
+	-- Appelé pour chaque répétition validée ; renvoie le gain à afficher (ou nil).
+	-- combo : multiplicateur du combo en cours (Balance.Combo), à appliquer au gain si le run en profite
+	onRep: ((player: Player, quality: string, combo: number) -> number?)?,
 	-- Appelé à la fin du run, quelle qu'en soit la raison
 	onEnd: ((player: Player, reason: EndReason, reps: number) -> ())?,
 }
@@ -31,6 +32,7 @@ export type RunSpec = {
 type Run = {
 	spec: RunSpec,
 	reps: number,
+	streak: number, -- répétitions réussies d'affilée (combo)
 	startedAt: number,
 	lastRepAt: number,
 }
@@ -41,6 +43,17 @@ local MIN_GAP = 0.15
 local runs: { [Player]: Run } = {}
 
 local MinigameService = {}
+
+-- Multiplicateur du combo pour une série de `streak` répétitions réussies d'affilée
+function MinigameService.ComboMultiplier(streak: number): number
+	local multiplier = 1
+	for _, step in Balance.Combo.Steps do
+		if streak >= step.at then
+			multiplier = step.multiplier
+		end
+	end
+	return multiplier
+end
 
 -- Tout le monde voit l'activité se réaliser : le personnage fait la répétition que le serveur a validée
 local function broadcast(player: Player, spec: RunSpec, state: string, quality: string?)
@@ -73,7 +86,7 @@ function MinigameService.StartRun(player: Player, spec: RunSpec): boolean
 	if runs[player] then
 		return false
 	end
-	runs[player] = { spec = spec, reps = 0, startedAt = os.clock(), lastRepAt = 0 }
+	runs[player] = { spec = spec, reps = 0, streak = 0, startedAt = os.clock(), lastRepAt = 0 }
 	Remotes.SeriesUpdate:FireClient(player, {
 		state = "Started",
 		kind = spec.kind,
@@ -142,7 +155,14 @@ local function onRep(player: Player, quality: unknown)
 
 	run.lastRepAt = now
 	run.reps += 1
-	local gain = if spec.onRep then spec.onRep(player, quality) else nil
+	-- Combo : un raté (ou le mode auto) le remet à zéro
+	if quality == "Miss" or quality == "Auto" then
+		run.streak = 0
+	else
+		run.streak += 1
+	end
+	local combo = MinigameService.ComboMultiplier(run.streak)
+	local gain = if spec.onRep then spec.onRep(player, quality, combo) else nil
 
 	-- Le run a pu être terminé par onRep
 	if runs[player] ~= run then
@@ -154,6 +174,8 @@ local function onRep(player: Player, quality: unknown)
 		reps = run.reps,
 		quality = quality,
 		gain = gain,
+		streak = run.streak,
+		combo = combo,
 	})
 	broadcast(player, spec, "Rep", quality)
 	if run.reps >= spec.total then

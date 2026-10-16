@@ -31,6 +31,8 @@ local NAMES = {
 	"Tutorial", -- serveur -> client : ({ step, total, done }) étape du tutoriel
 	"TutorialAction", -- client -> serveur : ("Skip") passer le tutoriel
 	"MentorSay", -- serveur -> client : ({ key, args }) le mentor parle (tutoriel, conseils)
+	"BuyBoost", -- client -> serveur : (boostId: string) au camion à shakes ou au distributeur
+	"BoostState", -- serveur -> client : ({ id: string?, endsAt: number }) boost en cours (heure serveur)
 }
 
 local isServer = RunService:IsServer()
@@ -87,4 +89,6 @@ return remotes :: {
 	Tutorial: RemoteEvent,
 	TutorialAction: RemoteEvent,
 	MentorSay: RemoteEvent,
+	BuyBoost: RemoteEvent,
+	BoostState: RemoteEvent,
 }

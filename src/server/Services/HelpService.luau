@@ -40,7 +40,8 @@ local function complete(player: Player, helpId: string)
 
 	local firstTime = data.HelpsDone[helpId] ~= true
 	data.HelpsDone[helpId] = true
-	StatsService.Add(player, "Cash", help.cash)
+	local cash = if firstTime and help.firstCash then help.firstCash else help.cash
+	StatsService.Add(player, "Cash", cash)
 
 	readyAt[player] = readyAt[player] or {}
 	readyAt[player][helpId] = workspace:GetServerTimeNow() + Balance.Helps.Cooldown
@@ -51,7 +52,7 @@ local function complete(player: Player, helpId: string)
 		args = {
 			npc = { key = `Npc.{help.npc}` },
 			line = { key = `HelpLine.{helpId}` },
-			cash = help.cash,
+			cash = cash,
 		},
 	})
 	TutorialService.OnEvent(player, "HelpCompleted", helpId)

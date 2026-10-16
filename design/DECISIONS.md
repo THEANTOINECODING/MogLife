@@ -2,6 +2,14 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-16 (décisions du créateur, étape 6 : le gameplay)
+
+- **D50 — Mog-off mis en scène** : écran VS avec la réplique du boss, compte à rebours, caméra de duel, jauge de Mog (toi contre lui) au lieu d'un texte, pastilles des manches, annonce de chaque manche (« plus rapide »), le boss qui nargue ou panique, « MOGGED! » à la victoire. Les règles du combat ne changent pas (D24).
+- **D49 — Combo** (choix du créateur : « améliorer les mécaniques ») : les répétitions réussies d'affilée multiplient le Mog des exercices (×1,2 dès 5, ×1,5 dès 10, ×2 « ON FIRE » dès 15) ; un raté remet à zéro, le mode auto ne compte pas. Ne touche pas aux aides (récompense fixe) ni au score des boss (équité). ❓ Paliers à régler pendant l'alpha.
+- **D48 — Le bocal de Maman rapporte 25 Cash la première fois** (5 ensuite) : le tutoriel peut faire acheter un premier look, comme le prévoit le design. Lève le ❓ de D46.
+- **D47 — Boosts temporaires plutôt qu'une énergie** (choix du créateur) : 4 aliments comiques (shake protéiné, jus de kale turbo, steak démesuré, œufs dorés) vendus en Cash au camion à shakes et au distributeur, ×1,25 à ×2 de Mog pendant 3 à 5 minutes, débloqués avec les stades. Jamais obligatoires, rien ne bloque sans eux. Un seul actif ; racheter le même prolonge (15 min max). ❓ Prix et effets à régler pendant l'alpha.
+- **Sons** : le créateur écoute et choisit parmi une liste proposée (`design/SONS_CANDIDATS.md`, priorité à la bibliothèque APM sous licence).
+
 ## 2026-10-16 (étape 5 : le guide et le tutoriel, nuit en autonomie)
 
 - **D46 — Tutoriel guidé par le mentor** (Config/Tutorial.luau) : 4 étapes (série de curls dans son garage → bocal de Maman → essayer un look chez le coiffeur → 50 Mog et Kevin), une carte d'objectif, un trait lumineux vers la cible, le mentor qui parle en bas de l'écran. Quittable (« Passer »), rejouable (le mentor le relance : « Show me the ropes »). Les joueurs qui ont déjà progressé ne le voient pas d'office. Conseils du mentor la première fois qu'on ouvre chaque boutique, et à chaque nouveau stade (exercices et aides débloqués, prochain boss).

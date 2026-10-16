@@ -14,6 +14,7 @@ local ORDER = {
 	"AmbienceController",
 	"TutorialController",
 	"SoundController",
+	"BoostController",
 }
 
 local controllers = {}

@@ -161,6 +161,8 @@ local function resolveRound(player: Player, fight: Fight)
 		score = score,
 		opponent = opponent,
 		won = won,
+		wins = fight.wins,
+		losses = fight.losses,
 	})
 
 	local over = fight.wins >= BOSS.RoundsToWin or fight.losses > BOSS.Rounds - BOSS.RoundsToWin
@@ -244,6 +246,14 @@ function startRound(player: Player, fight: Fight)
 	fight.token += 1
 	local token = fight.token
 	local interval = boss.interval * (BOSS.SpeedByRound[fight.round] or 1)
+	Remotes.BossUpdate:FireClient(player, {
+		state = "RoundStart",
+		bossId = fight.bossId,
+		round = fight.round,
+		rounds = BOSS.Rounds,
+		wins = fight.wins,
+		losses = fight.losses,
+	})
 
 	local started = MinigameService.StartRun(player, {
 		kind = "Boss",
@@ -333,8 +343,18 @@ local function onChallenge(player: Player, bossId: unknown)
 		stakes = state.fightLoss,
 	}
 	fights[player] = fight
-	Remotes.BossUpdate:FireClient(player, { state = "FightStarted", bossId = bossId })
-	startRound(player, fight)
+	-- Présentation (écran VS, compte à rebours) avant la première manche
+	Remotes.BossUpdate:FireClient(player, {
+		state = "FightStarted",
+		bossId = bossId,
+		intro = BOSS.IntroTime,
+		rounds = BOSS.Rounds,
+	})
+	task.delay(BOSS.IntroTime, function()
+		if fights[player] == fight then
+			startRound(player, fight)
+		end
+	end)
 end
 
 local function setupSpot(spot: Instance)

@@ -15,6 +15,7 @@ return {
 		FurnitureOwned = {}, -- meubles achetés
 		FurniturePlaced = {}, -- emplacement de la maison -> meuble posé
 		Tutorial = { Step = 1, Done = false }, -- tutoriel des 5 premières minutes (TutorialService)
+		Boost = { Id = "", EndsAt = 0 }, -- boost temporaire en cours (BoostService), EndsAt en os.time()
 		Tips = {}, -- conseils du mentor déjà donnés
 	},
 
@@ -24,6 +25,17 @@ return {
 	RepIntervalTolerance = 0.85,
 	-- Distance max (studs) entre le joueur et la station pendant une série
 	MaxStationDistance = 12,
+
+	-- Combo (série de répétitions réussies d'affilée, D49) : multiplie le Mog des exercices. Un raté remet à zéro ;
+	-- le mode auto ne compte pas (il garde le combo à zéro). Paliers : à partir de `at` répétitions réussies.
+	Combo = {
+		Steps = {
+			{ at = 0, multiplier = 1 },
+			{ at = 5, multiplier = 1.2 },
+			{ at = 10, multiplier = 1.5 },
+			{ at = 15, multiplier = 2 }, -- « ON FIRE »
+		},
+	},
 
 	-- Multiplicateur de Mog selon la qualité de la répétition ("Auto" = mode auto)
 	Quality = {
@@ -122,7 +134,14 @@ return {
 		-- Mog-off perdu (avec assez de Mog) : perte plus faible, annoncée aussi ❓
 		MogOffLossPercent = 0.05,
 		MogOffLossCap = { 20, 50, 120, 250, 500, 1_000 },
-		PauseBetweenRounds = 2,
+		PauseBetweenRounds = 3, -- secondes entre deux manches (annonce de la manche suivante)
+		IntroTime = 4.5, -- secondes de présentation avant la 1re manche (écran VS, compte à rebours)
+	},
+
+	-- Boutique de boosts (camion à shakes, distributeur)
+	BoostShop = {
+		Distance = 14, -- distance max (studs) au comptoir pour acheter
+		MaxDuration = 900, -- un boost prolongé ne dépasse jamais 15 minutes
 	},
 
 	-- Apparence provisoire (avatar Roblox) en attendant le personnage du jeu

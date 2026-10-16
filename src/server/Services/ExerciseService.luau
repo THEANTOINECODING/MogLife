@@ -16,6 +16,7 @@ local StatsService
 local MinigameService
 local BodyService
 local TutorialService
+local BoostService
 
 local ExerciseService = {}
 
@@ -71,8 +72,9 @@ local function startSeries(player: Player, exerciseId: unknown)
 		anchor = station,
 		autoAllowed = true,
 		titleKey = `Exercise.{exerciseId}`,
-		onRep = function(p, quality)
-			local gain = exercise.mogPerRep * Balance.Quality[quality]
+		onRep = function(p, quality, combo)
+			-- Gain = base × qualité × combo × boost en cours
+			local gain = exercise.mogPerRep * Balance.Quality[quality] * combo * BoostService.Multiplier(p)
 			StatsService.Add(p, "Mog", gain)
 			-- Les muscles travaillés gonflent (D40)
 			BodyService.Pump(p, exerciseId, quality)
@@ -114,6 +116,7 @@ function ExerciseService.Init(services)
 	MinigameService = services.MinigameService
 	BodyService = services.BodyService
 	TutorialService = services.TutorialService
+	BoostService = services.BoostService
 end
 
 function ExerciseService.Start()
