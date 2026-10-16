@@ -36,6 +36,8 @@ local NAMES = {
 	"Records", -- serveur -> client : ({ [exerciseId]: score }) meilleures notes de série
 	"Cutscene", -- serveur -> client : ({ kind: "Intro" | "Boss", bossId?, spot? }) jouer une cinématique
 	"CutsceneDone", -- client -> serveur : (kind: string) cinématique finie ou passée
+	"OpenCreator", -- serveur -> client : ({ mode: "Create" | "Edit", look, hair: string }) ouvrir le menu de création
+	"SetLook", -- client -> serveur : (look, hair: string) valider l'apparence choisie (le serveur vérifie tout)
 }
 
 local isServer = RunService:IsServer()
@@ -97,4 +99,6 @@ return remotes :: {
 	Records: RemoteEvent,
 	Cutscene: RemoteEvent,
 	CutsceneDone: RemoteEvent,
+	OpenCreator: RemoteEvent,
+	SetLook: RemoteEvent,
 }

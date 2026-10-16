@@ -46,6 +46,14 @@ local report = {}
 
 local characters = workspace:FindFirstChild("MogLife_Characters")
 if characters then
+	-- Le fichier contient TOUS les corps et TOUS les objets de style : on remplace tout (les pièces d'anciennes
+	-- versions qui n'existent plus, ex. avant les corps féminins et les teintes D55, ne restent pas)
+	for _, name in { "Bodies", "Style" } do
+		local old = ReplicatedStorage:FindFirstChild(name)
+		if old then
+			old:ClearAllChildren()
+		end
+	end
 	local scale, bodies, styles = importScale(characters), 0, 0
 	for _, part in characters:GetDescendants() do
 		if part:IsA("MeshPart") then

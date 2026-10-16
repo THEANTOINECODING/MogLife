@@ -24,7 +24,11 @@ local StyleService = {}
 local function sendState(player: Player)
 	local data = DataService.Get(player)
 	if data then
-		Remotes.StyleState:FireClient(player, { owned = data.StyleOwned, equipped = data.StyleEquipped })
+		-- L'apparence (D55) sert aux aperçus du client : couleurs de peau et de cheveux, genre, expression
+		Remotes.StyleState:FireClient(
+			player,
+			{ owned = data.StyleOwned, equipped = data.StyleEquipped, look = data.Look }
+		)
 	end
 end
 
@@ -158,7 +162,7 @@ local function onEquip(player: Player, category: unknown, itemId: unknown)
 		data.StyleEquipped[category] = nil
 	elseif typeof(itemId) == "string" then
 		local item = StyleItems[itemId]
-		if not item or item.category ~= category or not data.StyleOwned[itemId] then
+		if not item or item.category ~= category or not (data.StyleOwned[itemId] or item.starter) then
 			return
 		end
 		data.StyleEquipped[category] = itemId

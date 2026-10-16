@@ -18,6 +18,19 @@ return {
 		Boost = { Id = "", EndsAt = 0 }, -- boost temporaire en cours (BoostService), EndsAt en os.time()
 		Records = {}, -- meilleure note de série par exercice (0 à 100)
 		Tips = {}, -- conseils du mentor déjà donnés
+		-- Apparence choisie dans le menu de création (D55, Config/Look.luau) ; Created = menu déjà validé une fois
+		Look = {
+			Created = false,
+			Gender = "M",
+			Skin = "Peach",
+			Hair = "Brown",
+			Eyes = "Brown",
+			Top = "Gray",
+			Shorts = "Blue",
+			Expression = "Confident",
+			First = "Brad",
+			Title = "Spaghetti",
+		},
 	},
 
 	-- Séries d'exercices
@@ -26,6 +39,12 @@ return {
 	RepIntervalTolerance = 0.85,
 	-- Distance max (studs) entre le joueur et la station pendant une série
 	MaxStationDistance = 12,
+
+	-- Création de personnage (D55)
+	Look = {
+		OpenDelay = 2, -- secondes après l'arrivée avant d'ouvrir le menu de création (le temps que l'interface charge)
+		RequestCooldown = 1, -- secondes minimum entre deux validations d'apparence
+	},
 
 	-- Combo (série de répétitions réussies d'affilée, D49) : multiplie le Mog des exercices. Un raté remet à zéro ;
 	-- le mode auto ne compte pas (il garde le combo à zéro). Paliers : à partir de `at` répétitions réussies.

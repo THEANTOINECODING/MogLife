@@ -14,7 +14,7 @@ export type Body = {
 }
 
 local Bodies: { [string]: Body } = {
-	Normie = { width = 0.75, height = 1.0, depth = 0.8, head = 1.1 },
+	Normie = { width = 0.5, height = 1.05, depth = 0.6, head = 1.15 }, -- « spaghetti » : très grand et très mince (D55)
 	GymRat = { width = 0.9, height = 1.0, depth = 0.9, head = 1.05 },
 	Bro = { width = 1.05, height = 1.05, depth = 1.0, head = 1.0 },
 	Alpha = { width = 1.2, height = 1.1, depth = 1.1, head = 1.0 },

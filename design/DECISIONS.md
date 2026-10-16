@@ -2,6 +2,11 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-17 (création de personnage, demande du créateur)
+
+- **D55 — Menu de création de personnage.** Choix : corps masculin ou féminin (7 corps féminins, même squelette et même progression absurde, un haut toujours porté, poitrine unique jamais suggestive), teinte de peau (10 naturelles + 3 fantaisie), coupe de départ (classique + 4 gratuites : boucles, cheveux longs, chignon, carré) et couleur de cheveux (10 + 6 fantaisie, s'applique aussi aux barbes et sourcils), couleur des yeux (6), expression (sûr de lui, nerveux, déterminé), couleurs du haut et du short de départ (12), surnom de bro (prénom + titre choisis dans une liste, affiché au-dessus de la tête). Boutons « Aléatoire » et « Voir mon futur moi » (aperçu en GOD MOGGER). **Pas de choix de taille** (décision du créateur). Ouvert au premier passage (avant l'intro, et une fois pour les joueurs existants), puis gratuit au miroir de sa maison. Technique : les zones teintables des textures sont semi-transparentes, la couleur de la pièce apparaît au travers (une texture par corps pour toutes les teintes). Choix par défaut faute de réponse : couleurs fantaisie gratuites ; les joueurs existants voient le menu une fois.
+- **D56 — Normie « spaghetti »** (demande du créateur) : torse, bras et jambes très fins, coudes et genoux noueux, short trop large, grosses baskets, squelette beaucoup plus étroit (largeur 0,5), pour une évolution très visible dès le premier boss.
+
 ## 2026-10-16 (améliorations validées par le créateur)
 
 - **D54 — Musique par ambiance** (demande du créateur : la musique de la ville était trop forte et lassante). Ville : 3 morceaux acoustiques doux joués à la suite, volume bas. Pendant ses exercices et ses aides : musique d'entraînement (gardée 8 s après une série pour enchaîner). Combat de boss et sa présentation : musique de combat, repart du début à chaque combat. Fondus entre ambiances, reprise où on s'était arrêté, musique baissée pendant les jingles (transformation, victoire, défaite). Tout dans `Config/Sounds.luau`. Complété le 16/10 : ville = « Groove in Motion » (choix du créateur), entraînement = « Positive Attitude (A) », et chaque son a son propre volume calculé d'après son niveau mesuré (les fichiers allaient de 1 à 10), pour un ensemble doux et régulier.

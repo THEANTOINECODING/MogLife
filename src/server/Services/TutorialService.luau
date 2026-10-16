@@ -2,6 +2,7 @@
 -- - Tutoriel des 5 premières minutes (Config/Tutorial.luau) : une étape à la fois, validée par un événement du jeu
 --   (série terminée, aide réussie, boutique ouverte, boss battu). Quittable (bouton « Passer »), rejouable (le
 --   mentor le relance). Les joueurs qui ont déjà progressé ne le voient pas d'office.
+-- - Le tutoriel (et l'intro de Muscle City) attend que le joueur ait créé son personnage (LookService, D55).
 -- - Conseils : la première fois qu'on ouvre chaque boutique, et à chaque nouveau stade (ce qui se débloque,
 --   le prochain boss). Le mentor parle via le remote MentorSay ; on ne répète jamais un conseil déjà donné.
 
@@ -139,14 +140,10 @@ local function onAction(player: Player, action: unknown)
 	end
 end
 
-local function onPlayerLoaded(player: Player)
+local function begin(player: Player)
 	local data = DataService.Get(player)
 	if not data then
 		return
-	end
-	-- Joueur qui a déjà progressé (avant l'arrivée du tutoriel) : il n'en a pas besoin
-	if not data.Tutorial.Done and data.Tutorial.Step == 1 and (data.Stage > 1 or data.Mog > 0) then
-		data.Tutorial.Done = true
 	end
 	if data.Tutorial.Done then
 		send(player)
@@ -176,6 +173,28 @@ local function onPlayerLoaded(player: Player)
 			announce(player)
 		end
 	end)
+end
+
+local function onPlayerLoaded(player: Player)
+	local data = DataService.Get(player)
+	if not data then
+		return
+	end
+	-- Joueur qui a déjà progressé (avant l'arrivée du tutoriel) : il n'en a pas besoin
+	if not data.Tutorial.Done and data.Tutorial.Step == 1 and (data.Stage > 1 or data.Mog > 0) then
+		data.Tutorial.Done = true
+	end
+	-- Personnage pas encore créé : le menu de création s'ouvre d'abord, la suite vient après (LookCreated)
+	if not (data.Look and data.Look.Created) then
+		send(player)
+		return
+	end
+	begin(player)
+end
+
+-- Le joueur vient de valider son personnage pour la première fois (LookService) : intro, puis tutoriel
+function TutorialService.LookCreated(player: Player)
+	begin(player)
 end
 
 function TutorialService.Init(services)

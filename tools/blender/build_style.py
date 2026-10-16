@@ -3,8 +3,11 @@ Objets de style de MOG LIFE (étape 3) : coupes, barbes, hauts et accessoires, s
 à partir des mêmes mesures que le corps (build_bodies.geometry) : un débardeur épouse un Normie comme un
 GOD MOGGER. Même style que les corps (low poly PS1, texture à éclairage cuit), une seule texture partagée.
 
-Chaque objet = une pièce par partie du squelette qu'il recouvre, nommée <Stade>__<Objet>__<Partie>
-(ex. Bro__Hawaiian__UpperTorso) : soudée à cette partie par BodyService, elle suit animations, pump et croissance.
+Chaque objet = une pièce par partie du squelette qu'il recouvre, nommée <Corps>__<Objet>__<Partie>[_<Teinte>]
+(ex. Bro__Hawaiian__UpperTorso, BroF__Banana__Head_Hair) : soudée à cette partie par BodyService, elle suit
+animations, pump et croissance. Les objets existent pour les 14 corps (7 stades x masculin/féminin, D55).
+Teintes (D55) : les cheveux, barbes et sourcils prennent la couleur de cheveux du joueur (_Hair), les crânes rasés
+et la méga-mâchoire sa couleur de peau (_Skin) : ces cases sont des voiles semi-transparents.
 
 Écrit :
 - assets/export/characters/MogLife_Characters.fbx : les 7 corps (build_bodies.py, à lancer avant) ET tous les objets
@@ -70,13 +73,20 @@ def paint_style_atlas():
         return lit(c, y, 0.12)
     a.cell("pajama", 7, 0, pajama)
 
-    a.cell("hair_yellow", 0, 1, lambda x, y: noise((0.98, 0.84, 0.2), 0.06))
-    a.cell("hair_brown", 1, 1, lambda x, y: noise((0.36, 0.2, 0.09), 0.05))
-    a.cell("hair_pink", 2, 1, lambda x, y: noise((1.0, 0.3, 0.62), 0.05))
-    a.cell("hair_black", 3, 1, lambda x, y: noise((0.07, 0.06, 0.07), 0.04) if (x * 3 + y) % 9 else (0.25, 0.25, 0.3))
-    a.cell("beard_brown", 4, 1, lambda x, y: noise((0.3, 0.17, 0.08), 0.07))
-    a.cell("beard_ginger", 5, 1, lambda x, y: noise((0.78, 0.36, 0.12), 0.07))
-    a.cell("beard_black", 6, 1, lambda x, y: noise((0.08, 0.07, 0.07), 0.05))
+    # Cheveux et barbes : voiles sur la couleur de cheveux du joueur (mèches plus sombres, quelques reflets)
+    def strands(x, y):
+        if (x * 3 + y) % 7 == 0:
+            return veil(0.72)
+        if (x + y * 2) % 11 == 0:
+            return veil(1.18)
+        return veil(grain(0.1))
+    a.cell("hair_yellow", 0, 1, strands)
+    a.cell("hair_brown", 1, 1, lambda x, y: veil(grain(0.12) * (0.85 if (x + y) % 5 == 0 else 1.0)))
+    a.cell("hair_pink", 2, 1, lambda x, y: veil(1.12 if y > 24 else grain(0.08)))     # pointes plus claires
+    a.cell("hair_black", 3, 1, lambda x, y: veil(1.25) if (x * 3 + y) % 9 == 0 else veil(grain(0.08)))  # gomina
+    a.cell("beard_brown", 4, 1, lambda x, y: veil(0.9 * grain(0.15)))
+    a.cell("beard_ginger", 5, 1, lambda x, y: veil(0.85 * grain(0.18)))
+    a.cell("beard_black", 6, 1, lambda x, y: veil(0.8 * grain(0.1)))
     a.cell("lens", 7, 1, lambda x, y: (0.55, 0.65, 0.8) if x + y < 12 and x + y > 8 else (0.05, 0.06, 0.09))
 
     a.cell("red", 0, 2, plain((0.86, 0.12, 0.14)))
@@ -94,11 +104,10 @@ def paint_style_atlas():
         return lit(c, y, 0.15)
     a.cell("mog_front", 5, 2, mog_front)
 
-    def bald(x, y):                                   # crâne lustré : reflet blanc
-        c = noise((0.93, 0.72, 0.56), 0.015)
+    def bald(x, y):                                   # crâne lustré (couleur de peau) : reflet blanc
         if (x - 11) ** 2 + (y - 22) ** 2 < 14:
-            c = (1.0, 0.98, 0.92)
-        return lit(c, y, 0.15)
+            return (1.0, 0.98, 0.92, 0.7)
+        return veil(lit_k(y, 0.15) * grain(0.015))
     a.cell("bald", 6, 2, bald)
 
     def sock(x, y):                                   # chaussette blanche à deux rayures rouges
@@ -110,7 +119,8 @@ def paint_style_atlas():
     a.cell("strap", 1, 3, plain((0.2, 0.2, 0.22)))
     a.cell("ribbon", 2, 3, lambda x, y: (0.15, 0.3, 0.75) if x < 16 else (0.85, 0.15, 0.18))
     a.cell("pajama_front", 3, 3, lambda x, y: (0.96, 0.96, 1.0) if x in (15, 16) and y % 8 < 3 else pajama(x, y))
-    a.cell("hawaiian_front", 4, 3, lambda x, y: (0.93, 0.72, 0.56) if abs(x - 15.5) < (y - 14) * 0.6 else hawaiian(x, y))
+    # Col en V : un débardeur blanc dessous (la peau du joueur n'est pas connue de cette texture)
+    a.cell("hawaiian_front", 4, 3, lambda x, y: (0.96, 0.95, 0.92) if abs(x - 15.5) < (y - 14) * 0.6 else hawaiian(x, y))
     a.cell("fluo", 5, 3, lambda x, y: lit((0.95, 0.95, 0.95) if x in (2, 3) else noise((0.55, 1.0, 0.15), 0.03), y, 0.15))
 
     def velvet(x, y):                                 # velours violet : côtes verticales
@@ -123,8 +133,8 @@ def paint_style_atlas():
         return (k * 0.6, k * 0.55, k * 0.5)
     a.cell("leather", 7, 3, leather)
 
-    a.cell("skin", 0, 4, lambda x, y: lit(noise((0.93, 0.72, 0.56), 0.02), y, 0.15))
-    a.cell("brow_dark", 1, 4, lambda x, y: noise((0.12, 0.08, 0.05), 0.04))
+    a.cell("skin", 0, 4, lambda x, y: veil(lit_k(y, 0.15) * grain(0.02)))
+    a.cell("brow_dark", 1, 4, lambda x, y: veil(0.7 * grain(0.06)))
 
     def teeth(x, y):                                  # dents éclatantes, avec une étincelle
         c = (0.82, 0.8, 0.76) if x % 6 == 0 else (1.0, 1.0, 0.97)
@@ -132,8 +142,14 @@ def paint_style_atlas():
             c = (1.0, 1.0, 1.0)
         return c
     a.cell("teeth_white", 2, 4, teeth)
-    a.cell("lips", 3, 4, lambda x, y: noise((0.62, 0.36, 0.32), 0.02))
+    a.cell("lips", 3, 4, lambda x, y: tinge((0.45, 0.06, 0.1), 0.35))
     return a
+
+
+# Teinte de chaque case teintable : les formes qui l'utilisent vont dans la pièce <Partie>_<Teinte>
+STYLE_TINT = {"hair_yellow": "Hair", "hair_brown": "Hair", "hair_pink": "Hair", "hair_black": "Hair",
+              "beard_brown": "Hair", "beard_ginger": "Hair", "beard_black": "Hair", "brow_dark": "Hair",
+              "bald": "Skin", "skin": "Skin", "lips": "Skin"}
 
 
 # ------------------------------------------------------------------ outils
@@ -149,7 +165,8 @@ class Wardrobe:
 
     def make(self, part, bm, cell, front_cell=None):
         obj = self.b.make(bm, cell, front_cell)
-        self.current.setdefault(part, []).append(obj)
+        tint = STYLE_TINT.get(cell)
+        self.current.setdefault(part + ("_" + tint if tint else ""), []).append(obj)
 
 
 def ring_upright(center, radius, thickness, height, n=16):
@@ -301,6 +318,36 @@ def build_hair(w, g):
 
     w.start("ShinyBald")         # crâne rasé et lustré
     w.make("Head", half_sphere((0, hy + 0.02, z + r * 0.12), (r * 0.86, r * 0.99, r * 0.9)), "bald")
+
+    # Coupes de départ (gratuites, au choix dans le menu de création, D55)
+    w.start("Curly")             # boucles en boules autour du crâne
+    w.make("Head", half_sphere((0, hy + 0.03, z + r * 0.15), (r * 0.9, r * 1.03, r * 0.9)), "hair_brown")
+    for k in range(9):
+        a = k / 9 * 2 * math.pi
+        c = (math.cos(a) * r * 0.78, hy + math.sin(a) * r * 0.85, z + r * (0.55 + 0.25 * math.sin(a * 2)))
+        w.make("Head", lowsphere(c, (r * 0.3, r * 0.3, r * 0.28), 6, 4), "hair_brown")
+    for c in ((0, hy, z + r * 1.0), (r * 0.35, hy - r * 0.3, z + r * 0.92), (-r * 0.35, hy + r * 0.3, z + r * 0.92)):
+        w.make("Head", lowsphere(c, (r * 0.32, r * 0.32, r * 0.25), 6, 4), "hair_brown")
+
+    w.start("LongHair")          # cheveux longs jusqu'aux épaules, raie au milieu
+    w.make("Head", half_sphere((0, hy + 0.03, z + r * 0.12), (r * 0.92, r * 1.04, r * 0.96)), "hair_brown")
+    # Masse arrondie derrière la tête, qui tombe jusqu'aux épaules, et deux mèches qui encadrent le visage
+    w.make("Head", lowsphere((0, hy + r * 0.38, z - r * 0.55), (r * 0.95, r * 0.62, r * 1.05), 8, 6), "hair_brown")
+    for sx in (-1, 1):
+        w.make("Head", limb((sx * r * 0.8, hy - r * 0.35, z + r * 0.35), (sx * r * 0.85, hy - r * 0.15, z - r * 1.15),
+                            r * 0.2, r * 0.26, r * 0.16, sides=6), "hair_brown")
+
+    w.start("Bun")               # chignon haut sur le crâne
+    w.make("Head", half_sphere((0, hy + 0.03, z + r * 0.12), (r * 0.9, r * 1.03, r * 0.95)), "hair_brown")
+    w.make("Head", lowsphere((0, hy + r * 0.15, z + r * 1.12), (r * 0.42, r * 0.42, r * 0.35), 8, 6), "hair_brown")
+    w.make("Head", ring((0, hy + r * 0.15, z + r * 0.92), r * 0.3, 0.05, 0.08, 8), "red")
+
+    w.start("Bob")               # carré court arrondi, frange droite
+    w.make("Head", half_sphere((0, hy + 0.03, z + r * 0.1), (r * 0.95, r * 1.06, r * 1.0)), "hair_brown")
+    for sx in (-1, 1):
+        w.make("Head", lowsphere((sx * r * 0.78, hy + r * 0.1, z - r * 0.3), (r * 0.3, r * 0.75, r * 0.6), 6, 5), "hair_brown")
+    w.make("Head", lowsphere((0, hy + r * 0.55, z - r * 0.25), (r * 0.8, r * 0.4, r * 0.65), 8, 5), "hair_brown")
+    w.make("Head", block((0, hy - r * 0.86, z + r * 0.55), (r * 1.3, r * 0.18, r * 0.3)), "hair_brown")
 
     w.start("Pompadour")         # un mètre de banane noire gominée
     w.make("Head", half_sphere((0, hy + 0.03, z + r * 0.2), (r * 0.89, r * 1.02, r * 0.82)), "hair_black")
@@ -479,7 +526,7 @@ def merge_item(stage, item, parts, mat, col):
 atlas = paint_style_atlas()
 manifest = {}
 all_objs = []
-for i, stage in enumerate(ORDER):
+for i, stage in enumerate(BODY_KEYS):
     g = geometry(stage)
     builder = Builder("Style_" + stage, atlas)
     w = Wardrobe(builder)
@@ -489,7 +536,7 @@ for i, stage in enumerate(ORDER):
     build_beards(w, g)
     build_faces(w, g)
     build_accessories(w, g)
-    sk = SKELETONS[stage]["parts"]
+    sk = SKELETONS[BASE[stage]]["parts"]
     manifest[stage] = {}
     for item, parts in w.items.items():
         pieces = merge_item(stage, item, parts, builder.mat, builder.col)
@@ -500,20 +547,21 @@ for i, stage in enumerate(ORDER):
             zs = [v.co.z for v in obj.data.vertices]
             c = ((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2, (min(zs) + max(zs)) / 2)
             roblox = (-c[0], c[2], c[1])
-            pc = sk[part]["center"]
+            pc = sk[part.split("_")[0]]["center"]
             manifest[stage][item][part] = [round(roblox[k] - pc[k], 3) for k in range(3)]
-            obj.location.x = i * 7
+            obj.location.x = (i // 2) * 7
+            obj.location.y = (i % 2) * 7
             all_objs.append(obj)
     print(f"{stage}: {len(w.items)} objets, {sum(len(p) for p in manifest[stage].values())} pièces, {builder.tris()} triangles")
 
 # Textures (style + une par corps), à côté du FBX pour que Studio les trouve
-for image_name, file_name in [("Style_Atlas", "MogLife_Style.png")] + [(f"Body{s}_Atlas", f"Body_{s}.png") for s in ORDER]:
+for image_name, file_name in [("Style_Atlas", "MogLife_Style.png")] + [(f"Body{s}_Atlas", f"Body_{s}.png") for s in BODY_KEYS]:
     img = bpy.data.images.get(image_name)
     img.filepath_raw = os.path.join(STYLE_OUT, file_name)
     img.file_format = "PNG"
     img.save()
 # Les corps partent dans le même fichier
-for stage in ORDER:
+for stage in BODY_KEYS:
     all_objs += [o for o in bpy.data.collections["Body_" + stage].objects if o.type == "MESH"]
 
 # Export (positions remises à zéro)
@@ -542,11 +590,12 @@ print(f"{len(all_objs)} pièces exportées dans {fbx}")
 lines = [
     "-- Fichier généré par tools/blender/build_style.py : ne pas modifier à la main.",
     "-- Pièces de chaque objet de style, par stade : partie du squelette -> décalage (studs) du centre de la pièce",
-    "-- par rapport au centre de cette partie, au repos. Modèle : ReplicatedStorage.Style.<Stade>__<Objet>__<Partie>.",
+    "-- par rapport au centre de cette partie, au repos. Modèle : ReplicatedStorage.Style.<Corps>__<Objet>__<Pièce>.",
+    "-- Pièce = <Partie R15>[_<Teinte>] : _Hair prend la couleur de cheveux du joueur, _Skin sa couleur de peau.",
     "",
     "return {",
 ]
-for stage in ORDER:
+for stage in BODY_KEYS:
     lines.append(f"\t{stage} = {{")
     for item in sorted(manifest[stage]):
         lines.append(f"\t\t{item} = {{")

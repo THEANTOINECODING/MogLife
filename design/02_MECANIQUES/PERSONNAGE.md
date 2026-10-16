@@ -9,7 +9,24 @@ Chaque joueur incarne **un bro cartoon propre au jeu**, pas son avatar Roblox. R
 - Tous les corps partagent le **même squelette** (rig compatible R15) : les animations, habits et coupes fonctionnent sur tous les stades.
 - Taille plafonnée : le plus gros corps ne cache pas l'écran des autres et passe les portes.
 - La taille ne donne aucun avantage en Mog-off.
-- Au premier lancement : choix simple de départ (couleur de peau, coupe de base, visage) ❓ liste exacte.
+- Le Normie est un « spaghetti » (D56) : torse, bras et jambes très fins, coudes et genoux noueux, short trop large.
+
+## Création de personnage (D55)
+
+Au premier lancement (avant l'intro de Muscle City), puis gratuitement au miroir de sa maison :
+
+| Réglage | Choix |
+|---|---|
+| Corps | Masculin ou féminin : 14 corps (7 stades × 2), même squelette, même progression absurde. Le corps féminin porte toujours un haut (brassière de sport aux stades torse nu), une seule poitrine, rien de suggestif. |
+| Peau | 10 teintes naturelles + 3 fantaisie (vert, bleu, lavande) |
+| Cheveux | Coupe classique + 4 coupes gratuites (boucles, longs, chignon, carré) + celles achetées chez le coiffeur ; 10 couleurs + 6 fantaisie (barbes et sourcils suivent) |
+| Yeux | 6 couleurs |
+| Visage | Expression : sûr de lui, nerveux, déterminé (bouche et sourcils) |
+| Tenue de départ | Couleur du haut et du short (12 couleurs) ; les habits de la boutique gardent les leurs |
+| Surnom | Prénom + titre choisis dans une liste (« Brad "Spaghetti" »), affiché au-dessus de la tête ; pas de texte libre |
+
+Boutons « Aléatoire » et « Voir mon futur moi » (aperçu en GOD MOGGER). **Pas de choix de taille** : elle vient du stade.
+Listes et couleurs : `src/shared/Config/Look.luau`.
 
 ## La boutique de style
 

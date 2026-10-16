@@ -20,12 +20,14 @@ class Atlas:
         self.cells = {}
 
     def put(self, x, y, rgb):
+        """rgb opaque, ou (r, g, b, a) : un pixel semi-transparent laisse voir la couleur de la pièce dans Roblox
+        (MeshPart.Color), ce qui permet de teinter la peau, les cheveux... d'une même texture (D55)."""
         if 0 <= x < self.size and 0 <= y < self.size:
             i = (y * self.size + x) * 4
-            self.px[i:i + 4] = [rgb[0], rgb[1], rgb[2], 1.0]
+            self.px[i:i + 4] = [rgb[0], rgb[1], rgb[2], rgb[3] if len(rgb) > 3 else 1.0]
 
     def cell(self, key, cx, cy, fn):
-        """Peint la case (cx, cy) avec fn(x, y) -> rgb, et l'enregistre sous `key`."""
+        """Peint la case (cx, cy) avec fn(x, y) -> rgb ou rgba, et l'enregistre sous `key`."""
         self.cells[key] = (cx, cy)
         for y in range(C):
             for x in range(C):
@@ -33,10 +35,12 @@ class Atlas:
 
     def material(self):
         img = bpy.data.images.get(f"{self.name}_Atlas")
-        if img and tuple(img.size) != (self.size, self.size):
+        # Image avec canal alpha (sinon les voiles teintables deviennent opaques à l'enregistrement)
+        if img and (tuple(img.size) != (self.size, self.size) or img.alpha_mode == "NONE" or img.depth < 32):
             bpy.data.images.remove(img)
             img = None
-        img = img or bpy.data.images.new(f"{self.name}_Atlas", self.size, self.size)
+        img = img or bpy.data.images.new(f"{self.name}_Atlas", self.size, self.size, alpha=True)
+        img.alpha_mode = "STRAIGHT"
         img.pixels = self.px
         img.pack()
         mat = bpy.data.materials.get(f"{self.name}_Mat") or bpy.data.materials.new(f"{self.name}_Mat")

@@ -11,6 +11,7 @@ local RunService = game:GetService("RunService")
 
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local StyleItems = require(ReplicatedStorage.Shared.Config.StyleItems)
+local Look = require(ReplicatedStorage.Shared.Look)
 local Outfit = require(ReplicatedStorage.Shared.Outfit)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Format = require(ReplicatedStorage.Shared.Format)
@@ -44,6 +45,7 @@ local category = "Hair"
 local cash = 0
 local owned: { [string]: boolean } = {}
 local equipped: { [string]: string } = {}
+local look: Look.LookData? = nil -- apparence du joueur (aperçu aux bonnes couleurs)
 local confirming: string? = nil
 
 local ShopController = {}
@@ -76,7 +78,7 @@ local function refreshPreview()
 		table.insert(items, itemId)
 	end
 	table.sort(items)
-	local key = `{stage and stage.id}:{table.concat(items, ",")}`
+	local key = `{stage and stage.id}:{table.concat(items, ",")}:{look and Look.Key(look) or ""}`
 	if key == previewKey then
 		return
 	end
@@ -85,7 +87,7 @@ local function refreshPreview()
 		previewModel:Destroy()
 		previewModel = nil
 	end
-	local model = stage and Outfit.Build(stage.id, items)
+	local model = stage and Outfit.Build(stage.id, items, { look = look })
 	if not model then
 		return
 	end
@@ -386,6 +388,8 @@ function ShopController.Start()
 	Remotes.StyleState.OnClientEvent:Connect(function(state)
 		owned = state.owned or {}
 		equipped = state.equipped or {}
+		look = state.look
+		previewKey = nil
 		if panel.Visible then
 			render()
 		end

@@ -1,5 +1,6 @@
 -- Objets de style (purement esthétiques). Voir design/02_MECANIQUES/PERSONNAGE.md.
 -- price = nil : objet exclusif, obtenu en battant un boss (bossId).
+-- starter = true : coupe de départ gratuite, possédée par tous et proposée dans le menu de création (D55).
 -- Visuels : sur les corps de stade, les VRAIS modèles (tools/blender/build_style.py, un par corps, pièces dans
 -- ReplicatedStorage.Style et décalages dans StylePieces.luau). Les `pieces` ci-dessous sont les blocs de secours,
 -- utilisés seulement sur un avatar Roblox sans corps de stade : attach (partie du corps), size et offset en
@@ -20,6 +21,7 @@ export type Item = {
 	category: "Hair" | "Beard" | "Face" | "Top" | "Bottom" | "Accessory",
 	price: number?,
 	bossId: string?,
+	starter: boolean?,
 	order: number, -- ordre d'affichage dans la boutique
 	pieces: { Piece },
 }
@@ -89,6 +91,36 @@ local StyleItems: { [string]: Item } = {
 		pieces = {
 			{ attach = "Head", size = V(1, 0.8, 1.5), offset = V(0, 0.75, -0.55), color = rgb(25, 25, 30) },
 		},
+	},
+
+	-- Coupes de départ (gratuites, menu de création et coiffeur)
+	Curly = {
+		category = "Hair",
+		price = 0,
+		starter = true,
+		order = 6,
+		pieces = { { attach = "Head", size = V(1.15, 0.5, 1.15), offset = V(0, 0.5, 0), color = rgb(110, 70, 40) } },
+	},
+	LongHair = {
+		category = "Hair",
+		price = 0,
+		starter = true,
+		order = 7,
+		pieces = { { attach = "Head", size = V(1.1, 1.3, 0.4), offset = V(0, 0, 0.5), color = rgb(110, 70, 40) } },
+	},
+	Bun = {
+		category = "Hair",
+		price = 0,
+		starter = true,
+		order = 8,
+		pieces = { { attach = "Head", size = V(0.5, 0.45, 0.5), offset = V(0, 0.8, 0.1), color = rgb(110, 70, 40) } },
+	},
+	Bob = {
+		category = "Hair",
+		price = 0,
+		starter = true,
+		order = 9,
+		pieces = { { attach = "Head", size = V(1.12, 0.9, 1.12), offset = V(0, 0.25, 0.05), color = rgb(110, 70, 40) } },
 	},
 
 	-- Barbes (chez le coiffeur)
