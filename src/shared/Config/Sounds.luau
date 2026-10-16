@@ -6,13 +6,11 @@
 
 return {
 	-- Musiques d'ambiance (D54) : chaque ambiance est une liste jouée à la suite (moins de lassitude qu'une seule
-	-- boucle). Tout est de la bibliothèque APM (sous licence Roblox), vérifié dans Studio (chargé, durée).
+	-- boucle). APM (sous licence Roblox) ou Distrokid (mis à disposition des créateurs), vérifié dans Studio.
 	Music = {
-		-- En ville : douce, acoustique, sans percussions fortes, pour donner envie de rester
+		-- En ville : choisie par le créateur le 16/10 parmi 31 propositions (D54)
 		Town = {
-			"rbxassetid://1839993539", -- « Happy Daze (b) » : folk acoustique léger et joyeux, 2 min 21
-			"rbxassetid://1835290380", -- « Welcome Sunshine (Main Underscore) » : version d'accompagnement, 1 min 55
-			"rbxassetid://9046672003", -- « Strumming Stroll (Alt. 2) » : guitare grattée, balade, 2 min
+			"rbxassetid://74451963781528", -- « Groove in Motion » (Distrokid) : groove léger, 4 min 53 en boucle
 		},
 		-- Pendant un exercice ou une aide : plus entraînante
 		Workout = {
