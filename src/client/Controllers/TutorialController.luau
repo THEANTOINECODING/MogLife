@@ -66,7 +66,7 @@ local function findTarget(target: Tutorial.Target): BasePart?
 end
 
 local function updateGuide()
-	local step = current and not current.done and Tutorial.Steps[current.step]
+	local step = if current and not current.done then Tutorial.Steps[current.step] else nil
 	local target = step and findTarget(step.target)
 	local visible = target ~= nil and startAttachment ~= nil and startAttachment.Parent ~= nil
 	if target then
@@ -77,7 +77,7 @@ local function updateGuide()
 end
 
 local function render()
-	local step = current and not current.done and Tutorial.Steps[current.step]
+	local step = if current and not current.done then Tutorial.Steps[current.step] else nil
 	card.Visible = step ~= nil
 	if step and current then
 		goalLabel.Text = Texts.Get(`Tutorial.{step.id}.Goal`)
