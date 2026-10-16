@@ -18,8 +18,9 @@ local Remotes = require(ReplicatedStorage.Shared.Remotes)
 
 local PLOT_TAG = "Plot"
 local MIRROR_NAME = "HomeMirror"
--- Miroir de la maison : sur le mur droit du salon, entre la lampe et la télé (repère du sol de la maison)
-local MIRROR_OFFSET = CFrame.new(12.55, 4.3, -8) * CFrame.Angles(0, math.pi / 2, 0)
+-- Miroir de la maison : contre le mur droit du salon (surface intérieure à 12,1 studs du centre), entre la lampe
+-- et la télé, sur une partie de mur sans fenêtre (repère du sol de la maison ; la vitre regarde vers le salon)
+local MIRROR_OFFSET = CFrame.new(11.95, 4.3, -8) * CFrame.Angles(0, math.pi / 2, 0)
 
 local DataService
 local StyleService
