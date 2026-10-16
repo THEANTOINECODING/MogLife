@@ -21,17 +21,26 @@ local SoundController = {}
 
 -- Joue un effet de Config/Sounds.luau (sans effet si son identifiant est vide).
 -- pitch : vitesse de lecture (1 = normal ; le son des répétitions monte avec le combo)
+local sfxGroup: SoundGroup? = nil
+
 function SoundController.Play(name: string, pitch: number?)
-	local id = Sounds.Sfx[name]
-	if typeof(id) ~= "string" or id == "" then
+	local entry = Sounds.Sfx[name]
+	if typeof(entry) ~= "table" or typeof(entry.id) ~= "string" or entry.id == "" then
 		return
 	end
 	local sound = cache[name]
 	if not sound then
+		if not sfxGroup then
+			sfxGroup = Instance.new("SoundGroup")
+			sfxGroup.Name = "Effects"
+			sfxGroup.Volume = Sounds.Volume.Sfx
+			sfxGroup.Parent = SoundService
+		end
 		sound = Instance.new("Sound")
 		sound.Name = name
-		sound.SoundId = id
-		sound.Volume = Sounds.Volume.Sfx
+		sound.SoundId = entry.id
+		sound.Volume = entry.volume or 0.5
+		sound.SoundGroup = sfxGroup
 		sound.Parent = SoundService
 		cache[name] = sound
 	end
@@ -44,26 +53,29 @@ end
 type Mood = "Town" | "Workout" | "Boss"
 
 local musicGroup: SoundGroup
-local tracks: { [string]: { sound: Sound, index: number, started: boolean } } = {}
+type Track = { id: string, volume: number }
+local tracks: { [string]: { sound: Sound, index: number, started: boolean, list: { Track } } } = {}
 local currentMood: string? = nil
 local fightActive = false
 local runActive = false
 local workoutUntil = 0
 local bossIntroUntil = 0
 
-local function moodVolume(mood: string): number
-	return Sounds.Volume.Music[mood] or 0.2
-end
-
-local function playlist(mood: string): { string }
+local function playlist(mood: string): { Track }
 	local list = Sounds.Music[mood]
 	local valid = {}
-	for _, id in if typeof(list) == "table" then list else {} do
-		if typeof(id) == "string" and id ~= "" then
-			table.insert(valid, id)
+	for _, item in if typeof(list) == "table" then list else {} do
+		if typeof(item) == "table" and typeof(item.id) == "string" and item.id ~= "" then
+			table.insert(valid, { id = item.id, volume = item.volume or 0.3 })
 		end
 	end
 	return valid
+end
+
+-- Volume du morceau en cours de cette ambiance (chaque morceau a le sien, voir Config/Sounds.luau)
+local function moodVolume(mood: string): number
+	local entry = tracks[mood]
+	return if entry then entry.list[entry.index].volume else 0
 end
 
 -- Le lecteur d'une ambiance (créé à la première utilisation) ; enchaîne les morceaux de sa liste
@@ -78,15 +90,18 @@ local function track(mood: string)
 	end
 	local sound = Instance.new("Sound")
 	sound.Name = `Music{mood}`
-	sound.SoundId = list[1]
+	sound.SoundId = list[1].id
 	sound.Looped = #list == 1
 	sound.Volume = 0
 	sound.SoundGroup = musicGroup
 	sound.Parent = SoundService
-	local entry = { sound = sound, index = 1, started = false }
+	local entry = { sound = sound, index = 1, started = false, list = list }
 	sound.Ended:Connect(function()
 		entry.index = entry.index % #list + 1
-		sound.SoundId = list[entry.index]
+		sound.SoundId = list[entry.index].id
+		if currentMood == mood then
+			sound.Volume = list[entry.index].volume
+		end
 		task.wait(Sounds.Timing.TrackGap)
 		if currentMood == mood then
 			sound:Play()
@@ -156,10 +171,10 @@ local duckToken = 0
 local function duck()
 	duckToken += 1
 	local token = duckToken
-	TweenService:Create(musicGroup, TweenInfo.new(0.25), { Volume = Sounds.Volume.Duck }):Play()
+	TweenService:Create(musicGroup, TweenInfo.new(0.4), { Volume = Sounds.Volume.Music * Sounds.Volume.Duck }):Play()
 	task.delay(Sounds.Timing.Duck, function()
 		if duckToken == token then
-			TweenService:Create(musicGroup, TweenInfo.new(1), { Volume = 1 }):Play()
+			TweenService:Create(musicGroup, TweenInfo.new(1.5), { Volume = Sounds.Volume.Music }):Play()
 		end
 	end)
 end
@@ -167,7 +182,7 @@ end
 local function startMusic()
 	musicGroup = Instance.new("SoundGroup")
 	musicGroup.Name = "Music"
-	musicGroup.Volume = 1
+	musicGroup.Volume = Sounds.Volume.Music
 	musicGroup.Parent = SoundService
 	updateMusic()
 	-- Les délais (fin de la grâce d'entraînement, fin de la présentation du boss) sont vérifiés en continu
@@ -207,8 +222,8 @@ function SoundController.Start()
 	Remotes.SeriesUpdate.OnClientEvent:Connect(function(update)
 		if update.state == "Rep" then
 			-- Chaque répétition réussie d'affilée joue un peu plus aigu : on entend la série monter (D52)
-			local streak = math.min(update.streak or 0, 15)
-			SoundController.Play(REP_SOUNDS[update.quality] or "RepGood", 1 + streak * 0.035)
+			local streak = math.min(update.streak or 0, Sounds.ComboPitch.MaxStreak)
+			SoundController.Play(REP_SOUNDS[update.quality] or "RepGood", 1 + streak * Sounds.ComboPitch.Step)
 		elseif update.state == "Ended" and update.reason == "Completed" and update.kind == "Exercise" then
 			SoundController.Play("SeriesEnd")
 		end

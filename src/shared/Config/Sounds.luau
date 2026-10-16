@@ -1,51 +1,56 @@
--- Sons du jeu (étape 7). Identifiants d'audio Roblox : "rbxassetid://123…".
--- Choisis par Claude le 16/10 (à la demande du créateur, qui signalera en jouant ceux qui ne conviennent pas) parmi
--- design/SONS_CANDIDATS.md : musique et jingles de la bibliothèque APM (sous licence Roblox), effets courts publics.
--- Tous vérifiés dans Studio (chargés, durée adaptée). Pour changer un son : coller ici son identifiant, Rojo synchronise.
--- Un identifiant vide = pas de son.
+-- Sons du jeu (étape 7, D54). Identifiants d'audio Roblox : "rbxassetid://123…". Un identifiant vide = pas de son.
+-- Musique : bibliothèque APM (sous licence Roblox) ou Distrokid (mis à disposition des créateurs).
+-- Volumes (16/10) : les fichiers n'ont pas du tout le même niveau (la musique de la ville est ~10 fois plus faible que
+-- celle des boss). Chaque son a donc son propre volume, calculé à partir de son niveau mesuré dans Studio
+-- (PlaybackLoudness moyen à volume 1, noté « niveau ») pour viser un niveau perçu cohérent :
+--   musique ~14 à 20 (fond), répétitions ~16 à 20 (très fréquentes, discrètes), récompenses ~30, jingles ~40.
+-- Pour remplacer un son : coller son identifiant, mesurer son niveau, et ajuster le volume (cible / niveau).
 
 return {
-	-- Musiques d'ambiance (D54) : chaque ambiance est une liste jouée à la suite (moins de lassitude qu'une seule
-	-- boucle). APM (sous licence Roblox) ou Distrokid (mis à disposition des créateurs), vérifié dans Studio.
+	-- Musiques d'ambiance : chaque ambiance est une liste jouée à la suite
 	Music = {
-		-- En ville : choisie par le créateur le 16/10 parmi 31 propositions (D54)
+		-- En ville : choisie par le créateur le 16/10 parmi 31 propositions
 		Town = {
-			"rbxassetid://74451963781528", -- « Groove in Motion » (Distrokid) : groove léger, 4 min 53 en boucle
+			{ id = "rbxassetid://74451963781528", volume = 0.7 }, -- « Groove in Motion », 4 min 53, niveau 20
 		},
-		-- Pendant un exercice ou une aide : plus entraînante
+		-- Pendant un exercice ou une aide : un peu plus entraînante, mais douce
 		Workout = {
-			"rbxassetid://1848365782", -- « Fighting Fit (b) », 2 min 51
+			{ id = "rbxassetid://1840383344", volume = 0.19 }, -- « Positive Attitude (A) » (APM), 2 min 56, niveau 92
 		},
-		-- Combat de boss (et sa présentation) : la plus intense
+		-- Combat de boss (et sa présentation) : la plus intense, sans être agressive
 		Boss = {
-			"rbxassetid://1837046455", -- « Fight For The Win », 2 min 48
-			"rbxassetid://1837049200", -- « Title Shot », 2 min 34
+			{ id = "rbxassetid://1837046455", volume = 0.1 }, -- « Fight For The Win » (APM), 2 min 48, niveau 207
+			{ id = "rbxassetid://1837049200", volume = 0.09 }, -- « Title Shot » (APM), 2 min 34, niveau 237
 		},
 	},
 	-- Effets
 	Sfx = {
-		RepPerfect = "rbxassetid://18448089848", -- répétition parfaite (le plus satisfaisant : « ding » + petit gonflement)
-		RepGood = "rbxassetid://140323850218372", -- répétition réussie
-		RepMiss = "rbxassetid://109359226723492", -- répétition ratée (comique : « pfff », couinement)
-		SeriesEnd = "rbxassetid://9045129322", -- fin de série
-		HelpDone = "rbxassetid://134810204798705", -- aide réussie (cha-ching du Cash)
-		Purchase = "rbxassetid://134810204798705", -- achat à la boutique
-		StageUp = "rbxassetid://9042409054", -- transformation : nouveau corps (fanfare courte)
-		BossVictory = "rbxassetid://1836860398", -- Mog-off gagné
-		BossDefeat = "rbxassetid://190705984", -- Mog-off perdu (trombone triste)
-		MentorSay = "rbxassetid://72467819049463", -- le mentor parle (petit « hmm » mystérieux)
+		-- Répétitions (à chaque mouvement) : discrètes
+		RepPerfect = { id = "rbxassetid://18448089848", volume = 0.9 }, -- « ding » + gonflement, niveau 21
+		RepGood = { id = "rbxassetid://140323850218372", volume = 0.65 }, -- répétition réussie, niveau 27
+		RepMiss = { id = "rbxassetid://109359226723492", volume = 0.3 }, -- ratée (« pfff » comique), niveau 50
+		MentorSay = { id = "rbxassetid://72467819049463", volume = 0.38 }, -- le mentor parle (« hmm »), niveau 40
+		-- Récompenses : nettes
+		SeriesEnd = { id = "rbxassetid://9045129322", volume = 0.23 }, -- fin de série, niveau 128
+		HelpDone = { id = "rbxassetid://134810204798705", volume = 0.8 }, -- aide réussie (cha-ching), niveau 36
+		Purchase = { id = "rbxassetid://134810204798705", volume = 0.8 }, -- achat à la boutique, niveau 36
+		-- Jingles : les plus forts (la musique baisse en même temps)
+		StageUp = { id = "rbxassetid://9042409054", volume = 0.29 }, -- transformation (fanfare), niveau 139
+		BossVictory = { id = "rbxassetid://1836860398", volume = 0.15 }, -- Mog-off gagné, niveau 274
+		BossDefeat = { id = "rbxassetid://190705984", volume = 0.22 }, -- Mog-off perdu (trombone triste), niveau 158
 	},
 	Volume = {
-		-- Volume de chaque ambiance (la ville reste discrète, les combats passent devant)
-		Music = { Town = 0.14, Workout = 0.28, Boss = 0.34 },
-		Sfx = 0.6,
-		Duck = 0.3, -- part du volume de la musique gardée pendant un jingle (transformation, victoire, défaite)
+		Music = 1, -- volume général de la musique (multiplie celui de chaque morceau)
+		Sfx = 1, -- volume général des effets
+		Duck = 0.4, -- part du volume de la musique gardée pendant un jingle
 	},
+	-- Les répétitions réussies d'affilée jouent un peu plus aigu (on entend le combo monter), sans devenir criardes
+	ComboPitch = { Step = 0.02, MaxStreak = 15 },
 	Timing = {
-		Fade = 1.2, -- secondes de fondu entre deux ambiances
+		Fade = 1.6, -- secondes de fondu entre deux ambiances
 		WorkoutGrace = 8, -- secondes de musique d'entraînement gardées après une série (enchaîner sans couper)
 		BossIntro = 5.5, -- secondes de musique de boss pendant sa présentation (cinématique)
-		Duck = 3, -- secondes pendant lesquelles la musique est baissée pour un jingle
-		TrackGap = 2, -- secondes de silence entre deux morceaux de la ville
+		Duck = 3.5, -- secondes pendant lesquelles la musique est baissée pour un jingle
+		TrackGap = 2, -- secondes de silence entre deux morceaux d'une même ambiance
 	},
 }
