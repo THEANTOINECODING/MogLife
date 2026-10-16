@@ -26,7 +26,11 @@ local TAB_OFF = Color3.fromRGB(70, 60, 95)
 local OPTION = Color3.fromRGB(55, 45, 80)
 local TABS = { "Body", "Skin", "Hair", "Eyes", "Face", "Outfit", "Name" }
 local CLOSE_UP = { Eyes = true, Face = true, Hair = true } -- onglets où l'aperçu cadre la tête
-local SPIN_SPEED = 0.35 -- radians par seconde quand on ne touche pas l'aperçu
+-- Aperçu au repos : il fait face au joueur et se balance doucement ; on peut le tourner en le faisant glisser,
+-- puis il revient de face au bout de quelques secondes
+local SWAY_ANGLE = 0.45 -- radians de part et d'autre de la face
+local SWAY_SPEED = 0.6
+local RETURN_DELAY = 3 -- secondes après un glissé avant de revenir de face
 
 local player = Players.LocalPlayer
 
@@ -55,8 +59,9 @@ local owned: { [string]: boolean } = {}
 local equipped: { [string]: string } = {}
 local previewModel: Model? = nil
 local previewKey: string? = nil
-local angle = math.pi
+local angle = 0 -- 0 = face au joueur (la caméra regarde vers +Z, le modèle vers -Z)
 local dragging = false
+local lastDrag = 0
 local spinConnection: RBXScriptConnection? = nil
 local hiddenGuis: { ScreenGui } = {}
 
@@ -370,6 +375,7 @@ local function open(request: { [string]: any })
 	tab = "Body"
 	lastTab = nil
 	future = false
+	angle = 0
 	titleLabel.Text = Texts.Get(if mode == "Edit" then "Creator.EditTitle" else "Creator.Title")
 	doneButton.Text = Texts.Get(if mode == "Edit" then "Creator.Save" else "Creator.Done")
 	cancelButton.Visible = mode == "Edit"
@@ -380,8 +386,11 @@ local function open(request: { [string]: any })
 	MinigameController.SetGameplayLocked(true)
 	if not spinConnection then
 		spinConnection = RunService.RenderStepped:Connect(function(dt)
-			if not dragging then
-				angle += dt * SPIN_SPEED
+			if not dragging and os.clock() - lastDrag > RETURN_DELAY then
+				-- Revient doucement de face (par le chemin le plus court), en se balançant
+				local target = math.sin(os.clock() * SWAY_SPEED) * SWAY_ANGLE
+				local delta = (target - angle + math.pi) % (2 * math.pi) - math.pi
+				angle += delta * math.min(dt * 2.5, 1)
 			end
 			if previewModel then
 				previewModel:PivotTo(CFrame.Angles(0, angle, 0))
@@ -472,6 +481,7 @@ local function buildGui()
 		local kind = input.UserInputType
 		if kind == Enum.UserInputType.MouseMovement or kind == Enum.UserInputType.Touch then
 			angle += (input.Position.X - lastX) * 0.012
+			lastDrag = os.clock()
 			lastX = input.Position.X
 		end
 	end)

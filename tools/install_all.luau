@@ -68,6 +68,19 @@ if characters then
 		end
 	end
 	characters:Destroy()
+	-- Teintes (D55) : les zones semi-transparentes des textures doivent laisser voir la couleur de la pièce.
+	-- Une texture de MeshPart ignore la transparence ; une SurfaceAppearance en mode Overlay la respecte
+	-- (ColorMap n'est modifiable que depuis Studio : c'est fait ici, une fois, sur les modèles).
+	for _, name in { "Bodies", "Style" } do
+		for _, part in ReplicatedStorage[name]:GetChildren() do
+			if part:IsA("MeshPart") and part.TextureID ~= "" then
+				local appearance = Instance.new("SurfaceAppearance")
+				appearance.ColorMap = part.TextureID
+				appearance.AlphaMode = Enum.AlphaMode.Overlay
+				appearance.Parent = part
+			end
+		end
+	end
 	table.insert(report, `{bodies} pièces de corps, {styles} pièces de style`)
 end
 

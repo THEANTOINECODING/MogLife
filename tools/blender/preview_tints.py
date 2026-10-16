@@ -2,7 +2,8 @@
 Aperçu des teintes dans Blender (D55) : les zones teintables des textures sont semi-transparentes et ne prennent
 leur couleur que dans Roblox (MeshPart.Color). Pour juger le rendu dans Blender, preview_tints(objets, couleurs)
 donne à chaque pièce un matériau d'aperçu qui pose la texture sur la couleur de son groupe (comme Roblox).
-restore_tints(objets) remet le matériau d'origine AVANT l'export (l'export FBX ne doit voir que la texture).
+restore_tints(objets) remet le matériau d'origine AVANT l'export (l'export FBX ne doit voir que la texture) ;
+les scripts de construction recréent de toute façon les pièces à chaque lancement.
 À charger avec exec ; aucun effet sur les fichiers exportés.
 """
 import bpy
@@ -54,17 +55,20 @@ def _preview_material(base, tint, rgb):
 
 
 def preview_tints(objs, colors=None):
+    """Le matériau d'aperçu est posé sur l'OBJET (lien « OBJECT »), jamais sur le maillage : les copies
+    d'aperçu partagent leur maillage avec les vraies pièces, qui doivent garder leur matériau pour l'export."""
     colors = dict(PREVIEW, **(colors or {}))
     for o in objs:
-        if o.type != "MESH" or not o.data.materials:
+        if o.type != "MESH" or not o.data.materials or o.data.materials[0] is None:
             continue
-        o["base_material"] = o.data.materials[0].name.split("__Preview")[0]
-        base = bpy.data.materials[o["base_material"]]
+        base = o.data.materials[0]
         tint = tint_of(o.name)
-        o.data.materials[0] = _preview_material(base, tint, colors[tint]) if tint else base
+        slot = o.material_slots[0]
+        slot.link = "OBJECT"
+        slot.material = _preview_material(base, tint, colors[tint]) if tint else base
 
 
 def restore_tints(objs):
     for o in objs:
-        if o.type == "MESH" and "base_material" in o.keys():
-            o.data.materials[0] = bpy.data.materials[o["base_material"]]
+        if o.type == "MESH" and o.material_slots:
+            o.material_slots[0].link = "DATA"

@@ -45,6 +45,10 @@ local function place(template: Instance?, cframe: CFrame, parent: Instance, whit
 	end
 	if whiten and clone:IsA("MeshPart") then
 		clone.TextureID = ""
+		local appearance = clone:FindFirstChildOfClass("SurfaceAppearance")
+		if appearance then
+			appearance:Destroy()
+		end
 		clone.Color = MANNEQUIN_COLOR
 		clone.Material = Enum.Material.SmoothPlastic
 	end
