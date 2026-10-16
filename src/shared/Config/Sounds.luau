@@ -2,47 +2,48 @@
 -- Musique : bibliothèque APM (sous licence Roblox) ou Distrokid (mis à disposition des créateurs).
 -- Volumes (16/10) : les fichiers n'ont pas du tout le même niveau (la musique de la ville est ~10 fois plus faible que
 -- celle des boss). Chaque son a donc son propre volume, calculé à partir de son niveau mesuré dans Studio
--- (PlaybackLoudness moyen à volume 1, noté « niveau ») pour viser un niveau perçu cohérent :
---   musique ~14 à 20 (fond), répétitions ~16 à 20 (très fréquentes, discrètes), récompenses ~30, jingles ~40.
--- Pour remplacer un son : coller son identifiant, mesurer son niveau, et ajuster le volume (cible / niveau).
+-- (PlaybackLoudness à volume 1 : « moy » = moyenne, « crête » = maximum ; volume = cible / niveau).
+-- Musiques réglées sur leur moyenne (~14 à 16, en fond). Effets réglés sur leur crête, car un son court s'entend
+-- surtout à son pic : répétitions ~20 (à chaque mouvement), mentor ~18, récompenses ~38, jingles ~42.
+-- (Le créateur trouvait les jingles de boss et les sons de combat trop forts avec un réglage sur la moyenne.)
 
 return {
 	-- Musiques d'ambiance : chaque ambiance est une liste jouée à la suite
 	Music = {
 		-- En ville : choisie par le créateur le 16/10 parmi 31 propositions
 		Town = {
-			{ id = "rbxassetid://74451963781528", volume = 0.7 }, -- « Groove in Motion », 4 min 53, niveau 20
+			{ id = "rbxassetid://74451963781528", volume = 0.7 }, -- « Groove in Motion », 4 min 53, moy 20, crête 36
 		},
 		-- Pendant un exercice ou une aide : un peu plus entraînante, mais douce
 		Workout = {
-			{ id = "rbxassetid://1840383344", volume = 0.19 }, -- « Positive Attitude (A) » (APM), 2 min 56, niveau 92
+			{ id = "rbxassetid://1840383344", volume = 0.16 }, -- « Positive Attitude (A) » (APM), 2 min 56, moy 92, crête 233
 		},
 		-- Combat de boss (et sa présentation) : la plus intense, sans être agressive
 		Boss = {
-			{ id = "rbxassetid://1837046455", volume = 0.1 }, -- « Fight For The Win » (APM), 2 min 48, niveau 207
-			{ id = "rbxassetid://1837049200", volume = 0.09 }, -- « Title Shot » (APM), 2 min 34, niveau 237
+			{ id = "rbxassetid://1837046455", volume = 0.075 }, -- « Fight For The Win » (APM), 2 min 48, moy 207, crête 373
+			{ id = "rbxassetid://1837049200", volume = 0.065 }, -- « Title Shot » (APM), 2 min 34, moy 237, crête 502
 		},
 	},
 	-- Effets
 	Sfx = {
 		-- Répétitions (à chaque mouvement) : discrètes
-		RepPerfect = { id = "rbxassetid://18448089848", volume = 0.9 }, -- « ding » + gonflement, niveau 21
-		RepGood = { id = "rbxassetid://140323850218372", volume = 0.65 }, -- répétition réussie, niveau 27
-		RepMiss = { id = "rbxassetid://109359226723492", volume = 0.3 }, -- ratée (« pfff » comique), niveau 50
-		MentorSay = { id = "rbxassetid://72467819049463", volume = 0.38 }, -- le mentor parle (« hmm »), niveau 40
+		RepPerfect = { id = "rbxassetid://18448089848", volume = 0.4 }, -- « ding » + gonflement, crête 55
+		RepGood = { id = "rbxassetid://140323850218372", volume = 0.34 }, -- répétition réussie, crête 64
+		RepMiss = { id = "rbxassetid://109359226723492", volume = 0.14 }, -- ratée (« pfff » comique), crête 145
+		MentorSay = { id = "rbxassetid://72467819049463", volume = 0.34 }, -- le mentor parle (« hmm »), crête 53
 		-- Récompenses : nettes
-		SeriesEnd = { id = "rbxassetid://9045129322", volume = 0.23 }, -- fin de série, niveau 128
-		HelpDone = { id = "rbxassetid://134810204798705", volume = 0.8 }, -- aide réussie (cha-ching), niveau 36
-		Purchase = { id = "rbxassetid://134810204798705", volume = 0.8 }, -- achat à la boutique, niveau 36
+		SeriesEnd = { id = "rbxassetid://9045129322", volume = 0.11 }, -- fin de série, crête 336
+		HelpDone = { id = "rbxassetid://134810204798705", volume = 0.3 }, -- aide réussie (cha-ching), crête 125
+		Purchase = { id = "rbxassetid://134810204798705", volume = 0.3 }, -- achat à la boutique, crête 125
 		-- Jingles : les plus forts (la musique baisse en même temps)
-		StageUp = { id = "rbxassetid://9042409054", volume = 0.29 }, -- transformation (fanfare), niveau 139
-		BossVictory = { id = "rbxassetid://1836860398", volume = 0.15 }, -- Mog-off gagné, niveau 274
-		BossDefeat = { id = "rbxassetid://190705984", volume = 0.22 }, -- Mog-off perdu (trombone triste), niveau 158
+		StageUp = { id = "rbxassetid://9042409054", volume = 0.2 }, -- transformation (fanfare), crête 218
+		BossVictory = { id = "rbxassetid://1836860398", volume = 0.078 }, -- Mog-off gagné, crête 542
+		BossDefeat = { id = "rbxassetid://190705984", volume = 0.1 }, -- Mog-off perdu (trombone triste), crête 402
 	},
 	Volume = {
 		Music = 1, -- volume général de la musique (multiplie celui de chaque morceau)
 		Sfx = 1, -- volume général des effets
-		Duck = 0.4, -- part du volume de la musique gardée pendant un jingle
+		Duck = 0.35, -- part du volume de la musique gardée pendant un jingle
 	},
 	-- Les répétitions réussies d'affilée jouent un peu plus aigu (on entend le combo monter), sans devenir criardes
 	ComboPitch = { Step = 0.02, MaxStreak = 15 },
