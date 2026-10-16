@@ -6,7 +6,6 @@ Test de la vision : l'idée tient-elle dans les trois briques (mini-jeux, conten
 ## Multijoueur (après le MVP)
 
 - **Duels de Mog entre joueurs** : Mog-off à chances égales sur une estrade, invitations consenties, récompenses plafonnées par paire de joueurs. Règles détaillées dans `archive/v3_exploits/02_MECANIQUES/MOG.md`. Réutilise directement le Mog-off des boss.
-- **Spotter** : un ami t'assiste pendant une série et vous gagnez tous les deux un petit bonus.
 - **Aides géantes coopératives** : un objet énorme à déplacer à plusieurs (réutilise un mini-jeu, scores additionnés).
 - **Galères du jour** : une aide spéciale apparaît sur le serveur pour tout le monde.
 
@@ -53,9 +52,9 @@ Déjà fait : plusieurs stations par exercice, bouton Maison et bus, icônes et 
 
 ## Liste d'améliorations du 16/10 (proposée par Claude, validée par le créateur)
 
-Mises en place d'abord : note de fin de série et records, objectif toujours visible, son qui monte avec le combo,
-sueur et gros plan pendant les séries, coups spéciaux et sorties des boss, émotes et pareur, événements de ville,
-animations (intro de la ville, présentation des boss, entrée en scène du défi). Le reste, pour plus tard :
+Mises en place (D51 à D58) : note de fin de série et records, objectif toujours visible, son qui monte avec le
+combo, sueur et gros plan pendant les séries, coups spéciaux et sorties des boss, émotes et pareur, événements de
+ville, animations (intro de la ville, présentation des boss, entrée en scène du défi). Le reste, pour plus tard :
 - Ralenti d'une demi-seconde au passage « ON FIRE » ; vibration du téléphone sur les Perfect ; veines pendant un gros pump.
 - Répétition dorée (x3) ; rythme qui accélère avec le combo ; maîtrise des exercices (bronze/argent/or) ; options d'accessibilité (fenêtres plus larges, daltoniens).
 - Boss en mode difficile (revanche renforcée, objet exclusif) ; indice du mentor avant un boss ; spectateurs et foule qui applaudit.

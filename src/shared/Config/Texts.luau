@@ -137,6 +137,24 @@ local STRINGS: { [string]: string } = {
 	["Boss.RoundLostShort"] = "ROUND LOST",
 	["Boss.MoggedStamp"] = "MOGGED!",
 	-- Ce que dit le boss pendant le combat
+	-- Événements de ville
+	["Event.GoldenDumbbells.Title"] = "GOLDEN DUMBBELLS!",
+	["Event.GoldenDumbbells.Desc"] = "Golden dumbbells fell all over town. Grab them first!",
+	["Event.GoldenDumbbells.Got"] = "Golden dumbbell! +{cash} Cash",
+	["Event.FreeShakes.Title"] = "FREE SHAKES!",
+	["Event.FreeShakes.Desc"] = "Free protein shakes at the plaza. One per bro!",
+	["Event.FreeShakes.Prompt"] = "Grab a shake",
+	["Event.FreeShakes.Got"] = "Free {boost}! Your gains just got juicier.",
+	["Event.FreeShakes.Already"] = "One shake per bro. Don't be greedy.",
+	["Event.FreeShakes.Stronger"] = "You already have a stronger boost going!",
+	["Event.RunawayPiano.Title"] = "RUNAWAY PIANO!",
+	["Event.RunawayPiano.Desc"] = "A piano is rolling across the plaza. Stop it!",
+	["Event.RunawayPiano.Prompt"] = "Stop the piano",
+	["Event.RunawayPiano.Got"] = "You stopped the piano with your bare hands! +{cash} Cash",
+	["Event.RunawayPiano.Stopped"] = "{name} stopped the runaway piano!",
+	["Event.Ended"] = "Event over!",
+	["Event.TimeLeft"] = "{seconds}s left",
+
 	-- Pareur
 	["Spot.Prompt"] = "Spot",
 	["Spot.Lifter"] = "{name} is spotting you! +{bonus}% Mog",

@@ -87,6 +87,24 @@ local function onBuy(player: Player, boostId: unknown)
 	})
 end
 
+-- Boost offert (événement de ville) : jamais à la place d'un boost plus fort déjà actif. Renvoie true si donné.
+function BoostService.Grant(player: Player, boostId: string): boolean
+	local boost = Boosts[boostId]
+	local data = DataService.Get(player)
+	if not boost or not data then
+		return false
+	end
+	local now = os.time()
+	local currentId, endsAt = BoostService.Active(player)
+	if currentId and currentId ~= boostId and Boosts[currentId].mogMultiplier >= boost.mogMultiplier then
+		return false
+	end
+	local start = if currentId == boostId then endsAt else now
+	data.Boost = { Id = boostId, EndsAt = math.min(start + boost.duration, now + Balance.BoostShop.MaxDuration) }
+	sendState(player)
+	return true
+end
+
 local function setupShop(shop: Instance)
 	if not shop:IsA("BasePart") then
 		return

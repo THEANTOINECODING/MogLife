@@ -13,6 +13,7 @@ local StyleService
 local HelpService
 local BossService
 local FurnitureService
+local EventService
 
 local DevService = {}
 
@@ -47,6 +48,11 @@ local commands = {
 		HelpService.StartHelp(player, helpId)
 		return true
 	end,
+	-- Lance un événement de ville tout de suite (kind : GoldenDumbbells, FreeShakes, RunawayPiano)
+	StartEvent = function(_player: Player, kind: string)
+		EventService.Stop()
+		return EventService.Run(kind)
+	end,
 	-- Simule le prompt d'un boss (affiche la fenêtre de défi)
 	ShowChallenge = function(player: Player, bossId: string)
 		BossService.ShowChallenge(player, bossId)
@@ -61,6 +67,7 @@ function DevService.Init(services)
 	HelpService = services.HelpService
 	BossService = services.BossService
 	FurnitureService = services.FurnitureService
+	EventService = services.EventService
 end
 
 function DevService.Start()
