@@ -28,6 +28,8 @@ Les habitants ont des problèmes absurdes. Les aider **rapporte du Cash**, la se
 
 Le Cash d'une aide augmente avec le stade requis. Les anciennes aides restent faisables mais rapportent moins que les récentes.
 
+**Le Cash dépend de la réussite (D57).** Chaque répétition rapporte selon sa qualité (Perfect 100 %, Good 60 %, raté 0, mode auto 30 %), multipliée par le combo et par la chaîne de Perfect (+10 % par Perfect d'affilée, jusqu'à +50 %). Une aide jouée entièrement à la main sans aucun raté est « sans faute » : ×1,25 sur le total. Tout raté = 0 Cash (l'habitant remercie quand même, poliment) et pas de délai d'attente. Le joueur qui arrête en cours de route garde ce qu'il a gagné. Ordres de grandeur : sans faute ≈ 1,75 × le Cash du tableau, partie moyenne ≈ 1 ×. Réglages : `Balance.Helps.Reward`.
+
 ## Exemples de répliques
 
 - Maman : « Ça fait trois ans que ce bocal me nargue. »

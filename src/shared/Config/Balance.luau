@@ -111,7 +111,18 @@ return {
 	-- Aides en ville (voir design/02_MECANIQUES/AIDES.md)
 	Helps = {
 		Reps = 12, -- environ 20 à 40 s selon le mini-jeu
-		Cooldown = 120, -- secondes avant de pouvoir refaire la même aide ❓
+		Cooldown = 120, -- secondes avant de pouvoir refaire la même aide ❓ (seulement si l'aide a rapporté)
+		-- Récompense selon la réussite (D57) : chaque répétition rapporte (cash de l'aide / répétitions)
+		-- x qualité x combo (Balance.Combo) x bonus de chaîne de Perfect. Tout raté = 0 Cash.
+		-- Ordres de grandeur (12 répétitions) : tout Perfect sans faute = environ 1,75 x le cash de l'aide ;
+		-- partie moyenne (Perfect, Good et quelques ratés) = environ 1 x ; tout raté = 0. ❓ à calibrer.
+		Reward = {
+			Scale = 0.8, -- ramène le gain moyen au cash de l'aide (le combo et les chaînes de Perfect le gonflent)
+			Quality = { Perfect = 1, Good = 0.6, Miss = 0, Auto = 0.3 },
+			PerfectChainStep = 0.1, -- +10 % par Perfect d'affilée...
+			PerfectChainMax = 0.5, -- ...jusqu'à +50 %
+			Flawless = 1.25, -- aide entière jouée à la main sans aucun raté : x1,25 sur le total
+		},
 	},
 
 	-- Maison et meubles

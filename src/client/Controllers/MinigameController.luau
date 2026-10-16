@@ -398,11 +398,15 @@ local function onRepConfirmed(update)
 	end
 	if update.gain then
 		current.gained += update.gain
-		pop(
-			current.gainLabel,
-			Texts.Get("Minigame.Gain", { value = Format.Gain(update.gain) }),
-			Color3.fromRGB(255, 255, 255)
-		)
+		-- Aides : du Cash (rien sur un raté) ; exercices : du Mog
+		local isCash = current.kind == "Help"
+		if not (isCash and update.gain <= 0) then
+			pop(
+				current.gainLabel,
+				Texts.Get(if isCash then "Minigame.GainCash" else "Minigame.Gain", { value = Format.Gain(update.gain) }),
+				if isCash then Color3.fromRGB(120, 230, 120) else Color3.fromRGB(255, 255, 255)
+			)
+		end
 	end
 end
 
@@ -413,8 +417,16 @@ local function onEnded(update)
 	if update.kind == "Boss" then
 		return
 	end
-	if update.kind == "Exercise" and update.reason == "Completed" then
-		endLabel.Text = Texts.Get("Series.Complete", { mog = Format.Gain(gained) })
+	if (update.kind == "Exercise" or update.kind == "Help") and update.reason == "Completed" then
+		if update.kind == "Help" then
+			-- Aide : le Cash vraiment versé (bonus sans faute compris), ou rien si tout est raté
+			local cash = update.cash or 0
+			endLabel.Text = if cash > 0
+				then Texts.Get(if update.flawless then "Help.CompleteFlawless" else "Help.Complete", { cash = cash })
+				else Texts.Get("Help.CompleteNothing")
+		else
+			endLabel.Text = Texts.Get("Series.Complete", { mog = Format.Gain(gained) })
+		end
 		local grade = update.grade
 		gradeLabel.Text = grade or "-"
 		gradeLabel.TextColor3 = GRADE_COLORS[grade] or GRADE_COLORS.C

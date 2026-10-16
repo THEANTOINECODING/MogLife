@@ -1,5 +1,8 @@
--- Aides en ville : habitants (tag "HelperSpot" + attribut HelpId), run de mini-jeu, Cash à la réussite,
--- délai avant de refaire la même aide. Voir design/02_MECANIQUES/AIDES.md.
+-- Aides en ville : habitants (tag "HelperSpot" + attribut HelpId), run de mini-jeu, délai avant de refaire la
+-- même aide. Voir design/02_MECANIQUES/AIDES.md.
+-- Le Cash dépend de la réussite (D57, Balance.Helps.Reward) : chaque répétition rapporte selon sa qualité, le combo
+-- et la chaîne de Perfect ; bonus « sans faute » ; tout raté = rien. Le total est versé à la fin (même si le joueur
+-- arrête en cours de route : il garde ce qu'il a gagné).
 
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
@@ -24,6 +27,9 @@ local TutorialService
 local readyAt: { [Player]: { [string]: number } } = {}
 -- Une même aide peut avoir plusieurs habitants (la maman de chaque maison)
 local anchors: { [string]: { BasePart } } = {}
+-- Aide en cours de chaque joueur : Cash gagné jusqu'ici, Perfect d'affilée, ratés
+type Progress = { earned: number, chain: number, misses: number, auto: number }
+local progress: { [Player]: Progress } = {}
 
 local HelpService = {}
 
@@ -31,31 +37,72 @@ local function sendState(player: Player)
 	Remotes.HelpState:FireClient(player, readyAt[player] or {})
 end
 
-local function complete(player: Player, helpId: string)
+local REWARD = Balance.Helps.Reward
+
+-- Cash d'une répétition (le client l'affiche ; le total est versé à la fin)
+local function repCash(player: Player, helpId: string, quality: string, combo: number): number
+	local state = progress[player]
+	if not state then
+		return 0
+	end
+	local help = Helps[helpId]
+	if quality == "Perfect" then
+		state.chain += 1
+	else
+		state.chain = 0
+	end
+	if quality == "Miss" then
+		state.misses += 1
+	elseif quality == "Auto" then
+		state.auto += 1
+	end
+	local base = help.cash / (help.reps or Balance.Helps.Reps) * REWARD.Scale
+	local chainBonus = 1 + math.min(math.max(state.chain - 1, 0) * REWARD.PerfectChainStep, REWARD.PerfectChainMax)
+	local gain = base * (REWARD.Quality[quality] or 0) * combo * chainBonus
+	state.earned += gain
+	return math.floor(gain * 10 + 0.5) / 10
+end
+
+-- Fin de l'aide : verse ce qui a été gagné, remercie (ou pas) l'habitant
+local function finish(player: Player, helpId: string, reason: string): { [string]: any }?
+	local state = progress[player]
+	progress[player] = nil
 	local help = Helps[helpId]
 	local data = DataService.Get(player)
-	if not data then
-		return
+	if not state or not data or reason == "Left" then
+		return nil
+	end
+	local completed = reason == "Completed"
+	local flawless = completed and state.misses == 0 and state.auto == 0
+	local total = state.earned * (if flawless then REWARD.Flawless else 1)
+	local cash = math.floor(total + 0.5)
+	local firstTime = completed and cash > 0 and data.HelpsDone[helpId] ~= true
+	-- Toute première réussite : au moins la récompense de découverte (le bocal de Maman, D48)
+	if firstTime and help.firstCash then
+		cash = math.max(cash, help.firstCash)
+	end
+	if cash > 0 then
+		StatsService.Add(player, "Cash", cash)
 	end
 
-	local firstTime = data.HelpsDone[helpId] ~= true
-	data.HelpsDone[helpId] = true
-	local cash = if firstTime and help.firstCash then help.firstCash else help.cash
-	StatsService.Add(player, "Cash", cash)
-
-	readyAt[player] = readyAt[player] or {}
-	readyAt[player][helpId] = workspace:GetServerTimeNow() + Balance.Helps.Cooldown
-	sendState(player)
-
-	Remotes.Notify:FireClient(player, {
-		key = if firstTime then "Help.Done" else "Help.Thanks",
-		args = {
-			npc = { key = `Npc.{help.npc}` },
-			line = { key = `HelpLine.{helpId}` },
-			cash = cash,
-		},
-	})
-	TutorialService.OnEvent(player, "HelpCompleted", helpId)
+	if completed then
+		if cash > 0 then
+			data.HelpsDone[helpId] = true
+			readyAt[player] = readyAt[player] or {}
+			readyAt[player][helpId] = workspace:GetServerTimeNow() + Balance.Helps.Cooldown
+			sendState(player)
+		end
+		Remotes.Notify:FireClient(player, {
+			key = if cash == 0 then "Help.Failed" elseif firstTime then "Help.Done" else "Help.Thanks",
+			args = {
+				npc = { key = `Npc.{help.npc}` },
+				line = { key = `HelpLine.{helpId}` },
+				cash = cash,
+			},
+		})
+		TutorialService.OnEvent(player, "HelpCompleted", helpId)
+	end
+	return { cash = cash, flawless = flawless }
 end
 
 local function startHelp(player: Player, helpId: string)
@@ -95,7 +142,8 @@ local function startHelp(player: Player, helpId: string)
 		return
 	end
 
-	MinigameService.StartRun(player, {
+	progress[player] = { earned = 0, chain = 0, misses = 0, auto = 0 }
+	local started = MinigameService.StartRun(player, {
 		kind = "Help",
 		id = helpId,
 		minigame = help.minigame,
@@ -104,12 +152,16 @@ local function startHelp(player: Player, helpId: string)
 		anchor = anchor,
 		autoAllowed = true,
 		titleKey = `Help.{helpId}`,
+		onRep = function(p, quality, combo)
+			return repCash(p, helpId, quality, combo)
+		end,
 		onEnd = function(p, reason)
-			if reason == "Completed" then
-				complete(p, helpId)
-			end
+			return finish(p, helpId, reason)
 		end,
 	})
+	if not started then
+		progress[player] = nil
+	end
 end
 
 local function setupSpot(spot: Instance)
@@ -162,6 +214,7 @@ function HelpService.Start()
 	Remotes.RequestStats.OnServerEvent:Connect(sendState)
 	Players.PlayerRemoving:Connect(function(player)
 		readyAt[player] = nil
+		progress[player] = nil
 	end)
 end
 
