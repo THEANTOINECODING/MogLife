@@ -150,6 +150,7 @@ return {
 		MogOffLossCap = { 20, 50, 120, 250, 500, 1_000 },
 		PauseBetweenRounds = 3, -- secondes entre deux manches (annonce de la manche suivante)
 		IntroTime = 6, -- secondes de présentation avant la 1re manche (écran VS ~2,5 s, puis 3-2-1-MOG!)
+		MeetDistance = 24, -- studs : la première fois qu'on s'approche d'un boss, il est présenté (cinématique)
 	},
 
 	-- Boutique de boosts (camion à shakes, distributeur)

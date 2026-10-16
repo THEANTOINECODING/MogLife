@@ -4,6 +4,7 @@ Format : date — décision — raison. La plus récente en haut.
 
 ## 2026-10-16 (améliorations validées par le créateur)
 
+- **D53 — Cinématiques aux moments clés** (demande du créateur) : bandes noires, plans de caméra, légendes, bouton « Skip » ; le reste de l'interface est masqué pendant la scène. (1) Intro de Muscle City à la première arrivée (survol de la ville puis descente au garage), le tutoriel démarre après. (2) Présentation de chaque boss à la première approche (« A WILD BOSS APPEARS », son stade, sa réplique), une seule fois par joueur. (3) Entrée en scène à chaque défi : tour de caméra en contre-plongée, le boss se gonfle, puis caméra de duel.
 - **D52 — Objectif toujours visible et ressenti des séries** : carte « Next goal » (boss prêt, exercice jamais essayé, sinon meilleur exercice) ; son des répétitions qui monte avec le combo ; sueur qui coule de plus en plus fort ; gros plan de caméra sur son personnage pendant une série ou une aide.
 - **D51 — Note de fin de série (S/A/B/C, étoiles) et record par exercice** : précision moyenne des répétitions jouées à la main (Perfect 100, Good 70, Miss 20), pas de note si la série est surtout en auto. Records sauvegardés.
 

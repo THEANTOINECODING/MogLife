@@ -424,10 +424,44 @@ function BossService.Init(services)
 	TutorialService = services.TutorialService
 end
 
+-- Première rencontre avec chaque boss : présentation en cinématique (D53), une seule fois par joueur
+local function checkMeetings()
+	for _, player in Players:GetPlayers() do
+		local data = DataService.Get(player)
+		if not data or fights[player] or MinigameService.IsBusy(player) then
+			continue
+		end
+		for bossId, list in spots do
+			local key = `Meet.{bossId}`
+			if data.Tips[key] then
+				continue
+			end
+			-- Un boss déjà battu n'a pas besoin d'être présenté
+			if data.BossesBeaten[bossId] then
+				data.Tips[key] = true
+				continue
+			end
+			for _, spot in list do
+				if MinigameService.IsNear(player, spot, BOSS.MeetDistance) then
+					data.Tips[key] = true
+					Remotes.Cutscene:FireClient(player, { kind = "Boss", bossId = bossId, spot = spot })
+					break
+				end
+			end
+		end
+	end
+end
+
 function BossService.Start()
 	for _, spot in CollectionService:GetTagged(SPOT_TAG) do
 		setupSpot(spot)
 	end
+	task.spawn(function()
+		while true do
+			task.wait(0.5)
+			checkMeetings()
+		end
+	end)
 	CollectionService:GetInstanceAddedSignal(SPOT_TAG):Connect(setupSpot)
 	Remotes.ChallengeBoss.OnServerEvent:Connect(onChallenge)
 	Players.PlayerRemoving:Connect(endFight)

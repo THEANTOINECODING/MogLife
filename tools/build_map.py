@@ -899,7 +899,7 @@ def gym():
     for i, lx in enumerate((-24, 0, 24)):
         for j, lz in enumerate((14, 34)):
             c.append(P(F, f"GymLamp{i}{j}", (lx, 19.4, lz), (10, 0.4, 1.4), (255, 244, 214), "Neon",
-                       children=[light(brightness=1.3, range_=40)]))
+                       children=[light(brightness=0.6, range_=40)]))
     c.append(P(F, "SignBar", (0, 25, 6), (26, 1.2, 1.2), (180, 180, 186), "Metal", shape="Cylinder"))
     for k, dx in enumerate((-13, 13)):
         c.append(P(F, f"SignPlate{k}", (dx, 25, 6), (2, 9, 9), (40, 40, 44), "Metal", shape="Cylinder"))

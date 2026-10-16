@@ -16,6 +16,10 @@ local Remotes = require(ReplicatedStorage.Shared.Remotes)
 
 local DataService
 
+local INTRO_TIMEOUT = 25 -- secondes : on lance le tutoriel même si le client n'a pas signalé la fin de l'intro
+
+local waitingIntro: { [Player]: boolean } = {}
+
 local TutorialService = {}
 
 local function say(player: Player, key: string, args: { [string]: any }?)
@@ -146,14 +150,32 @@ local function onPlayerLoaded(player: Player)
 	end
 	if data.Tutorial.Done then
 		send(player)
-	else
-		-- Laisse le temps au client d'afficher le jeu avant la première réplique
-		task.delay(3, function()
+		return
+	end
+	-- Nouveau joueur : intro de Muscle City d'abord (une seule fois), puis le mentor lance le tutoriel quand elle
+	-- est finie ou passée (ou au bout de INTRO_TIMEOUT si le client ne répond pas)
+	if not data.Tips.Intro then
+		data.Tips.Intro = true
+		waitingIntro[player] = true
+		task.delay(2, function()
 			if player.Parent then
+				Remotes.Cutscene:FireClient(player, { kind = "Intro" })
+			end
+		end)
+		task.delay(INTRO_TIMEOUT, function()
+			if waitingIntro[player] and player.Parent then
+				waitingIntro[player] = nil
 				announce(player)
 			end
 		end)
+		return
 	end
+	-- Laisse le temps au client d'afficher le jeu avant la première réplique
+	task.delay(3, function()
+		if player.Parent then
+			announce(player)
+		end
+	end)
 end
 
 function TutorialService.Init(services)
@@ -163,6 +185,15 @@ end
 function TutorialService.Start()
 	DataService.PlayerLoaded:Connect(onPlayerLoaded)
 	Remotes.TutorialAction.OnServerEvent:Connect(onAction)
+	Remotes.CutsceneDone.OnServerEvent:Connect(function(player, kind)
+		if kind == "Intro" and waitingIntro[player] then
+			waitingIntro[player] = nil
+			announce(player)
+		end
+	end)
+	Players.PlayerRemoving:Connect(function(player)
+		waitingIntro[player] = nil
+	end)
 	Remotes.RequestStats.OnServerEvent:Connect(send)
 	for _, player in Players:GetPlayers() do
 		if DataService.Get(player) then

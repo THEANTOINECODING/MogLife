@@ -25,6 +25,7 @@ local player = Players.LocalPlayer
 
 local UIController
 local MinigameController
+local CutsceneController
 
 local gui: ScreenGui
 local panel: Frame
@@ -316,8 +317,40 @@ local function onBossUpdate(update)
 		meter.Visible = true
 		setMeter(0, 0)
 		renderPips()
-		startDuelCamera(update.bossId)
 		intro(update.bossId, update.intro or 4)
+		-- Entrée en scène (D53) : la caméra tourne autour du boss en contre-plongée, il se gonfle, puis on passe au
+		-- duel. Elle tient dans le temps de présentation du serveur ; la passer ne fait qu'avancer la caméra de duel.
+		local model = bossModel(update.bossId)
+		if model then
+			local base, size, front = CutsceneController.Measure(model)
+			local face = base + Vector3.new(0, size * 0.75, 0)
+			local radius = size * 1.3 + 4
+			local function around(angle: number, height: number): CFrame
+				local offset = CFrame.fromAxisAngle(Vector3.new(0, 1, 0), angle):VectorToWorldSpace(front) * radius
+				return CFrame.lookAt(face + offset + Vector3.new(0, height, 0), face)
+			end
+			CutsceneController.Play({
+				{
+					from = around(math.rad(-50), -size * 0.35),
+					to = around(math.rad(40), size * 0.05),
+					duration = 2.2,
+					onStart = function()
+						local scale = model:GetScale()
+						model:ScaleTo(scale * 1.2)
+						task.wait(0.6)
+						if model.Parent then
+							model:ScaleTo(scale)
+						end
+					end,
+				},
+			}, function()
+				if fight and fight.bossId == update.bossId then
+					startDuelCamera(update.bossId)
+				end
+			end, true)
+		else
+			startDuelCamera(update.bossId)
+		end
 	elseif update.state == "RoundStart" then
 		setMeter(0, 0)
 		if update.round > 1 then
@@ -574,6 +607,7 @@ end
 function BossController.Init(controllers)
 	UIController = controllers.UIController
 	MinigameController = controllers.MinigameController
+	CutsceneController = controllers.CutsceneController
 end
 
 function BossController.Start()
