@@ -38,6 +38,7 @@ local MinigameController
 
 local gui: ScreenGui
 local titleLabel: TextLabel
+local hintLabel: TextLabel
 local viewport: ViewportFrame
 local world: WorldModel
 local camera: Camera
@@ -377,6 +378,7 @@ local function open(request: { [string]: any })
 	future = false
 	angle = 0
 	titleLabel.Text = Texts.Get(if mode == "Edit" then "Creator.EditTitle" else "Creator.Title")
+	hintLabel.Visible = mode == "Create"
 	doneButton.Text = Texts.Get(if mode == "Edit" then "Creator.Save" else "Creator.Done")
 	cancelButton.Visible = mode == "Edit"
 	if not gui.Enabled then
@@ -419,9 +421,18 @@ local function buildGui()
 
 	titleLabel = Ui.label({
 		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.fromScale(0.5, 0.025),
-		Size = UDim2.fromScale(0.6, 0.075),
+		Position = UDim2.fromScale(0.5, 0.02),
+		Size = UDim2.fromScale(0.6, 0.065),
 		TextColor3 = GOLD,
+		Parent = gui,
+	})
+	hintLabel = Ui.label({
+		AnchorPoint = Vector2.new(0.5, 0),
+		Position = UDim2.fromScale(0.5, 0.083),
+		Size = UDim2.fromScale(0.6, 0.03),
+		Font = Enum.Font.GothamMedium,
+		TextColor3 = Color3.fromRGB(205, 200, 225),
+		Text = Texts.Get("Creator.MirrorHint"),
 		Parent = gui,
 	})
 
@@ -435,8 +446,8 @@ local function buildGui()
 		Position = UDim2.fromScale(0.03, 0.03),
 		Size = UDim2.fromScale(0.94, 0.8),
 		BackgroundTransparency = 1,
-		Ambient = Color3.fromRGB(150, 150, 160),
-		LightColor = Color3.fromRGB(255, 245, 230),
+		Ambient = Color3.fromRGB(185, 182, 195),
+		LightColor = Color3.fromRGB(255, 248, 235),
 		LightDirection = Vector3.new(-0.4, -1, 0.6),
 		Parent = previewCard,
 	})

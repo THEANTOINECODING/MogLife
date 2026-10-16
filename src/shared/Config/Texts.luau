@@ -423,6 +423,7 @@ local STRINGS: { [string]: string } = {
 	-- Menu de création de personnage (D55)
 	["Creator.Title"] = "Create your character",
 	["Creator.EditTitle"] = "Change your look",
+	["Creator.MirrorHint"] = "You can change all of this later, for free, at the mirror in your house.",
 	["Creator.Tab.Body"] = "Body",
 	["Creator.Tab.Skin"] = "Skin",
 	["Creator.Tab.Hair"] = "Hair",
