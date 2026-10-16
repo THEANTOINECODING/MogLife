@@ -135,7 +135,7 @@ return {
 		MogOffLossPercent = 0.05,
 		MogOffLossCap = { 20, 50, 120, 250, 500, 1_000 },
 		PauseBetweenRounds = 3, -- secondes entre deux manches (annonce de la manche suivante)
-		IntroTime = 4.5, -- secondes de présentation avant la 1re manche (écran VS, compte à rebours)
+		IntroTime = 6, -- secondes de présentation avant la 1re manche (écran VS ~2,5 s, puis 3-2-1-MOG!)
 	},
 
 	-- Boutique de boosts (camion à shakes, distributeur)

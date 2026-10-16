@@ -176,7 +176,7 @@ local function openRun(update)
 		Ui.label({
 			Name = "Title",
 			AnchorPoint = Vector2.new(0.5, 0),
-			Position = UDim2.new(0.5, 0, 0, 120),
+			Position = UDim2.new(0.5, 0, 0, 156),
 			Size = UDim2.fromOffset(520, 40),
 			TextColor3 = Color3.fromRGB(255, 220, 120),
 			Text = UIController.Resolve({ key = update.titleKey, args = update.titleArgs }),
@@ -186,7 +186,7 @@ local function openRun(update)
 	local counter = Ui.label({
 		Name = "Counter",
 		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 0, 162),
+		Position = UDim2.new(0.5, 0, 0, 198),
 		Size = UDim2.fromOffset(200, 40),
 		Text = Texts.Get("Minigame.RepCounter", { reps = 0, total = update.total }),
 		Parent = root,
@@ -204,7 +204,7 @@ local function openRun(update)
 	local comboLabel = Ui.label({
 		Name = "Combo",
 		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 0, 204),
+		Position = UDim2.new(0.5, 0, 0, 240),
 		Size = UDim2.fromOffset(320, 34),
 		TextColor3 = COMBO_COLORS[1],
 		Text = "",
