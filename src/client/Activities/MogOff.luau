@@ -82,11 +82,11 @@ local function pose(index: number, rig, m, root: CFrame)
 	return targets, poles, waist
 end
 
-function MogOff:Pose(p: number, shake: number, _u: number, time: number, count: number)
-	local rig, m = self.ctx.rig, self.ctx.measures
+-- Prend la pose n° index (1 à 5) avec l'amplitude p (0 = bras détendus, 1 = pose complète). Utilisé aussi par
+-- les émotes (Activities/Emote.luau).
+function MogOff.Strike(rig, m, index: number, p: number, shake: number, time: number)
 	local root = rig.root.CFrame
 	local tremble = shake * math.sin(time * 36) * 0.08
-	local index = (math.max(count, 1) - 1) % 5 + 1
 	local targets, poles, waist = pose(index, rig, m, root)
 	-- Le buste se cambre dans la pose (une ratée tremble)
 	rig:Set("Waist", CFrame.new():Lerp(waist, p) * CFrame.Angles(0.1 * p + tremble, 0, 0))
@@ -97,6 +97,13 @@ function MogOff:Pose(p: number, shake: number, _u: number, time: number, count: 
 		local target = relaxed:Lerp(targets[sx], p) + root.UpVector * tremble
 		rig:Reach(if sx < 0 then "LeftArm" else "RightArm", target, poles[sx])
 	end
+end
+
+MogOff.PoseCount = 5
+
+function MogOff:Pose(p: number, shake: number, _u: number, time: number, count: number)
+	local index = (math.max(count, 1) - 1) % MogOff.PoseCount + 1
+	MogOff.Strike(self.ctx.rig, self.ctx.measures, index, p, shake, time)
 	-- Le boss se gonfle à chacune de ses répétitions, puis reprend sa taille
 	if self.boss and self.boss.Parent then
 		local t = (os.clock() - self.pulseAt) / PULSE_TIME

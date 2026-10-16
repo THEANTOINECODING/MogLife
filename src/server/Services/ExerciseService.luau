@@ -17,6 +17,7 @@ local MinigameService
 local BodyService
 local TutorialService
 local BoostService
+local SocialService
 
 local ExerciseService = {}
 
@@ -63,7 +64,7 @@ local function startSeries(player: Player, exerciseId: unknown)
 		return
 	end
 
-	MinigameService.StartRun(player, {
+	local started = MinigameService.StartRun(player, {
 		kind = "Exercise",
 		id = exerciseId,
 		minigame = exercise.minigame,
@@ -73,14 +74,20 @@ local function startSeries(player: Player, exerciseId: unknown)
 		autoAllowed = true,
 		titleKey = `Exercise.{exerciseId}`,
 		onRep = function(p, quality, combo)
-			-- Gain = base × qualité × combo × boost en cours
-			local gain = exercise.mogPerRep * Balance.Quality[quality] * combo * BoostService.Multiplier(p)
+			-- Gain = base × qualité × combo × boost en cours × pareur (+20 % si un autre joueur le pare)
+			local gain = exercise.mogPerRep
+				* Balance.Quality[quality]
+				* combo
+				* BoostService.Multiplier(p)
+				* SocialService.LifterMultiplier(p)
 			StatsService.Add(p, "Mog", gain)
+			SocialService.OnLifterRep(p, gain, quality)
 			-- Les muscles travaillés gonflent (D40)
 			BodyService.Pump(p, exerciseId, quality)
 			return gain
 		end,
 		onEnd = function(p, reason, _reps, score)
+			SocialService.EndSeries(p)
 			if reason ~= "Completed" then
 				return nil
 			end
@@ -99,6 +106,10 @@ local function startSeries(player: Player, exerciseId: unknown)
 			return { record = if newRecord then score else best, newRecord = newRecord }
 		end,
 	})
+	-- Les autres joueurs peuvent le parer pendant la série
+	if started then
+		SocialService.OfferSpot(player)
+	end
 end
 
 local function setupStation(station: Instance)
@@ -130,6 +141,7 @@ function ExerciseService.Init(services)
 	BodyService = services.BodyService
 	TutorialService = services.TutorialService
 	BoostService = services.BoostService
+	SocialService = services.SocialService
 end
 
 function ExerciseService.Start()

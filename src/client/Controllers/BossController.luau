@@ -4,6 +4,8 @@
 -- - jauge de Mog en direct (toi contre lui) et pastilles des manches gagnées / perdues ;
 -- - annonce de chaque manche (« plus rapide »), le boss qui nargue ou panique selon le score ;
 -- - « MOGGED! » géant à la victoire, avant les récompenses. Défaite automatique : le joueur s'envole.
+-- - coup spécial du boss pendant la dernière manche (BossSpecials : il gêne la lecture, jamais les règles) ;
+-- - sortie du boss : vaincu, il s'envole en tournoyant (la caméra le suit) ; vainqueur, il se gonfle et nargue.
 -- Le serveur décide de tout (BossService) ; ici, on met en scène.
 
 local Players = game:GetService("Players")
@@ -14,6 +16,7 @@ local CollectionService = game:GetService("CollectionService")
 
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local BossSpecials = require(script.Parent.Parent.BossSpecials)
 local Ui = require(script.Parent.Parent.Ui)
 
 local GOLD = Color3.fromRGB(255, 210, 60)
@@ -50,6 +53,8 @@ local pips: { Frame } = {}
 local pipsFrame: Frame
 local fight: { bossId: string, rounds: number, results: { boolean } }? = nil
 local cameraConnection: RBXScriptConnection? = nil
+local specialGui: ScreenGui
+local stopSpecial: (() -> ())? = nil
 
 local BossController = {}
 
@@ -238,11 +243,66 @@ local function renderPips()
 	end
 end
 
+local function endSpecial()
+	if stopSpecial then
+		stopSpecial()
+		stopSpecial = nil
+	end
+end
+
+-- Dernière manche : le boss sort son coup spécial dès que le mini-jeu est à l'écran
+local function startSpecial(bossId: string)
+	endSpecial()
+	if not BossSpecials.Has(bossId) then
+		return
+	end
+	task.spawn(function()
+		local waited = 0
+		while waited < 3 and not MinigameController.CurrentRoot() do
+			waited += task.wait(0.05)
+		end
+		local root = MinigameController.CurrentRoot()
+		if root and fight and fight.bossId == bossId then
+			stopSpecial = BossSpecials.Start(bossId, root, specialGui)
+		end
+	end)
+end
+
 local function endPresentation()
+	endSpecial()
 	fight = nil
 	meter.Visible = false
 	vsBand.Visible = false
 	stopDuelCamera()
+end
+
+-- Sortie du boss : le serveur l'anime pour tout le monde (vaincu, il s'envole en tournoyant ; vainqueur, il se
+-- gonfle). Ici, la caméra filme la scène : elle suit le boss qui s'envole, ou s'approche de lui qui nargue.
+local function filmBoss(bossId: string, duration: number, onDone: (() -> ())?)
+	local model = bossModel(bossId)
+	local camera = workspace.CurrentCamera
+	if not model or not camera then
+		return
+	end
+	local base, size = CutsceneController.Measure(model)
+	local eye = camera.CFrame.Position
+	camera.CameraType = Enum.CameraType.Scriptable
+	local t0 = os.clock()
+	local connection
+	connection = RunService.RenderStepped:Connect(function()
+		local t = (os.clock() - t0) / duration
+		local target = if model.Parent then model:GetPivot().Position else base
+		-- Recul progressif pour garder le boss dans le cadre pendant qu'il monte
+		local wanted = CFrame.lookAt(eye + Vector3.new(0, size * 0.2 * math.min(t, 1), 0), target)
+		camera.CFrame = camera.CFrame:Lerp(wanted, 0.25)
+		if t >= 1 then
+			connection:Disconnect()
+			camera.CameraType = Enum.CameraType.Custom
+			if onDone then
+				onDone()
+			end
+		end
+	end)
 end
 
 local function onBossPrompt(info)
@@ -361,10 +421,25 @@ local function onBossUpdate(update)
 				Texts.Get("Boss.RoundFaster"),
 				0.9
 			)
+			-- Dernière manche : annonce du coup spécial, puis l'effet pendant toute la manche
+			if final and BossSpecials.Has(update.bossId) then
+				task.delay(1.3, function()
+					if fight and fight.bossId == update.bossId then
+						shout(
+							Texts.Get(`BossSpecial.{update.bossId}`),
+							RED,
+							Texts.Get(`BossSpecial.{update.bossId}.Hint`),
+							1
+						)
+					end
+				end)
+				startSpecial(update.bossId)
+			end
 		end
 	elseif update.state == "Live" then
 		setMeter(update.score, update.opponent)
 	elseif update.state == "RoundResult" then
+		endSpecial()
 		if fight then
 			fight.results[update.round] = update.won
 			renderPips()
@@ -385,6 +460,9 @@ local function onBossUpdate(update)
 	elseif update.state == "Victory" then
 		endPresentation()
 		shout(Texts.Get("Boss.MoggedStamp"), GOLD, bossName(update.bossId), 1.2)
+		filmBoss(update.bossId, 1.5, function()
+			shout("✦", GOLD, nil, 0.3)
+		end)
 		local name = bossName(update.bossId)
 		task.delay(1.6, function()
 			if update.firstWin then
@@ -411,6 +489,7 @@ local function onBossUpdate(update)
 		end)
 	elseif update.state == "Defeat" then
 		endPresentation()
+		filmBoss(update.bossId, 1.4)
 		bossSays(update.bossId, `BossTaunt.{update.bossId}.Ahead`)
 		local text = if (update.cash or 0) > 0
 			then Texts.Get("Boss.Defeat", { boss = bossName(update.bossId), cash = update.cash })
@@ -430,6 +509,14 @@ end
 
 local function buildGui()
 	gui = Ui.create("ScreenGui", { Name = "Boss", ResetOnSpawn = false, DisplayOrder = 5 })
+	-- Effets des coups spéciaux : au-dessus du mini-jeu, sous les annonces du combat
+	specialGui = Ui.create("ScreenGui", {
+		Name = "BossSpecial",
+		ResetOnSpawn = false,
+		DisplayOrder = 3,
+		IgnoreGuiInset = true,
+		Parent = player:WaitForChild("PlayerGui"),
+	})
 
 	-- Bandeau VS de la présentation
 	vsBand = Ui.create("Frame", {

@@ -137,6 +137,34 @@ local STRINGS: { [string]: string } = {
 	["Boss.RoundLostShort"] = "ROUND LOST",
 	["Boss.MoggedStamp"] = "MOGGED!",
 	-- Ce que dit le boss pendant le combat
+	-- Pareur
+	["Spot.Prompt"] = "Spot",
+	["Spot.Lifter"] = "{name} is spotting you! +{bonus}% Mog",
+	["Spot.Spotter"] = "You're spotting {name}. Hype them up!",
+	["Spot.Ended"] = "Spotting done: +{mog} Mog for helping {name}",
+
+	-- Émotes
+	["Emote.Button"] = "Flex",
+	["Emote.Pose1"] = "Double Biceps",
+	["Emote.Pose2"] = "Most Muscular",
+	["Emote.Pose3"] = "Lat Spread",
+	["Emote.Pose4"] = "Side Chest",
+	["Emote.Pose5"] = "Victory",
+
+	-- Coups spéciaux de la dernière manche
+	["BossSpecial.Kevin"] = "NAP TIME!",
+	["BossSpecial.Kevin.Hint"] = "Kevin's laziness is contagious... stay awake!",
+	["BossSpecial.Brayan"] = "BRONZE GLARE!",
+	["BossSpecial.Brayan.Hint"] = "Don't look directly at the tan!",
+	["BossSpecial.CoachTurbo"] = "WHISTLE DRILL!",
+	["BossSpecial.CoachTurbo.Hint"] = "Coach will not stop whistling.",
+	["BossSpecial.NoLegs"] = "WOBBLE!",
+	["BossSpecial.NoLegs.Hint"] = "No legs, no balance, no mercy!",
+	["BossSpecial.BlockKing"] = "ROYAL WIND!",
+	["BossSpecial.BlockKing.Hint"] = "The royal fan blows everything away!",
+	["BossSpecial.PumpGod"] = "MEGA PUMP!",
+	["BossSpecial.PumpGod.Hint"] = "Even the screen is pumping!",
+	["BossSpecial.Whistle"] = "TWEET!",
 	["BossTaunt.Kevin.Ahead"] = "See? Training is overrated. Nap time.",
 	["BossTaunt.Kevin.Behind"] = "Wait wait wait, I wasn't ready. Again!",
 	["BossTaunt.Brayan.Ahead"] = "You're blinded by my glow. It happens.",

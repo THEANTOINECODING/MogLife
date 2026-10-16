@@ -40,6 +40,21 @@ return {
 	-- Distance max (studs) entre le joueur et la station pendant une série
 	MaxStationDistance = 12,
 
+	-- Émotes : poses de culturisme (MogOff.Strike), visibles par tous
+	Emotes = {
+		Duration = 2.6, -- secondes de pose
+		Cooldown = 3, -- secondes minimum entre deux émotes
+		Count = 5, -- nombre de poses (doit suivre MogOff.PoseCount)
+	},
+
+	-- Pareur : un joueur en pare un autre pendant sa série d'exercice
+	Spot = {
+		Distance = 12, -- studs max entre le pareur et le pratiquant
+		LifterBonus = 0.2, -- +20 % de Mog pour le pratiquant paré
+		SpotterShare = 0.25, -- le pareur reçoit 25 % du Mog de chaque répétition
+		CheerPose = 1, -- pose d'encouragement du pareur (double biceps)
+	},
+
 	-- Création de personnage (D55)
 	Look = {
 		OpenDelay = 2, -- secondes après l'arrivée avant d'ouvrir le menu de création (le temps que l'interface charge)

@@ -10,7 +10,9 @@ local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local MogOff = require(script.Parent.Parent.Activities.MogOff)
 local Rig = require(script.Parent.Parent.Activities.Rig)
 
 local Activities = script.Parent.Parent.Activities
@@ -45,6 +47,9 @@ local addSweat: (Model) -> ParticleEmitter?
 local startCloseUp: (Model) -> ()
 local stopCloseUp: () -> ()
 local animators: { [Player]: Animator } = {}
+-- Émotes (poses de culturisme, hors activité) : vues par tout le monde
+type Emote = { character: Model, rig: Rig.Rig, measures: any, index: number, start: number }
+local emotes: { [Player]: Emote } = {}
 
 local ActivityController = {}
 
@@ -188,9 +193,39 @@ local function stop(player: Player)
 	end
 end
 
+local function stopEmote(player: Player)
+	local emote = emotes[player]
+	if emote then
+		emotes[player] = nil
+		emote.rig:Release()
+	end
+end
+
+-- Un joueur prend une pose (émote validée par le serveur) : montée, maintien, retour
+local function playEmote(player: Player, index: number)
+	if animators[player] then
+		return
+	end
+	stopEmote(player)
+	local character = player.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	local rig = character and Rig.new(character)
+	if not humanoid or not rig then
+		return
+	end
+	emotes[player] = {
+		character = character :: Model,
+		rig = rig,
+		measures = rig:Measure(humanoid),
+		index = index,
+		start = os.clock(),
+	}
+end
+
 local function start(update)
 	local player = update.player
 	stop(player)
+	stopEmote(player)
 	-- Exercices et aides : un module par activité ; combats de boss : le Mog-off (duel de poses), pour tous les boss
 	local module = Activities:FindFirstChild(if update.kind == "Boss" then "MogOff" else update.id)
 	local anchor = update.anchor
@@ -288,6 +323,20 @@ local function step()
 		animator.activity:Pose(p, shake, u, now, animator.count)
 		animator.rig:Apply()
 	end
+	local duration = Balance.Emotes.Duration
+	for player, emote in emotes do
+		local t = now - emote.start
+		if not emote.character.Parent or not emote.rig.root.Parent or t > duration then
+			stopEmote(player)
+			continue
+		end
+		-- 0,25 s pour prendre la pose, maintien, 0,35 s pour la relâcher
+		local p = math.clamp(math.min(t / 0.25, (duration - t) / 0.35), 0, 1)
+		p = p * p * (3 - 2 * p)
+		emote.rig:Clear()
+		MogOff.Strike(emote.rig, emote.measures, emote.index, p, 0, now)
+		emote.rig:Apply()
+	end
 end
 
 function ActivityController.Start()
@@ -308,7 +357,15 @@ function ActivityController.Start()
 			stop(update.player)
 		end
 	end)
-	Players.PlayerRemoving:Connect(stop)
+	Remotes.EmotePlay.OnClientEvent:Connect(function(who, index)
+		if typeof(who) == "Instance" and who:IsA("Player") and typeof(index) == "number" then
+			playEmote(who, index)
+		end
+	end)
+	Players.PlayerRemoving:Connect(function(player)
+		stop(player)
+		stopEmote(player)
+	end)
 	-- Après l'Animator de Roblox et avant la physique : la pose écrite gagne
 	RunService.PreSimulation:Connect(step)
 end

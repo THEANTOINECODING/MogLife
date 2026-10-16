@@ -18,6 +18,7 @@ local ORDER = {
 	"ObjectiveController",
 	"CutsceneController",
 	"CreatorController",
+	"EmoteController",
 }
 
 local controllers = {}

@@ -38,6 +38,8 @@ local NAMES = {
 	"CutsceneDone", -- client -> serveur : (kind: string) cinématique finie ou passée
 	"OpenCreator", -- serveur -> client : ({ mode: "Create" | "Edit", look, hair: string }) ouvrir le menu de création
 	"SetLook", -- client -> serveur : (look, hair: string) valider l'apparence choisie (le serveur vérifie tout)
+	"Emote", -- client -> serveur : (index: number) prendre une pose de culturisme
+	"EmotePlay", -- serveur -> tous : (player, index) ce joueur prend cette pose
 }
 
 local isServer = RunService:IsServer()
@@ -101,4 +103,6 @@ return remotes :: {
 	CutsceneDone: RemoteEvent,
 	OpenCreator: RemoteEvent,
 	SetLook: RemoteEvent,
+	Emote: RemoteEvent,
+	EmotePlay: RemoteEvent,
 }

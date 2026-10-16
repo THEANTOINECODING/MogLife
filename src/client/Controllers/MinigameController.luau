@@ -552,6 +552,11 @@ local function buildGui()
 	gui.Parent = player:WaitForChild("PlayerGui")
 end
 
+-- Cadre du mini-jeu en cours (nil hors run) : les coups spéciaux des boss le font bouger (BossSpecials)
+function MinigameController.CurrentRoot(): Frame?
+	return current and current.root
+end
+
 function MinigameController.Init(controllers)
 	UIController = controllers.UIController
 end
