@@ -65,6 +65,39 @@ ville, animations (intro de la ville, présentation des boss, entrée en scène 
 - Menu de réglages (volumes, effets réduits) ; mini-carte ; relecture du français ; vérification téléphone.
 - Mesures de jeu ; optimisation mobile (chargement progressif) ; revue anti-triche.
 
+## Idées pour rendre les mini-jeux plus satisfaisants (proposées par Claude le 17/10, à valider)
+
+Ressenti de chaque répétition :
+- **Arrêt sur image** de 60 ms sur un Perfect, et secousse d'écran qui grandit avec le combo.
+- **Gerbe d'étincelles** et éclaboussure de sueur sur un Perfect ; contour doré du mini-jeu à partir de 10 d'affilée.
+- **« Trop tôt ! / Trop tard ! »** sous un Good ou un raté, pour apprendre le bon moment.
+- **Accord musical** à chaque palier de combo, et « drop » de basse au passage ON FIRE.
+- **Vibration du téléphone** sur les Perfect.
+
+Rythme d'une série :
+- **Répétition dorée** au hasard (elle brille) : un Perfect dessus rapporte ×3.
+- **Mode FEVER** à 15 d'affilée : 5 secondes de fenêtres plus larges et de gains doublés, écran qui pulse.
+- **Coup final** : la dernière répétition se joue au ralenti, caméra en gros plan, gain bonus si Perfect.
+- **Motifs de rythme** qui changent tous les 5 répétitions (accélération, pause, double) pour casser la monotonie.
+- **Exercices payés selon la réussite** comme les aides (aujourd'hui un raté rapporte autant de Mog qu'une répétition
+  en auto) : raté à 50 %, à décider.
+
+Spécifique à chaque activité :
+- Pastèque (curl) qui se fend un peu plus à chaque Perfect et explose à la fin d'une série parfaite.
+- Pneu du livreur qui gonfle vraiment et éclate (comique) si on pompe trop.
+- Piano : les Perfect jouent les vraies notes d'une mélodie ; les ratés font des fausses notes.
+- Clous : le clou s'enfonce d'un coup sur un Perfect, se tord sur un raté.
+- Transats : la pile tangue physiquement, et s'écroule en fin de partie si elle est trop bancale.
+- Courses : les sacs s'empilent dans les bras du personnage au fil des réussites.
+
+Combats de boss :
+- **Contre** : un Perfect pile sur une répétition du boss fait « MOG BACK » (bonus de score, le boss recule).
+- Jauge de « rage » du boss qui annonce son coup spécial.
+
+Rejouabilité :
+- **Maîtrise** par exercice (bronze, argent, or selon le record) qui change l'apparence du matériel.
+- **Défi du jour** (« 20 curls Perfect d'affilée ») pour un petit bonus ; **classement** par exercice.
+
 ## Questions ouvertes
 
 - ~~Comment déformer légèrement le corps à l'intérieur d'un stade (os, formes) ?~~ → Mise à l'échelle des pièces de la coque (D40).
