@@ -5,9 +5,24 @@
 -- Un identifiant vide = pas de son.
 
 return {
-	-- Musique de fond par lieu (boucle). Town = la ville ; d'autres lieux viendront avec les zones (plage…).
+	-- Musiques d'ambiance (D54) : chaque ambiance est une liste jouée à la suite (moins de lassitude qu'une seule
+	-- boucle). Tout est de la bibliothèque APM (sous licence Roblox), vérifié dans Studio (chargé, durée).
 	Music = {
-		Town = "rbxassetid://9047861871", -- « Funky Comedy » (APM, sous licence), 2 min 43 en boucle
+		-- En ville : douce, acoustique, sans percussions fortes, pour donner envie de rester
+		Town = {
+			"rbxassetid://1839993539", -- « Happy Daze (b) » : folk acoustique léger et joyeux, 2 min 21
+			"rbxassetid://1835290380", -- « Welcome Sunshine (Main Underscore) » : version d'accompagnement, 1 min 55
+			"rbxassetid://9046672003", -- « Strumming Stroll (Alt. 2) » : guitare grattée, balade, 2 min
+		},
+		-- Pendant un exercice ou une aide : plus entraînante
+		Workout = {
+			"rbxassetid://1848365782", -- « Fighting Fit (b) », 2 min 51
+		},
+		-- Combat de boss (et sa présentation) : la plus intense
+		Boss = {
+			"rbxassetid://1837046455", -- « Fight For The Win », 2 min 48
+			"rbxassetid://1837049200", -- « Title Shot », 2 min 34
+		},
 	},
 	-- Effets
 	Sfx = {
@@ -23,7 +38,16 @@ return {
 		MentorSay = "rbxassetid://72467819049463", -- le mentor parle (petit « hmm » mystérieux)
 	},
 	Volume = {
-		Music = 0.25,
+		-- Volume de chaque ambiance (la ville reste discrète, les combats passent devant)
+		Music = { Town = 0.14, Workout = 0.28, Boss = 0.34 },
 		Sfx = 0.6,
+		Duck = 0.3, -- part du volume de la musique gardée pendant un jingle (transformation, victoire, défaite)
+	},
+	Timing = {
+		Fade = 1.2, -- secondes de fondu entre deux ambiances
+		WorkoutGrace = 8, -- secondes de musique d'entraînement gardées après une série (enchaîner sans couper)
+		BossIntro = 5.5, -- secondes de musique de boss pendant sa présentation (cinématique)
+		Duck = 3, -- secondes pendant lesquelles la musique est baissée pour un jingle
+		TrackGap = 2, -- secondes de silence entre deux morceaux de la ville
 	},
 }
