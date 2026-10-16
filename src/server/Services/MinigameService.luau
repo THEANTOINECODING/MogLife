@@ -25,14 +25,17 @@ export type RunSpec = {
 	-- Appelé pour chaque répétition validée ; renvoie le gain à afficher (ou nil).
 	-- combo : multiplicateur du combo en cours (Balance.Combo), à appliquer au gain si le run en profite
 	onRep: ((player: Player, quality: string, combo: number) -> number?)?,
-	-- Appelé à la fin du run, quelle qu'en soit la raison
-	onEnd: ((player: Player, reason: EndReason, reps: number) -> ())?,
+	-- Appelé à la fin du run, quelle qu'en soit la raison. score : précision (0-100) des répétitions jouées à la
+	-- main, nil si la série n'est pas notée. Peut renvoyer des infos à ajouter au message de fin (ex. record).
+	onEnd: ((player: Player, reason: EndReason, reps: number, score: number?) -> { [string]: any }?)?,
 }
 
 type Run = {
 	spec: RunSpec,
 	reps: number,
 	streak: number, -- répétitions réussies d'affilée (combo)
+	points: number, -- points de précision des répétitions jouées à la main (Balance.Grade)
+	manual: number, -- répétitions jouées à la main
 	startedAt: number,
 	lastRepAt: number,
 }
@@ -43,6 +46,16 @@ local MIN_GAP = 0.15
 local runs: { [Player]: Run } = {}
 
 local MinigameService = {}
+
+-- Lettre de la note (S, A, B, C) pour une précision de 0 à 100
+function MinigameService.Grade(score: number): string
+	for _, entry in Balance.Grade.Letters do
+		if score >= entry.min then
+			return entry.letter
+		end
+	end
+	return "C"
+end
 
 -- Multiplicateur du combo pour une série de `streak` répétitions réussies d'affilée
 function MinigameService.ComboMultiplier(streak: number): number
@@ -56,7 +69,7 @@ function MinigameService.ComboMultiplier(streak: number): number
 end
 
 -- Tout le monde voit l'activité se réaliser : le personnage fait la répétition que le serveur a validée
-local function broadcast(player: Player, spec: RunSpec, state: string, quality: string?)
+local function broadcast(player: Player, spec: RunSpec, state: string, quality: string?, streak: number?)
 	Remotes.Activity:FireAllClients({
 		player = player,
 		state = state,
@@ -65,6 +78,7 @@ local function broadcast(player: Player, spec: RunSpec, state: string, quality: 
 		anchor = spec.anchor,
 		interval = spec.interval,
 		quality = quality,
+		streak = streak,
 	})
 end
 
@@ -86,7 +100,7 @@ function MinigameService.StartRun(player: Player, spec: RunSpec): boolean
 	if runs[player] then
 		return false
 	end
-	runs[player] = { spec = spec, reps = 0, streak = 0, startedAt = os.clock(), lastRepAt = 0 }
+	runs[player] = { spec = spec, reps = 0, streak = 0, points = 0, manual = 0, startedAt = os.clock(), lastRepAt = 0 }
 	Remotes.SeriesUpdate:FireClient(player, {
 		state = "Started",
 		kind = spec.kind,
@@ -110,17 +124,26 @@ function MinigameService.EndRun(player: Player, reason: EndReason)
 	end
 	runs[player] = nil
 	broadcast(player, run.spec, "Ended")
+	-- Note : seulement si la série est finie et surtout jouée à la main
+	local score: number? = nil
+	if reason == "Completed" and run.manual > 0 and run.manual >= run.reps * Balance.Grade.MinManualShare then
+		score = math.floor(run.points / run.manual + 0.5)
+	end
+	local extra = if run.spec.onEnd then run.spec.onEnd(player, reason, run.reps, score) else nil
 	if reason ~= "Left" then
-		Remotes.SeriesUpdate:FireClient(player, {
+		local message = {
 			state = "Ended",
 			kind = run.spec.kind,
 			id = run.spec.id,
 			reason = reason,
 			reps = run.reps,
-		})
-	end
-	if run.spec.onEnd then
-		run.spec.onEnd(player, reason, run.reps)
+			score = score,
+			grade = if score then MinigameService.Grade(score) else nil,
+		}
+		for key, value in extra or {} do
+			message[key] = value
+		end
+		Remotes.SeriesUpdate:FireClient(player, message)
 	end
 end
 
@@ -155,6 +178,10 @@ local function onRep(player: Player, quality: unknown)
 
 	run.lastRepAt = now
 	run.reps += 1
+	if quality ~= "Auto" then
+		run.manual += 1
+		run.points += Balance.Grade.Points[quality] or 0
+	end
 	-- Combo : un raté (ou le mode auto) le remet à zéro
 	if quality == "Miss" or quality == "Auto" then
 		run.streak = 0
@@ -177,7 +204,7 @@ local function onRep(player: Player, quality: unknown)
 		streak = run.streak,
 		combo = combo,
 	})
-	broadcast(player, spec, "Rep", quality)
+	broadcast(player, spec, "Rep", quality, run.streak)
 	if run.reps >= spec.total then
 		MinigameService.EndRun(player, "Completed")
 	end

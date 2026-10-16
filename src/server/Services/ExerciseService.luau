@@ -80,10 +80,23 @@ local function startSeries(player: Player, exerciseId: unknown)
 			BodyService.Pump(p, exerciseId, quality)
 			return gain
 		end,
-		onEnd = function(p, reason)
-			if reason == "Completed" then
-				TutorialService.OnEvent(p, "SeriesCompleted", exerciseId)
+		onEnd = function(p, reason, _reps, score)
+			if reason ~= "Completed" then
+				return nil
 			end
+			TutorialService.OnEvent(p, "SeriesCompleted", exerciseId)
+			-- Record personnel de l'exercice (D51)
+			local playerData = DataService.Get(p)
+			if not score or not playerData then
+				return nil
+			end
+			local best = playerData.Records[exerciseId]
+			local newRecord = best == nil or score > best
+			if newRecord then
+				playerData.Records[exerciseId] = score
+				Remotes.Records:FireClient(p, playerData.Records)
+			end
+			return { record = if newRecord then score else best, newRecord = newRecord }
 		end,
 	})
 end
@@ -125,6 +138,15 @@ function ExerciseService.Start()
 	end
 	CollectionService:GetInstanceAddedSignal(STATION_TAG):Connect(setupStation)
 	Remotes.StartSeries.OnServerEvent:Connect(startSeries)
+	-- Records envoyés au client (objectif du HUD : exercices déjà essayés)
+	local function sendRecords(player: Player)
+		local data = DataService.Get(player)
+		if data then
+			Remotes.Records:FireClient(player, data.Records)
+		end
+	end
+	DataService.PlayerLoaded:Connect(sendRecords)
+	Remotes.RequestStats.OnServerEvent:Connect(sendRecords)
 end
 
 return ExerciseService

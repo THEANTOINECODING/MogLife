@@ -16,6 +16,7 @@ return {
 		FurniturePlaced = {}, -- emplacement de la maison -> meuble posé
 		Tutorial = { Step = 1, Done = false }, -- tutoriel des 5 premières minutes (TutorialService)
 		Boost = { Id = "", EndsAt = 0 }, -- boost temporaire en cours (BoostService), EndsAt en os.time()
+		Records = {}, -- meilleure note de série par exercice (0 à 100)
 		Tips = {}, -- conseils du mentor déjà donnés
 	},
 
@@ -34,6 +35,19 @@ return {
 			{ at = 5, multiplier = 1.2 },
 			{ at = 10, multiplier = 1.5 },
 			{ at = 15, multiplier = 2 }, -- « ON FIRE »
+		},
+	},
+
+	-- Note de fin de série (D51) : précision moyenne des répétitions jouées à la main (le mode auto ne compte pas ;
+	-- une série surtout en auto n'a pas de note). Lettre et étoiles selon le score.
+	Grade = {
+		Points = { Perfect = 100, Good = 70, Miss = 20 },
+		MinManualShare = 0.5, -- au moins la moitié des répétitions jouées à la main pour être noté
+		Letters = {
+			{ letter = "S", min = 95, stars = 3 },
+			{ letter = "A", min = 85, stars = 2 },
+			{ letter = "B", min = 70, stars = 1 },
+			{ letter = "C", min = 0, stars = 0 },
 		},
 	},
 

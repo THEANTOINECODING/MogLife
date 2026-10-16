@@ -2,6 +2,11 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-16 (améliorations validées par le créateur)
+
+- **D52 — Objectif toujours visible et ressenti des séries** : carte « Next goal » (boss prêt, exercice jamais essayé, sinon meilleur exercice) ; son des répétitions qui monte avec le combo ; sueur qui coule de plus en plus fort ; gros plan de caméra sur son personnage pendant une série ou une aide.
+- **D51 — Note de fin de série (S/A/B/C, étoiles) et record par exercice** : précision moyenne des répétitions jouées à la main (Perfect 100, Good 70, Miss 20), pas de note si la série est surtout en auto. Records sauvegardés.
+
 ## 2026-10-16 (décisions du créateur, étape 6 : le gameplay)
 
 - **D50 — Mog-off mis en scène** : écran VS avec la réplique du boss, compte à rebours, caméra de duel, jauge de Mog (toi contre lui) au lieu d'un texte, pastilles des manches, annonce de chaque manche (« plus rapide »), le boss qui nargue ou panique, « MOGGED! » à la victoire. Les règles du combat ne changent pas (D24).

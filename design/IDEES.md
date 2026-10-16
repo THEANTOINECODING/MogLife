@@ -51,6 +51,21 @@ Déjà fait : plusieurs stations par exercice, bouton Maison et bus, icônes et 
 - **Miniature 3D de chaque article** dans la liste de la boutique (en plus de l'essayage).
 - **Réglage du son** (musique / effets) dans un petit menu.
 
+## Liste d'améliorations du 16/10 (proposée par Claude, validée par le créateur)
+
+Mises en place d'abord : note de fin de série et records, objectif toujours visible, son qui monte avec le combo,
+sueur et gros plan pendant les séries, coups spéciaux et sorties des boss, émotes et pareur, événements de ville,
+animations (intro de la ville, présentation des boss, entrée en scène du défi). Le reste, pour plus tard :
+- Ralenti d'une demi-seconde au passage « ON FIRE » ; vibration du téléphone sur les Perfect ; veines pendant un gros pump.
+- Répétition dorée (x3) ; rythme qui accélère avec le combo ; maîtrise des exercices (bronze/argent/or) ; options d'accessibilité (fenêtres plus larges, daltoniens).
+- Boss en mode difficile (revanche renforcée, objet exclusif) ; indice du mentor avant un boss ; spectateurs et foule qui applaudit.
+- Paliers dans un stade (25/50/75 %) ; titres au-dessus de la tête ; succès Roblox ; livre de collection ; garage qui s'équipe à chaque stade.
+- Bonus de groupe à la salle en plein air ; classement des maisons.
+- Habitants qui se promènent, voitures qui roulent ; haltères dorés cachés ; histoires en 3 épisodes par habitant ; ambiance de nuit à la salle.
+- Variantes de couleur des vêtements ; tenues enregistrées ; pose de victoire au choix ; aura du God Mogger ; extérieur de maison ; lettres de Maman.
+- Menu de réglages (volumes, effets réduits) ; mini-carte ; relecture du français ; vérification téléphone.
+- Mesures de jeu ; optimisation mobile (chargement progressif) ; revue anti-triche.
+
 ## Questions ouvertes
 
 - ~~Comment déformer légèrement le corps à l'intérieur d'un stade (os, formes) ?~~ → Mise à l'échelle des pièces de la coque (D40).

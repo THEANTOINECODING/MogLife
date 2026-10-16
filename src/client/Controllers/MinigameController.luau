@@ -41,6 +41,19 @@ local savedMovement: { walkSpeed: number, jumpHeight: number, jumpPower: number 
 local gui: ScreenGui
 local endPanel: Frame
 local endLabel: TextLabel
+local gradeLabel: TextLabel
+local starsLabel: TextLabel
+local accuracyLabel: TextLabel
+local recordLabel: TextLabel
+
+-- Couleur de chaque note
+local GRADE_COLORS = {
+	S = Color3.fromRGB(255, 210, 60),
+	A = Color3.fromRGB(90, 220, 90),
+	B = Color3.fromRGB(110, 180, 255),
+	C = Color3.fromRGB(200, 200, 200),
+}
+local GRADE_STARS = { S = 3, A = 2, B = 1, C = 0 }
 local lastExerciseId: string? = nil
 local pendingContinue = false
 
@@ -402,7 +415,31 @@ local function onEnded(update)
 	end
 	if update.kind == "Exercise" and update.reason == "Completed" then
 		endLabel.Text = Texts.Get("Series.Complete", { mog = Format.Gain(gained) })
+		local grade = update.grade
+		gradeLabel.Text = grade or "-"
+		gradeLabel.TextColor3 = GRADE_COLORS[grade] or GRADE_COLORS.C
+		starsLabel.Text = string.rep("★", GRADE_STARS[grade] or 0) .. string.rep("☆", 3 - (GRADE_STARS[grade] or 0))
+		accuracyLabel.Text = if update.score
+			then Texts.Get("Series.Accuracy", { score = update.score })
+			else Texts.Get("Series.NoGrade")
+		if update.newRecord then
+			recordLabel.Text = Texts.Get("Series.NewRecord")
+			recordLabel.TextColor3 = GRADE_COLORS.S
+		elseif update.record then
+			recordLabel.Text = Texts.Get("Series.Record", { record = update.record })
+			recordLabel.TextColor3 = Color3.fromRGB(200, 200, 210)
+		else
+			recordLabel.Text = ""
+		end
 		endPanel.Visible = true
+		-- La note tombe avec un rebond
+		gradeLabel.Size = UDim2.fromOffset(170, 170)
+		TweenService:Create(gradeLabel, TweenInfo.new(0.45, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out), {
+			Size = UDim2.fromOffset(110, 110),
+		}):Play()
+		if update.newRecord then
+			punch(5)
+		end
 		return
 	end
 	if update.reason == "TooFar" then
@@ -418,16 +455,45 @@ local function buildGui()
 		Name = "EndPanel",
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(400, 190),
+		Size = UDim2.fromOffset(440, 260),
 		BackgroundColor3 = Color3.fromRGB(20, 20, 20),
 		BackgroundTransparency = 0.15,
 		Visible = false,
 		Parent = gui,
 	}, { Ui.corner(UDim.new(0, 16)) })
 
+	-- Note (S/A/B/C) à gauche, détails à droite
+	gradeLabel = Ui.label({
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromOffset(80, 82),
+		Size = UDim2.fromOffset(110, 110),
+		Text = "",
+		Parent = endPanel,
+	})
+	starsLabel = Ui.label({
+		AnchorPoint = Vector2.new(0.5, 0),
+		Position = UDim2.fromOffset(80, 138),
+		Size = UDim2.fromOffset(130, 30),
+		TextColor3 = Color3.fromRGB(255, 210, 60),
+		Parent = endPanel,
+	})
 	endLabel = Ui.label({
-		Position = UDim2.fromOffset(16, 16),
-		Size = UDim2.new(1, -32, 0, 70),
+		Position = UDim2.fromOffset(160, 18),
+		Size = UDim2.new(1, -176, 0, 50),
+		TextXAlignment = Enum.TextXAlignment.Left,
+		Parent = endPanel,
+	})
+	accuracyLabel = Ui.label({
+		Position = UDim2.fromOffset(160, 74),
+		Size = UDim2.new(1, -176, 0, 30),
+		TextXAlignment = Enum.TextXAlignment.Left,
+		TextColor3 = Color3.fromRGB(220, 220, 230),
+		Parent = endPanel,
+	})
+	recordLabel = Ui.label({
+		Position = UDim2.fromOffset(160, 110),
+		Size = UDim2.new(1, -176, 0, 30),
+		TextXAlignment = Enum.TextXAlignment.Left,
 		Parent = endPanel,
 	})
 

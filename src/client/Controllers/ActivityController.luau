@@ -6,6 +6,7 @@
 -- l'aide (Curl, OpenJar…). Pose(p, shake, u, time, count) : count = répétitions commencées (le clou s'enfonce…).
 
 local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
@@ -35,10 +36,14 @@ type Animator = {
 	interval: number,
 	reps: { Rep },
 	count: number, -- répétitions commencées depuis le début du run
+	sweat: ParticleEmitter?, -- sueur qui coule de plus en plus fort avec le combo (exercices et aides)
 	borrowed: { [BasePart]: { cframe: CFrame, transparency: number } },
 }
 
 local localPlayer = Players.LocalPlayer
+local addSweat: (Model) -> ParticleEmitter?
+local startCloseUp: (Model) -> ()
+local stopCloseUp: () -> ()
 local animators: { [Player]: Animator } = {}
 
 local ActivityController = {}
@@ -89,6 +94,73 @@ local function setBodyGroup(character: Model, group: string)
 	end
 end
 
+-- Gouttes de sueur qui perlent du front et tombent (une émission plus forte avec le combo)
+addSweat = function(character: Model): ParticleEmitter?
+	local head = character:FindFirstChild("Head")
+	if not head then
+		return nil
+	end
+	local sweat = Instance.new("ParticleEmitter")
+	sweat.Name = "Sweat"
+	sweat.Color = ColorSequence.new(Color3.fromRGB(170, 220, 255))
+	sweat.LightEmission = 0.3
+	sweat.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.1), NumberSequenceKeypoint.new(1, 1) })
+	sweat.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, 0.18), NumberSequenceKeypoint.new(1, 0.08) })
+	sweat.Lifetime = NumberRange.new(0.5, 0.9)
+	sweat.Speed = NumberRange.new(2, 4)
+	sweat.SpreadAngle = Vector2.new(60, 60)
+	sweat.Acceleration = Vector3.new(0, -30, 0)
+	sweat.Rate = 1.5
+	sweat.Parent = head
+	return sweat
+end
+
+-- Gros plan pendant sa propre série : la caméra regarde le personnage de face, un peu de côté, et le place dans la
+-- partie gauche de l'écran (le mini-jeu est à droite). Elle suit le corps (pompes, tractions, voiture poussée…).
+local closeUp: RBXScriptConnection? = nil
+startCloseUp = function(character: Model)
+	stopCloseUp()
+	local camera = Workspace.CurrentCamera
+	local root = character:FindFirstChild("HumanoidRootPart") :: BasePart?
+	local torso = character:FindFirstChild("UpperTorso") :: BasePart?
+	if not camera or not root or not torso then
+		return
+	end
+	local startCF = camera.CFrame
+	local startedAt = os.clock()
+	local facing = root.CFrame -- orientation du personnage au début (il ne tourne pas pendant la série)
+	-- Distance selon la taille du corps
+	local extent = character:GetExtentsSize()
+	local distance = 6 + extent.Y * 0.9
+	camera.CameraType = Enum.CameraType.Scriptable
+	closeUp = RunService.RenderStepped:Connect(function()
+		if not torso.Parent then
+			return
+		end
+		local focus = torso.Position
+		local eye = focus
+			+ facing.LookVector * distance
+			+ facing.RightVector * (distance * 0.35)
+			+ Vector3.new(0, 1.5, 0)
+		-- Le personnage à gauche : on vise un point à la droite de la caméra
+		local aim = focus - facing.RightVector * (distance * 0.32)
+		local wanted = CFrame.lookAt(eye, aim)
+		local blend = math.clamp((os.clock() - startedAt) / 0.6, 0, 1)
+		camera.CFrame = startCF:Lerp(wanted, blend * blend * (3 - 2 * blend))
+	end)
+end
+
+stopCloseUp = function()
+	if closeUp then
+		closeUp:Disconnect()
+		closeUp = nil
+		local camera = Workspace.CurrentCamera
+		if camera then
+			camera.CameraType = Enum.CameraType.Custom
+		end
+	end
+end
+
 local function stop(player: Player)
 	local animator = animators[player]
 	if not animator then
@@ -97,6 +169,12 @@ local function stop(player: Player)
 	animators[player] = nil
 	animator.activity:Destroy()
 	animator.rig:Release()
+	if animator.sweat then
+		animator.sweat:Destroy()
+	end
+	if player == localPlayer then
+		stopCloseUp()
+	end
 	for part, saved in animator.borrowed do
 		part.CFrame = saved.cframe
 		part.Transparency = saved.transparency
@@ -156,6 +234,12 @@ local function start(update)
 		isLocal = player == localPlayer, -- seul le joueur concerné déplace son propre personnage
 	})
 	animators[player] = animator
+	if update.kind ~= "Boss" then
+		animator.sweat = addSweat(character)
+		if player == localPlayer then
+			startCloseUp(character)
+		end
+	end
 end
 
 local function onRep(update)
@@ -168,6 +252,11 @@ local function onRep(update)
 	local last = animator.reps[#animator.reps]
 	local duration = math.clamp(animator.interval * 0.8, 0.45, 1.1)
 	animator.count += 1
+	-- Plus le combo est long, plus ça transpire
+	if animator.sweat then
+		local streak = math.min(update.streak or 0, 15)
+		animator.sweat.Rate = if streak == 0 then 1.5 else 3 + streak * 1.6
+	end
 	table.insert(animator.reps, {
 		-- Une répétition ne coupe jamais la précédente : elle commence quand l'autre se termine
 		start = if last then math.max(now, last.start + last.duration) else now,

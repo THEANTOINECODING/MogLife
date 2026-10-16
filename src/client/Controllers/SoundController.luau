@@ -14,8 +14,9 @@ local cache: { [string]: Sound } = {}
 
 local SoundController = {}
 
--- Joue un effet de Config/Sounds.luau (sans effet si son identifiant est vide)
-function SoundController.Play(name: string)
+-- Joue un effet de Config/Sounds.luau (sans effet si son identifiant est vide).
+-- pitch : vitesse de lecture (1 = normal ; le son des répétitions monte avec le combo)
+function SoundController.Play(name: string, pitch: number?)
 	local id = Sounds.Sfx[name]
 	if typeof(id) ~= "string" or id == "" then
 		return
@@ -29,6 +30,7 @@ function SoundController.Play(name: string)
 		sound.Parent = SoundService
 		cache[name] = sound
 	end
+	sound.PlaybackSpeed = pitch or 1
 	SoundService:PlayLocalSound(sound)
 end
 
@@ -52,7 +54,9 @@ function SoundController.Start()
 	startMusic()
 	Remotes.SeriesUpdate.OnClientEvent:Connect(function(update)
 		if update.state == "Rep" then
-			SoundController.Play(REP_SOUNDS[update.quality] or "RepGood")
+			-- Chaque répétition réussie d'affilée joue un peu plus aigu : on entend la série monter (D52)
+			local streak = math.min(update.streak or 0, 15)
+			SoundController.Play(REP_SOUNDS[update.quality] or "RepGood", 1 + streak * 0.035)
 		elseif update.state == "Ended" and update.reason == "Completed" and update.kind == "Exercise" then
 			SoundController.Play("SeriesEnd")
 		end

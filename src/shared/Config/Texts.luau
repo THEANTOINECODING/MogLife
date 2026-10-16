@@ -74,6 +74,15 @@ local STRINGS: { [string]: string } = {
 
 	-- Séries
 	["Series.Complete"] = "Series complete! +{mog} Mog",
+	["Series.Accuracy"] = "Accuracy {score}%",
+	["Objective.Title"] = "Next goal",
+	["Objective.Boss"] = "You're ready! Challenge {boss}. Follow the gold line.",
+	["Objective.TryExercise"] = "New exercise unlocked: try the {exercise}!",
+	["Objective.Train"] = "Train ({exercise} pays the most) to reach {mog} Mog for {boss}.",
+	["Objective.Top"] = "You are at the top. The Pump God is coming soon...",
+	["Series.Record"] = "Best: {record}%",
+	["Series.NewRecord"] = "NEW RECORD!",
+	["Series.NoGrade"] = "Auto mode: no grade",
 	["Series.Continue"] = "Keep going",
 	["Series.Done"] = "Done",
 	["Series.TooFar"] = "You walked away from the station.",
