@@ -26,7 +26,7 @@ je ne suis pas développeur.
   - **D67** : défis et coffre de la semaine (bouton Weekly), trophées, titres exclusifs.
   - **D68** : bras de fer contre n'importe quel joueur, n'importe où. Une table apparaît entre les deux joueurs,
     avec le mini-jeu « Gauge » (jauge de force).
-  - **D69** : porte arrière de la salle de sport, à terminer (voir la tâche 1).
+  - **D69** : porte arrière de la salle de sport, vers la salle en plein air (terminée).
 - Fichiers à ne pas committer sans me demander : `assets/blender/bosses.blend` et `assets/export/props.fbx`. Ils sont
   modifiés en dehors de nos sessions.
 
