@@ -4,11 +4,13 @@
 -- Les joueurs et les pièces presque invisibles (zones de collision, repères, vitres) ne gênent jamais ; les PNJ oui.
 
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 
 local CameraFraming = {}
 
-local MIN_DISTANCE = 3 -- studs : la caméra ne vient jamais plus près que ça du sujet
+local MIN_DISTANCE = 5 -- studs : la caméra ne vient jamais plus près que ça du sujet
 local MARGIN = 0.8 -- studs gardés devant l'obstacle
+local SOLID_SIZE = 30 -- studs : en dessous, un obstacle est « petit » (estompé plutôt qu'évité)
 
 local function ignoreList(extra: { Instance }?): { Instance }
 	local list = {}
@@ -37,11 +39,14 @@ local function ignoreList(extra: { Instance }?): { Instance }
 end
 
 -- Distance libre depuis `from` dans la direction `direction` (jusqu'à maxDistance)
+-- solidOnly : seuls les grands décors (murs, bâtiments, toits) arrêtent le rayon ; les petits obstacles (PNJ, arbres,
+-- poteaux) sont traversés, car ils seront estompés pendant l'activité
 function CameraFraming.ClearDistance(
 	from: Vector3,
 	direction: Vector3,
 	maxDistance: number,
-	ignore: { Instance }
+	ignore: { Instance },
+	solidOnly: boolean?
 ): number
 	local params = RaycastParams.new()
 	params.FilterType = Enum.RaycastFilterType.Exclude
@@ -58,7 +63,8 @@ function CameraFraming.ClearDistance(
 		end
 		local part = hit.Instance
 		-- Vitres et pièces presque invisibles : on voit au travers
-		if part:IsA("BasePart") and part.Transparency < 0.45 and part.Material ~= Enum.Material.Glass then
+		local small = solidOnly and part:IsA("BasePart") and part.Size.Magnitude < SOLID_SIZE
+		if part:IsA("BasePart") and part.Transparency < 0.45 and part.Material ~= Enum.Material.Glass and not small then
 			return travelled + hit.Distance
 		end
 		table.insert(list, part)
@@ -71,18 +77,29 @@ function CameraFraming.ClearDistance(
 end
 
 -- Part des points visibles depuis l'œil (aucun décor entre l'œil et le point)
-local function visibleShare(eye: Vector3, points: { Vector3 }, ignore: { Instance }): number
+local function visibleShare(eye: Vector3, points: { Vector3 }, ignore: { Instance }, solidOnly: boolean?): number
 	if #points == 0 then
 		return 1
 	end
-	local seen = 0
+	-- Chaque point compte pour trois rayons (centre et de chaque côté) : un poteau fin devant le corps le cache
+	-- en partie, ça doit compter
+	local seen, total = 0, 0
 	for _, point in points do
 		local offset = point - eye
-		if CameraFraming.ClearDistance(eye, offset, offset.Magnitude, ignore) >= offset.Magnitude - 0.05 then
-			seen += 1
+		local side = offset:Cross(Vector3.new(0, 1, 0))
+		side = if side.Magnitude > 0.01 then side.Unit * 0.6 else Vector3.zero
+		for _, shift in { Vector3.zero, side, -side } do
+			local target = offset + shift
+			total += 1
+			if
+				CameraFraming.ClearDistance(eye, target, target.Magnitude, ignore, solidOnly)
+				>= target.Magnitude - 0.05
+			then
+				seen += 1
+			end
 		end
 	end
-	return seen / #points
+	return seen / total
 end
 
 -- Meilleure position de caméra : renvoie la position de l'œil. directions : par ordre de préférence (vecteurs depuis
@@ -100,16 +117,21 @@ function CameraFraming.Best(
 	local bestEye, bestScore = nil, -1
 	for index, direction in directions do
 		local wanted = direction.Magnitude
-		local clear = CameraFraming.ClearDistance(focus, direction, wanted + MARGIN, ignore)
+		-- Seuls les grands décors rapprochent la caméra ou cachent vraiment le corps (le reste sera estompé)
+		local clear = CameraFraming.ClearDistance(focus, direction, wanted + MARGIN, ignore, true)
 		local eye = if clear >= wanted
 			then focus + direction
 			else focus + direction.Unit * math.max(clear - MARGIN, MIN_DISTANCE)
-		local share = visibleShare(eye, targets, ignore)
+		local share = visibleShare(eye, targets, ignore, true)
+		-- Corps entièrement visible derrière les grands décors, avec tout le recul voulu : l'angle préféré est pris
+		-- tel quel (les petits obstacles, arbre ou PNJ, seront estompés)
 		if share >= 1 and clear >= wanted then
-			return eye -- tout est visible, dans l'ordre de préférence
+			return eye
 		end
-		-- Score : d'abord ce qu'on voit du corps, puis le recul disponible, puis l'ordre de préférence
-		local score = share * 10 + math.min(clear / wanted, 1) - index * 0.01
+		local clean = visibleShare(eye, targets, ignore, false)
+		-- Score : ce qu'on voit du corps ET le recul disponible comptent autant (une caméra collée au personnage est
+		-- pire qu'un pied caché), puis l'absence de petits obstacles, puis l'ordre de préférence
+		local score = share * 10 + math.min(clear / wanted, 1) * 10 + clean - index * 0.01
 		if score > bestScore then
 			bestScore, bestEye = score, eye
 		end
@@ -175,7 +197,7 @@ end
 -- son écran seulement, puis revient. Les rayons partent de la caméra vers chaque point du corps, plus deux rayons
 -- décalés de côté (un PNJ fin entre deux rayons masquerait quand même le corps).
 local FADE = 0.75
-local MAX_FADE_SIZE = 30 -- studs : les grands murs et bâtiments ne sont jamais estompés (le cadrage les évite)
+local MAX_FADE_SIZE = SOLID_SIZE -- les grands murs et bâtiments ne sont jamais estompés (le cadrage les évite)
 
 export type Fader = { parts: { [BasePart]: boolean } }
 
@@ -220,5 +242,105 @@ function CameraFraming.ClearFade(fader: Fader)
 	end
 	fader.parts = {}
 end
+
+-- ------------------------------------------------------------------ caméra stable (activités, duels)
+-- La caméra choisit son angle UNE fois, d'après le corps au repos, puis reste fixe par rapport au sujet : elle ne
+-- suit pas chaque répétition (le torse qui monte et descend), seulement un vrai déplacement (pousser la voiture),
+-- en douceur. Elle ne change d'angle que si un grand décor (mur, bâtiment) cache durablement le corps, en glissant.
+-- Le zoom (champ de vision) est fixé pendant toute l'activité. Les petits obstacles sont estompés.
+export type FollowOptions = {
+	anchor: () -> Vector3?, -- position de référence du sujet (racine du personnage) ; nil = sujet disparu
+	plan: () -> (Vector3, Vector3), -- calcule (œil, point visé) pour la position actuelle du sujet
+	points: () -> { Vector3 }, -- points du corps à garder visibles (estompage, contrôle de l'angle)
+	ignore: () -> { Instance }, -- objets qui ne gênent jamais (station, objet tenu, boss)
+	enterTime: number?, -- secondes pour arriver depuis la caméra du joueur
+}
+
+local FOV = 70
+local REPLAN_MOVE = 4 -- studs : le sujet s'est vraiment déplacé, l'angle est recalculé
+local BLOCK_CHECK = 1.2 -- secondes entre deux contrôles de visibilité
+local BLOCK_TIME = 1.5 -- secondes de corps caché (par un grand décor) avant de changer d'angle
+local GLIDE = 0.9 -- secondes pour glisser vers un nouvel angle
+
+function CameraFraming.Follow(options: FollowOptions): () -> ()
+	local camera = workspace.CurrentCamera
+	local start = options.anchor()
+	if not camera or not start then
+		return function() end
+	end
+	local savedFov = camera.FieldOfView
+	camera.CameraType = Enum.CameraType.Scriptable
+	camera.FieldOfView = FOV
+	local startCF = camera.CFrame
+	local t0 = os.clock()
+	local enter = options.enterTime or 0.7
+
+	-- Angle choisi : décalages de l'œil et du point visé par rapport au sujet
+	local planned = start
+	local eye, aim = options.plan()
+	local eyeOffset, aimOffset = eye - start, aim - start
+	local fromEye, fromAim, glideStart = eyeOffset, aimOffset, -math.huge
+	local smoothAnchor = start
+	local fader = CameraFraming.NewFader()
+	local nextFade, nextCheck, hiddenSince = 0, 0, nil :: number?
+
+	local function replan(anchor: Vector3)
+		local newEye, newAim = options.plan()
+		fromEye, fromAim = eyeOffset, aimOffset
+		eyeOffset, aimOffset = newEye - anchor, newAim - anchor
+		glideStart = os.clock()
+		planned = anchor
+		hiddenSince = nil
+	end
+
+	local connection = RunService.RenderStepped:Connect(function(dt)
+		local anchor = options.anchor()
+		if not anchor then
+			return
+		end
+		local now = os.clock()
+		-- Suit les vrais déplacements, en douceur (pas les mouvements des répétitions : la racine bouge peu)
+		smoothAnchor = smoothAnchor:Lerp(anchor, math.min(dt * 3, 1))
+		if (anchor - planned).Magnitude > REPLAN_MOVE then
+			replan(anchor)
+		end
+		-- Contrôle de visibilité : si un grand décor cache le corps trop longtemps, nouvel angle
+		if now >= nextCheck then
+			nextCheck = now + BLOCK_CHECK
+			local ignore = ignoreList(options.ignore())
+			local seen = visibleShare(camera.CFrame.Position, options.points(), ignore, true)
+			if seen < 0.5 then
+				hiddenSince = hiddenSince or now
+				if now - hiddenSince >= BLOCK_TIME then
+					replan(anchor)
+				end
+			else
+				hiddenSince = nil
+			end
+		end
+		local g = math.clamp((now - glideStart) / GLIDE, 0, 1)
+		g = g * g * (3 - 2 * g)
+		local eyeNow = smoothAnchor + fromEye:Lerp(eyeOffset, g)
+		local aimNow = smoothAnchor + fromAim:Lerp(aimOffset, g)
+		local wanted = CFrame.lookAt(eyeNow, aimNow)
+		local e = math.clamp((now - t0) / enter, 0, 1)
+		camera.CFrame = if e < 1 then startCF:Lerp(wanted, e * e * (3 - 2 * e)) else wanted
+		camera.FieldOfView = math.max(camera.FieldOfView, FOV - 6) -- un « punch » ne peut pas s'accumuler
+		-- Petits obstacles devant le corps : estompés
+		if now >= nextFade then
+			nextFade = now + 0.15
+			CameraFraming.Fade(fader, camera.CFrame.Position, options.points(), options.ignore())
+		end
+	end)
+
+	return function()
+		connection:Disconnect()
+		CameraFraming.ClearFade(fader)
+		camera.FieldOfView = savedFov
+		camera.CameraType = Enum.CameraType.Custom
+	end
+end
+
+CameraFraming.Fov = FOV
 
 return CameraFraming

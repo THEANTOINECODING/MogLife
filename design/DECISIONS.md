@@ -2,6 +2,10 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-17 (caméra stable pendant les jeux)
+
+- **D66 — Pendant une activité ou un Mog-off, la caméra choisit un angle et le garde.** Elle suit le joueur en douceur sans tourner avec lui ; elle ne change d'angle que si le joueur se déplace vraiment (plus de 4 studs) ou si le corps reste caché plus de 1,5 s, et glisse alors vers le nouvel angle. Le champ de vision est fixé à 70° (jamais sous 64°, l'effet de coup ne zoome plus fort). Les petits objets (moins de 30 studs) et les accessoires de l'activité sont estompés au lieu d'être évités ; seuls les murs et gros décors font changer d'angle. Chaque point du corps est testé par trois rayons pour qu'un poteau fin devant le joueur compte. Développé couché filmé côté pieds (les disques cachent le corps de profil), pompes de trois quarts. Les boutons latéraux restent cachés pendant tout le combat.
+
 ## 2026-10-17 (garde-robe de la boutique)
 
 - **D65 — Les habits achetés remplacent la tenue de départ sur les parties couvertes.** Quand un haut est équipé, les pièces `_Top` du corps ne sont plus posées ; idem pour les pièces `_Shorts` avec un bas. Elles traversaient les habits pendant la prise de masse, surtout sur le Normie au short ample. Un article dont l'import est incomplet n'est pas posé. Les 34 articles existants sont reconstruits pour les 14 corps dans Blender ; les 9 habits reçoivent des finitions géométriques (cols, revers, boutons, ourlets, ceintures ovales, poignets et poches) et la poitrine des hauts féminins enveloppe la coque du corps. Le serveur conserve l'interpolation des tailles et décalages de chaque pièce selon le Mog (D41, D60). Un FBX de la garde-robe seule permet la mise à jour sans réimporter les corps.

@@ -7,8 +7,9 @@ PushUp.__index = PushUp
 
 -- Caméra : de trois quarts et un peu en hauteur, pour voir le corps allongé en entier
 PushUp.CloseUp = {
-	steps = { { 60, 0.4 }, { -60, 0.4 }, { 85, 0.5 }, { -85, 0.5 }, { 30, 0.7 }, { -30, 0.7 }, { 0, 1 } },
-	height = 2,
+	steps = { { 60, 0.3 }, { -60, 0.3 }, { 85, 0.4 }, { -85, 0.4 }, { 30, 0.6 }, { -30, 0.6 }, { 0, 0.9 } },
+	height = 1.5,
+	scale = 0.8,
 }
 
 local MAT = 0.16 -- épaisseur du tapis

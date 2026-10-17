@@ -7,8 +7,11 @@ BenchPress.__index = BenchPress
 
 -- Caméra : de profil et en hauteur (vu des pieds, la barre et les disques cachent le corps)
 BenchPress.CloseUp = {
-	steps = { { 70, 0.5 }, { -70, 0.5 }, { 90, 0.7 }, { -90, 0.7 }, { 45, 0.8 }, { -45, 0.8 }, { 0, 1.2 } },
-	height = 2.5,
+	-- La barre est en travers du corps : vue de côté, ses disques cachent tout. On filme depuis les pieds (le
+	-- personnage allongé regarde vers sa tête), en hauteur, la barre en travers de l'image.
+	steps = { { 155, 0.6 }, { -155, 0.6 }, { 180, 0.7 }, { 130, 0.8 }, { -130, 0.8 }, { 25, 0.9 }, { -25, 0.9 } },
+	height = 2,
+	scale = 0.75, -- allongé : le corps est moins haut, la caméra peut venir plus près
 }
 
 local SEAT = 1.975 -- dessus du banc au-dessus de la dalle (props_gym.py : bench_press)

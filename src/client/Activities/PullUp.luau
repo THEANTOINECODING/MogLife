@@ -4,6 +4,9 @@
 local PullUp = {}
 PullUp.__index = PullUp
 
+-- Caméra : suspendu, le corps et les mains montent au-dessus de la tête au repos : on cadre plus haut et un peu plus loin
+PullUp.CloseUp = { focus = 1.6, scale = 1.1 }
+
 local BAR = 7.9 -- hauteur de la barre au-dessus de la dalle (props_gym.py : pullup_bar)
 
 function PullUp.Stand(top: CFrame): CFrame

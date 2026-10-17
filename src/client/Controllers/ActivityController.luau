@@ -6,7 +6,6 @@
 -- l'aide (Curl, OpenJar…). Pose(p, shake, u, time, count) : count = répétitions commencées (le clou s'enfonce…).
 
 local Players = game:GetService("Players")
-local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
@@ -122,13 +121,21 @@ addSweat = function(character: Model): ParticleEmitter?
 	return sweat
 end
 
--- Gros plan pendant sa propre série : la caméra regarde le personnage de face, un peu de côté, et le place dans la
--- partie gauche de l'écran (le mini-jeu est à droite). Elle suit le corps (pompes, tractions, voiture poussée…).
-local closeUp: RBXScriptConnection? = nil
-local closeUpFader: CameraFraming.Fader? = nil
--- preset : réglage de caméra propre à l'activité (module Activities : CloseUp = { steps, height }), facultatif
+-- Gros plan pendant sa propre série : caméra stable (CameraFraming.Follow) qui choisit une fois l'angle d'où l'on
+-- voit tout le corps, place le personnage dans la moitié gauche de l'écran (le mini-jeu est à droite) et ne bouge
+-- plus, sauf vrai déplacement (voiture poussée) ou mur qui cache durablement le corps.
+local stopFollow: (() -> ())? = nil
+local closeUpToken: any = nil
+local SETTLE_TIME = 0.35 -- secondes avant de choisir l'angle
+-- preset : réglage de caméra propre à l'activité (module Activities : CloseUp = { steps, height, scale, focus }), facultatif
 -- animator : pour ignorer les objets que le personnage tient ou utilise (piano, barre, bocal…)
 startCloseUp = function(character: Model, preset: any, anchor: BasePart?, animator: any)
+	stopCloseUp()
+	local root = character:FindFirstChild("HumanoidRootPart") :: BasePart?
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	if not root or not humanoid then
+		return
+	end
 	-- La station et les objets de l'activité ne gênent jamais la vue et ne sont jamais estompés
 	local function activityParts(): { Instance }
 		local list: { Instance } = {}
@@ -140,78 +147,55 @@ startCloseUp = function(character: Model, preset: any, anchor: BasePart?, animat
 		end
 		return list
 	end
-	stopCloseUp()
-	local camera = Workspace.CurrentCamera
-	local root = character:FindFirstChild("HumanoidRootPart") :: BasePart?
-	local torso = character:FindFirstChild("UpperTorso") :: BasePart?
-	if not camera or not root or not torso then
+	-- Mesures du corps au repos : hauteur (pieds -> sommet de la tête) et largeur, pour tout faire tenir à l'écran
+	local _, size = character:GetBoundingBox()
+	local height = math.max(size.Y, 4)
+	local width = math.max(size.X, size.Z)
+	-- Distance pour voir le corps entier dans la moitié gauche de l'écran, avec de la marge pour les mouvements
+	local distance = (6 + math.max(height, width) * 1.1) * ((preset and preset.scale) or 1)
+	local camHeight = (preset and preset.height) or 1.5
+	local steps = preset and preset.steps
+	-- Centre du corps au repos, par rapport à la racine (les répétitions ne le déplacent pas)
+	-- (focus : décalage vertical propre à l'activité, ex. suspendu à la barre de traction, le corps monte)
+	local focusUp = (preset and preset.focus) or 0
+	local centerOffset = Vector3.new(0, height * 0.5 - humanoid.HipHeight - root.Size.Y / 2 + focusUp, 0)
+	-- L'activité place et tourne le personnage dans ses premières images : on attend qu'il soit en position
+	local token = {}
+	closeUpToken = token
+	task.wait(SETTLE_TIME)
+	if closeUpToken ~= token or not root.Parent then
 		return
 	end
-	local startedAt = os.clock()
-	local facing = root.CFrame -- orientation du personnage au début (il ne tourne pas pendant la série)
-	-- Distance selon la taille du corps
-	local extent = character:GetExtentsSize()
-	local distance = 6 + extent.Y * 0.9
-	camera.CameraType = Enum.CameraType.Scriptable
-	-- Angle sans obstacle (murs du garage, toit, meubles) : recalculé deux fois par seconde (le personnage peut se
-	-- déplacer, ex. en poussant la voiture), la caméra y glisse en douceur
-	local eye: Vector3? = nil
-	local nextCheck = 0
-	local nextFade = 0
-	closeUpFader = CameraFraming.NewFader()
-	closeUp = RunService.RenderStepped:Connect(function(dt)
-		if not torso.Parent then
-			return
-		end
-		local focus = torso.Position
-		local now = os.clock()
-		if now >= nextCheck then
-			nextCheck = now + 0.5
-			local steps = preset and preset.steps
-			local height = (preset and preset.height) or 1.5
-			local wanted = CameraFraming.Best(
+	stopFollow = CameraFraming.Follow({
+		anchor = function()
+			return if root.Parent then root.Position else nil
+		end,
+		plan = function()
+			local focus = root.Position + centerOffset
+			local eye = CameraFraming.Best(
 				focus,
-				CameraFraming.Around(facing.LookVector, distance, height, 1, steps),
-				-- La dalle ou la station de l'activité ne gêne jamais la vue
+				-- Orientation réelle au moment du choix (certaines activités tournent le personnage au départ)
+				CameraFraming.Around(root.CFrame.LookVector, distance, camHeight, 1, steps),
 				activityParts(),
 				CameraFraming.BodyPoints(character)
 			)
-			eye = if eye then eye:Lerp(wanted, 0.5) else wanted
-		end
-		local target = eye :: Vector3
-		-- Le personnage à gauche de l'écran (le mini-jeu est à droite) : on vise un peu à droite de lui
-		local look = (focus - target).Unit
-		local right = look:Cross(Vector3.new(0, 1, 0))
-		local aim = focus + right * (distance * 0.3)
-		local wanted = CFrame.lookAt(target, aim)
-		local blend = math.clamp((now - startedAt) / 0.6, 0, 1)
-		local follow = if blend < 1 then blend * blend * (3 - 2 * blend) else math.min(dt * 6, 1)
-		camera.CFrame = camera.CFrame:Lerp(wanted, follow)
-		-- Ce qui reste entre la caméra et le corps (PNJ, arbre) est estompé
-		if now >= nextFade and closeUpFader then
-			nextFade = now + 0.15
-			CameraFraming.Fade(
-				closeUpFader,
-				camera.CFrame.Position,
-				CameraFraming.BodyPoints(character),
-				activityParts()
-			)
-		end
-	end)
+			-- Le personnage dans la moitié gauche : on vise un point à sa droite (vu de la caméra)
+			local look = (focus - eye).Unit
+			local right = look:Cross(Vector3.new(0, 1, 0))
+			return eye, focus + right * ((focus - eye).Magnitude * 0.28)
+		end,
+		points = function()
+			return CameraFraming.BodyPoints(character)
+		end,
+		ignore = activityParts,
+	})
 end
 
 stopCloseUp = function()
-	if closeUpFader then
-		CameraFraming.ClearFade(closeUpFader)
-		closeUpFader = nil
-	end
-	if closeUp then
-		closeUp:Disconnect()
-		closeUp = nil
-		local camera = Workspace.CurrentCamera
-		if camera then
-			camera.CameraType = Enum.CameraType.Custom
-		end
+	closeUpToken = nil
+	if stopFollow then
+		stopFollow()
+		stopFollow = nil
 	end
 end
 
@@ -321,7 +305,7 @@ local function start(update)
 	if update.kind ~= "Boss" then
 		animator.sweat = addSweat(character)
 		if player == localPlayer and SettingsController.Get("CloseUp") then
-			startCloseUp(character, Activity.CloseUp, anchor, animator)
+			task.spawn(startCloseUp, character, Activity.CloseUp, anchor, animator)
 		end
 	end
 end

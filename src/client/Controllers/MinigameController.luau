@@ -13,6 +13,7 @@ local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Format = require(ReplicatedStorage.Shared.Format)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local CameraFraming = require(script.Parent.Parent.CameraFraming)
 local Ui = require(script.Parent.Parent.Ui)
 
 local Minigames = script.Parent.Parent.Minigames
@@ -170,15 +171,24 @@ end
 
 -- Pendant une série, la colonne de gauche (Maison, Flex, Style, Settings) se range : elle ne sert à rien et
 -- cachait le personnage (le bouton Stop reste)
+-- Plusieurs raisons peuvent se cumuler (série en cours, combat de boss entre deux manches) : la colonne ne revient
+-- que quand il n'y en a plus aucune
 local SIDE_GUIS = { "Travel", "Emotes", "Menu" }
-local function setSideButtonsHidden(hidden: boolean)
+local sideReasons: { [string]: boolean } = {}
+local function setSideButtonsHidden(hidden: boolean, reason: string?)
+	sideReasons[reason or "Run"] = if hidden then true else nil
+	local anyReason = next(sideReasons) ~= nil
 	local playerGui = player:FindFirstChildOfClass("PlayerGui")
 	for _, name in SIDE_GUIS do
 		local sideGui = playerGui and playerGui:FindFirstChild(name)
 		if sideGui and sideGui:IsA("ScreenGui") then
-			sideGui.Enabled = not hidden
+			sideGui.Enabled = not anyReason
 		end
 	end
+end
+
+function MinigameController.SetSideButtonsHidden(hidden: boolean, reason: string)
+	setSideButtonsHidden(hidden, reason)
 end
 
 local function closeRun()
@@ -385,8 +395,9 @@ local function punch(strength: number)
 	if not camera or (SettingsController and not SettingsController.Get("ScreenFx")) then
 		return
 	end
-	local base = camera.FieldOfView
-	camera.FieldOfView = base - strength
+	-- Toujours depuis le même zoom de référence : plusieurs Perfect rapprochés ne zooment pas de plus en plus
+	local base = CameraFraming.Fov
+	camera.FieldOfView = base - math.min(strength, 4)
 	TweenService:Create(camera, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 		FieldOfView = base,
 	}):Play()

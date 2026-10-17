@@ -54,8 +54,7 @@ local meterBoss: TextLabel
 local pips: { Frame } = {}
 local pipsFrame: Frame
 local fight: { bossId: string, rounds: number, results: { boolean } }? = nil
-local cameraConnection: RBXScriptConnection? = nil
-local duelFader: CameraFraming.Fader? = nil
+
 local specialGui: ScreenGui
 local stopSpecial: (() -> ())? = nil
 
@@ -111,21 +110,6 @@ local function bossModel(bossId: string): Model?
 		end
 	end
 	return model
-end
-
--- Le boss peut être beaucoup plus grand que le joueur (Pump God) : le centre seul ne garantit pas qu'il tienne
--- dans le cadre. Les coins de sa boîte englobante guident le choix d'angle et l'estompage du décor.
-local function duelPoints(character: Model, model: Model): { Vector3 }
-	local points = CameraFraming.BodyPoints(character)
-	local bounds, size = model:GetBoundingBox()
-	for _, x in { -0.5, 0.5 } do
-		for _, y in { -0.5, 0.5 } do
-			for _, z in { -0.5, 0.5 } do
-				table.insert(points, bounds:PointToWorldSpace(Vector3.new(x * size.X, y * size.Y, z * size.Z)))
-			end
-		end
-	end
-	return points
 end
 
 -- Grand texte au centre : apparaît en grossissant, puis s'efface
@@ -189,81 +173,64 @@ local function bossSays(bossId: string, key: string)
 	end)
 end
 
--- Caméra de duel : le joueur et le boss de profil, décalés à gauche (le mini-jeu est à droite)
+-- Caméra de duel : le joueur et le boss de profil, dans la moitié gauche de l'écran (le mini-jeu est à droite).
+-- Caméra stable (CameraFraming.Follow) : le boss est mesuré UNE fois au début (il se gonfle à chaque pose : la
+-- caméra ne doit pas zoomer et dézoomer avec lui) et l'angle ne change que si un mur cache durablement la scène.
+local stopFollow: (() -> ())? = nil
 local function startDuelCamera(bossId: string)
-	local camera = workspace.CurrentCamera
 	local model = bossModel(bossId)
-	if not camera or not model then
+	local character = player.Character
+	local root = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
+	if not model or not character or not root then
 		return
 	end
-	camera.CameraType = Enum.CameraType.Scriptable
-	local startCF = camera.CFrame
-	local t0 = os.clock()
-	-- De profil, d'un côté ou de l'autre du duel : le premier angle sans décor entre la caméra et les deux
-	-- adversaires (recalculé deux fois par seconde)
-	local eye: Vector3? = nil
-	local nextCheck = 0
-	local nextFade = 0
-	duelFader = CameraFraming.NewFader()
-	cameraConnection = RunService.RenderStepped:Connect(function(dt)
-		local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart") :: BasePart?
-		if not root or not model.Parent then
-			return
-		end
-		local you, them = root.Position, model:GetPivot().Position
-		local mid = (you + them) / 2
-		local axis = Vector3.new(them.X - you.X, 0, them.Z - you.Z)
-		local gap = math.max(axis.Magnitude, 6)
-		axis = if axis.Magnitude > 0.1 then axis.Unit else Vector3.xAxis
-		local side = Vector3.new(0, 1, 0):Cross(axis)
-		local center = mid + Vector3.new(0, 2.5, 0)
-		local now = os.clock()
-		if now >= nextCheck then
-			nextCheck = now + 0.5
-			-- Un boss géant exige du recul même quand les deux combattants se tiennent près l'un de l'autre.
-			local distance = math.max(gap * 1.25 + 6, model:GetExtentsSize().Magnitude * 1.5)
-			local directions = CameraFraming.Around(side, distance, 2.5)
-			for _, direction in CameraFraming.Around(-side, distance, 2.5) do
+	local base, height = CutsceneController.Measure(model)
+	local bossTop = base + Vector3.new(0, height, 0)
+	local bossMid = base + Vector3.new(0, height * 0.5, 0)
+	local function points(): { Vector3 }
+		local list = CameraFraming.BodyPoints(character :: Model)
+		table.insert(list, bossTop)
+		table.insert(list, bossMid)
+		table.insert(list, base + Vector3.new(0, 0.6, 0))
+		return list
+	end
+	stopFollow = CameraFraming.Follow({
+		anchor = function()
+			return if root.Parent then root.Position else nil
+		end,
+		plan = function()
+			local you = root.Position
+			local axis = Vector3.new(base.X - you.X, 0, base.Z - you.Z)
+			local gap = math.max(axis.Magnitude, 6)
+			axis = if axis.Magnitude > 0.1 then axis.Unit else Vector3.xAxis
+			local side = Vector3.new(0, 1, 0):Cross(axis)
+			local top = math.max(height, 6)
+			local center = Vector3.new((you.X + base.X) / 2, base.Y + top * 0.45, (you.Z + base.Z) / 2)
+			-- Recul : les deux combattants côte à côte, le plus grand en entier
+			local distance = math.max(gap * 1.3, top * 1.6) + 6
+			-- Profil pur d'abord (les deux combattants face à face, bien de côté), puis de légers décalages
+			local steps = { { 0, 0.15 }, { 15, 0.2 }, { -15, 0.2 }, { 35, 0.3 }, { -35, 0.3 }, { 0, 0.8 } }
+			local directions = CameraFraming.Around(side, distance, 1.5, 1, steps)
+			for _, direction in CameraFraming.Around(-side, distance, 1.5, 1, steps) do
 				table.insert(directions, direction)
 			end
-			-- Les deux adversaires doivent être visibles : le corps du joueur et celui du boss
-			local points = duelPoints(player.Character :: Model, model)
-			local wanted = CameraFraming.Best(center, directions, { model }, points)
-			eye = if eye then eye:Lerp(wanted, 0.5) else wanted
-		end
-		local target = eye :: Vector3
-		-- Les deux adversaires dans la moitié gauche de l'écran (le mini-jeu est à droite)
-		local look = (center - target).Unit
-		local right = look:Cross(Vector3.new(0, 1, 0))
-		local wanted = CFrame.lookAt(target, center + right * (gap * 0.3))
-		-- Entrée en douceur depuis la caméra du joueur, puis suivi souple
-		local blend = math.clamp((now - t0) / 0.8, 0, 1)
-		if blend < 1 then
-			camera.CFrame = startCF:Lerp(wanted, blend * blend * (3 - 2 * blend))
-		else
-			camera.CFrame = camera.CFrame:Lerp(wanted, math.min(dt * 6, 1))
-		end
-		-- Ce qui passe entre la caméra et les deux adversaires est estompé
-		if duelFader and now >= nextFade then
-			nextFade = now + 0.15
-			local points = duelPoints(player.Character :: Model, model)
-			CameraFraming.Fade(duelFader, camera.CFrame.Position, points, { model })
-		end
-	end)
+			local eye = CameraFraming.Best(center, directions, { model }, points())
+			local look = (center - eye).Unit
+			local right = look:Cross(Vector3.new(0, 1, 0))
+			return eye, center + right * ((center - eye).Magnitude * 0.22)
+		end,
+		points = points,
+		ignore = function()
+			return { model }
+		end,
+		enterTime = 0.8,
+	})
 end
 
 local function stopDuelCamera()
-	if duelFader then
-		CameraFraming.ClearFade(duelFader)
-		duelFader = nil
-	end
-	if cameraConnection then
-		cameraConnection:Disconnect()
-		cameraConnection = nil
-	end
-	local camera = workspace.CurrentCamera
-	if camera then
-		camera.CameraType = Enum.CameraType.Custom
+	if stopFollow then
+		stopFollow()
+		stopFollow = nil
 	end
 end
 
@@ -327,6 +294,7 @@ end
 -- Pendant le combat, l'écran est au duel : le panneau Mog / Cash et l'objectif laissent la place aux annonces
 local function setFightLayout(active: boolean)
 	UIController.SetStatsHidden(active, "Fight")
+	MinigameController.SetSideButtonsHidden(active, "Fight")
 end
 
 local function endPresentation()
