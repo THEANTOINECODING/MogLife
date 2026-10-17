@@ -85,27 +85,11 @@ je ne suis pas développeur.
 - **L'import dans Studio est manuel** : c'est moi qui le fais (Accueil → Importer 3D), puis je colle le script indiqué
   dans la barre de commande de Studio. Dis-moi exactement quoi faire et attends ma confirmation.
 
-## 4. Tâche 1 : finir la porte arrière de la salle (D69)
+## 4. La porte arrière de la salle (D69) est terminée
 
-Ce qui est déjà fait (commit `2a2d67c`) :
-- l'ouverture dans `tools/blender/props_building.py` (`BACK_DOORS`) ;
-- les battants dans `tools/build_map.py` ;
-- le miroir du fond coupé en deux et le râtelier du milieu retiré ;
-- les collisions régénérées.
-
-Ce qui manque :
-1. Blender connecté, exécuter `tools/blender/export_buildings.py`. Il produit
-   `assets/export/props/MogLife_Buildings.fbx` et `buildings_manifest.json`.
-2. Si `buildings_manifest.json` a changé, relancer `py -3 tools/build_map.py` et `py -3 tools/gen_colliders.py`.
-3. Me demander d'importer `MogLife_Buildings.fbx` dans Studio (Accueil → Importer 3D), puis de coller
-   `tools/install_props.luau` dans la barre de commande, et d'enregistrer (Ctrl+S).
-4. Vérifier en jeu :
-   - le mur du fond est bien ouvert ;
-   - les deux battants (`Door_Shop_GymBack`) s'ouvrent quand on approche ;
-   - on passe de la salle à la salle en plein air ;
-   - aucun mur invisible ;
-   - la console est sans erreur.
-5. Mettre à jour D69 dans `design/DECISIONS.md` (retirer « Reste à faire ») et committer.
+Elle a été exportée, importée et vérifiée le 18/10. Attention pour tout futur import de modèles : l'importateur de
+Studio peut perdre la texture de palette. `tools/install_props.luau` la remet automatiquement, et le script peut être
+lancé par toi avec `execute_luau` en mode édition (je n'ai plus qu'à faire l'import et Ctrl+S).
 
 ## 5. Ensuite, dans cet ordre (une tâche à la fois, en me demandant avant de passer à la suivante)
 

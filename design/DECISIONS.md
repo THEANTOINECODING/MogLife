@@ -4,7 +4,7 @@ Format : date — décision — raison. La plus récente en haut.
 
 ## 2026-10-18 (porte arrière de la salle)
 
-- **D69 — La salle a une deuxième entrée, au milieu du mur du fond** (demande du créateur). Elle donne sur la salle en plein air, côté centre-ville : plus besoin de faire le tour par la route. Ouverture de 10 × 12 studs avec deux battants automatiques (Door_Shop_GymBack), encadrement et bandeau rouge côté extérieur ; le miroir du fond est coupé en deux et le râtelier d'haltères du milieu retiré pour laisser le passage. Collisions régénérées (tools/gen_colliders.py). **Reste à faire** : exporter les bâtiments depuis Blender (tools/blender/export_buildings.py) puis les importer dans Studio (Importer 3D + tools/install_props.luau) ; d'ici là le mur du fond paraît fermé mais se traverse à l'emplacement de la porte.
+- **D69 — La salle a une deuxième entrée, au milieu du mur du fond** (demande du créateur). Elle donne sur la salle en plein air, côté centre-ville : plus besoin de faire le tour par la route. Ouverture de 10 × 12 studs avec deux battants automatiques (Door_Shop_GymBack), encadrement et bandeau rouge côté extérieur ; le miroir du fond est coupé en deux et le râtelier d'haltères du milieu retiré pour laisser le passage. Collisions régénérées (tools/gen_colliders.py), bâtiments réexportés depuis Blender et importés dans Studio le 18/10 ; vérifié en jeu (passage libre, battants en place). L'import avait perdu la texture de palette sur les 34 pièces des bâtiments : remise à la main, et tools/install_props.luau la remet désormais tout seul.
 
 ## 2026-10-18 (bras de fer n'importe où)
 

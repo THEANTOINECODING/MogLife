@@ -9,10 +9,14 @@
 	- Un décor déjà présent du même nom est remplacé (pour réimporter après une modification).
 	- Murs des bâtiments (*_Walls) : leur collision n'est pas celle du mesh (Roblox rebouche les portes), PropService
 	  pose des blocs invisibles exacts (tools/gen_colliders.py). Façades (*_Trim) : sans collision.
+	- Texture : tous les décors partagent la même palette (MogProps_Palette.png, déjà sur Roblox). L'importateur ne
+	  la remet pas toujours (import du 18/10 : bâtiments tout gris) ; une pièce importée sans texture la reçoit.
 	Enregistrer ensuite la place (Ctrl+S) : les modèles vivent dans la place, pas dans les fichiers.
 ]]
 
 local ServerStorage = game:GetService("ServerStorage")
+
+local PALETTE = "rbxassetid://123907474681522" -- assets/export/props/MogProps_Palette.png
 
 local imported = workspace:FindFirstChild("props")
 	or workspace:FindFirstChild("MogLife_GymStations")
@@ -48,6 +52,9 @@ for _, part in imported:GetDescendants() do
 		end
 		part.Size *= scale
 		part.Anchored = true
+		if part.TextureID == "" then
+			part.TextureID = PALETTE
+		end
 		part.CFrame = CFrame.new(0, part.Size.Y / 2, 0)
 		part.Parent = folder
 		count += 1
