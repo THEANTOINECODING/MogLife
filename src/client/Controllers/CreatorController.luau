@@ -315,7 +315,7 @@ local function fillContent()
 		end, 160)
 		-- Titres exclusifs : ceux qui ne sont pas encore débloqués montrent comment les obtenir
 		section("Creator.RewardTitles", 5)
-		local frame = grid(6, UDim2.fromOffset(210, 54))
+		local frame = grid(6, UDim2.new(1, -8, 0, 54))
 		for index, entry in LookConfig.RewardTitles do
 			local unlocked = unlockedTitles[entry.id] == true
 			local name = Texts.Get(`Nick.Title.{entry.id}`)
