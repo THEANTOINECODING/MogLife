@@ -9,7 +9,7 @@ Ce dossier est la source de vérité du jeu. Un fichier = un sujet.
 | [02_MECANIQUES/MINIJEUX.md](02_MECANIQUES/MINIJEUX.md) | **Mécanique principale** : un mini-jeu par exercice | On crée ou modifie un exercice |
 | [02_MECANIQUES/BOSS.md](02_MECANIQUES/BOSS.md) | Un boss par stade, Mog-off, défaite trop tôt | On touche aux boss ou aux stades |
 | [02_MECANIQUES/AIDES.md](02_MECANIQUES/AIDES.md) | Aider la ville pour gagner du Cash | On crée une aide ou un habitant |
-| [02_MECANIQUES/DUELS.md](02_MECANIQUES/DUELS.md) | Duels entre joueurs : Tug of Mog | On touche aux duels |
+| [02_MECANIQUES/DUELS.md](02_MECANIQUES/DUELS.md) | Duels entre joueurs : bras de fer | On touche aux duels |
 | [02_MECANIQUES/PERSONNAGE.md](02_MECANIQUES/PERSONNAGE.md) | Personnage cartoon et boutique de style | On touche au corps, aux habits, aux coupes |
 | [03_PROGRESSION.md](03_PROGRESSION.md) | Stats, économie, rangs, rythme | On touche aux chiffres |
 | [04_MONDE_PNJ.md](04_MONDE_PNJ.md) | Ville, quartiers, personnages, humour | On crée du contenu |

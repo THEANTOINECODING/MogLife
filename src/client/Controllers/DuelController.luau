@@ -1,9 +1,9 @@
--- Duels entre joueurs côté client (Tug of Mog, D67) :
--- - un bouton « Tug of Mog » sur chaque autre joueur proche (prompt local) pour l'inviter ;
+-- Duels entre joueurs côté client (bras de fer, D68) :
+-- - un bouton « Arm Wrestle » sur chaque autre joueur proche, n'importe où (prompt local) pour l'inviter ;
 -- - la fenêtre d'invitation reçue (Accepter / Refuser, refus automatique) ;
--- - la mise en scène : bandeau VS, 3-2-1-TUG!, caméra qui filme les deux joueurs de profil, jauge de la corde (toi
---   à gauche, l'adversaire à droite), pastilles des manches, annonces, petit « coup de corde » à la manche perdue,
---   pose de victoire, fenêtre du résultat (Cash, plafond du jour, bilan).
+-- - la mise en scène : bandeau VS, 3-2-1, caméra qui filme les deux joueurs de profil autour de la table, jauge du
+--   bras de fer (toi à gauche, l'adversaire à droite), pastilles des manches, annonces, petit recul à la manche
+--   perdue, pose de victoire, fenêtre du résultat (Cash, plafond du jour, bilan).
 -- Le serveur décide de tout (DuelService) ; ici, on met en scène.
 
 local Players = game:GetService("Players")
@@ -171,10 +171,10 @@ local function shout(text: string, color: Color3, sub: string?, hold: number?)
 	end
 end
 
--- Jauge de la corde : comme un vrai tir à la corde, le drapeau glisse vers celui qui gagne (à gauche quand c'est
--- toi) ; arrivé au bout, K.-O. rope > 0 = la corde penche de ton côté.
-local function setRope(rope: number, limit: number)
-	local share = math.clamp(rope / math.max(limit, 1), -1, 1)
+-- Jauge du bras de fer : le poing glisse vers celui qui gagne (à gauche quand c'est toi) ; arrivé au bout, le bras
+-- de l'autre est plaqué. lean > 0 = le bras penche en ta faveur.
+local function setLean(lean: number, limit: number)
+	local share = math.clamp(lean / math.max(limit, 1), -1, 1)
 	TweenService:Create(meterKnob, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 		Position = UDim2.fromScale(0.5 - share * 0.5, 0.5),
 	}):Play()
@@ -248,14 +248,15 @@ local function startCamera()
 		plan = function()
 			local you, them = root.Position, theirPosition()
 			local axis = Vector3.new(them.X - you.X, 0, them.Z - you.Z)
-			local gap = math.max(axis.Magnitude, 6)
+			local gap = math.max(axis.Magnitude, 3)
 			axis = if axis.Magnitude > 0.1 then axis.Unit else Vector3.xAxis
 			local side = Vector3.new(0, 1, 0):Cross(axis)
 			local center = (you + them) / 2 + Vector3.new(0, 0.5, 0)
-			local distance = gap * 0.9 + 6
-			-- Caméra du côté où l'adversaire est à droite de l'écran (toi à gauche, comme la jauge), en plongée :
-			-- l'estrade est entourée de bancs et de racks, une caméra basse les aurait devant elle
-			local steps = { { 0, 0.7 }, { 20, 0.7 }, { -20, 0.7 }, { 45, 0.6 }, { -45, 0.6 }, { 0, 1.1 } }
+			-- Assez près pour voir les bras sur la table, assez loin pour garder les deux joueurs en entier
+			local distance = gap * 1.2 + 5.5
+			-- Caméra du côté où l'adversaire est à droite de l'écran (toi à gauche, comme la jauge), en légère
+			-- plongée : on voit la table et les deux bras, et une caméra basse aurait le décor devant elle
+			local steps = { { 0, 0.45 }, { 20, 0.45 }, { -20, 0.45 }, { 45, 0.5 }, { -45, 0.5 }, { 0, 1.1 } }
 			local directions = CameraFraming.Around(-side, distance, 1.5, 1, steps)
 			for _, direction in CameraFraming.Around(side, distance, 1.5, 1, steps) do
 				table.insert(directions, direction)
@@ -286,12 +287,12 @@ local function setLayout(active: boolean)
 	MinigameController.SetSideButtonsHidden(active, "Duel")
 end
 
--- Manche perdue : la corde tire le joueur d'un coup vers l'adversaire
+-- Manche perdue : le joueur recule d'un petit bond, le bras plaqué
 local function yank()
 	local character = player.Character
 	local root = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
 	if root then
-		root.AssemblyLinearVelocity = root.CFrame.LookVector * 26 + Vector3.new(0, 18, 0)
+		root.AssemblyLinearVelocity = -root.CFrame.LookVector * 14 + Vector3.new(0, 12, 0)
 	end
 end
 
@@ -367,17 +368,17 @@ local function onUpdate(update)
 			theirSpot = update.theirSpot,
 			rounds = update.rounds or Duels.Rounds,
 			results = {},
-			limit = update.limit or Duels.RopeLimit,
+			limit = update.limit or Duels.LeanLimit,
 		}
 		refreshAllPrompts()
 		MinigameController.SetGameplayLocked(true)
 		setLayout(true)
 		meter.Visible = true
 		meterThem.Text = (duel :: Duel).name
-		setRope(0, (duel :: Duel).limit)
+		setLean(0, (duel :: Duel).limit)
 		renderPips()
 		intro((duel :: Duel).name, update.intro or Duels.IntroTime)
-		-- Le temps que le serveur place les deux joueurs sur l'estrade
+		-- Le temps que le serveur pose la table et place les deux joueurs
 		task.delay(0.4, function()
 			if duel and not stopFollow then
 				startCamera()
@@ -385,7 +386,7 @@ local function onUpdate(update)
 		end)
 	elseif state == "RoundStart" then
 		if duel then
-			setRope(0, duel.limit)
+			setLean(0, duel.limit)
 		end
 		if update.round > 1 then
 			local final = update.round == update.rounds
@@ -398,7 +399,7 @@ local function onUpdate(update)
 		end
 	elseif state == "Live" then
 		if duel then
-			setRope(update.rope, update.limit or duel.limit)
+			setLean(update.lean, update.limit or duel.limit)
 		end
 	elseif state == "RoundResult" then
 		if duel then
@@ -560,9 +561,9 @@ local function buildGui()
 		Parent = gui,
 	})
 
-	-- Jauge de la corde : ton camp (or) à gauche, celui de l'adversaire (rouge) à droite, le drapeau entre les deux
+	-- Jauge du bras de fer : ton camp (or) à gauche, celui de l'adversaire (rouge) à droite, le poing entre les deux
 	meter = Ui.create("Frame", {
-		Name = "Rope",
+		Name = "Lean",
 		AnchorPoint = Vector2.new(0.5, 1),
 		Position = UDim2.new(0.5, 0, 1, -140),
 		Size = UDim2.new(0.6, 0, 0, 34),
@@ -609,7 +610,7 @@ local function buildGui()
 		Position = UDim2.fromScale(0.5, 0.5),
 		Size = UDim2.fromOffset(40, 40),
 		TextStrokeTransparency = 1,
-		Text = "🚩",
+		Text = "✊",
 		ZIndex = 4,
 		Parent = meter,
 	})

@@ -55,7 +55,7 @@ local commands = {
 		EventService.Stop()
 		return EventService.Run(kind)
 	end,
-	-- Duel d'entraînement contre un mannequin (teste le Tug of Mog seul) ; perfect / good : sa précision (0 à 1)
+	-- Duel d'entraînement contre un mannequin (teste le bras de fer seul) ; perfect / good : sa précision (0 à 1)
 	DuelBot = function(player: Player, perfect: number?, good: number?)
 		local skill = if perfect then { perfect = perfect, good = good or 0 } else nil
 		return DuelService.StartBotDuel(player, skill)

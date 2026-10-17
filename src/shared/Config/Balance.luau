@@ -44,7 +44,7 @@ return {
 			Trophies = 0,
 			Stats = {},
 		},
-		-- Duels « Tug of Mog » (DuelService) : bilan, et compteur du jour par adversaire (récompenses plafonnées)
+		-- Duels de bras de fer (DuelService) : bilan, et compteur du jour par adversaire (récompenses plafonnées)
 		Duels = { Wins = 0, Losses = 0, Draws = 0, Day = 0, Pairs = {} },
 		-- Apparence choisie dans le menu de création (D55, Config/Look.luau) ; Created = menu déjà validé une fois
 		Look = {

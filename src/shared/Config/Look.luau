@@ -126,13 +126,13 @@ local Look = {
 		"Noodle",
 	},
 	-- Titres exclusifs (D67), débloqués par les trophées de la semaine (3 défis réussis la même semaine) ou par les
-	-- victoires en duel (Tug of Mog, victoires récompensées seulement). Textes : Nick.Title.<id>.
+	-- victoires en duel (bras de fer, victoires récompensées seulement). Textes : Nick.Title.<id>.
 	RewardTitles = {
 		{ id = "WeeklyWarrior", trophies = 1 },
 		{ id = "NeverSkips", trophies = 4 },
 		{ id = "CalendarCrusher", trophies = 10 },
-		{ id = "TugChamp", duelWins = 5 },
-		{ id = "RopeBoss", duelWins = 25 },
+		{ id = "WristWrecker", duelWins = 5 },
+		{ id = "IronGrip", duelWins = 25 },
 		{ id = "Unmoggable", duelWins = 100 },
 	},
 

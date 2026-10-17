@@ -28,7 +28,7 @@ Test de la vision : l'idée tient-elle dans les trois briques (mini-jeux, conten
 
 ## Multijoueur (après le MVP)
 
-- ~~**Duels de Mog entre joueurs**~~ → fait (D67) sous la forme du Tug of Mog, voir `02_MECANIQUES/DUELS.md`.
+- ~~**Duels de Mog entre joueurs**~~ → fait (D67, puis D68 : bras de fer n'importe où), voir `02_MECANIQUES/DUELS.md`.
 - **Aides géantes coopératives** : un objet énorme à déplacer à plusieurs (réutilise un mini-jeu, scores additionnés).
 - **Galères du jour** : une aide spéciale apparaît sur le serveur pour tout le monde.
 

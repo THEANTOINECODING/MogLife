@@ -29,8 +29,9 @@ Remplace la suite de l'étape E ci-dessous. Chaque étape prépare la suivante (
 7. ✅ **Le son** (16-17/10 : musique par ambiance choisie par le créateur, volumes mesurés et équilibrés, D54) : musique par zone, effets pour chaque activité.
 8. **Alpha** : testeurs, vrais téléphones, réglage de l'économie.
 9. ✅ **Faire revenir les joueurs** (17/10, D67) : défis de la semaine et coffre de la semaine (bouton Weekly),
-   duels entre joueurs à chances égales (Tug of Mog, même suite de nœuds pour les deux, deux estrades dans la salle),
-   titres exclusifs et victoires affichées à côté du surnom. Testé dans Studio : duel complet contre un mannequin
+   duels entre joueurs à chances égales (18/10, D68 : bras de fer contre n'importe qui, n'importe où, table qui
+   apparaît entre les deux joueurs, mêmes zones de force pour les deux),
+   titres exclusifs et victoires affichées à côté du surnom. Testé dans Studio : bras de fer complet contre un mannequin (devant une maison et sur la place)
    (défaite, victoire, récompense, plafond, surnom), défis, bonus, trophée, titres, changement de semaine. Reste à
    tester : l'invitation entre deux vrais joueurs (mode « Serveur et 2 clients » de Studio), la liste des titres dans
    le menu du miroir, le jeu au doigt sur téléphone.

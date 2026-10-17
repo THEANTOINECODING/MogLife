@@ -1,35 +1,47 @@
--- Duels entre joueurs : « Tug of Mog » (D67, design/02_MECANIQUES/DUELS.md). Un bras de fer en rythme sur une
--- estrade de la salle (tag DuelSpot). Chances égales : même motif de nœuds, mêmes fenêtres, mêmes vitesses pour les
--- deux joueurs ; ni le Mog, ni le stade, ni la tenue n'entrent dans le calcul.
+-- Duels entre joueurs : bras de fer (D68, design/02_MECANIQUES/DUELS.md). Contre n'importe quel joueur, n'importe
+-- où : une table apparaît entre les deux. Chances égales : même motif de zones, mêmes fenêtres, mêmes vitesses pour
+-- les deux joueurs ; ni le Mog, ni le stade, ni la tenue n'entrent dans le calcul.
 -- Les chiffres sont des hypothèses ❓ à régler pendant l'alpha.
 
 return {
-	Minigame = "Tug", -- module dans src/client/Minigames/ (jamais utilisé ailleurs)
-	Activity = "Tug", -- module dans src/client/Activities/ (les deux joueurs tirent sur la corde)
+	Minigame = "Gauge", -- module dans src/client/Minigames/ (jamais utilisé ailleurs)
+	Activity = "ArmWrestle", -- module dans src/client/Activities/ (les deux joueurs, coude sur la table)
 
 	Rounds = 3,
 	RoundsToWin = 2,
-	RepsPerRound = 8, -- nœuds par manche
-	Interval = 0.95, -- secondes entre deux nœuds (manche 1)
+	RepsPerRound = 8, -- poussées par manche (un balayage de l'aiguille chacune)
+	Interval = 0.95, -- secondes d'un balayage de l'aiguille (manche 1)
 	SpeedByRound = { 1, 0.88, 0.78 }, -- chaque manche est plus rapide…
-	TimingScaleByRound = { 1, 0.9, 0.8 }, -- … et ses fenêtres plus serrées
-	HoldChanceByRound = { 0.15, 0.3, 0.4 }, -- part de nœuds longs (maintenir puis relâcher)
-	Lead = 1.5, -- intervalles avant l'arrivée du premier nœud (temps de traversée de la corde à l'écran)
-	MinRepGap = 0.25, -- secondes minimum entre deux répétitions envoyées (une fin de nœud long suivie d'un nœud)
-	HoldLength = 0.4, -- longueur d'un nœud long, en intervalles (court : le nœud suivant arrive juste après)
+	TimingScaleByRound = { 1, 0.85, 0.7 }, -- … et sa zone de force plus étroite
+	Lead = 0.6, -- balayages d'attente avant le premier (le temps de voir la jauge)
+	MinRepGap = 0.25, -- secondes minimum entre deux poussées envoyées
+	-- Jauge (fractions de sa largeur) : la zone verte change de place à chaque balayage
+	ZoneHalf = 0.13, -- demi-largeur de la zone verte (Good), × l'échelle de la manche
+	PerfectHalf = 0.045, -- demi-largeur du cœur doré (Perfect), × l'échelle de la manche
+	ZoneMin = 0.2, -- la zone reste entre ces deux bornes de la jauge
+	ZoneMax = 0.8,
 
-	-- Traction de chaque répétition sur la corde (en « crans »). La corde va de -RopeLimit à +RopeLimit :
-	-- l'atteindre fait gagner la manche tout de suite (K.-O.) ; sinon, la manche va au côté vers lequel penche la
-	-- corde après le dernier nœud (0 = manche nulle).
-	Pull = { Perfect = 3, Good = 2, Miss = 0 },
-	RopeLimit = 12,
+	-- Poussée de chaque répétition (en « crans »). Le bras va de -LeanLimit à +LeanLimit : l'atteindre, c'est plaquer
+	-- le bras de l'adversaire sur la table (manche gagnée tout de suite) ; sinon, la manche va au côté vers lequel
+	-- penchent les bras après la dernière poussée (0 = manche nulle).
+	Push = { Perfect = 3, Good = 2, Miss = 0 },
+	LeanLimit = 12,
+
+	-- Table de bras de fer (studs) : elle apparaît au sol entre les deux joueurs
+	Table = {
+		Height = 3.3, -- hauteur du plateau (on se tient debout)
+		Spacing = 1.9, -- distance entre le centre de la table et chaque joueur
+		MaxStep = 1.2, -- écart de hauteur de sol accepté sous la table et les joueurs
+		Room = Vector3.new(3, 5.5, 1.4), -- place libre demandée (largeur, hauteur, marge en longueur)
+		TryAngles = { 0, 90, -90, 45, -45, 135, -135, 180 }, -- sens essayés autour de l'axe entre les joueurs
+	},
 
 	IntroTime = 5, -- secondes de présentation (bandeau VS, 3-2-1) avant la 1re manche
 	PauseBetweenRounds = 3,
-	ResultTime = 4, -- secondes avant le retour des deux joueurs à leur place d'avant le duel
+	ResultTime = 4, -- secondes avant que la table disparaisse
 
 	-- Invitations
-	InviteDistance = 16, -- studs max entre les deux joueurs pour inviter
+	InviteDistance = 14, -- studs max entre les deux joueurs pour inviter
 	InviteTimeout = 12, -- refus automatique, sans pénalité
 	InviteCooldown = 20, -- secondes entre deux invitations d'un même joueur
 	DeclineBlock = 300, -- après un refus, le même joueur ne peut plus inviter celui-ci pendant 5 min

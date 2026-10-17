@@ -43,7 +43,7 @@ local NAMES = {
 	"CityEvent", -- serveur -> tous : ({ kind, state: "Started" | "Ended" | ..., endsAt? }) événement de ville
 	"SetSetting", -- client -> serveur : (key: string, value: boolean) changer un réglage
 	"SettingsState", -- serveur -> client : ({ [key]: boolean }) réglages sauvegardés
-	"DuelInvite", -- client -> serveur : (target: Player) inviter un joueur proche à un Tug of Mog
+	"DuelInvite", -- client -> serveur : (target: Player) inviter un joueur proche à un bras de fer
 	"DuelAnswer", -- client -> serveur : (accept: boolean) réponse à l'invitation reçue
 	-- serveur -> client : ({ state: "Invited" | "InviteSent" | "Started" | "RoundStart" | "Live" | "RoundResult" |
 	-- "Result" | "Finished", ... }) invitation reçue, puis déroulement du duel

@@ -10,6 +10,6 @@ return {
 		"CloseUp", -- gros plan de la caméra sur son personnage pendant les activités
 		"Names", -- noms au-dessus des autres joueurs
 		"Players", -- afficher les autres joueurs (les masquer allège l'écran et le téléphone)
-		"Duels", -- recevoir des invitations de duel (Tug of Mog)
+		"Duels", -- recevoir des invitations de duel (bras de fer)
 	},
 }

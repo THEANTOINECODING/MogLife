@@ -936,33 +936,9 @@ def gym():
     c.append(decor(F, "TankSlot", (28, 20.8, 34), "Kit_WaterTank"))
     for k, (lx, lz) in enumerate(((-24, 30), (0, 40))):
         c.append(decor(F, f"VentSlot{k}", (lx, 20.8, lz), "Kit_RoofVent"))
-    # Estrades de duel « Tug of Mog » (D67), de chaque côté du ring du Coach : les deux joueurs se font face
-    for k, cx in enumerate((-18, 18)):
-        duel_stage(c, F, k, cx, 16)
     c.append(landmark(F, "GymIcon", (0, 36, 24), "Gym"))
     return c
 
-
-def duel_stage(c, F, k, cx, cz):
-    """Estrade de duel : plateau, liseré doré, ligne du milieu, un camp or (A) et un camp rouge (B), 4 poteaux.
-    Les emplacements DuelSpot (attributs Arena et Side) regardent vers l'adversaire."""
-    top = 1.3
-    c.append(P(F, f"DuelStage{k}", (cx, 0.8, cz), (16, 1, 7), (45, 50, 78), "SmoothPlastic"))
-    for j, dz in enumerate((-3.35, 3.35)):
-        c.append(P(F, f"DuelTrimLong{k}{j}", (cx, top + 0.05, cz + dz), (16, 0.1, 0.3), (250, 200, 40), "Metal"))
-    for j, dx in enumerate((-7.85, 7.85)):
-        c.append(P(F, f"DuelTrimShort{k}{j}", (cx + dx, top + 0.05, cz), (0.3, 0.1, 7), (250, 200, 40), "Metal"))
-    c.append(P(F, f"DuelMidLine{k}", (cx, top + 0.03, cz), (0.4, 0.06, 6.4), (255, 255, 255), "Neon", collide=False))
-    for side, dx, color, yaw in (("A", -6, (250, 200, 40), -90), ("B", 6, (220, 60, 60), 90)):
-        c.append(P(F, f"DuelPad{k}{side}", (cx + dx, top + 0.03, cz), (3.2, 0.06, 3.2), color, "SmoothPlastic",
-                   collide=False))
-        c.append(P(F, f"DuelSpot{k}{side}", (cx + dx, top + 0.1, cz), (2, 0.2, 2), WHITE, yaw=yaw, transparency=1,
-                   collide=False, tags=["DuelSpot"], attributes={"Arena": f"Gym{k + 1}", "Side": side},
-                   extra={"CanQuery": False, "CanTouch": False}))
-    for j, (dx, dz) in enumerate(((-7.6, -3.1), (-7.6, 3.1), (7.6, -3.1), (7.6, 3.1))):
-        c.append(P(F, f"DuelPost{k}{j}", (cx + dx, top + 1.1, cz + dz), (0.5, 2.2, 0.5), (235, 235, 240), "Metal"))
-        c.append(P(F, f"DuelPostCap{k}{j}", (cx + dx, top + 2.35, cz + dz), (0.8, 0.8, 0.8), (250, 200, 40),
-                   "Metal", shape="Ball"))
 
 
 def park():

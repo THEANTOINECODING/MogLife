@@ -35,7 +35,7 @@ Depuis l'étape 9 (D67, bouton **Weekly** en haut à droite) :
   **trophée de la semaine** et un bonus. Les trophées débloquent des titres exclusifs (1, 4 et 10 trophées).
 - **Coffre de la semaine** : chaque jour où l'on joue au moins 3 minutes coche une case (7 cases) ; le coffre s'ouvre
   le dimanche, et rapporte plus s'il y a plus de cases cochées.
-- **Duels Tug of Mog** entre joueurs (voir `02_MECANIQUES/DUELS.md`).
+- **Bras de fer** contre n'importe quel joueur, n'importe où (D68, voir `02_MECANIQUES/DUELS.md`).
 - Aucune pénalité : sauter un jour ou une semaine ne fait rien perdre ; ce qui était gagné mais pas réclamé (défis,
   bonus, coffre) est versé automatiquement la semaine suivante. Montants : `Config/Weekly.luau` (hypothèses ❓).
 
