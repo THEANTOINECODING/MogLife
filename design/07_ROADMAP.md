@@ -21,12 +21,12 @@ Remplace la suite de l'étape E ci-dessous. Chaque étape prépare la suivante (
 **Règle transversale (D37) : chaque activité se joue vraiment dans le monde**, le personnage (et l'objet, le PNJ ou le boss) réalise le mouvement en suivant le résultat de chaque répétition du mini-jeu.
 
 1. ✅ **La ville** (15/10) : maisons, garages, magasins et salle modélisés dans Blender, portes automatiques (entrée, garage ↔ salon, magasins), salle en plein air, collisions exactes.
-2. ✅ **Le personnage du joueur** (16/10) : un corps par stade (Normie → God Mogger), prise de muscle satisfaisante (transformation animée, effet à chaque stade, gonflement progressif) et **les 6 exercices animés pour de vrai** selon le jeu du joueur (D37).
-3. 🟡 **Le style** (16/10 : objets modélisés pour les 7 corps, barbes, présentoirs ; reste : import et vérification en jeu, bas/bronzage/visage du design) : coiffures, barbes, tenues adaptées à tous les corps ; présentoirs dans les magasins.
-4. 🟡 **Les PNJ** (16/10 : 12 habitants/vendeurs/mentor modélisés, vendeurs et mentor en place, les 8 aides et le Mog-off animés ; reste : import des modèles et vérification à l'image) : habitants et boss refaits, mentor, **vendeurs dans chaque magasin** (D38) ; **aides et combats de boss animés pour de vrai** (D37).
+2. ✅ **Le personnage du joueur** (16/10 ; 17/10 : création de personnage D55, Normie spaghetti D56, corps féminins D59, croissance continue D60) : un corps par stade (Normie → God Mogger), prise de muscle satisfaisante (transformation animée, effet à chaque stade, gonflement progressif) et **les 6 exercices animés pour de vrai** selon le jeu du joueur (D37).
+3. ✅ **Le style** (16/10 ; 17/10 : objets pour les 14 corps, teintes de peau et de cheveux, importés et vérifiés en jeu ; reste du design : bronzage) : coiffures, barbes, tenues adaptées à tous les corps ; présentoirs dans les magasins.
+4. ✅ **Les PNJ** (16/10 : 12 habitants/vendeurs/mentor modélisés et vérifiés à l'image, les 8 aides et le Mog-off animés) : habitants et boss refaits, mentor, **vendeurs dans chaque magasin** (D38) ; **aides et combats de boss animés pour de vrai** (D37).
 5. ✅ **Le guide et le tutoriel** (16/10, D46 ; ❓ premier achat du tutoriel) : le mentor explique chaque nouveau stade et chaque magasin ; flèches pour les nouveaux joueurs.
-6. 🟡 **Le gameplay** (16/10 : combo, boosts, Mog-off mis en scène, D47–D50 ; à vérifier en jeu) : mini-jeux améliorés ; boissons et aliments comiques qui donnent un boost (❓ énergie, voir D36).
-7. 🟡 **Le son** (16/10 : système en place, sons branchés sur les événements ; ❓ choisir les sons, voir Config/Sounds.luau) : musique par zone, effets pour chaque activité.
+6. ✅ **Le gameplay** (16-17/10 : combo, boosts, Mog-off mis en scène, notes et records, aides payées selon la réussite, coups spéciaux des boss, émotes, pareur, événements de ville, cinématiques ; D47–D58) : mini-jeux améliorés ; boissons et aliments comiques qui donnent un boost (❓ énergie, voir D36).
+7. ✅ **Le son** (16-17/10 : musique par ambiance choisie par le créateur, volumes mesurés et équilibrés, D54) : musique par zone, effets pour chaque activité.
 8. **Alpha** : testeurs, vrais téléphones, réglage de l'économie.
 9. **Faire revenir les joueurs** : récompenses hebdomadaires, duels entre joueurs à chances égales (même mini-jeu).
 
