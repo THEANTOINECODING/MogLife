@@ -30,6 +30,7 @@ type Piece = { part: BasePart, kind: string, size: Vector3 }
 type State = {
 	character: Model,
 	stageId: string,
+	bodyKey: string, -- corps porté (<Stade> ou <Stade>F) : un changement de genre réapplique les proportions
 	styleKey: string, -- objets équipés et apparence au moment de la construction (pour savoir s'il faut reconstruire)
 	pieces: { Piece },
 	pump: { [string]: number }, -- gonflement en cours par type de muscle (UpperArm, UpperTorso…)
@@ -224,7 +225,7 @@ function BodyService.Refresh(player: Player, force: boolean?)
 	local styleItems = equippedStyle(player, bodyKey)
 	local styleKey = `{bodyKey}|{table.concat(styleItems, ",")}|{Look.Key(look)}`
 	local sameCharacter = previous ~= nil and previous.character == character
-	if sameCharacter and previous.stageId == stageId and not force then
+	if sameCharacter and previous.bodyKey == bodyKey and not force then
 		-- Même corps : on ne reconstruit que si les objets équipés ont changé
 		if previous.styleKey ~= styleKey then
 			previous.pieces = buildShell(character, bodyKey, look, styleItems)
@@ -233,11 +234,13 @@ function BodyService.Refresh(player: Player, force: boolean?)
 		applySizes(player)
 		return
 	end
-	applyProportions(humanoid, body)
+	-- Proportions du squelette du corps porté (les corps féminins ont les leurs)
+	applyProportions(humanoid, Bodies[bodyKey] or body)
 	hideOriginalBody(character)
 	states[player] = {
 		character = character,
 		stageId = stageId,
+		bodyKey = bodyKey,
 		styleKey = styleKey,
 		pieces = buildShell(character, bodyKey, look, styleItems),
 		pump = if sameCharacter then previous.pump else {},

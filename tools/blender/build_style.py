@@ -536,7 +536,7 @@ for i, stage in enumerate(BODY_KEYS):
     build_beards(w, g)
     build_faces(w, g)
     build_accessories(w, g)
-    sk = SKELETONS[BASE[stage]]["parts"]
+    sk = skeleton(stage)["parts"]
     manifest[stage] = {}
     for item, parts in w.items.items():
         pieces = merge_item(stage, item, parts, builder.mat, builder.col)

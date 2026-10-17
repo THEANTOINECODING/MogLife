@@ -21,6 +21,16 @@ local Bodies: { [string]: Body } = {
 	Chad = { width = 1.35, height = 1.15, depth = 1.2, head = 0.95 },
 	Gigachad = { width = 1.5, height = 1.2, depth = 1.3, head = 0.95 },
 	GodMogger = { width = 1.7, height = 1.3, depth = 1.45, head = 0.9 },
+
+	-- Corps féminins (D55, refaits le 17/10) : épaules plus étroites (largeur x0,85), un peu moins profonds et moins
+	-- grands que les masculins du même stade, même tête. Squelettes relevés dans Studio comme les autres.
+	NormieF = { width = 0.44, height = 1.02, depth = 0.56, head = 1.15 },
+	GymRatF = { width = 0.77, height = 0.97, depth = 0.83, head = 1.05 },
+	BroF = { width = 0.89, height = 1.02, depth = 0.92, head = 1.0 },
+	AlphaF = { width = 1.02, height = 1.07, depth = 1.01, head = 1.0 },
+	ChadF = { width = 1.15, height = 1.12, depth = 1.1, head = 0.95 },
+	GigachadF = { width = 1.28, height = 1.16, depth = 1.2, head = 0.95 },
+	GodMoggerF = { width = 1.45, height = 1.26, depth = 1.33, head = 0.9 },
 }
 
 return Bodies

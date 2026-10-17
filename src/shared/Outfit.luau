@@ -24,9 +24,11 @@ function Outfit.Available(): boolean
 	return ReplicatedStorage:FindFirstChild("Bodies") ~= nil and ReplicatedStorage:FindFirstChild("Style") ~= nil
 end
 
--- Hauteur du sommet de la tête d'un stade (pour cadrer une caméra ou poser une tête)
-function Outfit.HeadCenter(stage: string): Vector3?
-	local skeleton = BodySkeleton[stage]
+-- Centre de la tête d'un stade (pour cadrer une caméra ou poser une tête) ; avec l'apparence, celui du corps
+-- féminin si c'est lui qui est porté
+function Outfit.HeadCenter(stage: string, look: Look.LookData?): Vector3?
+	local key = if look then Look.BodyKey(stage, look, ReplicatedStorage:FindFirstChild("Bodies")) else stage
+	local skeleton = BodySkeleton[key] or BodySkeleton[stage]
 	return skeleton and skeleton.Head
 end
 
@@ -60,14 +62,18 @@ function Outfit.Build(stage: string, items: { string }, options: Options?): Mode
 	local opts = options or {}
 	local bodies = ReplicatedStorage:FindFirstChild("Bodies")
 	local styles = ReplicatedStorage:FindFirstChild("Style")
-	local skeleton = BodySkeleton[stage]
-	if not bodies or not styles or not skeleton then
+	if not bodies or not styles then
+		return nil
+	end
+	local look = opts.look or Look.Default()
+	local bodyKey = Look.BodyKey(stage, look, bodies)
+	-- Les corps féminins ont leur propre squelette (plus étroit)
+	local skeleton = BodySkeleton[bodyKey] or BodySkeleton[stage]
+	if not skeleton then
 		return nil
 	end
 	local model = Instance.new("Model")
 	model.Name = "Outfit"
-	local look = opts.look or Look.Default()
-	local bodyKey = Look.BodyKey(stage, look, bodies)
 	local whiten = opts.mannequin == true
 	for _, entry in Look.Pieces(bodyKey, look, items, { bust = opts.bust, noBaseHair = whiten }) do
 		local folder = if entry.folder == "Bodies" then bodies else styles

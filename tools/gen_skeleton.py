@@ -11,6 +11,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SOURCE = os.path.join(ROOT, "assets", "export", "bodies", "skeletons.json")
 OUT = os.path.join(ROOT, "src", "shared", "Config", "BodySkeleton.luau")
 ORDER = ["Normie", "GymRat", "Bro", "Alpha", "Chad", "Gigachad", "GodMogger"]
+ORDER += [name + "F" for name in ORDER]  # corps féminins (D55), squelettes à part
 
 data = json.load(open(SOURCE, encoding="utf-8"))
 lines = [

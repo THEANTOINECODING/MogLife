@@ -94,7 +94,7 @@ local function previewItems(): { string }
 end
 
 local function frameCamera(stageId: string)
-	local head = Outfit.HeadCenter(stageId)
+	local head = Outfit.HeadCenter(stageId, look)
 	if not head then
 		return
 	end

@@ -94,7 +94,7 @@ local function refreshPreview()
 	model.Parent = world
 	previewModel = model
 	-- Cadrage : tout le corps, quel que soit le stade
-	local head = Outfit.HeadCenter(stage.id) :: Vector3
+	local head = Outfit.HeadCenter(stage.id, look) :: Vector3
 	local center = head.Y * 0.55
 	local distance = head.Y * 1.75 + 2
 	local camera = viewport.CurrentCamera :: Camera
