@@ -2,6 +2,10 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-18 (porte arrière de la salle)
+
+- **D69 — La salle a une deuxième entrée, au milieu du mur du fond** (demande du créateur). Elle donne sur la salle en plein air, côté centre-ville : plus besoin de faire le tour par la route. Ouverture de 10 × 12 studs avec deux battants automatiques (Door_Shop_GymBack), encadrement et bandeau rouge côté extérieur ; le miroir du fond est coupé en deux et le râtelier d'haltères du milieu retiré pour laisser le passage. Collisions régénérées (tools/gen_colliders.py). **Reste à faire** : exporter les bâtiments depuis Blender (tools/blender/export_buildings.py) puis les importer dans Studio (Importer 3D + tools/install_props.luau) ; d'ici là le mur du fond paraît fermé mais se traverse à l'emplacement de la porte.
+
 ## 2026-10-18 (bras de fer n'importe où)
 
 - **D68 — Le duel entre joueurs devient un bras de fer, contre n'importe qui, n'importe où** (demande du créateur ; remplace le Tug of Mog de D67). Choix du créateur : nouveau mini-jeu de jauge de force (**Gauge** : l'aiguille balaie la jauge, appuyer dans la zone verte qui change de place à chaque balayage, mêmes zones pour les deux joueurs), une table de bras de fer qui apparaît entre les deux joueurs là où ils sont (sol plat et place vérifiés, autres sens essayés sinon), invitation toujours à accepter. Les deux estrades de la salle sont retirées, le mini-jeu Tug et son animation sont supprimés (un mini-jeu n'est jamais réutilisé). Récompenses, plafond par paire de joueurs, participation valide et compteur de victoires inchangés. Titres de duel renommés : Wrist Wrecker (5 victoires), Iron Grip (25), Unmoggable (100).

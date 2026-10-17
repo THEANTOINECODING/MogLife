@@ -331,9 +331,10 @@ def doors(P):
     parts.append((box((0, 0, h - 1.6), (w - 2.0, 0.42, 1.4)), "glass"))
     P.prop("Door_House", parts)
 
-    # Magasins : deux battants vitrés par entrée (cadre sombre, barre de poussée)
-    for name, spec in SHOPS.items():
-        dw, dh = spec[3]
+    # Magasins : deux battants vitrés par entrée (cadre sombre, barre de poussée) ; aussi pour les portes arrière
+    entrances = [(name, spec[3]) for name, spec in SHOPS.items()]
+    entrances += [(name + "Back", size) for name, size in BACK_DOORS.items()]
+    for name, (dw, dh) in entrances:
         w, h = dw / 2 - 0.05, dh - 0.4
         parts = [
             (box((-w / 2 + 0.3, 0, h / 2), (0.6, 0.3, h)), "charcoal"),
@@ -357,6 +358,9 @@ SHOPS = {
     "Grocery": (36, 32, 14, (10, 9), ((-11, 10, 2.5, 9), (11, 10, 2.5, 9)), "green", "tiles"),
     "Gym": (84, 48, 20, (18, 13), ((-26, 16, 3, 12), (26, 16, 3, 12)), "darkred", "gymwall"),
 }
+# Portes à l'arrière (largeur, hauteur), au milieu du mur du fond (D69) : la salle donne aussi sur la salle en plein
+# air, côté centre-ville. Leurs battants : Door_Shop_<nom>Back.
+BACK_DOORS = {"Gym": (10, 12)}
 
 
 def shop(P, name, spec):
@@ -367,7 +371,9 @@ def shop(P, name, spec):
     holes = (door,) + tuple((x - ww / 2, x + ww / 2, y0, y1) for x, ww, y0, y1 in windows)
     walls = []
     walls += wall("x", -half, half, 0, T, 0, h + para, holes)
-    walls += wall("x", -half, half, d - T, d, 0, h + para)
+    back = BACK_DOORS.get(name)
+    back_holes = ((-back[0] / 2, back[0] / 2, 0, back[1]),) if back else ()
+    walls += wall("x", -half, half, d - T, d, 0, h + para, back_holes)
     walls += wall("y", T, d - T, -half, -half + T, 0, h + para)
     walls += wall("y", T, d - T, half - T, half, 0, h + para)
     P.prop(f"Shop_{name}_Walls", [(b, "white") for b in walls])
@@ -405,13 +411,22 @@ def shop(P, name, spec):
     for x in (-dw / 2 - 1.2, dw / 2 + 1.2):
         trim.append((box((x, -0.9, dh + 3.3), (0.5, 1.4, 0.3)), "charcoal"))
         trim.append((box((x, -1.5, dh + 3.1), (0.8, 0.4, 0.3)), "lampwarm"))
+    # Porte arrière : encadrement et bandeau coloré, collés au mur (la boîte de la façade ne change pas)
+    if back:
+        bw, bh = back
+        trim += [
+            (box((-bw / 2 - 0.3, d, bh / 2), (0.6, 0.4, bh)), "charcoal"),
+            (box((bw / 2 + 0.3, d, bh / 2), (0.6, 0.4, bh)), "charcoal"),
+            (box((0, d, bh + 0.3), (bw + 1.2, 0.4, 0.6)), "charcoal"),
+            (box((0, d, bh + 1.5), (bw + 2.4, 0.3, 1.4)), sign),
+        ]
     P.prop(f"Shop_{name}_Trim", trim)
 
     inside = half - T
     parts = []
     for run, a0, a1, t0, t1, hl in (
         ("x", -inside, inside, T, T + 0.06, holes),
-        ("x", -inside, inside, d - T - 0.06, d - T, ()),
+        ("x", -inside, inside, d - T - 0.06, d - T, back_holes),
         ("y", T, d - T, -inside, -inside + 0.06, ()),
         ("y", T, d - T, inside - 0.06, inside, ()),
     ):

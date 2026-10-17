@@ -11802,6 +11802,144 @@
    ]
   },
   {
+   "name": "GymBackDoorLeft",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Door_Shop_GymBack",
+    "PropCollide": false,
+    "AutoDoor": true,
+    "DoorHinge": -1
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         56.4,
+         0.4,
+         -56.5
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "GymBackDoorRight",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Door_Shop_GymBack",
+    "PropCollide": false,
+    "AutoDoor": true,
+    "DoorHinge": -1
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         56.4,
+         0.4,
+         -51.5
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
    "name": "GymLamp00",
    "className": "Part",
    "properties": {
@@ -13602,12 +13740,12 @@
    }
   },
   {
-   "name": "GymMirror",
+   "name": "GymMirror0",
    "className": "Part",
    "properties": {
     "Anchored": true,
     "Size": [
-     76,
+     31,
      10,
      0.2
     ],
@@ -13616,7 +13754,55 @@
       "position": [
        57.2,
        8.1,
-       -54.0
+       -76.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      225,
+      240
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false,
+    "Reflectance": 0.4
+   }
+  },
+  {
+   "name": "GymMirror1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     31,
+     10,
+     0.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       57.2,
+       8.1,
+       -31.5
       ],
       "orientation": [
        [
@@ -13811,72 +13997,6 @@
          58.6,
          0.4,
          -66.0
-        ],
-        "orientation": [
-         [
-          0.0,
-          0.0,
-          -1.0
-         ],
-         [
-          0.0,
-          1.0,
-          0
-         ],
-         [
-          1.0,
-          0.0,
-          0.0
-         ]
-        ]
-       }
-      },
-      "Color": {
-       "Color3uint8": [
-        240,
-        238,
-        232
-       ]
-      },
-      "Material": "SmoothPlastic",
-      "CanCollide": false,
-      "Transparency": 1,
-      "CanQuery": false,
-      "CanTouch": false
-     }
-    }
-   ]
-  },
-  {
-   "name": "RackSlot3",
-   "className": "Model",
-   "properties": {
-    "Tags": {
-     "Tags": [
-      "PropSlot"
-     ]
-    }
-   },
-   "attributes": {
-    "Prop": "DumbbellRack"
-   },
-   "children": [
-    {
-     "name": "PropAnchor",
-     "className": "Part",
-     "properties": {
-      "Anchored": true,
-      "Size": [
-       1,
-       0.2,
-       1
-      ],
-      "CFrame": {
-       "CFrame": {
-        "position": [
-         58.6,
-         0.4,
-         -54.0
         ],
         "orientation": [
          [

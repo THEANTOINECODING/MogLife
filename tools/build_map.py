@@ -391,6 +391,7 @@ def piece(F, name, prop, tint=None, material=None, collide=True, attributes=None
 
 SHOP_DIMS = {"Clothes": (44, 38), "Barber": (36, 32), "Furniture": (48, 38), "Grocery": (36, 32), "Gym": (84, 48)}
 SHOP_DOOR_WIDTH = {"Clothes": 10, "Barber": 8, "Furniture": 12, "Grocery": 10, "Gym": 18}  # = props_building.SHOPS
+SHOP_BACK_DOOR_WIDTH = {"Gym": 10}  # = props_building.BACK_DOORS (porte au milieu du mur du fond, D69)
 
 
 def auto_door(F, name, local, prop, yaw=0, swing=None):
@@ -415,6 +416,17 @@ def shop_shell(F, name, color, material, floor):
         # Deux battants vitrés, poignées au milieu (le battant de droite est retourné)
         auto_door(F, name + "DoorLeft", (-SHOP_DOOR_WIDTH[name] / 4, ft, 0.4), f"Door_Shop_{name}"),
         auto_door(F, name + "DoorRight", (SHOP_DOOR_WIDTH[name] / 4, ft, 0.4), f"Door_Shop_{name}", yaw=180),
+    ] + back_doors(F, name, d, ft)
+
+
+def back_doors(F, name, d, ft):
+    """Deux battants dans l'ouverture du mur du fond, s'il y en a une (props_building.BACK_DOORS)."""
+    bw = SHOP_BACK_DOOR_WIDTH.get(name)
+    if not bw:
+        return []
+    return [
+        auto_door(F, name + "BackDoorLeft", (-bw / 4, ft, d - 0.4), f"Door_Shop_{name}Back"),
+        auto_door(F, name + "BackDoorRight", (bw / 4, ft, d - 0.4), f"Door_Shop_{name}Back", yaw=180),
     ]
 
 
@@ -911,9 +923,13 @@ def gym():
     c.append(P(F, "CoachStage", (0, 0.8, 16), (16, 1, 12), (170, 40, 40), "Fabric"))
     wrap(c, n0, F, "CoachStageSlot", (0, 0.3, 16), "BossStage")
     c.append(spot(F, "CoachTurboSpot", (0, 1.8, 16), (8, 1, 8), SPOT_BOSS, "BossSpot", {"BossId": "CoachTurbo"}))
-    c.append(P(F, "GymMirror", (0, 8, 46.8), (76, 10, 0.2), (200, 225, 240), "Glass", collide=False,
-               extra={"Reflectance": 0.4}))
+    # Miroir du fond en deux parties, de chaque côté de la porte arrière
+    for k, lx in enumerate((-22.5, 22.5)):
+        c.append(P(F, f"GymMirror{k}", (lx, 8, 46.8), (31, 10, 0.2), (200, 225, 240), "Glass", collide=False,
+                   extra={"Reflectance": 0.4}))
     for k in range(7):
+        if k == 3:
+            continue  # place de la porte arrière
         n0 = len(c)
         c.append(P(F, f"Rack{k}", (-36 + k * 12, 1.7, 45), (7, 2.8, 1.6), (70, 70, 76), "Metal"))
         wrap(c, n0, F, f"RackSlot{k}", (-36 + k * 12, 0.3, 45.4), "DumbbellRack")
