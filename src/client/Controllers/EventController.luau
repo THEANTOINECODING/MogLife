@@ -22,6 +22,7 @@ local titleLabel: TextLabel
 local descLabel: TextLabel
 local timerLabel: TextLabel
 local current: { kind: string, endsAt: number }? = nil
+local inRun = false -- pendant une série ou un combat, le bandeau laisse la place aux textes du mini-jeu
 
 local EventController = {}
 
@@ -49,13 +50,23 @@ local function addMarker(object: Instance)
 end
 
 local function hideBanner()
-	TweenService:Create(banner, TweenInfo.new(0.3), { Position = UDim2.new(0.5, 0, 0, -140) }):Play()
+	local tween = TweenService:Create(banner, TweenInfo.new(0.3), { Position = UDim2.new(0.5, 0, 0, -220) })
+	tween.Completed:Connect(function(state)
+		if state == Enum.PlaybackState.Completed then
+			banner.Visible = false
+		end
+	end)
+	tween:Play()
 end
 
 local function showBanner(kind: string)
+	if inRun then
+		return
+	end
 	titleLabel.Text = Texts.Get(`Event.{kind}.Title`)
 	descLabel.Text = Texts.Get(`Event.{kind}.Desc`)
-	banner.Position = UDim2.new(0.5, 0, 0, -140)
+	banner.Visible = true
+	banner.Position = UDim2.new(0.5, 0, 0, -220)
 	TweenService:Create(banner, TweenInfo.new(0.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
 		Position = UDim2.new(0.5, 0, 0, 222), -- sous le panneau Mog / Cash du HUD
 	}):Play()
@@ -81,8 +92,9 @@ local function buildGui()
 	banner = Ui.panel({
 		Name = "Banner",
 		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 0, -140),
+		Position = UDim2.new(0.5, 0, 0, -220),
 		Size = UDim2.fromOffset(460, 104),
+		Visible = false,
 		Parent = gui,
 	})
 	titleLabel = Ui.label({
@@ -118,6 +130,30 @@ function EventController.Start()
 	end
 	CollectionService:GetInstanceAddedSignal(EVENT_TAG):Connect(addMarker)
 	Remotes.CityEvent.OnClientEvent:Connect(onEvent)
+	-- Pendant ses séries et combats, le bandeau se range ; il revient après si l'événement dure encore
+	Remotes.SeriesUpdate.OnClientEvent:Connect(function(update)
+		if update.state == "Started" then
+			inRun = true
+			if current then
+				hideBanner()
+			end
+		elseif update.state == "Ended" and update.kind ~= "Boss" then
+			inRun = false
+			if current then
+				showBanner(current.kind)
+			end
+		end
+	end)
+	-- Combat de boss : plusieurs manches à la suite, le bandeau ne revient qu'à la fin du combat
+	Remotes.BossUpdate.OnClientEvent:Connect(function(update)
+		local state = update.state
+		if state == "Victory" or state == "Defeat" or state == "Aborted" then
+			inRun = false
+			if current then
+				showBanner(current.kind)
+			end
+		end
+	end)
 	task.spawn(function()
 		while true do
 			task.wait(0.25)

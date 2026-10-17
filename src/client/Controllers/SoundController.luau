@@ -22,6 +22,8 @@ local SoundController = {}
 -- Joue un effet de Config/Sounds.luau (sans effet si son identifiant est vide).
 -- pitch : vitesse de lecture (1 = normal ; le son des répétitions monte avec le combo)
 local sfxGroup: SoundGroup? = nil
+local musicOn = true -- réglages du joueur (SettingsController)
+local soundsOn = true
 
 function SoundController.Play(name: string, pitch: number?)
 	local entry = Sounds.Sfx[name]
@@ -33,7 +35,7 @@ function SoundController.Play(name: string, pitch: number?)
 		if not sfxGroup then
 			sfxGroup = Instance.new("SoundGroup")
 			sfxGroup.Name = "Effects"
-			sfxGroup.Volume = Sounds.Volume.Sfx
+			sfxGroup.Volume = if soundsOn then Sounds.Volume.Sfx else 0
 			sfxGroup.Parent = SoundService
 		end
 		sound = Instance.new("Sound")
@@ -171,10 +173,14 @@ local duckToken = 0
 local function duck()
 	duckToken += 1
 	local token = duckToken
+	if not musicOn then
+		return
+	end
 	TweenService:Create(musicGroup, TweenInfo.new(0.4), { Volume = Sounds.Volume.Music * Sounds.Volume.Duck }):Play()
 	task.delay(Sounds.Timing.Duck, function()
 		if duckToken == token then
-			TweenService:Create(musicGroup, TweenInfo.new(1.5), { Volume = Sounds.Volume.Music }):Play()
+			TweenService:Create(musicGroup, TweenInfo.new(1.5), { Volume = if musicOn then Sounds.Volume.Music else 0 })
+				:Play()
 		end
 	end)
 end
@@ -182,7 +188,7 @@ end
 local function startMusic()
 	musicGroup = Instance.new("SoundGroup")
 	musicGroup.Name = "Music"
-	musicGroup.Volume = Sounds.Volume.Music
+	musicGroup.Volume = if musicOn then Sounds.Volume.Music else 0
 	musicGroup.Parent = SoundService
 	updateMusic()
 	-- Les délais (fin de la grâce d'entraînement, fin de la présentation du boss) sont vérifiés en continu
@@ -213,6 +219,21 @@ local function startMusic()
 			updateMusic()
 		end
 	end)
+end
+
+-- Réglages du joueur : couper / remettre la musique ou les effets (en fondu pour la musique)
+function SoundController.SetMusicEnabled(on: boolean)
+	musicOn = on
+	if musicGroup then
+		TweenService:Create(musicGroup, TweenInfo.new(0.5), { Volume = if on then Sounds.Volume.Music else 0 }):Play()
+	end
+end
+
+function SoundController.SetSoundsEnabled(on: boolean)
+	soundsOn = on
+	if sfxGroup then
+		sfxGroup.Volume = if on then Sounds.Volume.Sfx else 0
+	end
 end
 
 local REP_SOUNDS = { Perfect = "RepPerfect", Good = "RepGood", Auto = "RepGood", Miss = "RepMiss" }

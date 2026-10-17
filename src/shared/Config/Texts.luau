@@ -137,6 +137,25 @@ local STRINGS: { [string]: string } = {
 	["Boss.RoundLostShort"] = "ROUND LOST",
 	["Boss.MoggedStamp"] = "MOGGED!",
 	-- Ce que dit le boss pendant le combat
+	-- Boutons du menu et réglages
+	["Menu.Style"] = "Style",
+	["Menu.Settings"] = "Settings",
+	["Settings.Title"] = "Settings",
+	["Settings.On"] = "On",
+	["Settings.Off"] = "Off",
+	["Settings.Music"] = "Music",
+	["Settings.Music.Hint"] = "Background music",
+	["Settings.Sounds"] = "Sound effects",
+	["Settings.Sounds.Hint"] = "Reps, rewards, jingles",
+	["Settings.ScreenFx"] = "Screen effects",
+	["Settings.ScreenFx.Hint"] = "Shakes, flashes and boss special moves",
+	["Settings.CloseUp"] = "Close-up camera",
+	["Settings.CloseUp.Hint"] = "Zoom on your character while training",
+	["Settings.Names"] = "Player names",
+	["Settings.Names.Hint"] = "Names above other players",
+	["Settings.Players"] = "Show other players",
+	["Settings.Players.Hint"] = "Hide them for a lighter screen",
+
 	-- Événements de ville
 	["Event.GoldenDumbbells.Title"] = "GOLDEN DUMBBELLS!",
 	["Event.GoldenDumbbells.Desc"] = "Golden dumbbells fell all over town. Grab them first!",
@@ -295,6 +314,8 @@ local STRINGS: { [string]: string } = {
 	["Shop.Store.Barber"] = "Barbershop",
 	["Shop.Title.Clothes"] = "Swole Threads",
 	["Shop.Title.Barber"] = "Fade & Flex Barbershop",
+	["Shop.Title.Wardrobe"] = "Your Wardrobe",
+	["Shop.WardrobeEmpty"] = "Nothing here yet. Visit the shops in town to find some style!",
 
 	-- Déplacements
 	["Travel.Home"] = "🏠 Home",

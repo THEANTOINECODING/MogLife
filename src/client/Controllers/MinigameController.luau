@@ -78,14 +78,39 @@ type Current = {
 }
 
 local current: Current? = nil
+local SettingsController
 
 local MinigameController = {}
 MinigameController.LastCombo = 1
 
 -- Bloque le personnage sur place (le client contrôle son propre personnage).
 -- On n'utilise pas PlayerModule : les versions récentes de Roblox ne le fournissent plus.
+-- Pendant un mini-jeu ou une fenêtre, les étiquettes flottantes du décor (noms des PNJ, icônes des lieux, repères)
+-- sont masquées : elles passaient devant les textes du mini-jeu
+local hiddenTags: { BillboardGui } = {}
+local TAG_NAMES = { NameTag = true, LandmarkIcon = true, EventMarker = true }
+local function setWorldTagsHidden(hidden: boolean)
+	if hidden then
+		if #hiddenTags > 0 then
+			return
+		end
+		for _, gui in workspace:GetDescendants() do
+			if gui:IsA("BillboardGui") and TAG_NAMES[gui.Name] and gui.Enabled then
+				gui.Enabled = false
+				table.insert(hiddenTags, gui)
+			end
+		end
+	else
+		for _, gui in hiddenTags do
+			gui.Enabled = true
+		end
+		table.clear(hiddenTags)
+	end
+end
+
 function MinigameController.SetGameplayLocked(locked: boolean)
 	ProximityPromptService.Enabled = not locked
+	setWorldTagsHidden(locked)
 
 	local character = player.Character
 	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
@@ -342,7 +367,7 @@ end
 -- Petit coup de zoom de la caméra (répétition parfaite, palier de combo)
 local function punch(strength: number)
 	local camera = workspace.CurrentCamera
-	if not camera then
+	if not camera or (SettingsController and not SettingsController.Get("ScreenFx")) then
 		return
 	end
 	local base = camera.FieldOfView
@@ -558,6 +583,7 @@ function MinigameController.CurrentRoot(): Frame?
 end
 
 function MinigameController.Init(controllers)
+	SettingsController = controllers.SettingsController
 	UIController = controllers.UIController
 end
 

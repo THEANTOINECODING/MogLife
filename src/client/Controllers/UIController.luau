@@ -21,11 +21,13 @@ local progressLabel: TextLabel
 local barFill: Frame
 local toastLabel: TextLabel
 local toastToken = 0
+local hudPanel: Frame
 
 local function buildHud()
 	local gui = Ui.create("ScreenGui", { Name = "Hud", ResetOnSpawn = false })
 
 	local panel = Ui.create("Frame", {
+		Name = "Stats",
 		AnchorPoint = Vector2.new(0.5, 0),
 		Position = UDim2.new(0.5, 0, 0, 8),
 		Size = UDim2.fromOffset(380, 104),
@@ -33,6 +35,7 @@ local function buildHud()
 		BackgroundTransparency = 0.25,
 		Parent = gui,
 	}, { Ui.corner() })
+	hudPanel = panel
 
 	mogLabel = Ui.label({
 		Position = UDim2.fromOffset(10, 6),
@@ -111,6 +114,24 @@ local function update(stats)
 	else
 		bossLabel.Text = Texts.Get("Hud.NextBoss", { boss = bossName })
 	end
+end
+
+-- Cache le panneau Mog / Cash et la carte d'objectif pendant un combat de boss (la jauge du duel les remplace, et
+-- ils couvraient les annonces sur les petits écrans) ou quand une fenêtre est ouverte (boutique, garde-robe,
+-- réglages). Plusieurs raisons peuvent se cumuler : le panneau revient quand il n'y en a plus aucune.
+local hideReasons: { [string]: boolean } = {}
+local ObjectiveController
+function UIController.SetStatsHidden(hidden: boolean, reason: string?)
+	hideReasons[reason or "Default"] = if hidden then true else nil
+	local anyReason = next(hideReasons) ~= nil
+	hudPanel.Visible = not anyReason
+	if ObjectiveController then
+		ObjectiveController.SetHidden(anyReason)
+	end
+end
+
+function UIController.Init(controllers)
+	ObjectiveController = controllers.ObjectiveController
 end
 
 -- Affiche un message court au centre de l'écran.

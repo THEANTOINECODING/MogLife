@@ -41,6 +41,8 @@ local NAMES = {
 	"Emote", -- client -> serveur : (index: number) prendre une pose de culturisme
 	"EmotePlay", -- serveur -> tous : (player, index) ce joueur prend cette pose
 	"CityEvent", -- serveur -> tous : ({ kind, state: "Started" | "Ended" | ..., endsAt? }) événement de ville
+	"SetSetting", -- client -> serveur : (key: string, value: boolean) changer un réglage
+	"SettingsState", -- serveur -> client : ({ [key]: boolean }) réglages sauvegardés
 }
 
 local isServer = RunService:IsServer()
@@ -107,4 +109,6 @@ return remotes :: {
 	Emote: RemoteEvent,
 	EmotePlay: RemoteEvent,
 	CityEvent: RemoteEvent,
+	SetSetting: RemoteEvent,
+	SettingsState: RemoteEvent,
 }

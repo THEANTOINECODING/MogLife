@@ -17,6 +17,7 @@ local CollectionService = game:GetService("CollectionService")
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local BossSpecials = require(script.Parent.Parent.BossSpecials)
+local CameraFraming = require(script.Parent.Parent.CameraFraming)
 local Ui = require(script.Parent.Parent.Ui)
 
 local GOLD = Color3.fromRGB(255, 210, 60)
@@ -29,6 +30,7 @@ local player = Players.LocalPlayer
 local UIController
 local MinigameController
 local CutsceneController
+local SettingsController
 
 local gui: ScreenGui
 local panel: Frame
@@ -181,7 +183,11 @@ local function startDuelCamera(bossId: string)
 	camera.CameraType = Enum.CameraType.Scriptable
 	local startCF = camera.CFrame
 	local t0 = os.clock()
-	cameraConnection = RunService.RenderStepped:Connect(function()
+	-- De profil, d'un côté ou de l'autre du duel : le premier angle sans décor entre la caméra et les deux
+	-- adversaires (recalculé deux fois par seconde)
+	local eye: Vector3? = nil
+	local nextCheck = 0
+	cameraConnection = RunService.RenderStepped:Connect(function(dt)
 		local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart") :: BasePart?
 		if not root or not model.Parent then
 			return
@@ -192,12 +198,30 @@ local function startDuelCamera(bossId: string)
 		local gap = math.max(axis.Magnitude, 6)
 		axis = if axis.Magnitude > 0.1 then axis.Unit else Vector3.xAxis
 		local side = Vector3.new(0, 1, 0):Cross(axis)
-		local focus = mid + Vector3.new(0, 2.5, 0) + side * (gap * 0.25)
-		local eye = mid + side * (gap * 1.25 + 6) + Vector3.new(0, 5, 0)
-		local wanted = CFrame.lookAt(eye, focus)
-		-- Entrée en douceur depuis la caméra du joueur
-		local blend = math.clamp((os.clock() - t0) / 0.8, 0, 1)
-		camera.CFrame = startCF:Lerp(wanted, blend * blend * (3 - 2 * blend))
+		local center = mid + Vector3.new(0, 2.5, 0)
+		local now = os.clock()
+		if now >= nextCheck then
+			nextCheck = now + 0.5
+			local distance = gap * 1.25 + 6
+			local directions = CameraFraming.Around(side, distance, 2.5)
+			for _, direction in CameraFraming.Around(-side, distance, 2.5) do
+				table.insert(directions, direction)
+			end
+			local wanted = CameraFraming.Best(center, directions)
+			eye = if eye then eye:Lerp(wanted, 0.5) else wanted
+		end
+		local target = eye :: Vector3
+		-- Les deux adversaires dans la moitié gauche de l'écran (le mini-jeu est à droite)
+		local look = (center - target).Unit
+		local right = look:Cross(Vector3.new(0, 1, 0))
+		local wanted = CFrame.lookAt(target, center + right * (gap * 0.3))
+		-- Entrée en douceur depuis la caméra du joueur, puis suivi souple
+		local blend = math.clamp((now - t0) / 0.8, 0, 1)
+		if blend < 1 then
+			camera.CFrame = startCF:Lerp(wanted, blend * blend * (3 - 2 * blend))
+		else
+			camera.CFrame = camera.CFrame:Lerp(wanted, math.min(dt * 6, 1))
+		end
 	end)
 end
 
@@ -253,7 +277,8 @@ end
 -- Dernière manche : le boss sort son coup spécial dès que le mini-jeu est à l'écran
 local function startSpecial(bossId: string)
 	endSpecial()
-	if not BossSpecials.Has(bossId) then
+	-- Réglage « effets d'écran » coupé : l'annonce reste, la perturbation non
+	if not BossSpecials.Has(bossId) or not SettingsController.Get("ScreenFx") then
 		return
 	end
 	task.spawn(function()
@@ -268,8 +293,14 @@ local function startSpecial(bossId: string)
 	end)
 end
 
+-- Pendant le combat, l'écran est au duel : le panneau Mog / Cash et l'objectif laissent la place aux annonces
+local function setFightLayout(active: boolean)
+	UIController.SetStatsHidden(active, "Fight")
+end
+
 local function endPresentation()
 	endSpecial()
+	setFightLayout(false)
 	fight = nil
 	meter.Visible = false
 	vsBand.Visible = false
@@ -374,6 +405,7 @@ local function onBossUpdate(update)
 	if update.state == "FightStarted" then
 		hidePanel()
 		fight = { bossId = update.bossId, rounds = update.rounds or 3, results = {} }
+		setFightLayout(true)
 		meter.Visible = true
 		setMeter(0, 0)
 		renderPips()
@@ -695,6 +727,7 @@ function BossController.Init(controllers)
 	UIController = controllers.UIController
 	MinigameController = controllers.MinigameController
 	CutsceneController = controllers.CutsceneController
+	SettingsController = controllers.SettingsController
 end
 
 function BossController.Start()

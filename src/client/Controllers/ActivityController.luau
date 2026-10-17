@@ -12,6 +12,7 @@ local RunService = game:GetService("RunService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local CameraFraming = require(script.Parent.Parent.CameraFraming)
 local MogOff = require(script.Parent.Parent.Activities.MogOff)
 local Rig = require(script.Parent.Parent.Activities.Rig)
 
@@ -44,9 +45,10 @@ type Animator = {
 
 local localPlayer = Players.LocalPlayer
 local addSweat: (Model) -> ParticleEmitter?
-local startCloseUp: (Model) -> ()
+local startCloseUp: (Model, any) -> ()
 local stopCloseUp: () -> ()
 local animators: { [Player]: Animator } = {}
+local SettingsController
 -- Émotes (poses de culturisme, hors activité) : vues par tout le monde
 type Emote = { character: Model, rig: Rig.Rig, measures: any, index: number, start: number }
 local emotes: { [Player]: Emote } = {}
@@ -123,7 +125,8 @@ end
 -- Gros plan pendant sa propre série : la caméra regarde le personnage de face, un peu de côté, et le place dans la
 -- partie gauche de l'écran (le mini-jeu est à droite). Elle suit le corps (pompes, tractions, voiture poussée…).
 local closeUp: RBXScriptConnection? = nil
-startCloseUp = function(character: Model)
+-- preset : réglage de caméra propre à l'activité (module Activities : CloseUp = { steps, height }), facultatif
+startCloseUp = function(character: Model, preset: any)
 	stopCloseUp()
 	local camera = Workspace.CurrentCamera
 	local root = character:FindFirstChild("HumanoidRootPart") :: BasePart?
@@ -131,27 +134,39 @@ startCloseUp = function(character: Model)
 	if not camera or not root or not torso then
 		return
 	end
-	local startCF = camera.CFrame
 	local startedAt = os.clock()
 	local facing = root.CFrame -- orientation du personnage au début (il ne tourne pas pendant la série)
 	-- Distance selon la taille du corps
 	local extent = character:GetExtentsSize()
 	local distance = 6 + extent.Y * 0.9
 	camera.CameraType = Enum.CameraType.Scriptable
-	closeUp = RunService.RenderStepped:Connect(function()
+	-- Angle sans obstacle (murs du garage, toit, meubles) : recalculé deux fois par seconde (le personnage peut se
+	-- déplacer, ex. en poussant la voiture), la caméra y glisse en douceur
+	local eye: Vector3? = nil
+	local nextCheck = 0
+	closeUp = RunService.RenderStepped:Connect(function(dt)
 		if not torso.Parent then
 			return
 		end
 		local focus = torso.Position
-		local eye = focus
-			+ facing.LookVector * distance
-			+ facing.RightVector * (distance * 0.35)
-			+ Vector3.new(0, 1.5, 0)
-		-- Le personnage à gauche : on vise un point à la droite de la caméra
-		local aim = focus - facing.RightVector * (distance * 0.32)
-		local wanted = CFrame.lookAt(eye, aim)
-		local blend = math.clamp((os.clock() - startedAt) / 0.6, 0, 1)
-		camera.CFrame = startCF:Lerp(wanted, blend * blend * (3 - 2 * blend))
+		local now = os.clock()
+		if now >= nextCheck then
+			nextCheck = now + 0.5
+			local steps = preset and preset.steps
+			local height = (preset and preset.height) or 1.5
+			local wanted =
+				CameraFraming.Best(focus, CameraFraming.Around(facing.LookVector, distance, height, 1, steps))
+			eye = if eye then eye:Lerp(wanted, 0.5) else wanted
+		end
+		local target = eye :: Vector3
+		-- Le personnage à gauche de l'écran (le mini-jeu est à droite) : on vise un peu à droite de lui
+		local look = (focus - target).Unit
+		local right = look:Cross(Vector3.new(0, 1, 0))
+		local aim = focus + right * (distance * 0.5)
+		local wanted = CFrame.lookAt(target, aim)
+		local blend = math.clamp((now - startedAt) / 0.6, 0, 1)
+		local follow = if blend < 1 then blend * blend * (3 - 2 * blend) else math.min(dt * 6, 1)
+		camera.CFrame = camera.CFrame:Lerp(wanted, follow)
 	end)
 end
 
@@ -271,8 +286,8 @@ local function start(update)
 	animators[player] = animator
 	if update.kind ~= "Boss" then
 		animator.sweat = addSweat(character)
-		if player == localPlayer then
-			startCloseUp(character)
+		if player == localPlayer and SettingsController.Get("CloseUp") then
+			startCloseUp(character, Activity.CloseUp)
 		end
 	end
 end
@@ -337,6 +352,10 @@ local function step()
 		MogOff.Strike(emote.rig, emote.measures, emote.index, p, 0, now)
 		emote.rig:Apply()
 	end
+end
+
+function ActivityController.Init(controllers)
+	SettingsController = controllers.SettingsController
 end
 
 function ActivityController.Start()

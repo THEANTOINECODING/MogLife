@@ -5,6 +5,12 @@
 local BenchPress = {}
 BenchPress.__index = BenchPress
 
+-- Caméra : de profil et en hauteur (vu des pieds, la barre et les disques cachent le corps)
+BenchPress.CloseUp = {
+	steps = { { 70, 0.5 }, { -70, 0.5 }, { 90, 0.7 }, { -90, 0.7 }, { 45, 0.8 }, { -45, 0.8 }, { 0, 1.2 } },
+	height = 2.5,
+}
+
 local SEAT = 1.975 -- dessus du banc au-dessus de la dalle (props_gym.py : bench_press)
 local PELVIS_Z = 0.9 -- bassin vers le bout du banc, la tête sous les crochets
 local UNRACK_TIME = 0.6

@@ -147,8 +147,11 @@ local function onPlayerLoaded(player: Player)
 	if not data then
 		return
 	end
+	-- La validation ne reprend jamais « Created » (le client ne doit pas pouvoir le forcer) : on le garde à part,
+	-- sinon le menu de création se rouvrirait à chaque connexion
+	local created = typeof(data.Look) == "table" and data.Look.Created == true
 	data.Look = Look.Sanitize(data.Look, nil) :: any
-	data.Look.Created = data.Look.Created == true
+	data.Look.Created = created
 	for itemId, item in StyleItems do
 		if item.starter then
 			data.StyleOwned[itemId] = true

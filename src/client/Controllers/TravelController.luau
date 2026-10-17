@@ -62,7 +62,8 @@ local function buildGui()
 	local home = Ui.button({
 		Name = "Home",
 		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 12, 0.5, 0),
+		-- Colonne de gauche, centrée : Maison, Flex, Style, Settings (64 px d'écart)
+		Position = UDim2.new(0, 12, 0.5, -64),
 		Size = UDim2.fromOffset(120, 54),
 		BackgroundColor3 = Color3.fromRGB(220, 120, 30),
 		Text = Texts.Get("Travel.Home"),

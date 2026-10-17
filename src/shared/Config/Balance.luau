@@ -18,6 +18,8 @@ return {
 		Boost = { Id = "", EndsAt = 0 }, -- boost temporaire en cours (BoostService), EndsAt en os.time()
 		Records = {}, -- meilleure note de série par exercice (0 à 100)
 		Tips = {}, -- conseils du mentor déjà donnés
+		-- Réglages du joueur (Config/Settings.luau), tous activés par défaut
+		Settings = { Music = true, Sounds = true, ScreenFx = true, CloseUp = true, Names = true, Players = true },
 		-- Apparence choisie dans le menu de création (D55, Config/Look.luau) ; Created = menu déjà validé une fois
 		Look = {
 			Created = false,

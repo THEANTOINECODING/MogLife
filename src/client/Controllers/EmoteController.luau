@@ -26,7 +26,7 @@ local function buildGui()
 	local button = Ui.button({
 		Name = "Flex",
 		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 12, 0.5, 64),
+		Position = UDim2.new(0, 12, 0.5, 0),
 		Size = UDim2.fromOffset(120, 54),
 		BackgroundColor3 = Color3.fromRGB(150, 70, 200),
 		Text = Texts.Get("Emote.Button"),
@@ -35,7 +35,7 @@ local function buildGui()
 	menu = Ui.panel({
 		Name = "Poses",
 		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 142, 0.5, 64),
+		Position = UDim2.new(0, 142, 0.5, 0),
 		Size = UDim2.fromOffset(210, 44 * Balance.Emotes.Count + 20),
 		Visible = false,
 		Parent = gui,

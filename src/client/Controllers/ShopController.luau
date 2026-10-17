@@ -2,6 +2,8 @@
 -- achat avec confirmation, porter / retirer, et ESSAYAGE GRATUIT : un aperçu 3D (son propre corps de stade, ce
 -- qu'on porte + l'article choisi) tourne à gauche de la liste. Toucher un article l'essaie.
 -- Le serveur vérifie tout (prix, Cash, possession) ; ce contrôleur n'affiche que l'état reçu.
+-- Garde-robe (bouton « Style » du HUD) : la même fenêtre, toutes catégories, seulement ce qu'on possède, pour
+-- porter ou retirer ses objets n'importe où.
 
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
@@ -24,6 +26,7 @@ local ALL_CATEGORIES = { "Hair", "Beard", "Face", "Top", "Bottom", "Accessory" }
 local player = Players.LocalPlayer
 
 local MinigameController
+local UIController
 
 local panel: Frame
 local titleLabel: TextLabel
@@ -47,13 +50,14 @@ local owned: { [string]: boolean } = {}
 local equipped: { [string]: string } = {}
 local look: Look.LookData? = nil -- apparence du joueur (aperçu aux bonnes couleurs)
 local confirming: string? = nil
+local wardrobe = false -- garde-robe : seulement les objets possédés, rien à acheter
 
 local ShopController = {}
 
 local function sortedItems(cat: string): { string }
 	local ids = {}
 	for id, item in StyleItems do
-		if item.category == cat then
+		if item.category == cat and (not wardrobe or owned[id] or item.starter) then
 			table.insert(ids, id)
 		end
 	end
@@ -127,13 +131,25 @@ function render()
 		tab.BackgroundColor3 = if cat == category then Color3.fromRGB(220, 120, 30) else Color3.fromRGB(70, 70, 80)
 	end
 	for _, child in list:GetChildren() do
-		if child:IsA("GuiButton") then
+		if child:IsA("GuiButton") or child.Name == "Empty" then
 			child:Destroy()
 		end
 	end
 	refreshPreview()
 
-	for index, itemId in sortedItems(category) do
+	local items = sortedItems(category)
+	if wardrobe and #items == 0 then
+		Ui.label({
+			Name = "Empty",
+			Size = UDim2.new(1, -12, 0, 60),
+			TextWrapped = true,
+			Font = Enum.Font.GothamMedium,
+			TextColor3 = Color3.fromRGB(200, 200, 215),
+			Text = Texts.Get("Shop.WardrobeEmpty"),
+			Parent = list,
+		})
+	end
+	for index, itemId in items do
 		local item = StyleItems[itemId]
 		local row = Ui.create("TextButton", {
 			Text = "",
@@ -229,6 +245,7 @@ local function buildTabs()
 end
 
 local function open(mirror: Instance)
+	wardrobe = false
 	local store = mirror:GetAttribute("Store")
 	local listed = mirror:GetAttribute("Categories")
 	categories = {}
@@ -248,12 +265,14 @@ local function open(mirror: Instance)
 	buildTabs()
 	confirming = nil
 	panel.Visible = true
+	UIController.SetStatsHidden(true, "Shop")
 	MinigameController.SetGameplayLocked(true)
 	render()
 end
 
 local function close()
 	panel.Visible = false
+	UIController.SetStatsHidden(false, "Shop")
 	MinigameController.SetGameplayLocked(false)
 end
 
@@ -358,8 +377,28 @@ function ShopController.Open(mirror: Instance)
 	open(mirror)
 end
 
+-- Garde-robe : tout ce qu'on possède, à porter ou retirer
+function ShopController.OpenWardrobe()
+	wardrobe = true
+	categories = ALL_CATEGORIES
+	category = categories[1]
+	previewing = nil
+	confirming = nil
+	titleLabel.Text = Texts.Get("Shop.Title.Wardrobe")
+	buildTabs()
+	panel.Visible = true
+	UIController.SetStatsHidden(true, "Shop")
+	MinigameController.SetGameplayLocked(true)
+	render()
+end
+
+function ShopController.IsOpen(): boolean
+	return panel ~= nil and panel.Visible
+end
+
 function ShopController.Init(controllers)
 	MinigameController = controllers.MinigameController
+	UIController = controllers.UIController
 end
 
 function ShopController.Start()

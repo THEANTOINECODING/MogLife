@@ -5,6 +5,12 @@
 local PushUp = {}
 PushUp.__index = PushUp
 
+-- Caméra : de trois quarts et un peu en hauteur, pour voir le corps allongé en entier
+PushUp.CloseUp = {
+	steps = { { 60, 0.4 }, { -60, 0.4 }, { 85, 0.5 }, { -85, 0.5 }, { 30, 0.7 }, { -30, 0.7 }, { 0, 1 } },
+	height = 2,
+}
+
 local MAT = 0.16 -- épaisseur du tapis
 local WRIST_HEIGHT = 0.35 -- poignet au-dessus du sol (la main est à plat)
 

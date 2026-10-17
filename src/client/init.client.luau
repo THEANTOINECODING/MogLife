@@ -20,6 +20,7 @@ local ORDER = {
 	"CreatorController",
 	"EmoteController",
 	"EventController",
+	"SettingsController",
 }
 
 local controllers = {}

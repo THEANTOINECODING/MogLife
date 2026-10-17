@@ -22,6 +22,7 @@ local goalLabel: TextLabel
 local stats: { Mog: number, Stage: number }? = nil
 local records: { [string]: number } = {}
 local tutorialActive = false
+local hiddenForFight = false
 
 local ObjectiveController = {}
 
@@ -30,7 +31,7 @@ local function exerciseName(id: string): string
 end
 
 local function render()
-	card.Visible = stats ~= nil and not tutorialActive
+	card.Visible = stats ~= nil and not tutorialActive and not hiddenForFight
 	if not stats then
 		return
 	end
@@ -66,6 +67,12 @@ local function render()
 			boss = bossName,
 		})
 	end
+end
+
+-- Caché pendant un combat de boss (BossController)
+function ObjectiveController.SetHidden(hidden: boolean)
+	hiddenForFight = hidden
+	render()
 end
 
 local function buildGui()
