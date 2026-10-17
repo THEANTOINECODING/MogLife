@@ -2,6 +2,10 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-17 (caméra de Mog-off)
+
+- **D64 — Le cadre du duel tient compte de tout le boss.** La caméra vérifie les coins du modèle du boss en plus du corps du joueur et recule selon sa taille avant de choisir son angle ; Pump God, bien plus grand que les autres, doit rester entier dans le champ.
+
 ## 2026-10-17 (cadrage du piano)
 
 - **D63 — Piano porté face à la rue.** Au PianoSpot devant le magasin, le personnage regarde dans la direction du trottoir et de la rue pendant l'aide. La caméra de l'activité peut ainsi filmer son visage et le piano de face.

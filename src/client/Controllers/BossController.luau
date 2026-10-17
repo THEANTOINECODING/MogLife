@@ -113,6 +113,21 @@ local function bossModel(bossId: string): Model?
 	return model
 end
 
+-- Le boss peut être beaucoup plus grand que le joueur (Pump God) : le centre seul ne garantit pas qu'il tienne
+-- dans le cadre. Les coins de sa boîte englobante guident le choix d'angle et l'estompage du décor.
+local function duelPoints(character: Model, model: Model): { Vector3 }
+	local points = CameraFraming.BodyPoints(character)
+	local bounds, size = model:GetBoundingBox()
+	for _, x in { -0.5, 0.5 } do
+		for _, y in { -0.5, 0.5 } do
+			for _, z in { -0.5, 0.5 } do
+				table.insert(points, bounds:PointToWorldSpace(Vector3.new(x * size.X, y * size.Y, z * size.Z)))
+			end
+		end
+	end
+	return points
+end
+
 -- Grand texte au centre : apparaît en grossissant, puis s'efface
 local function shout(text: string, color: Color3, sub: string?, hold: number?)
 	bigLabel.Text = text
@@ -205,14 +220,14 @@ local function startDuelCamera(bossId: string)
 		local now = os.clock()
 		if now >= nextCheck then
 			nextCheck = now + 0.5
-			local distance = gap * 1.25 + 6
+			-- Un boss géant exige du recul même quand les deux combattants se tiennent près l'un de l'autre.
+			local distance = math.max(gap * 1.25 + 6, model:GetExtentsSize().Magnitude * 1.5)
 			local directions = CameraFraming.Around(side, distance, 2.5)
 			for _, direction in CameraFraming.Around(-side, distance, 2.5) do
 				table.insert(directions, direction)
 			end
 			-- Les deux adversaires doivent être visibles : le corps du joueur et celui du boss
-			local points = CameraFraming.BodyPoints(player.Character :: Model)
-			table.insert(points, them + Vector3.new(0, 2, 0))
+			local points = duelPoints(player.Character :: Model, model)
 			local wanted = CameraFraming.Best(center, directions, { model }, points)
 			eye = if eye then eye:Lerp(wanted, 0.5) else wanted
 		end
@@ -231,8 +246,7 @@ local function startDuelCamera(bossId: string)
 		-- Ce qui passe entre la caméra et les deux adversaires est estompé
 		if duelFader and now >= nextFade then
 			nextFade = now + 0.15
-			local points = CameraFraming.BodyPoints(player.Character :: Model)
-			table.insert(points, them + Vector3.new(0, 2, 0))
+			local points = duelPoints(player.Character :: Model, model)
 			CameraFraming.Fade(duelFader, camera.CFrame.Position, points, { model })
 		end
 	end)
