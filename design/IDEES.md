@@ -3,6 +3,29 @@
 Toute nouvelle idée arrive ici. Elle passe dans le design seulement après une décision dans `DECISIONS.md`.
 Test de la vision : l'idée tient-elle dans les trois briques (mini-jeux, contenu en données, personnage) ?
 
+## Économie actuelle — simulation du 17/10/2026, à décider pendant l'alpha
+
+`tools/simulate_economy.luau` a été exécuté dans Studio en mode Édition avec les Config actuels, sans toucher à une sauvegarde. Le calcul applique le combo aux exercices et aux aides, le paiement D57 (qualité, chaîne de Perfect et bonus sans faute), les événements de ville, les achats de boosts, le pareur et les pertes des Mog-off. Il s'arrête au seuil de Pump God, encore « coming soon ».
+
+| Parcours simulé | Kevin battu | Brayan battu | Coach Turbo battu | No-Legs battu | King of the Block battu | Seuil Pump God |
+|---|---:|---:|---:|---:|---:|---:|
+| Auto, aucune aide | 2:11 | 6:29 | bloqué à 21:04 | — | — | — |
+| Moyen, aides + événements | 1:41 | 6:28 | 20:23 | 38:09 | 59:20 | 76:14 |
+| Précis, aides + événements | 1:41 | 5:17 | 16:24 | 31:30 | 49:01 | 68:03 |
+| Moyen, boosts + pareur | 1:41 | 5:23 | 14:34 | 25:11 | 37:16 | 45:20 |
+| Moyen, un look acheté par stade | 1:41 | 6:42 | 20:35 | 38:45 | 60:30 | 77:30 |
+
+**Style et Cash.** Dans le parcours moyen, le premier look à 25 Cash devient accessible à 2:57 (45 Cash en poche). Après Brayan : 108 Cash et 19 looks payants accessibles ; après Coach Turbo : 354 Cash et les 25 looks payants accessibles ; au seuil de Pump God : 3 712 Cash, dont 3 042 gagnés par les aides, 155 par les événements et 255 perdus en Mog-off. Le parcours qui achète un look par stade en possède cinq pour 145 Cash dépensés et garde 3 524 Cash au seuil final. Avec boosts et pareur, neuf boosts coûtent 1 700 Cash ; 421 Cash restent au seuil de Pump God, et le pareur reçoit 6 527 Mog au total. Le parcours auto n'a que 70 Cash après Brayan (14 looks accessibles) et reste bloqué à Coach Turbo avec sa précision supposée.
+
+**Hypothèses et limites.** Départ à 0 Mog/0 Cash sur un serveur neuf ; meilleur exercice disponible, deux séries entre aides, 4 s entre séries, 6 s de trajet, 3 s de relance d'aide, 10 s de marge par défi. Précision moyenne : 30 % Perfect, 50 % Good ; précise : 60 % Perfect, 32 % Good. Le profil moyen gagne 5 points de probabilité Perfect après chaque défaite. Les événements arrivent à l'intervalle moyen de 10 min 30, leurs trois types alternent et le joueur en saisit une partie ; en jeu, type et intervalle sont aléatoires et le serveur peut déjà tourner lors de l'arrivée. Le pareur aide une série sur deux ; le profil boosté achète le meilleur boost disponible quand le précédent expire. Les mini-jeux, trajets, achats et réflexes réels d'un joueur, la contention des événements entre joueurs, le téléphone et les échecs d'aide ne sont pas mesurés ici. Ce sont cinq parcours déterministes, pas une moyenne de joueurs.
+
+**Questions au créateur avant tout réglage :**
+
+- Kevin à 1:41 et Coach Turbo vers 16–20 min sont plus rapides que les cibles de `03_PROGRESSION.md` (3–5 min et 25–40 min). Veux-tu garder ces cibles après un test humain sur téléphone ?
+- Le parcours boosts + pareur atteint Pump God en 45:20 contre 76:14 pour le moyen sans eux. Ce gain combiné te convient-il ? Pour isoler chaque effet, faire une simulation « boosts seuls » et « pareur seul » avant de toucher aux valeurs.
+- Tous les looks payants actuels sont accessibles dès Coach Turbo dans le parcours moyen. Souhaites-tu conserver ce Cash abondant pour favoriser l'expression du style, ou ajouter plus tard des looks haut de gamme et des choix de dépense ?
+- Le joueur auto bloqué à Coach Turbo doit-il être aidé par un apprentissage des mini-jeux ou par la règle encore ouverte « boss moins exigeant après trois défaites » (D19) ? À trancher après des essais humains, sans décider ici.
+
 ## Multijoueur (après le MVP)
 
 - **Duels de Mog entre joueurs** : Mog-off à chances égales sur une estrade, invitations consenties, récompenses plafonnées par paire de joueurs. Règles détaillées dans `archive/v3_exploits/02_MECANIQUES/MOG.md`. Réutilise directement le Mog-off des boss.
