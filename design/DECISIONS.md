@@ -2,6 +2,10 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-17 (cadrage du piano)
+
+- **D63 — Piano porté face à la rue.** Au PianoSpot devant le magasin, le personnage regarde dans la direction du trottoir et de la rue pendant l'aide. La caméra de l'activité peut ainsi filmer son visage et le piano de face.
+
 ## 2026-10-17 (création de personnage, demande du créateur)
 
 - **D62 — Caméra qui montre tout le corps, objets gênants estompés, sièges automatiques** (demande du créateur). La caméra des activités et du duel vérifie que la tête, le torse, les mains et les pieds sont visibles depuis chaque angle candidat (dont plongées et trois-quarts arrière) ; l'objet tenu (piano, barre…) ne compte jamais comme obstacle ; ce qui reste devant (PNJ, arbre, petit décor) devient transparent sur l'écran du joueur. La colonne de boutons de gauche se range pendant une série. Bancs, canapés, banquettes et fauteuils de barbier : on s'y assoit tout seul en montant dessus (assise mesurée sur le modèle) ; on se relève en sautant ou en lançant une activité.

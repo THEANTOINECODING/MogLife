@@ -5,7 +5,7 @@ local Piano = {}
 Piano.__index = Piano
 
 function Piano.Stand(top: CFrame): CFrame
-	return top * CFrame.new(-3.5, 0, -3) * CFrame.Angles(0, math.pi, 0)
+	return top * CFrame.new(-3.5, 0, -3)
 end
 
 function Piano.new(ctx)
