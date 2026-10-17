@@ -32,7 +32,7 @@ return {
 		Height = 3.3, -- hauteur du plateau (on se tient debout)
 		Spacing = 1.9, -- distance entre le centre de la table et chaque joueur
 		MaxStep = 1.2, -- écart de hauteur de sol accepté sous la table et les joueurs
-		Room = Vector3.new(3, 5.5, 1.4), -- place libre demandée (largeur, hauteur, marge en longueur)
+		Room = Vector3.new(3, 5.5, 3.4), -- place libre autour des joueurs, y compris derrière eux près d'un mur
 		TryAngles = { 0, 90, -90, 45, -45, 135, -135, 180 }, -- sens essayés autour de l'axe entre les joueurs
 	},
 
