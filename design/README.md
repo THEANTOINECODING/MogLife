@@ -17,6 +17,7 @@ Ce dossier est la source de vérité du jeu. Un fichier = un sujet.
 | [06_MONETISATION.md](06_MONETISATION.md) | Règles de monétisation | Avant toute boutique |
 | [07_ROADMAP.md](07_ROADMAP.md) | Étapes de construction | Avant de commencer un lot de travail |
 | [08_TESTS_ET_MESURES.md](08_TESTS_ET_MESURES.md) | Tests joueurs, analytics, vérifications | Avant une alpha ou une mise à jour |
+| [ALPHA_PREPARATION.md](ALPHA_PREPARATION.md) | État vérifié, essais à faire et fiche testeur | Pour préparer l'étape 8 |
 | [DECISIONS.md](DECISIONS.md) | Journal des décisions et de leurs raisons | On se demande « pourquoi on a fait ça ? » |
 | [IDEES.md](IDEES.md) | Idées en attente | On a une nouvelle idée |
 

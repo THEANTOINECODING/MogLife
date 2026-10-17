@@ -1,3 +1,17 @@
+# Passation Codex — 18 octobre 2026
+
+Antoine a autorisé la poursuite des tâches pendant la nuit. J'ai lu les règles, la vision, la roadmap, les décisions D66–D69, les fichiers de design concernés et le code avant modification. Studio est accessible par MCP ; Rojo tourne déjà sur le port 34872. Les changements ont été enregistrés en commits locaux ; rien n'a été publié ni envoyé en ligne.
+
+- **Deux vrais clients : encore non testé.** Le MCP ne lance qu'un client ; Studio était en mode édition, sans « Serveur et 2 clients » ouvert. Il faut faire ce test dans l'onglet Test (invitation, refus, table, animations, résultat, plafond de 3 duels par paire, réglage « Duel invites »). Ne pas le présenter comme validé.
+- **Table près d'un mur : corrigée et vérifiée à l'image avec le mannequin.** `src/shared/Config/Duels.luau` demande plus de place derrière les joueurs. Avant : mannequin contre la façade, mur sur une grande partie de l'écran. Après : table tournée de 90°, deux adversaires visibles de profil. Un duel démarre encore en espace ouvert. Le duel à deux vrais joueurs près d'un mur reste à tester.
+- **Titres du miroir : vérifiés à l'image.** `src/client/Controllers/CreatorController.luau` affiche les six titres sur une colonne, lisibles. Au miroir de la maison, les titres verrouillés montrent leurs conditions. Avec 1 trophée et 5 victoires de test, « Weekly Warrior » et « Wrist Wrecker » se débloquent ; sélectionner ce dernier change l'aperçu. L'édition a été annulée.
+- **Économie : simulation sans sauvegarde joueur.** `tools/simulate_economy.luau` ajoute des profils comparables : boosts seuls, pareur seul, les deux. Résultats et questions ouvertes dans `design/ALPHA_PREPARATION.md`. Aucun chiffre d'équilibrage changé.
+- **Alpha :** `design/ALPHA_PREPARATION.md` contient les essais à faire, une fiche testeur et les limites. Aucun événement d'analytics demandé par `08_TESTS_ET_MESURES.md` n'est encore branché dans `src/` ; les mesures réelles demandent soit cette instrumentation, soit une fiche manuelle.
+
+StyLua et Selene ont été exécutés : 0 erreur, 0 avertissement. La sortie Studio n'a montré aucune erreur du jeu pendant ces vérifications ; elle contient des avertissements Roblox/CorePackages et un asset `rbxassetid://203785492` de mauvais type, non traité dans cette session. Avant chaque test Play, j'ai conservé les données du joueur ; après chaque test, j'ai restauré `Duels` et `Weekly` et vérifié que `Cash`, le surnom et les compteurs avaient leurs valeurs initiales (530 Cash, 0 victoire, 0 trophée, titre `ThePump`). Ne pas toucher à `assets/blender/bosses.blend` ni `assets/export/props.fbx` : modifications antérieures d'Antoine.
+
+---
+
 # Rapport de la nuit — MOG LIFE 💪🗿
 
 Nuit du 13 au 14 octobre 2026. Travail autonome : **étapes B, C et D de la roadmap**, plus une simulation de l'économie.

@@ -67,6 +67,38 @@ local PROFILES = {
 		improves = true,
 		spend = true,
 	},
+	-- Ces trois variantes reprennent les tirages du profil 2 pour isoler l'effet des boosts et du pareur.
+	{
+		name = "6. Joueur moyen, boosts seuls",
+		seed = #"2. Joueur moyen, aides + événements" * 104729,
+		helps = true,
+		events = 0.5,
+		boosts = true,
+		perfect = 0.3,
+		good = 0.5,
+		improves = true,
+	},
+	{
+		name = "7. Joueur moyen, pareur seul",
+		seed = #"2. Joueur moyen, aides + événements" * 104729,
+		helps = true,
+		events = 0.5,
+		spotter = true,
+		perfect = 0.3,
+		good = 0.5,
+		improves = true,
+	},
+	{
+		name = "8. Joueur moyen, boosts + pareur (mêmes tirages)",
+		seed = #"2. Joueur moyen, aides + événements" * 104729,
+		helps = true,
+		events = 0.5,
+		boosts = true,
+		spotter = true,
+		perfect = 0.3,
+		good = 0.5,
+		improves = true,
+	},
 }
 
 local function expectedScore(perfect: number, good: number): number
@@ -162,7 +194,7 @@ end
 
 local function simulate(baseProfile)
 	local profile = table.clone(baseProfile)
-	local randomState = #profile.name * 104729
+	local randomState = profile.seed or #profile.name * 104729
 	local function roll(): number
 		randomState = (randomState * 16807) % 2147483647
 		return randomState / 2147483647
@@ -408,7 +440,8 @@ local lines = {
 	"===== SIMULATION ÉCONOMIE MOG LIFE : règles actuelles =====",
 	"Hypothèses : serveur neuf, événements toutes les 10 min 30 (types alternés), 2 séries entre aides.",
 	"Le profil moyen gagne 5 points de Perfect après chaque défaite ; le pareur aide une série sur deux.",
-	"Les coûts de style sont affichés sans achat sauf dans le dernier profil ; Pump God reste coming soon.",
+	"Profils 2, 6, 7 et 8 : mêmes tirages aléatoires pour comparer séparément boosts et pareur.",
+	"Les coûts de style sont affichés sans achat sauf dans le profil 5 ; Pump God reste coming soon.",
 }
 for _, profile in PROFILES do
 	local r = simulate(profile)
