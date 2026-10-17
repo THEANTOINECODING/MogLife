@@ -5,7 +5,7 @@
 Chaque joueur incarne **un bro cartoon propre au jeu**, pas son avatar Roblox. Raison : l'avatar Roblox ne peut qu'être agrandi globalement, alors que la direction artistique exige des traits exagérés (torse en V géant, jambes en allumettes, mâchoire carrée).
 
 - **Un corps par stade** (7 modèles : Normie, Gym Rat, Bro, Alpha, Chad, Gigachad, GOD MOGGER), du maigrichon au démesuré. Le MVP en contient 4 (Normie → Alpha).
-- Le corps prend du muscle à chaque séance (décision D40) : **pump** à chaque répétition (redescend en ~20 s), **croissance permanente** dans le stade selon la progression du Mog vers le boss suivant, **transformation** en battant le boss. Technique : mise à l'échelle des pièces de la coque (une par partie du squelette).
+- Le corps prend du muscle à chaque séance (D40, D60) : **pump** à chaque répétition (redescend en ~20 s) et **croissance continue** : pendant un stade, le corps (pièces et squelette) se rapproche du corps du stade suivant au rythme du Mog vers le boss ; battre le boss ne change plus la taille, seulement les détails (éclat doré).
 - Tous les corps partagent le **même squelette** (rig compatible R15) : les animations, habits et coupes fonctionnent sur tous les stades.
 - Taille plafonnée : le plus gros corps ne cache pas l'écran des autres et passe les portes.
 - La taille ne donne aucun avantage en Mog-off.

@@ -1,10 +1,12 @@
 -- Corps du personnage du joueur selon son stade : proportions du squelette R15 + coque Blender (D28, D39).
 -- Les parties Roblox d'origine deviennent invisibles ; chaque pièce de la coque est soudée à sa partie,
 -- donc les animations (Roblox et ActivityController) la font suivre.
--- Le personnage prend du muscle à chaque séance (D40) : chaque pièce est épaissie selon
---   - la croissance permanente du stade (progression du Mog vers le boss suivant),
---   - le pump des muscles travaillés pendant une série (redescend en quelques secondes).
--- Changer de stade = transformation (signal BodyTransform à tous les clients pour l'effet visuel).
+-- Le personnage prend du muscle à chaque séance (D40), EN CONTINU (D60) : pendant un stade, chaque pièce et le
+-- squelette lui-même (largeur, hauteur, profondeur) se rapprochent de ceux du corps du stade suivant, au rythme de la
+-- progression du Mog vers le boss. Au Mog du boss, le corps a exactement la taille du suivant : battre le boss ne
+-- change plus que les détails (définition, formes), pas la taille. Au dernier stade, l'ancienne croissance continue.
+-- S'y ajoute le pump des muscles travaillés pendant une série (redescend en quelques secondes).
+-- Changer de stade = transformation (signal BodyTransform à tous les clients : l'éclat doré masque le changement).
 -- Les objets de style équipés (coupes, barbes, hauts, accessoires) sont des pièces modélisées pour chaque corps
 -- (ReplicatedStorage.Style, StylePieces.luau) : soudées comme le corps, elles suivent pump et croissance.
 -- Une coupe équipée remplace la coupe de base du corps.
@@ -16,6 +18,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local BodyPieces = require(ReplicatedStorage.Shared.Config.BodyPieces)
 local Bodies = require(ReplicatedStorage.Shared.Config.Bodies)
 local StyleItems = require(ReplicatedStorage.Shared.Config.StyleItems)
 local StylePieces = require(ReplicatedStorage.Shared.Config.StylePieces)
@@ -26,7 +29,16 @@ local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local SHELL_NAME = "BodyShell"
 local GROWTH = Balance.Growth
 
-type Piece = { part: BasePart, kind: string, size: Vector3 }
+-- Une pièce posée : sa taille et son décalage dans ce corps, et ceux de sa jumelle dans le corps du stade suivant
+type Piece = {
+	part: BasePart,
+	weld: Weld,
+	kind: string,
+	size: Vector3,
+	offset: Vector3,
+	nextSize: Vector3?,
+	nextOffset: Vector3?,
+}
 type State = {
 	character: Model,
 	stageId: string,
@@ -34,6 +46,9 @@ type State = {
 	styleKey: string, -- objets équipés et apparence au moment de la construction (pour savoir s'il faut reconstruire)
 	pieces: { Piece },
 	pump: { [string]: number }, -- gonflement en cours par type de muscle (UpperArm, UpperTorso…)
+	scale: Bodies.Body, -- proportions du squelette de ce corps
+	nextScale: Bodies.Body?, -- celles du corps du stade suivant (nil au dernier stade)
+	appliedScale: number?, -- dernière progression appliquée au squelette (évite de le redimensionner pour rien)
 }
 
 local DataService
@@ -52,6 +67,17 @@ function BodyService.BodyFor(player: Player): (Bodies.Body?, string?)
 		return body, stage.id
 	end
 	return nil, nil
+end
+
+-- Stade suivant (nil au dernier stade, ou si son corps n'est pas importé)
+local function nextStageId(player: Player): string?
+	local data = DataService.Get(player)
+	local nextStage = data and Stages.List[data.Stage + 1]
+	local folder = ReplicatedStorage:FindFirstChild("Bodies")
+	if nextStage and Bodies[nextStage.id] and folder and folder:FindFirstChild(nextStage.id .. "_UpperTorso") then
+		return nextStage.id
+	end
+	return nil
 end
 
 -- Progression (0 à 1) du Mog entre le boss battu précédent et le boss du stade actuel
@@ -143,7 +169,52 @@ function BodyService.HasStyleModels(): boolean
 	return ReplicatedStorage:FindFirstChild("Style") ~= nil
 end
 
-local function buildShell(character: Model, bodyKey: string, look: Look.LookData, styleItems: { string }): { Piece }
+-- Jumelle d'une pièce dans le corps du stade suivant : même pièce si elle existe, sinon la pièce de base de la même
+-- partie (ex. une manche de t-shirt qui n'existe plus au stade torse nu suit le bras)
+local function twinOf(entry: Look.Piece, bodyKey: string, nextKey: string): (Vector3?, Vector3?)
+	local folder = ReplicatedStorage:FindFirstChild(entry.folder)
+	local bodies = ReplicatedStorage:FindFirstChild("Bodies")
+	if not folder or not bodies then
+		return nil, nil
+	end
+	local nextTemplate, nextOffset
+	if entry.item then
+		nextTemplate = folder:FindFirstChild(`{nextKey}__{entry.item}__{entry.key}`)
+		nextOffset = StylePieces[nextKey]
+			and StylePieces[nextKey][entry.item]
+			and StylePieces[nextKey][entry.item][entry.key]
+	else
+		nextTemplate = folder:FindFirstChild(`{nextKey}_{entry.key}`)
+		nextOffset = BodyPieces[nextKey] and BodyPieces[nextKey][entry.key]
+	end
+	local template = folder:FindFirstChild(entry.template)
+	if nextTemplate and nextTemplate:IsA("BasePart") and nextOffset and template and template:IsA("BasePart") then
+		return nextTemplate.Size, nextOffset
+	end
+	-- Pas de jumelle : la pièce grandit comme la pièce de base de sa partie
+	local base = bodies:FindFirstChild(`{bodyKey}_{entry.part}`)
+	local nextBase = bodies:FindFirstChild(`{nextKey}_{entry.part}`)
+	if not base or not nextBase or not base:IsA("BasePart") or not nextBase:IsA("BasePart") or not template then
+		return nil, nil
+	end
+	-- Taille : proportionnelle à la pièce de base, mais jamais plus de 30 % plus grosse qu'elle (une manche sur un
+	-- bras de spaghetti qui devient musclé exploserait) ; position : même écart à la pièce de base qu'aujourd'hui
+	local size = ((template :: BasePart).Size * (nextBase.Size / base.Size)):Min(nextBase.Size * 1.3)
+	local baseOffset = BodyPieces[bodyKey] and BodyPieces[bodyKey][entry.part]
+	local nextBaseOffset = BodyPieces[nextKey] and BodyPieces[nextKey][entry.part]
+	if not baseOffset or not nextBaseOffset then
+		return nil, nil
+	end
+	return size, nextBaseOffset + (entry.offset - baseOffset)
+end
+
+local function buildShell(
+	character: Model,
+	bodyKey: string,
+	nextKey: string?,
+	look: Look.LookData,
+	styleItems: { string }
+): { Piece }
 	local old = character:FindFirstChild(SHELL_NAME)
 	if old then
 		old:Destroy()
@@ -179,25 +250,76 @@ local function buildShell(character: Model, bodyKey: string, look: Look.LookData
 		weld.C0 = CFrame.new(offset)
 		weld.Parent = clone
 		clone.Parent = shell
-		table.insert(pieces, { part = clone, kind = kindOf(entry.part), size = template.Size })
+		local nextSize, nextOffset = nil, nil
+		if nextKey then
+			nextSize, nextOffset = twinOf(entry, bodyKey, nextKey)
+		end
+		table.insert(pieces, {
+			part = clone,
+			weld = weld,
+			kind = kindOf(entry.part),
+			size = template.Size,
+			offset = offset,
+			nextSize = nextSize,
+			nextOffset = nextOffset,
+		})
 	end
 	shell.Parent = character
 	return pieces
 end
 
--- Épaisseur de chaque pièce = croissance permanente du stade + pump en cours
+local SCALE_VALUES = {
+	{ "BodyWidthScale", "width" },
+	{ "BodyHeightScale", "height" },
+	{ "BodyDepthScale", "depth" },
+	{ "HeadScale", "head" },
+}
+
+-- Squelette : proportions entre celles de ce corps et celles du suivant, selon la progression
+local function applySkeleton(state: State, progress: number)
+	local nextScale = state.nextScale
+	if not nextScale then
+		return
+	end
+	if state.appliedScale and math.abs(state.appliedScale - progress) < GROWTH.SkeletonStep then
+		return
+	end
+	state.appliedScale = progress
+	local humanoid = state.character:FindFirstChildOfClass("Humanoid")
+	if not humanoid then
+		return
+	end
+	for _, pair in SCALE_VALUES do
+		local value = humanoid:FindFirstChild(pair[1])
+		if value and value:IsA("NumberValue") then
+			local from, to = (state.scale :: any)[pair[2]], (nextScale :: any)[pair[2]]
+			value.Value = from + (to - from) * progress
+		end
+	end
+end
+
+-- Taille de chaque pièce : chemin vers le corps du stade suivant (croissance continue) + pump en cours
 local function applySizes(player: Player)
 	local state = states[player]
 	if not state then
 		return
 	end
-	local growth = GROWTH.MaxScale * BodyService.Progress(player)
+	local progress = BodyService.Progress(player)
+	applySkeleton(state, progress)
+	-- Dernier stade (pas de corps suivant) : l'ancienne croissance en épaisseur
+	local lastStage = state.nextScale == nil
+	local growth = if lastStage then GROWTH.MaxScale * progress else 0
 	for _, piece in state.pieces do
 		local weight = GROWTH.Weights[piece.kind] or 0
 		local extra = (growth + (state.pump[piece.kind] or 0)) * weight
-		local thick = 1 + extra
-		local long = 1 + extra * GROWTH.LengthShare
-		piece.part.Size = piece.size * Vector3.new(thick, long, thick)
+		local pump = Vector3.new(1 + extra, 1 + extra * GROWTH.LengthShare, 1 + extra)
+		local size, offset = piece.size, piece.offset
+		if piece.nextSize and piece.nextOffset then
+			size = size:Lerp(piece.nextSize, progress)
+			offset = offset:Lerp(piece.nextOffset, progress)
+		end
+		piece.part.Size = size * pump
+		piece.weld.C0 = CFrame.new(offset)
 	end
 end
 
@@ -221,28 +343,35 @@ function BodyService.Refresh(player: Player, force: boolean?)
 		return
 	end
 	local look = lookOf(player)
-	local bodyKey = Look.BodyKey(stageId, look, ReplicatedStorage:FindFirstChild("Bodies"))
+	local bodiesFolder = ReplicatedStorage:FindFirstChild("Bodies")
+	local bodyKey = Look.BodyKey(stageId, look, bodiesFolder)
+	local nextStage = nextStageId(player)
+	local nextKey = if nextStage then Look.BodyKey(nextStage, look, bodiesFolder) else nil
 	local styleItems = equippedStyle(player, bodyKey)
-	local styleKey = `{bodyKey}|{table.concat(styleItems, ",")}|{Look.Key(look)}`
+	local styleKey = `{bodyKey}>{nextKey or ""}|{table.concat(styleItems, ",")}|{Look.Key(look)}`
 	local sameCharacter = previous ~= nil and previous.character == character
 	if sameCharacter and previous.bodyKey == bodyKey and not force then
 		-- Même corps : on ne reconstruit que si les objets équipés ont changé
 		if previous.styleKey ~= styleKey then
-			previous.pieces = buildShell(character, bodyKey, look, styleItems)
+			previous.pieces = buildShell(character, bodyKey, nextKey, look, styleItems)
 			previous.styleKey = styleKey
 		end
 		applySizes(player)
 		return
 	end
-	-- Proportions du squelette du corps porté (les corps féminins ont les leurs)
-	applyProportions(humanoid, Bodies[bodyKey] or body)
+	-- Proportions du squelette du corps porté (les corps féminins ont les leurs) ; la croissance continue les
+	-- rapproche ensuite de celles du corps suivant (applySkeleton)
+	local scale = Bodies[bodyKey] or body
+	applyProportions(humanoid, scale)
 	hideOriginalBody(character)
 	states[player] = {
 		character = character,
 		stageId = stageId,
 		bodyKey = bodyKey,
+		scale = scale,
+		nextScale = if nextKey then Bodies[nextKey] else nil,
 		styleKey = styleKey,
-		pieces = buildShell(character, bodyKey, look, styleItems),
+		pieces = buildShell(character, bodyKey, nextKey, look, styleItems),
 		pump = if sameCharacter then previous.pump else {},
 	}
 	applySizes(player)

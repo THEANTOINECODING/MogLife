@@ -35,6 +35,8 @@ export type Piece = {
 	part: string, -- partie R15 à laquelle la pièce est soudée
 	offset: Vector3, -- décalage par rapport au centre de cette partie, au repos
 	tint: string?, -- "Skin", "Hair", "Eyes", "Top", "Shorts" ou nil (couleurs de la texture)
+	key: string, -- nom de la pièce sans le corps (<Partie>[_<Groupe>]) : sa jumelle dans un autre corps a le même
+	item: string?, -- objet de style (nil pour le corps)
 }
 
 local Look = {}
@@ -167,6 +169,7 @@ function Look.Pieces(bodyKey: string, look: LookData, items: { string }, options
 				part = part,
 				offset = offset,
 				tint = tint,
+				key = key,
 			})
 		end
 	end
@@ -181,6 +184,8 @@ function Look.Pieces(bodyKey: string, look: LookData, items: { string }, options
 					part = part,
 					offset = offset,
 					tint = split[2],
+					key = key,
+					item = itemId,
 				})
 			end
 		end

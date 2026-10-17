@@ -215,8 +215,12 @@ return {
 
 	-- Le personnage prend du muscle à chaque séance (décision D40). Échelles des pièces de la coque.
 	Growth = {
-		-- Croissance permanente : +X % d'épaisseur quand le Mog atteint celui du boss suivant
+		-- Croissance continue (D60) : pendant un stade, le corps va vers celui du stade suivant (pièces et squelette).
+		-- MaxScale ne sert plus qu'au dernier stade : +X % d'épaisseur quand la progression est complète.
 		MaxScale = 0.22,
+		-- Le squelette n'est redimensionné que si la progression a bougé d'au moins ce pas (évite de le recalculer à
+		-- chaque petite répétition)
+		SkeletonStep = 0.01,
 		-- Part de la croissance (et du pump) que prend chaque pièce
 		Weights = {
 			UpperArm = 1,
