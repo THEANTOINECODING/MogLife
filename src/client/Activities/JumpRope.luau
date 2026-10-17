@@ -36,6 +36,7 @@ function JumpRope.new(ctx)
 	ctx.borrow("JumpRope", true)
 	local folder = Instance.new("Folder")
 	folder.Name = "JumpRope"
+	folder:SetAttribute("ActivityProps", true)
 	folder.Parent = workspace
 	self.folder = folder
 	self.left, self.leftTip = handle(folder)

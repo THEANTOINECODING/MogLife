@@ -45,7 +45,7 @@ type Animator = {
 
 local localPlayer = Players.LocalPlayer
 local addSweat: (Model) -> ParticleEmitter?
-local startCloseUp: (Model, any) -> ()
+local startCloseUp: (Model, any, BasePart?, any) -> ()
 local stopCloseUp: () -> ()
 local animators: { [Player]: Animator } = {}
 local SettingsController
@@ -125,8 +125,21 @@ end
 -- Gros plan pendant sa propre série : la caméra regarde le personnage de face, un peu de côté, et le place dans la
 -- partie gauche de l'écran (le mini-jeu est à droite). Elle suit le corps (pompes, tractions, voiture poussée…).
 local closeUp: RBXScriptConnection? = nil
+local closeUpFader: CameraFraming.Fader? = nil
 -- preset : réglage de caméra propre à l'activité (module Activities : CloseUp = { steps, height }), facultatif
-startCloseUp = function(character: Model, preset: any)
+-- animator : pour ignorer les objets que le personnage tient ou utilise (piano, barre, bocal…)
+startCloseUp = function(character: Model, preset: any, anchor: BasePart?, animator: any)
+	-- La station et les objets de l'activité ne gênent jamais la vue et ne sont jamais estompés
+	local function activityParts(): { Instance }
+		local list: { Instance } = {}
+		if anchor then
+			table.insert(list, anchor)
+		end
+		for part in (animator and animator.borrowed) or {} do
+			table.insert(list, part)
+		end
+		return list
+	end
 	stopCloseUp()
 	local camera = Workspace.CurrentCamera
 	local root = character:FindFirstChild("HumanoidRootPart") :: BasePart?
@@ -144,6 +157,8 @@ startCloseUp = function(character: Model, preset: any)
 	-- déplacer, ex. en poussant la voiture), la caméra y glisse en douceur
 	local eye: Vector3? = nil
 	local nextCheck = 0
+	local nextFade = 0
+	closeUpFader = CameraFraming.NewFader()
 	closeUp = RunService.RenderStepped:Connect(function(dt)
 		if not torso.Parent then
 			return
@@ -154,23 +169,42 @@ startCloseUp = function(character: Model, preset: any)
 			nextCheck = now + 0.5
 			local steps = preset and preset.steps
 			local height = (preset and preset.height) or 1.5
-			local wanted =
-				CameraFraming.Best(focus, CameraFraming.Around(facing.LookVector, distance, height, 1, steps))
+			local wanted = CameraFraming.Best(
+				focus,
+				CameraFraming.Around(facing.LookVector, distance, height, 1, steps),
+				-- La dalle ou la station de l'activité ne gêne jamais la vue
+				activityParts(),
+				CameraFraming.BodyPoints(character)
+			)
 			eye = if eye then eye:Lerp(wanted, 0.5) else wanted
 		end
 		local target = eye :: Vector3
 		-- Le personnage à gauche de l'écran (le mini-jeu est à droite) : on vise un peu à droite de lui
 		local look = (focus - target).Unit
 		local right = look:Cross(Vector3.new(0, 1, 0))
-		local aim = focus + right * (distance * 0.5)
+		local aim = focus + right * (distance * 0.3)
 		local wanted = CFrame.lookAt(target, aim)
 		local blend = math.clamp((now - startedAt) / 0.6, 0, 1)
 		local follow = if blend < 1 then blend * blend * (3 - 2 * blend) else math.min(dt * 6, 1)
 		camera.CFrame = camera.CFrame:Lerp(wanted, follow)
+		-- Ce qui reste entre la caméra et le corps (PNJ, arbre) est estompé
+		if now >= nextFade and closeUpFader then
+			nextFade = now + 0.15
+			CameraFraming.Fade(
+				closeUpFader,
+				camera.CFrame.Position,
+				CameraFraming.BodyPoints(character),
+				activityParts()
+			)
+		end
 	end)
 end
 
 stopCloseUp = function()
+	if closeUpFader then
+		CameraFraming.ClearFade(closeUpFader)
+		closeUpFader = nil
+	end
 	if closeUp then
 		closeUp:Disconnect()
 		closeUp = nil
@@ -287,7 +321,7 @@ local function start(update)
 	if update.kind ~= "Boss" then
 		animator.sweat = addSweat(character)
 		if player == localPlayer and SettingsController.Get("CloseUp") then
-			startCloseUp(character, Activity.CloseUp)
+			startCloseUp(character, Activity.CloseUp, anchor, animator)
 		end
 	end
 end

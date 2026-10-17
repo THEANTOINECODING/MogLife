@@ -9,6 +9,8 @@ export type Props = typeof(setmetatable({} :: { folder: Folder }, Props))
 function Props.new(name: string): Props
 	local folder = Instance.new("Folder")
 	folder.Name = name
+	-- La caméra des activités ignore ces objets (CameraFraming)
+	folder:SetAttribute("ActivityProps", true)
 	folder.Parent = workspace
 	return setmetatable({ folder = folder }, Props)
 end

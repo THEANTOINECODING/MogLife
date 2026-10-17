@@ -26,6 +26,7 @@ local ORDER = {
 	"SocialService",
 	"EventService",
 	"SettingsService",
+	"SeatService",
 	"DevService",
 }
 

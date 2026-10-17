@@ -94,15 +94,15 @@ local function setWorldTagsHidden(hidden: boolean)
 		if #hiddenTags > 0 then
 			return
 		end
-		for _, gui in workspace:GetDescendants() do
-			if gui:IsA("BillboardGui") and TAG_NAMES[gui.Name] and gui.Enabled then
-				gui.Enabled = false
-				table.insert(hiddenTags, gui)
+		for _, tag in workspace:GetDescendants() do
+			if tag:IsA("BillboardGui") and TAG_NAMES[tag.Name] and tag.Enabled then
+				tag.Enabled = false
+				table.insert(hiddenTags, tag)
 			end
 		end
 	else
-		for _, gui in hiddenTags do
-			gui.Enabled = true
+		for _, tag in hiddenTags do
+			tag.Enabled = true
 		end
 		table.clear(hiddenTags)
 	end
@@ -168,10 +168,24 @@ local function sendRep(quality: string): boolean
 	return true
 end
 
+-- Pendant une série, la colonne de gauche (Maison, Flex, Style, Settings) se range : elle ne sert à rien et
+-- cachait le personnage (le bouton Stop reste)
+local SIDE_GUIS = { "Travel", "Emotes", "Menu" }
+local function setSideButtonsHidden(hidden: boolean)
+	local playerGui = player:FindFirstChildOfClass("PlayerGui")
+	for _, name in SIDE_GUIS do
+		local sideGui = playerGui and playerGui:FindFirstChild(name)
+		if sideGui and sideGui:IsA("ScreenGui") then
+			sideGui.Enabled = not hidden
+		end
+	end
+end
+
 local function closeRun()
 	if not current then
 		return
 	end
+	setSideButtonsHidden(false)
 	for _, connection in current.connections do
 		connection:Disconnect()
 	end
@@ -200,6 +214,7 @@ local function openRun(update)
 		lastExerciseId = update.id
 	end
 	MinigameController.SetGameplayLocked(true)
+	setSideButtonsHidden(true)
 
 	-- Le cadre plein écran capte les touches : la caméra ne tourne pas pendant le mini-jeu
 	local root = Ui.create("Frame", {

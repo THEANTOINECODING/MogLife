@@ -55,6 +55,7 @@ local pips: { Frame } = {}
 local pipsFrame: Frame
 local fight: { bossId: string, rounds: number, results: { boolean } }? = nil
 local cameraConnection: RBXScriptConnection? = nil
+local duelFader: CameraFraming.Fader? = nil
 local specialGui: ScreenGui
 local stopSpecial: (() -> ())? = nil
 
@@ -187,6 +188,8 @@ local function startDuelCamera(bossId: string)
 	-- adversaires (recalculé deux fois par seconde)
 	local eye: Vector3? = nil
 	local nextCheck = 0
+	local nextFade = 0
+	duelFader = CameraFraming.NewFader()
 	cameraConnection = RunService.RenderStepped:Connect(function(dt)
 		local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart") :: BasePart?
 		if not root or not model.Parent then
@@ -207,7 +210,10 @@ local function startDuelCamera(bossId: string)
 			for _, direction in CameraFraming.Around(-side, distance, 2.5) do
 				table.insert(directions, direction)
 			end
-			local wanted = CameraFraming.Best(center, directions)
+			-- Les deux adversaires doivent être visibles : le corps du joueur et celui du boss
+			local points = CameraFraming.BodyPoints(player.Character :: Model)
+			table.insert(points, them + Vector3.new(0, 2, 0))
+			local wanted = CameraFraming.Best(center, directions, { model }, points)
 			eye = if eye then eye:Lerp(wanted, 0.5) else wanted
 		end
 		local target = eye :: Vector3
@@ -222,10 +228,21 @@ local function startDuelCamera(bossId: string)
 		else
 			camera.CFrame = camera.CFrame:Lerp(wanted, math.min(dt * 6, 1))
 		end
+		-- Ce qui passe entre la caméra et les deux adversaires est estompé
+		if duelFader and now >= nextFade then
+			nextFade = now + 0.15
+			local points = CameraFraming.BodyPoints(player.Character :: Model)
+			table.insert(points, them + Vector3.new(0, 2, 0))
+			CameraFraming.Fade(duelFader, camera.CFrame.Position, points, { model })
+		end
 	end)
 end
 
 local function stopDuelCamera()
+	if duelFader then
+		CameraFraming.ClearFade(duelFader)
+		duelFader = nil
+	end
 	if cameraConnection then
 		cameraConnection:Disconnect()
 		cameraConnection = nil

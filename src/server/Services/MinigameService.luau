@@ -45,6 +45,8 @@ local MIN_GAP = 0.15
 
 local runs: { [Player]: Run } = {}
 
+local SeatService
+
 local MinigameService = {}
 
 -- Lettre de la note (S, A, B, C) pour une précision de 0 à 100
@@ -100,6 +102,8 @@ function MinigameService.StartRun(player: Player, spec: RunSpec): boolean
 	if runs[player] then
 		return false
 	end
+	-- Assis sur un banc ou un canapé : il se relève pour l'activité
+	SeatService.StandUp(player)
 	runs[player] = { spec = spec, reps = 0, streak = 0, points = 0, manual = 0, startedAt = os.clock(), lastRepAt = 0 }
 	Remotes.SeriesUpdate:FireClient(player, {
 		state = "Started",
@@ -208,6 +212,10 @@ local function onRep(player: Player, quality: unknown)
 	if run.reps >= spec.total then
 		MinigameService.EndRun(player, "Completed")
 	end
+end
+
+function MinigameService.Init(services)
+	SeatService = services.SeatService
 end
 
 function MinigameService.Start()
