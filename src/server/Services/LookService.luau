@@ -36,11 +36,18 @@ local function lookOf(player: Player): Look.LookData?
 	return data and Look.Sanitize(data.Look, nil)
 end
 
+-- Titres exclusifs débloqués (trophées de la semaine, victoires en duel)
+local function unlockedTitles(data: any): { [string]: boolean }
+	return Look.UnlockedTitles(data.Weekly.Trophies, data.Duels.Wins)
+end
+
+-- Surnom au-dessus de la tête, avec le nombre de victoires en duel s'il y en a (D67)
 local function applyNickname(player: Player)
+	local data = DataService.Get(player)
 	local look = lookOf(player)
 	local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
-	if look and humanoid then
-		humanoid.DisplayName = Look.Nickname(look)
+	if data and look and humanoid then
+		humanoid.DisplayName = Look.Nickname(look, data.Duels.Wins)
 	end
 end
 
@@ -53,6 +60,9 @@ local function openCreator(player: Player, mode: string)
 		mode = mode,
 		look = Look.Sanitize(data.Look, nil),
 		hair = data.StyleEquipped.Hair or "",
+		titles = unlockedTitles(data),
+		trophies = data.Weekly.Trophies,
+		duelWins = data.Duels.Wins,
 	})
 end
 
@@ -79,7 +89,7 @@ local function onSetLook(player: Player, raw: unknown, hair: unknown)
 	end
 	lastRequest[player] = now
 	local firstTime = not data.Look.Created
-	local look = Look.Sanitize(raw, Look.Sanitize(data.Look, nil))
+	local look = Look.Sanitize(raw, Look.Sanitize(data.Look, nil), unlockedTitles(data))
 	look.Created = true
 	data.Look = look
 	local ok, hairId = validHair(data, hair)
@@ -169,6 +179,29 @@ local function onPlayerLoaded(player: Player)
 				openCreator(player, "Create")
 			end
 		end)
+	end
+end
+
+-- Met à jour le surnom affiché (nouvelle victoire en duel)
+function LookService.RefreshNickname(player: Player)
+	applyNickname(player)
+end
+
+-- Annonce les titres exclusifs qui viennent d'être débloqués (une seule fois chacun, mémorisé dans Tips)
+function LookService.CheckTitles(player: Player)
+	local data = DataService.Get(player)
+	if not data then
+		return
+	end
+	for id in unlockedTitles(data) do
+		local key = `Title.{id}`
+		if not data.Tips[key] then
+			data.Tips[key] = true
+			Remotes.Notify:FireClient(
+				player,
+				{ key = "Title.Unlocked", args = { title = { key = `Nick.Title.{id}` } } }
+			)
+		end
 	end
 end
 

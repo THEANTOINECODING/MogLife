@@ -15130,6 +15130,1754 @@
    ]
   },
   {
+   "name": "DuelStage0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     16,
+     1,
+     7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       0.9,
+       -72.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      45,
+      50,
+      78
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelTrimLong00",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     16,
+     0.1,
+     0.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       91.35,
+       1.45,
+       -72.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelTrimLong01",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     16,
+     0.1,
+     0.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       84.65,
+       1.45,
+       -72.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelTrimShort00",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     0.1,
+     7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       1.45,
+       -79.85
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelTrimShort01",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     0.1,
+     7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       1.45,
+       -64.15
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelMidLine0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.4,
+     0.06,
+     6.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       1.43,
+       -72.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      255,
+      255
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "DuelPad0A",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.2,
+     0.06,
+     3.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       1.43,
+       -78.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "DuelSpot0A",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     0.2,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       1.5,
+       -78.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        -0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "DuelSpot"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Arena": "Gym1",
+    "Side": "A"
+   }
+  },
+  {
+   "name": "DuelPad0B",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.2,
+     0.06,
+     3.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       1.43,
+       -66.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      220,
+      60,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "DuelSpot0B",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     0.2,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       1.5,
+       -66.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "DuelSpot"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Arena": "Gym1",
+    "Side": "B"
+   }
+  },
+  {
+   "name": "DuelPost00",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     2.2,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       91.1,
+       2.5,
+       -79.6
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      235,
+      240
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelPostCap00",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.8,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       91.1,
+       3.75,
+       -79.6
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "DuelPost01",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     2.2,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       84.9,
+       2.5,
+       -79.6
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      235,
+      240
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelPostCap01",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.8,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       84.9,
+       3.75,
+       -79.6
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "DuelPost02",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     2.2,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       91.1,
+       2.5,
+       -64.4
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      235,
+      240
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelPostCap02",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.8,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       91.1,
+       3.75,
+       -64.4
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "DuelPost03",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     2.2,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       84.9,
+       2.5,
+       -64.4
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      235,
+      240
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelPostCap03",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.8,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       84.9,
+       3.75,
+       -64.4
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "DuelStage1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     16,
+     1,
+     7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       0.9,
+       -36.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      45,
+      50,
+      78
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelTrimLong10",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     16,
+     0.1,
+     0.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       91.35,
+       1.45,
+       -36.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelTrimLong11",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     16,
+     0.1,
+     0.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       84.65,
+       1.45,
+       -36.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelTrimShort10",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     0.1,
+     7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       1.45,
+       -43.85
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelTrimShort11",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     0.1,
+     7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       1.45,
+       -28.15
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelMidLine1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.4,
+     0.06,
+     6.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       1.43,
+       -36.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      255,
+      255
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "DuelPad1A",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.2,
+     0.06,
+     3.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       1.43,
+       -42.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "DuelSpot1A",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     0.2,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       1.5,
+       -42.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        -0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "DuelSpot"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Arena": "Gym2",
+    "Side": "A"
+   }
+  },
+  {
+   "name": "DuelPad1B",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.2,
+     0.06,
+     3.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       1.43,
+       -30.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      220,
+      60,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "DuelSpot1B",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     0.2,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       88.0,
+       1.5,
+       -30.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "DuelSpot"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Arena": "Gym2",
+    "Side": "B"
+   }
+  },
+  {
+   "name": "DuelPost10",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     2.2,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       91.1,
+       2.5,
+       -43.6
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      235,
+      240
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelPostCap10",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.8,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       91.1,
+       3.75,
+       -43.6
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "DuelPost11",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     2.2,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       84.9,
+       2.5,
+       -43.6
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      235,
+      240
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelPostCap11",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.8,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       84.9,
+       3.75,
+       -43.6
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "DuelPost12",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     2.2,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       91.1,
+       2.5,
+       -28.4
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      235,
+      240
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelPostCap12",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.8,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       91.1,
+       3.75,
+       -28.4
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "DuelPost13",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     2.2,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       84.9,
+       2.5,
+       -28.4
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      235,
+      240
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "DuelPostCap13",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.8,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       84.9,
+       3.75,
+       -28.4
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Ball"
+   }
+  },
+  {
    "name": "GymIcon",
    "className": "Part",
    "properties": {

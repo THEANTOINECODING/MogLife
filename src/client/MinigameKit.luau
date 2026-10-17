@@ -5,7 +5,8 @@
 --   Minigame.new(parent: GuiObject, interval: number, onRep: (quality: string) -> (), options: Options?)
 --   minigame:SetAuto(on: boolean)   -- en mode auto, le mini-jeu s'anime tout seul et ne note rien
 --   minigame:Destroy()
--- options.timingScale (< 1 = fenêtres plus serrées, utilisé en combat de boss)
+-- options.timingScale (< 1 = fenêtres plus serrées, utilisé en combat de boss et en duel)
+-- options.seed (graine du motif : en duel, les deux joueurs ont exactement la même suite)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -16,6 +17,7 @@ local Ui = require(script.Parent.Ui)
 
 export type Options = {
 	timingScale: number?,
+	seed: number?, -- graine du motif (duels : les deux joueurs jouent la même suite)
 }
 
 local Kit = {}

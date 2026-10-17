@@ -79,9 +79,32 @@ function Look.Default(): LookData
 	}
 end
 
+-- Titre exclusif (RewardTitles) : sa condition de déblocage, nil si ce n'est pas un titre exclusif
+function Look.RewardTitle(id: unknown): { id: string, trophies: number?, duelWins: number? }?
+	for _, entry in LookConfig.RewardTitles do
+		if entry.id == id then
+			return entry
+		end
+	end
+	return nil
+end
+
+-- Titres exclusifs débloqués avec ce nombre de trophées de la semaine et de victoires en duel
+function Look.UnlockedTitles(trophies: number, duelWins: number): { [string]: boolean }
+	local unlocked = {}
+	for _, entry in LookConfig.RewardTitles do
+		if (entry.trophies and trophies >= entry.trophies) or (entry.duelWins and duelWins >= entry.duelWins) then
+			unlocked[entry.id] = true
+		end
+	end
+	return unlocked
+end
+
 -- Apparence valide à partir de données quelconques (client, ancienne sauvegarde) : chaque champ inconnu
 -- reprend la valeur de `fallback` (ou la valeur par défaut). Created n'est jamais pris du client.
-function Look.Sanitize(raw: unknown, fallback: LookData?): LookData
+-- unlocked : titres exclusifs autorisés (demande du client). nil = données déjà validées (sauvegarde) : un titre
+-- exclusif enregistré est gardé.
+function Look.Sanitize(raw: unknown, fallback: LookData?, unlocked: { [string]: boolean }?): LookData
 	local base = fallback or Look.Default()
 	local source = if typeof(raw) == "table" then raw :: any else {}
 	local out = table.clone(base)
@@ -99,7 +122,8 @@ function Look.Sanitize(raw: unknown, fallback: LookData?): LookData
 	if contains(LookConfig.NickFirst, source.First) then
 		out.First = source.First
 	end
-	if contains(LookConfig.NickTitle, source.Title) then
+	local rewardTitle = Look.RewardTitle(source.Title) ~= nil and (unlocked == nil or unlocked[source.Title] == true)
+	if contains(LookConfig.NickTitle, source.Title) or rewardTitle then
 		out.Title = source.Title
 	end
 	return out
@@ -206,11 +230,14 @@ function Look.Pieces(bodyKey: string, look: LookData, items: { string }, options
 end
 
 -- Surnom affiché au-dessus de la tête (« Brad "The Wall" »)
-function Look.Nickname(look: LookData): string
-	return Texts.Get("Nick.Format", {
+-- Surnom affiché ; duelWins > 0 : le nombre de victoires en duel s'affiche à côté (D67)
+function Look.Nickname(look: LookData, duelWins: number?): string
+	local args = {
 		first = Texts.Get(`Nick.First.{look.First}`),
 		title = Texts.Get(`Nick.Title.{look.Title}`),
-	})
+		wins = duelWins,
+	}
+	return Texts.Get(if duelWins and duelWins > 0 then "Nick.FormatWins" else "Nick.Format", args)
 end
 
 -- Apparence au hasard (bouton « Aléatoire » du menu ; les teintes fantaisie sont plus rares)

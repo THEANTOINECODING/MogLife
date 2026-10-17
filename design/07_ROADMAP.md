@@ -28,7 +28,12 @@ Remplace la suite de l'étape E ci-dessous. Chaque étape prépare la suivante (
 6. ✅ **Le gameplay** (16-17/10 : combo, boosts, Mog-off mis en scène, notes et records, aides payées selon la réussite, coups spéciaux des boss, émotes, pareur, événements de ville, cinématiques ; D47–D58) : mini-jeux améliorés ; boissons et aliments comiques qui donnent un boost (❓ énergie, voir D36).
 7. ✅ **Le son** (16-17/10 : musique par ambiance choisie par le créateur, volumes mesurés et équilibrés, D54) : musique par zone, effets pour chaque activité.
 8. **Alpha** : testeurs, vrais téléphones, réglage de l'économie.
-9. **Faire revenir les joueurs** : récompenses hebdomadaires, duels entre joueurs à chances égales (même mini-jeu).
+9. ✅ **Faire revenir les joueurs** (17/10, D67) : défis de la semaine et coffre de la semaine (bouton Weekly),
+   duels entre joueurs à chances égales (Tug of Mog, même suite de nœuds pour les deux, deux estrades dans la salle),
+   titres exclusifs et victoires affichées à côté du surnom. Testé dans Studio : duel complet contre un mannequin
+   (défaite, victoire, récompense, plafond, surnom), défis, bonus, trophée, titres, changement de semaine. Reste à
+   tester : l'invitation entre deux vrais joueurs (mode « Serveur et 2 clients » de Studio), la liste des titres dans
+   le menu du miroir, le jeu au doigt sur téléphone.
 
 ## MVP
 

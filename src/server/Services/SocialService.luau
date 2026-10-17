@@ -18,6 +18,7 @@ local PROMPT_NAME = "SpotPrompt"
 
 local StatsService
 local MinigameService
+local WeeklyService
 
 local lastEmote: { [Player]: number } = {}
 -- Parade en cours : pratiquant -> pareur, et Mog gagné par le pareur pendant cette parade
@@ -139,6 +140,7 @@ function SocialService.OnLifterRep(lifter: Player, gain: number, quality: string
 	local share = gain * SPOT.SpotterShare
 	spot.earned += share
 	StatsService.Add(spot.spotter, "Mog", share)
+	WeeklyService.Track(spot.spotter, "SpotReps")
 	-- Le pareur encourage : il pose à chaque Perfect
 	if quality == "Perfect" then
 		emote(spot.spotter, SPOT.CheerPose)
@@ -154,6 +156,7 @@ end
 function SocialService.Init(services)
 	StatsService = services.StatsService
 	MinigameService = services.MinigameService
+	WeeklyService = services.WeeklyService
 end
 
 function SocialService.Start()

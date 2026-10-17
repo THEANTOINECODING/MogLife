@@ -20,9 +20,10 @@ local KINDS = { "GoldenDumbbells", "FreeShakes", "RunawayPiano" }
 local DataService
 local StatsService
 local BoostService
+local WeeklyService
 
 local folder: Folder
-local active: { kind: string, endsAt: number, cleanup: { () -> () } }? = nil
+local active: { kind: string, endsAt: number, cleanup: { () -> () }, joined: { [Player]: boolean } }? = nil
 local rng = Random.new()
 
 local EventService = {}
@@ -55,6 +56,14 @@ local function spawnProp(name: string, cframe: CFrame): BasePart?
 	CollectionService:AddTag(part, EVENT_TAG)
 	part.Parent = folder
 	return part
+end
+
+-- Défi de la semaine « participer à des événements » : compté une fois par événement et par joueur
+local function joined(player: Player)
+	if active and not active.joined[player] then
+		active.joined[player] = true
+		WeeklyService.Track(player, "CityEvents")
+	end
 end
 
 local function announce(kind: string, state: string, extra: { [string]: any }?)
@@ -98,6 +107,7 @@ local function goldenDumbbells(cleanup: { () -> () })
 					local cash = cashFor(player, cfg.CashByStage)
 					StatsService.Add(player, "Cash", cash)
 					Remotes.Notify:FireClient(player, { key = "Event.GoldenDumbbells.Got", args = { cash = cash } })
+					joined(player)
 					announce("GoldenDumbbells", "Taken", { position = part.Position })
 					part:Destroy()
 				end)
@@ -137,6 +147,7 @@ local function freeShakes(cleanup: { () -> () })
 		end
 		if BoostService.Grant(player, cfg.Boost) then
 			served[player] = true
+			joined(player)
 			Remotes.Notify:FireClient(
 				player,
 				{ key = "Event.FreeShakes.Got", args = { boost = { key = `Boost.{cfg.Boost}` } } }
@@ -181,6 +192,7 @@ local function runawayPiano(cleanup: { () -> () })
 		local cash = cashFor(player, cfg.CashByStage)
 		StatsService.Add(player, "Cash", cash)
 		Remotes.Notify:FireClient(player, { key = "Event.RunawayPiano.Got", args = { cash = cash } })
+		joined(player)
 		announce("RunawayPiano", "Stopped", { name = player.DisplayName })
 	end)
 	-- Il roule d'un bout à l'autre de la place pendant la durée de l'événement, en tanguant
@@ -244,7 +256,7 @@ function EventService.Run(kind: string?): boolean
 		return false
 	end
 	local duration = (Events :: any)[chosen].Duration
-	local event = { kind = chosen, endsAt = workspace:GetServerTimeNow() + duration, cleanup = {} }
+	local event = { kind = chosen, endsAt = workspace:GetServerTimeNow() + duration, cleanup = {}, joined = {} }
 	active = event
 	starter(event.cleanup)
 	announce(chosen, "Started", { endsAt = event.endsAt })
@@ -260,6 +272,7 @@ function EventService.Init(services)
 	DataService = services.DataService
 	StatsService = services.StatsService
 	BoostService = services.BoostService
+	WeeklyService = services.WeeklyService
 end
 
 function EventService.Start()

@@ -304,7 +304,8 @@ local function start(update)
 	animators[player] = animator
 	if update.kind ~= "Boss" then
 		animator.sweat = addSweat(character)
-		if player == localPlayer and SettingsController.Get("CloseUp") then
+		-- Duel : DuelController filme les deux joueurs (pas de gros plan sur soi seul)
+		if player == localPlayer and update.kind ~= "Duel" and SettingsController.Get("CloseUp") then
 			task.spawn(startCloseUp, character, Activity.CloseUp, anchor, animator)
 		end
 	end

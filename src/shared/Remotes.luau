@@ -43,6 +43,13 @@ local NAMES = {
 	"CityEvent", -- serveur -> tous : ({ kind, state: "Started" | "Ended" | ..., endsAt? }) événement de ville
 	"SetSetting", -- client -> serveur : (key: string, value: boolean) changer un réglage
 	"SettingsState", -- serveur -> client : ({ [key]: boolean }) réglages sauvegardés
+	"DuelInvite", -- client -> serveur : (target: Player) inviter un joueur proche à un Tug of Mog
+	"DuelAnswer", -- client -> serveur : (accept: boolean) réponse à l'invitation reçue
+	-- serveur -> client : ({ state: "Invited" | "InviteSent" | "Started" | "RoundStart" | "Live" | "RoundResult" |
+	-- "Result" | "Finished", ... }) invitation reçue, puis déroulement du duel
+	"DuelUpdate",
+	"WeeklyState", -- serveur -> client : (état des défis, du coffre et des trophées de la semaine)
+	"WeeklyClaim", -- client -> serveur : (what: "Challenge" | "Bonus" | "Chest", index: number?) réclamer
 }
 
 local isServer = RunService:IsServer()
@@ -111,4 +118,9 @@ return remotes :: {
 	CityEvent: RemoteEvent,
 	SetSetting: RemoteEvent,
 	SettingsState: RemoteEvent,
+	DuelInvite: RemoteEvent,
+	DuelAnswer: RemoteEvent,
+	DuelUpdate: RemoteEvent,
+	WeeklyState: RemoteEvent,
+	WeeklyClaim: RemoteEvent,
 }

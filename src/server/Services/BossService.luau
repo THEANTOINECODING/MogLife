@@ -36,6 +36,7 @@ local StatsService
 local MinigameService
 local StyleService
 local TutorialService
+local WeeklyService
 
 -- Un même boss peut avoir plusieurs emplacements (Kevin dans le garage de chaque maison)
 local spots: { [string]: { BasePart } } = {}
@@ -101,6 +102,7 @@ local function finishFight(player: Player, fight: Fight)
 	if model then
 		Npc.LaunchAndReturn(model, 80, 5)
 	end
+	WeeklyService.Track(player, "MogOffsWon")
 
 	local firstWin = data.BossesBeaten[fight.bossId] ~= true and stageIndex == data.Stage
 	if not firstWin then
@@ -422,6 +424,7 @@ function BossService.Init(services)
 	MinigameService = services.MinigameService
 	StyleService = services.StyleService
 	TutorialService = services.TutorialService
+	WeeklyService = services.WeeklyService
 end
 
 -- Première rencontre avec chaque boss : présentation en cinématique (D53), une seule fois par joueur

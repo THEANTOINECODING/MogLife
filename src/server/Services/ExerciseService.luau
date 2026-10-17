@@ -18,6 +18,7 @@ local BodyService
 local TutorialService
 local BoostService
 local SocialService
+local WeeklyService
 
 local ExerciseService = {}
 
@@ -84,6 +85,9 @@ local function startSeries(player: Player, exerciseId: unknown)
 			SocialService.OnLifterRep(p, gain, quality)
 			-- Les muscles travaillés gonflent (D40)
 			BodyService.Pump(p, exerciseId, quality)
+			if quality == "Perfect" then
+				WeeklyService.Track(p, "PerfectReps")
+			end
 			return gain
 		end,
 		onEnd = function(p, reason, _reps, score)
@@ -92,6 +96,10 @@ local function startSeries(player: Player, exerciseId: unknown)
 				return nil
 			end
 			TutorialService.OnEvent(p, "SeriesCompleted", exerciseId)
+			WeeklyService.Track(p, "SeriesDone")
+			if score and MinigameService.Grade(score) == "S" then
+				WeeklyService.Track(p, "GradeS")
+			end
 			-- Record personnel de l'exercice (D51)
 			local playerData = DataService.Get(p)
 			if not score or not playerData then
@@ -142,6 +150,7 @@ function ExerciseService.Init(services)
 	TutorialService = services.TutorialService
 	BoostService = services.BoostService
 	SocialService = services.SocialService
+	WeeklyService = services.WeeklyService
 end
 
 function ExerciseService.Start()

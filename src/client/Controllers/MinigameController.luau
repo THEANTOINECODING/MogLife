@@ -173,7 +173,7 @@ end
 -- cachait le personnage (le bouton Stop reste)
 -- Plusieurs raisons peuvent se cumuler (série en cours, combat de boss entre deux manches) : la colonne ne revient
 -- que quand il n'y en a plus aucune
-local SIDE_GUIS = { "Travel", "Emotes", "Menu" }
+local SIDE_GUIS = { "Travel", "Emotes", "Menu", "Weekly" }
 local sideReasons: { [string]: boolean } = {}
 local function setSideButtonsHidden(hidden: boolean, reason: string?)
 	sideReasons[reason or "Run"] = if hidden then true else nil
@@ -305,7 +305,7 @@ local function openRun(update)
 		if current and not current.autoHeld then
 			sendRep(quality)
 		end
-	end, { timingScale = update.timingScale })
+	end, { timingScale = update.timingScale, seed = update.seed })
 
 	local session: Current = {
 		kind = update.kind,
@@ -464,8 +464,8 @@ end
 local function onEnded(update)
 	local gained = if current then current.gained else 0
 	closeRun()
-	-- Les manches de boss s'enchaînent : c'est BossController qui rend la main au joueur
-	if update.kind == "Boss" then
+	-- Les manches de boss et de duel s'enchaînent : c'est BossController / DuelController qui rend la main
+	if update.kind == "Boss" or update.kind == "Duel" then
 		return
 	end
 	if (update.kind == "Exercise" or update.kind == "Help") and update.reason == "Completed" then

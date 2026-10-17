@@ -28,6 +28,17 @@ Battre un boss, découvrir le nouvel exercice ou la nouvelle zone, se refaire un
 
 Le prochain boss, les objets de style qu'on veut, et les **mises à jour** (nouvelle zone, nouveau boss, nouveaux mini-jeux). Jamais d'obligation quotidienne.
 
+Depuis l'étape 9 (D67, bouton **Weekly** en haut à droite) :
+- **Défis de la semaine** : chaque lundi (UTC), 3 défis tirés au sort, les mêmes pour tous : un pour s'entraîner
+  (Perfect, séries, notes S), un pour aider la ville (aides, aides sans faute, événements), un pour se mesurer aux
+  autres (duels, victoires en duel, Mog-off, pareur). Chaque défi réussi se réclame (Cash) ; les 3 réclamés donnent un
+  **trophée de la semaine** et un bonus. Les trophées débloquent des titres exclusifs (1, 4 et 10 trophées).
+- **Coffre de la semaine** : chaque jour où l'on joue au moins 3 minutes coche une case (7 cases) ; le coffre s'ouvre
+  le dimanche, et rapporte plus s'il y a plus de cases cochées.
+- **Duels Tug of Mog** entre joueurs (voir `02_MECANIQUES/DUELS.md`).
+- Aucune pénalité : sauter un jour ou une semaine ne fait rien perdre ; ce qui était gagné mais pas réclamé (défis,
+  bonus, coffre) est versé automatiquement la semaine suivante. Montants : `Config/Weekly.luau` (hypothèses ❓).
+
 ## Les 5 premières minutes
 
 | Temps cible | Ce qui se passe | Ce que le joueur comprend |

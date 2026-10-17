@@ -19,7 +19,33 @@ return {
 		Records = {}, -- meilleure note de série par exercice (0 à 100)
 		Tips = {}, -- conseils du mentor déjà donnés
 		-- Réglages du joueur (Config/Settings.luau), tous activés par défaut
-		Settings = { Music = true, Sounds = true, ScreenFx = true, CloseUp = true, Names = true, Players = true },
+		Settings = {
+			Music = true,
+			Sounds = true,
+			ScreenFx = true,
+			CloseUp = true,
+			Names = true,
+			Players = true,
+			Duels = true,
+		},
+		-- Récompenses de la semaine (WeeklyService, Config/Weekly.luau). Week = numéro de semaine (0 = jamais ouvert) ;
+		-- Challenges = ids des 3 défis de la semaine ; Stats = compteurs de la semaine (WeeklyService.Track) ;
+		-- Days = { D1 = true… } jours cochés du coffre ; Seconds et DayStamp = temps de jeu du jour en cours ;
+		-- Trophies = semaines aux 3 défis réussis (titres exclusifs)
+		Weekly = {
+			Week = 0,
+			Challenges = {},
+			Claimed = {},
+			Bonus = false,
+			Days = {},
+			Chest = false,
+			Seconds = 0,
+			DayStamp = 0,
+			Trophies = 0,
+			Stats = {},
+		},
+		-- Duels « Tug of Mog » (DuelService) : bilan, et compteur du jour par adversaire (récompenses plafonnées)
+		Duels = { Wins = 0, Losses = 0, Draws = 0, Day = 0, Pairs = {} },
 		-- Apparence choisie dans le menu de création (D55, Config/Look.luau) ; Created = menu déjà validé une fois
 		Look = {
 			Created = false,

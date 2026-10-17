@@ -12,7 +12,7 @@ local Remotes = require(ReplicatedStorage.Shared.Remotes)
 export type EndReason = "Completed" | "Stopped" | "TooFar" | "Left"
 
 export type RunSpec = {
-	kind: "Exercise" | "Help" | "Boss",
+	kind: "Exercise" | "Help" | "Boss" | "Duel",
 	id: string, -- exerciseId, helpId ou bossId
 	minigame: string, -- module dans src/client/Minigames/
 	interval: number, -- durée d'une répétition (secondes)
@@ -20,6 +20,7 @@ export type RunSpec = {
 	anchor: BasePart, -- le joueur doit rester près de cette pièce
 	autoAllowed: boolean,
 	timingScale: number?, -- < 1 = fenêtres de timing plus serrées (combats de boss)
+	seed: number?, -- graine du motif du mini-jeu (duels : les deux joueurs jouent exactement le même)
 	titleKey: string?, -- texte affiché en haut du run (clé Texts)
 	titleArgs: { [string]: any }?,
 	-- Appelé pour chaque répétition validée ; renvoie le gain à afficher (ou nil).
@@ -105,6 +106,8 @@ function MinigameService.StartRun(player: Player, spec: RunSpec): boolean
 	-- Assis sur un banc ou un canapé : il se relève pour l'activité
 	SeatService.StandUp(player)
 	runs[player] = { spec = spec, reps = 0, streak = 0, points = 0, manual = 0, startedAt = os.clock(), lastRepAt = 0 }
+	-- Visible de tous : les autres clients ne proposent pas de duel à un joueur occupé
+	player:SetAttribute("InRun", true)
 	Remotes.SeriesUpdate:FireClient(player, {
 		state = "Started",
 		kind = spec.kind,
@@ -114,6 +117,7 @@ function MinigameService.StartRun(player: Player, spec: RunSpec): boolean
 		total = spec.total,
 		autoAllowed = spec.autoAllowed,
 		timingScale = spec.timingScale,
+		seed = spec.seed,
 		titleKey = spec.titleKey,
 		titleArgs = spec.titleArgs,
 	})
@@ -127,6 +131,7 @@ function MinigameService.EndRun(player: Player, reason: EndReason)
 		return
 	end
 	runs[player] = nil
+	player:SetAttribute("InRun", nil)
 	broadcast(player, run.spec, "Ended")
 	-- Note : seulement si la série est finie et surtout jouée à la main
 	local score: number? = nil

@@ -22,6 +22,7 @@ local StatsService
 local MinigameService
 local ExerciseService
 local TutorialService
+local WeeklyService
 
 -- Heure serveur (workspace:GetServerTimeNow) où chaque aide redevient disponible, par joueur
 local readyAt: { [Player]: { [string]: number } } = {}
@@ -88,6 +89,10 @@ local function finish(player: Player, helpId: string, reason: string): { [string
 	if completed then
 		if cash > 0 then
 			data.HelpsDone[helpId] = true
+			WeeklyService.Track(player, "HelpsDone")
+			if flawless then
+				WeeklyService.Track(player, "FlawlessHelps")
+			end
 			readyAt[player] = readyAt[player] or {}
 			readyAt[player][helpId] = workspace:GetServerTimeNow() + Balance.Helps.Cooldown
 			sendState(player)
@@ -202,6 +207,7 @@ function HelpService.Init(services)
 	MinigameService = services.MinigameService
 	ExerciseService = services.ExerciseService
 	TutorialService = services.TutorialService
+	WeeklyService = services.WeeklyService
 end
 
 function HelpService.Start()

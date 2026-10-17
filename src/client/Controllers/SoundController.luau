@@ -279,6 +279,26 @@ function SoundController.Start()
 		end
 		updateMusic()
 	end)
+	Remotes.DuelUpdate.OnClientEvent:Connect(function(update)
+		if typeof(update) ~= "table" then
+			return
+		end
+		if update.state == "Started" then
+			fightActive = true
+		elseif update.state == "Result" then
+			duck()
+			if update.result == "Won" then
+				SoundController.Play("BossVictory")
+			elseif update.result == "Lost" or update.result == "Forfeit" then
+				SoundController.Play("BossDefeat")
+			else
+				SoundController.Play("SeriesEnd")
+			end
+		elseif update.state == "Finished" then
+			fightActive = false
+		end
+		updateMusic()
+	end)
 	Remotes.MentorSay.OnClientEvent:Connect(function()
 		SoundController.Play("MentorSay")
 	end)

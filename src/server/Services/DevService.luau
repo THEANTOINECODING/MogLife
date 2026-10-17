@@ -14,6 +14,8 @@ local HelpService
 local BossService
 local FurnitureService
 local EventService
+local DuelService
+local WeeklyService
 
 local DevService = {}
 
@@ -53,6 +55,16 @@ local commands = {
 		EventService.Stop()
 		return EventService.Run(kind)
 	end,
+	-- Duel d'entraînement contre un mannequin (teste le Tug of Mog seul) ; perfect / good : sa précision (0 à 1)
+	DuelBot = function(player: Player, perfect: number?, good: number?)
+		local skill = if perfect then { perfect = perfect, good = good or 0 } else nil
+		return DuelService.StartBotDuel(player, skill)
+	end,
+	-- Ajoute à un compteur des défis de la semaine
+	WeeklyTrack = function(player: Player, stat: string, amount: number?)
+		WeeklyService.Track(player, stat, amount)
+		return true
+	end,
 	-- Simule le prompt d'un boss (affiche la fenêtre de défi)
 	ShowChallenge = function(player: Player, bossId: string)
 		BossService.ShowChallenge(player, bossId)
@@ -68,6 +80,8 @@ function DevService.Init(services)
 	BossService = services.BossService
 	FurnitureService = services.FurnitureService
 	EventService = services.EventService
+	DuelService = services.DuelService
+	WeeklyService = services.WeeklyService
 end
 
 function DevService.Start()

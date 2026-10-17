@@ -24,6 +24,7 @@ local GOLD = Color3.fromRGB(255, 210, 60)
 local TAB_ON = Color3.fromRGB(220, 120, 30)
 local TAB_OFF = Color3.fromRGB(70, 60, 95)
 local OPTION = Color3.fromRGB(55, 45, 80)
+local LOCKED = Color3.fromRGB(45, 42, 55) -- titre exclusif pas encore débloqué
 local TABS = { "Body", "Skin", "Hair", "Eyes", "Face", "Outfit", "Name" }
 local CLOSE_UP = { Eyes = true, Face = true, Hair = true } -- onglets où l'aperçu cadre la tête
 -- Aperçu au repos : il fait face au joueur et se balance doucement ; on peut le tourner en le faisant glisser,
@@ -65,6 +66,8 @@ local dragging = false
 local lastDrag = 0
 local spinConnection: RBXScriptConnection? = nil
 local hiddenGuis: { ScreenGui } = {}
+-- Titres exclusifs débloqués (trophées de la semaine, victoires en duel), envoyés par le serveur (D67)
+local unlockedTitles: { [string]: boolean } = {}
 
 local CreatorController = {}
 
@@ -310,6 +313,36 @@ local function fillContent()
 		end, function(value)
 			look.Title = value
 		end, 160)
+		-- Titres exclusifs : ceux qui ne sont pas encore débloqués montrent comment les obtenir
+		section("Creator.RewardTitles", 5)
+		local frame = grid(6, UDim2.fromOffset(210, 54))
+		for index, entry in LookConfig.RewardTitles do
+			local unlocked = unlockedTitles[entry.id] == true
+			local name = Texts.Get(`Nick.Title.{entry.id}`)
+			local text = if unlocked
+				then name
+				elseif entry.trophies then Texts.Get(
+					"Creator.TitleNeedsTrophies",
+					{ title = name, count = entry.trophies }
+				)
+				else Texts.Get("Creator.TitleNeedsWins", { title = name, count = entry.duelWins })
+			local button = Ui.button({
+				Name = entry.id,
+				BackgroundColor3 = if look.Title == entry.id then TAB_ON elseif unlocked then OPTION else LOCKED,
+				TextColor3 = if unlocked then Color3.new(1, 1, 1) else Color3.fromRGB(170, 170, 185),
+				AutoButtonColor = unlocked,
+				Text = text,
+				LayoutOrder = index,
+				Parent = frame,
+			})
+			selectedStroke(button, look.Title == entry.id)
+			if unlocked then
+				button.Activated:Connect(function()
+					look.Title = entry.id
+					render()
+				end)
+			end
+		end
 	end
 	content.CanvasPosition = Vector2.zero
 end
@@ -373,6 +406,7 @@ local function open(request: { [string]: any })
 	mode = if request.mode == "Edit" then "Edit" else "Create"
 	look = Look.Sanitize(request.look, nil)
 	hair = if typeof(request.hair) == "string" then request.hair else ""
+	unlockedTitles = if typeof(request.titles) == "table" then request.titles else {}
 	tab = "Body"
 	lastTab = nil
 	future = false

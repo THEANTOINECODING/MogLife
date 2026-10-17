@@ -33,6 +33,10 @@ local function onSet(player: Player, key: unknown, value: unknown)
 	if data then
 		data.Settings[key] = value
 	end
+	if key == "Duels" then
+		-- Les autres clients ne proposent plus de duel à ce joueur
+		player:SetAttribute("DuelsOff", if value then nil else true)
+	end
 end
 
 function SettingsService.Init(services)
@@ -49,6 +53,7 @@ function SettingsService.Start()
 					data.Settings[key] = true
 				end
 			end
+			player:SetAttribute("DuelsOff", if data.Settings.Duels then nil else true)
 		end
 		send(player)
 	end)

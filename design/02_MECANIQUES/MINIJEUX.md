@@ -50,6 +50,12 @@ Mog gagné = Mog de base de l'exercice × multiplicateur de qualité (Raté x1, 
 | Le Roi du Quartier | Combo | Taper un combo de 4 flèches avant que son ventilateur l'efface |
 | Le Dieu du Pump | ❓ à créer | (mise à jour Olympe) |
 
+## Duel entre joueurs (D67)
+
+| Activité | Mini-jeu | Mécanique |
+|---|---|---|
+| Tug of Mog | Tug | La corde défile vers tes mains : saisir les nœuds rouges, maintenir puis relâcher les nœuds dorés ; même suite pour les deux joueurs |
+
 ## Ajouter un mini-jeu
 
 1. Un module dans `src/client/Minigames/` basé sur `MinigameKit` (`new`, `SetAuto`, `Destroy`).
