@@ -1,6 +1,7 @@
 --[[
 	Range les personnages importés depuis Blender (assets/export/characters/MogLife_Characters.fbx,
-	Accueil > Importer 3D) : corps des stades -> ReplicatedStorage.Bodies (<stade>_<Partie>),
+	ou MogLife_Wardrobe.fbx pour ne réimporter que le style ; Accueil > Importer 3D) :
+	corps des stades -> ReplicatedStorage.Bodies (<stade>_<Partie>),
 	objets de style -> ReplicatedStorage.Style (<stade>__<objet>__<Partie>). Une pièce déjà présente du même
 	nom est remplacée (pour réimporter après une modification).
 	À coller dans la barre de commande de Studio, en mode édition. Ensuite : Ctrl+S.
@@ -9,9 +10,9 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local imported = workspace:FindFirstChild("MogLife_Characters")
+local imported = workspace:FindFirstChild("MogLife_Wardrobe") or workspace:FindFirstChild("MogLife_Characters")
 if not imported then
-	warn("[install_characters] Modèle MogLife_Characters introuvable dans Workspace : importer le FBX d'abord.")
+	warn("[install_characters] Modèle MogLife_Wardrobe ou MogLife_Characters introuvable dans Workspace.")
 	return
 end
 

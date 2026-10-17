@@ -14,7 +14,7 @@ return {
 		BoxerRobe = {
 			LeftUpperArm = Vector3.new(0.086, 0.273, 0),
 			LeftUpperLeg = Vector3.new(-0.008, 0.097, 0.02),
-			LowerTorso = Vector3.new(-0, -0.11, 0.02),
+			LowerTorso = Vector3.new(-0, -0.11, -0.032),
 			RightUpperArm = Vector3.new(-0.086, 0.273, 0),
 			RightUpperLeg = Vector3.new(0.008, 0.097, 0.02),
 			UpperTorso = Vector3.new(0, -0.017, -0.069),
@@ -40,8 +40,8 @@ return {
 		},
 		FluoShorts = {
 			LeftUpperLeg = Vector3.new(0, 0.23, 0),
-			LowerTorso = Vector3.new(-0, -0.11, 0.02),
-			RightUpperLeg = Vector3.new(0, 0.23, 0),
+			LowerTorso = Vector3.new(-0, -0.11, -0.012),
+			RightUpperLeg = Vector3.new(-0, 0.23, 0),
 		},
 		FrownBrows = {
 			Head_Hair = Vector3.new(-0, 0.272, -0.748),
@@ -66,7 +66,7 @@ return {
 		LeatherPants = {
 			LeftLowerLeg = Vector3.new(0, 0.024, 0.004),
 			LeftUpperLeg = Vector3.new(0, 0.035, -0.004),
-			LowerTorso = Vector3.new(-0, -0.11, 0.02),
+			LowerTorso = Vector3.new(-0, -0.11, -0.022),
 			RightLowerLeg = Vector3.new(-0, 0.024, 0.004),
 			RightUpperLeg = Vector3.new(-0, 0.035, -0.004),
 		},
@@ -117,7 +117,7 @@ return {
 			RightLowerArm = Vector3.new(0, -0.383, 0),
 		},
 		TightTank = {
-			UpperTorso = Vector3.new(0, 0.168, 0.02),
+			UpperTorso = Vector3.new(0, 0.204, -0.026),
 		},
 		TinySocks = {
 			LeftLowerLeg = Vector3.new(0, -0.173, 0),
@@ -131,11 +131,11 @@ return {
 			UpperTorso = Vector3.new(0, -0.017, -0.069),
 		},
 		VelvetJoggers = {
-			LeftLowerLeg = Vector3.new(0, 0.03, 0.004),
-			LeftUpperLeg = Vector3.new(0, 0.035, -0.004),
+			LeftLowerLeg = Vector3.new(0, 0.02, 0.004),
+			LeftUpperLeg = Vector3.new(-0.008, 0.035, -0.004),
 			LowerTorso = Vector3.new(-0, -0.11, 0.02),
-			RightLowerLeg = Vector3.new(0, 0.03, 0.004),
-			RightUpperLeg = Vector3.new(0, 0.035, -0.004),
+			RightLowerLeg = Vector3.new(0, 0.02, 0.004),
+			RightUpperLeg = Vector3.new(0.008, 0.035, -0.004),
 		},
 	},
 	NormieF = {
@@ -148,7 +148,7 @@ return {
 		BoxerRobe = {
 			LeftUpperArm = Vector3.new(0.076, 0.259, 0),
 			LeftUpperLeg = Vector3.new(-0.007, 0.094, 0.02),
-			LowerTorso = Vector3.new(-0, -0.104, 0.02),
+			LowerTorso = Vector3.new(-0, -0.104, -0.079),
 			RightUpperArm = Vector3.new(-0.076, 0.259, 0),
 			RightUpperLeg = Vector3.new(0.007, 0.094, 0.02),
 			UpperTorso = Vector3.new(0, -0.016, -0.035),
@@ -174,7 +174,7 @@ return {
 		},
 		FluoShorts = {
 			LeftUpperLeg = Vector3.new(0, 0.224, 0),
-			LowerTorso = Vector3.new(-0, -0.104, 0.02),
+			LowerTorso = Vector3.new(-0, -0.104, -0.012),
 			RightUpperLeg = Vector3.new(-0, 0.224, 0),
 		},
 		FrownBrows = {
@@ -192,7 +192,7 @@ return {
 		Hawaiian = {
 			LeftUpperArm = Vector3.new(0.084, 0.239, 0),
 			RightUpperArm = Vector3.new(-0.084, 0.239, 0),
-			UpperTorso = Vector3.new(0, -0.016, -0.021),
+			UpperTorso = Vector3.new(0, -0.016, -0.032),
 		},
 		Headband = {
 			Head = Vector3.new(-0, 0.302, -0.05),
@@ -200,7 +200,7 @@ return {
 		LeatherPants = {
 			LeftLowerLeg = Vector3.new(0, 0.028, 0.004),
 			LeftUpperLeg = Vector3.new(-0, 0.035, -0.004),
-			LowerTorso = Vector3.new(-0, -0.104, 0.02),
+			LowerTorso = Vector3.new(-0, -0.104, -0.022),
 			RightLowerLeg = Vector3.new(-0, 0.028, 0.004),
 			RightUpperLeg = Vector3.new(0, 0.035, -0.004),
 		},
@@ -215,7 +215,7 @@ return {
 			Head_Skin = Vector3.new(-0, -0.48, -0.264),
 		},
 		MogTank = {
-			UpperTorso = Vector3.new(0, -0.016, -0.021),
+			UpperTorso = Vector3.new(0, -0.016, -0.031),
 		},
 		Mohawk = {
 			Head_Hair = Vector3.new(-0, 0.905, -0.032),
@@ -229,7 +229,7 @@ return {
 			LeftUpperArm = Vector3.new(0.084, 0.065, 0),
 			RightLowerArm = Vector3.new(0, -0.093, 0),
 			RightUpperArm = Vector3.new(-0.084, 0.065, 0),
-			UpperTorso = Vector3.new(0, -0.016, -0.021),
+			UpperTorso = Vector3.new(0, -0.016, -0.032),
 		},
 		Pompadour = {
 			Head_Hair = Vector3.new(-0, 0.986, -0.208),
@@ -251,7 +251,7 @@ return {
 			RightLowerArm = Vector3.new(0, -0.372, 0),
 		},
 		TightTank = {
-			UpperTorso = Vector3.new(0, 0.163, 0.02),
+			UpperTorso = Vector3.new(0, 0.201, -0.026),
 		},
 		TinySocks = {
 			LeftLowerLeg = Vector3.new(-0, -0.17, 0),
@@ -262,14 +262,14 @@ return {
 			LeftUpperArm = Vector3.new(0.082, 0.071, 0),
 			RightLowerArm = Vector3.new(0, -0.093, 0),
 			RightUpperArm = Vector3.new(-0.082, 0.071, 0),
-			UpperTorso = Vector3.new(0, -0.016, -0.021),
+			UpperTorso = Vector3.new(0, -0.016, -0.045),
 		},
 		VelvetJoggers = {
-			LeftLowerLeg = Vector3.new(0, 0.033, 0.004),
-			LeftUpperLeg = Vector3.new(0, 0.035, -0.004),
+			LeftLowerLeg = Vector3.new(0, 0.021, 0.004),
+			LeftUpperLeg = Vector3.new(-0.008, 0.035, -0.004),
 			LowerTorso = Vector3.new(-0, -0.104, 0.02),
-			RightLowerLeg = Vector3.new(-0, 0.033, 0.004),
-			RightUpperLeg = Vector3.new(-0, 0.035, -0.004),
+			RightLowerLeg = Vector3.new(-0, 0.021, 0.004),
+			RightUpperLeg = Vector3.new(0.008, 0.035, -0.004),
 		},
 	},
 	GymRat = {
@@ -282,7 +282,7 @@ return {
 		BoxerRobe = {
 			LeftUpperArm = Vector3.new(0.107, 0.314, 0),
 			LeftUpperLeg = Vector3.new(-0.016, 0.092, 0.02),
-			LowerTorso = Vector3.new(-0, -0.1, 0.02),
+			LowerTorso = Vector3.new(-0, -0.1, -0.105),
 			RightUpperArm = Vector3.new(-0.107, 0.314, 0),
 			RightUpperLeg = Vector3.new(0.016, 0.092, 0.02),
 			UpperTorso = Vector3.new(0, -0.016, -0.07),
@@ -308,7 +308,7 @@ return {
 		},
 		FluoShorts = {
 			LeftUpperLeg = Vector3.new(0, 0.22, 0),
-			LowerTorso = Vector3.new(-0, -0.1, 0.02),
+			LowerTorso = Vector3.new(-0, -0.1, -0.012),
 			RightUpperLeg = Vector3.new(-0, 0.22, 0),
 		},
 		FrownBrows = {
@@ -326,7 +326,7 @@ return {
 		Hawaiian = {
 			LeftUpperArm = Vector3.new(0.117, 0.314, 0),
 			RightUpperArm = Vector3.new(-0.117, 0.314, 0),
-			UpperTorso = Vector3.new(0, -0.016, -0.02),
+			UpperTorso = Vector3.new(0, -0.016, -0.074),
 		},
 		Headband = {
 			Head = Vector3.new(-0, 0.288, -0.065),
@@ -334,7 +334,7 @@ return {
 		LeatherPants = {
 			LeftLowerLeg = Vector3.new(-0, 0.077, 0.032),
 			LeftUpperLeg = Vector3.new(0, 0.035, -0.011),
-			LowerTorso = Vector3.new(-0, -0.1, 0.02),
+			LowerTorso = Vector3.new(-0, -0.1, -0.022),
 			RightLowerLeg = Vector3.new(0, 0.077, 0.032),
 			RightUpperLeg = Vector3.new(-0, 0.035, -0.011),
 		},
@@ -349,7 +349,7 @@ return {
 			Head_Skin = Vector3.new(-0, -0.506, -0.299),
 		},
 		MogTank = {
-			UpperTorso = Vector3.new(0, -0.016, -0.042),
+			UpperTorso = Vector3.new(0, -0.016, -0.074),
 		},
 		Mohawk = {
 			Head_Hair = Vector3.new(-0, 0.858, -0.048),
@@ -363,7 +363,7 @@ return {
 			LeftUpperArm = Vector3.new(0.117, 0.158, 0),
 			RightLowerArm = Vector3.new(0, -0.091, 0),
 			RightUpperArm = Vector3.new(-0.117, 0.158, 0),
-			UpperTorso = Vector3.new(0, -0.016, -0.02),
+			UpperTorso = Vector3.new(0, -0.016, -0.074),
 		},
 		Pompadour = {
 			Head_Hair = Vector3.new(-0, 0.934, -0.213),
@@ -385,7 +385,7 @@ return {
 			RightLowerArm = Vector3.new(0, -0.364, 0),
 		},
 		TightTank = {
-			UpperTorso = Vector3.new(0, 0.152, -0.02),
+			UpperTorso = Vector3.new(0, 0.191, -0.069),
 		},
 		TinySocks = {
 			LeftLowerLeg = Vector3.new(0, -0.169, 0),
@@ -396,14 +396,14 @@ return {
 			LeftUpperArm = Vector3.new(0.115, 0.164, 0),
 			RightLowerArm = Vector3.new(0, -0.091, 0),
 			RightUpperArm = Vector3.new(-0.115, 0.164, 0),
-			UpperTorso = Vector3.new(0, -0.016, -0.02),
+			UpperTorso = Vector3.new(0, -0.016, -0.086),
 		},
 		VelvetJoggers = {
-			LeftLowerLeg = Vector3.new(0, 0.084, 0.032),
-			LeftUpperLeg = Vector3.new(0, 0.035, -0.011),
+			LeftLowerLeg = Vector3.new(0, 0.07, 0.032),
+			LeftUpperLeg = Vector3.new(-0, 0.035, -0.011),
 			LowerTorso = Vector3.new(-0, -0.1, 0.02),
-			RightLowerLeg = Vector3.new(-0, 0.084, 0.032),
-			RightUpperLeg = Vector3.new(-0, 0.035, -0.011),
+			RightLowerLeg = Vector3.new(-0, 0.07, 0.032),
+			RightUpperLeg = Vector3.new(0, 0.035, -0.011),
 		},
 	},
 	GymRatF = {
@@ -416,7 +416,7 @@ return {
 		BoxerRobe = {
 			LeftUpperArm = Vector3.new(0.096, 0.302, 0),
 			LeftUpperLeg = Vector3.new(-0.015, 0.089, 0.02),
-			LowerTorso = Vector3.new(-0, -0.094, 0.02),
+			LowerTorso = Vector3.new(-0, -0.094, -0.123),
 			RightUpperArm = Vector3.new(-0.096, 0.302, 0),
 			RightUpperLeg = Vector3.new(0.015, 0.089, 0.02),
 			UpperTorso = Vector3.new(0, -0.016, -0.049),
@@ -442,7 +442,7 @@ return {
 		},
 		FluoShorts = {
 			LeftUpperLeg = Vector3.new(0, 0.214, 0),
-			LowerTorso = Vector3.new(-0, -0.094, 0.02),
+			LowerTorso = Vector3.new(-0, -0.094, -0.012),
 			RightUpperLeg = Vector3.new(-0, 0.214, 0),
 		},
 		FrownBrows = {
@@ -460,7 +460,7 @@ return {
 		Hawaiian = {
 			LeftUpperArm = Vector3.new(0.105, 0.301, 0),
 			RightUpperArm = Vector3.new(-0.105, 0.301, 0),
-			UpperTorso = Vector3.new(0, -0.016, 0.004),
+			UpperTorso = Vector3.new(0, -0.016, -0.049),
 		},
 		Headband = {
 			Head = Vector3.new(-0, 0.288, -0.055),
@@ -468,7 +468,7 @@ return {
 		LeatherPants = {
 			LeftLowerLeg = Vector3.new(0, 0.082, 0.033),
 			LeftUpperLeg = Vector3.new(0, 0.034, -0.012),
-			LowerTorso = Vector3.new(-0, -0.094, 0.02),
+			LowerTorso = Vector3.new(-0, -0.094, -0.022),
 			RightLowerLeg = Vector3.new(-0, 0.082, 0.033),
 			RightUpperLeg = Vector3.new(-0, 0.034, -0.012),
 		},
@@ -483,7 +483,7 @@ return {
 			Head_Skin = Vector3.new(-0, -0.473, -0.258),
 		},
 		MogTank = {
-			UpperTorso = Vector3.new(0, -0.016, -0.018),
+			UpperTorso = Vector3.new(0, -0.016, -0.05),
 		},
 		Mohawk = {
 			Head_Hair = Vector3.new(-0, 0.858, -0.038),
@@ -497,7 +497,7 @@ return {
 			LeftUpperArm = Vector3.new(0.105, 0.137, 0),
 			RightLowerArm = Vector3.new(-0, -0.088, 0),
 			RightUpperArm = Vector3.new(-0.105, 0.137, 0),
-			UpperTorso = Vector3.new(0, -0.016, 0.004),
+			UpperTorso = Vector3.new(0, -0.016, -0.049),
 		},
 		Pompadour = {
 			Head_Hair = Vector3.new(-0, 0.934, -0.203),
@@ -519,7 +519,7 @@ return {
 			RightLowerArm = Vector3.new(-0, -0.353, 0),
 		},
 		TightTank = {
-			UpperTorso = Vector3.new(0, 0.155, 0.004),
+			UpperTorso = Vector3.new(0, 0.194, -0.045),
 		},
 		TinySocks = {
 			LeftLowerLeg = Vector3.new(-0, -0.166, 0),
@@ -530,13 +530,13 @@ return {
 			LeftUpperArm = Vector3.new(0.103, 0.143, 0),
 			RightLowerArm = Vector3.new(0, -0.088, 0),
 			RightUpperArm = Vector3.new(-0.103, 0.143, 0),
-			UpperTorso = Vector3.new(0, -0.016, 0.004),
+			UpperTorso = Vector3.new(0, -0.016, -0.062),
 		},
 		VelvetJoggers = {
-			LeftLowerLeg = Vector3.new(0, 0.089, 0.033),
+			LeftLowerLeg = Vector3.new(0, 0.074, 0.033),
 			LeftUpperLeg = Vector3.new(0, 0.034, -0.012),
 			LowerTorso = Vector3.new(-0, -0.094, 0.02),
-			RightLowerLeg = Vector3.new(-0, 0.089, 0.033),
+			RightLowerLeg = Vector3.new(-0, 0.074, 0.033),
 			RightUpperLeg = Vector3.new(-0, 0.034, -0.012),
 		},
 	},
@@ -550,7 +550,7 @@ return {
 		BoxerRobe = {
 			LeftUpperArm = Vector3.new(0.104, 0.334, 0),
 			LeftUpperLeg = Vector3.new(-0.02, 0.097, 0.02),
-			LowerTorso = Vector3.new(-0, -0.11, 0.02),
+			LowerTorso = Vector3.new(-0, -0.11, -0.141),
 			RightUpperArm = Vector3.new(-0.104, 0.334, 0),
 			RightUpperLeg = Vector3.new(0.02, 0.097, 0.02),
 			UpperTorso = Vector3.new(-0, -0.017, -0.087),
@@ -575,9 +575,9 @@ return {
 			Head = Vector3.new(-0.003, 0.127, -0.455),
 		},
 		FluoShorts = {
-			LeftUpperLeg = Vector3.new(-0, 0.23, 0),
-			LowerTorso = Vector3.new(-0, -0.11, 0.02),
-			RightUpperLeg = Vector3.new(0, 0.23, 0),
+			LeftUpperLeg = Vector3.new(0, 0.23, 0),
+			LowerTorso = Vector3.new(-0, -0.11, -0.012),
+			RightUpperLeg = Vector3.new(-0, 0.23, 0),
 		},
 		FrownBrows = {
 			Head_Hair = Vector3.new(-0, 0.247, -0.709),
@@ -592,9 +592,9 @@ return {
 			Head_Hair = Vector3.new(-0, -0.217, -0.704),
 		},
 		Hawaiian = {
-			LeftUpperArm = Vector3.new(0.114, 0.334, 0),
-			RightUpperArm = Vector3.new(-0.114, 0.334, 0),
-			UpperTorso = Vector3.new(-0, -0.017, -0.04),
+			LeftUpperArm = Vector3.new(0.121, 0.334, 0),
+			RightUpperArm = Vector3.new(-0.12, 0.334, 0),
+			UpperTorso = Vector3.new(-0, -0.017, -0.095),
 		},
 		Headband = {
 			Head = Vector3.new(-0, 0.274, -0.08),
@@ -602,7 +602,7 @@ return {
 		LeatherPants = {
 			LeftLowerLeg = Vector3.new(0, 0.089, 0.041),
 			LeftUpperLeg = Vector3.new(0, 0.035, -0.013),
-			LowerTorso = Vector3.new(-0, -0.11, 0.02),
+			LowerTorso = Vector3.new(-0, -0.11, -0.023),
 			RightLowerLeg = Vector3.new(-0, 0.089, 0.041),
 			RightUpperLeg = Vector3.new(-0, 0.035, -0.013),
 		},
@@ -617,7 +617,7 @@ return {
 			Head_Skin = Vector3.new(-0, -0.501, -0.333),
 		},
 		MogTank = {
-			UpperTorso = Vector3.new(-0, -0.017, -0.062),
+			UpperTorso = Vector3.new(-0, -0.017, -0.096),
 		},
 		Mohawk = {
 			Head_Hair = Vector3.new(-0, 0.81, -0.064),
@@ -631,7 +631,7 @@ return {
 			LeftUpperArm = Vector3.new(0.114, 0.203, 0),
 			RightLowerArm = Vector3.new(0, -0.096, 0),
 			RightUpperArm = Vector3.new(-0.114, 0.203, 0),
-			UpperTorso = Vector3.new(-0, -0.017, -0.04),
+			UpperTorso = Vector3.new(-0, -0.017, -0.095),
 		},
 		Pompadour = {
 			Head_Hair = Vector3.new(-0, 0.882, -0.219),
@@ -653,7 +653,7 @@ return {
 			RightLowerArm = Vector3.new(0, -0.383, 0),
 		},
 		TightTank = {
-			UpperTorso = Vector3.new(-0, 0.16, -0.04),
+			UpperTorso = Vector3.new(-0, 0.199, -0.091),
 		},
 		TinySocks = {
 			LeftLowerLeg = Vector3.new(0, -0.173, 0),
@@ -664,13 +664,13 @@ return {
 			LeftUpperArm = Vector3.new(0.112, 0.209, 0),
 			RightLowerArm = Vector3.new(0, -0.096, 0),
 			RightUpperArm = Vector3.new(-0.112, 0.209, 0),
-			UpperTorso = Vector3.new(-0, -0.017, -0.04),
+			UpperTorso = Vector3.new(-0, -0.017, -0.107),
 		},
 		VelvetJoggers = {
-			LeftLowerLeg = Vector3.new(0, 0.096, 0.041),
+			LeftLowerLeg = Vector3.new(0, 0.087, 0.041),
 			LeftUpperLeg = Vector3.new(0, 0.035, -0.013),
 			LowerTorso = Vector3.new(-0, -0.11, 0.02),
-			RightLowerLeg = Vector3.new(-0, 0.096, 0.041),
+			RightLowerLeg = Vector3.new(-0, 0.087, 0.041),
 			RightUpperLeg = Vector3.new(-0, 0.035, -0.013),
 		},
 	},
@@ -684,7 +684,7 @@ return {
 		BoxerRobe = {
 			LeftUpperArm = Vector3.new(0.093, 0.322, 0),
 			LeftUpperLeg = Vector3.new(-0.018, 0.094, 0.02),
-			LowerTorso = Vector3.new(-0, -0.104, 0.02),
+			LowerTorso = Vector3.new(-0, -0.104, -0.145),
 			RightUpperArm = Vector3.new(-0.093, 0.322, 0),
 			RightUpperLeg = Vector3.new(0.018, 0.094, 0.02),
 			UpperTorso = Vector3.new(0, -0.016, -0.056),
@@ -710,7 +710,7 @@ return {
 		},
 		FluoShorts = {
 			LeftUpperLeg = Vector3.new(0, 0.224, 0),
-			LowerTorso = Vector3.new(-0, -0.104, 0.02),
+			LowerTorso = Vector3.new(-0, -0.104, -0.012),
 			RightUpperLeg = Vector3.new(-0, 0.224, 0),
 		},
 		FrownBrows = {
@@ -728,7 +728,7 @@ return {
 		Hawaiian = {
 			LeftUpperArm = Vector3.new(0.103, 0.322, 0),
 			RightUpperArm = Vector3.new(-0.103, 0.322, 0),
-			UpperTorso = Vector3.new(0, -0.016, -0.004),
+			UpperTorso = Vector3.new(0, -0.016, -0.058),
 		},
 		Headband = {
 			Head = Vector3.new(-0, 0.274, -0.061),
@@ -736,7 +736,7 @@ return {
 		LeatherPants = {
 			LeftLowerLeg = Vector3.new(0, 0.095, 0.043),
 			LeftUpperLeg = Vector3.new(0, 0.035, -0.015),
-			LowerTorso = Vector3.new(-0, -0.104, 0.02),
+			LowerTorso = Vector3.new(-0, -0.104, -0.023),
 			RightLowerLeg = Vector3.new(-0, 0.095, 0.043),
 			RightUpperLeg = Vector3.new(-0, 0.035, -0.015),
 		},
@@ -751,7 +751,7 @@ return {
 			Head_Skin = Vector3.new(-0, -0.464, -0.252),
 		},
 		MogTank = {
-			UpperTorso = Vector3.new(0, -0.016, -0.026),
+			UpperTorso = Vector3.new(0, -0.016, -0.059),
 		},
 		Mohawk = {
 			Head_Hair = Vector3.new(-0, 0.81, -0.044),
@@ -765,7 +765,7 @@ return {
 			LeftUpperArm = Vector3.new(0.103, 0.175, 0),
 			RightLowerArm = Vector3.new(0, -0.093, 0),
 			RightUpperArm = Vector3.new(-0.103, 0.175, 0),
-			UpperTorso = Vector3.new(0, -0.016, -0.004),
+			UpperTorso = Vector3.new(0, -0.016, -0.058),
 		},
 		Pompadour = {
 			Head_Hair = Vector3.new(-0, 0.882, -0.199),
@@ -787,7 +787,7 @@ return {
 			RightLowerArm = Vector3.new(0, -0.372, 0),
 		},
 		TightTank = {
-			UpperTorso = Vector3.new(0, 0.163, -0.004),
+			UpperTorso = Vector3.new(0, 0.203, -0.054),
 		},
 		TinySocks = {
 			LeftLowerLeg = Vector3.new(0, -0.17, 0),
@@ -798,13 +798,13 @@ return {
 			LeftUpperArm = Vector3.new(0.1, 0.181, 0),
 			RightLowerArm = Vector3.new(0, -0.093, 0),
 			RightUpperArm = Vector3.new(-0.1, 0.181, 0),
-			UpperTorso = Vector3.new(0, -0.016, -0.004),
+			UpperTorso = Vector3.new(0, -0.016, -0.071),
 		},
 		VelvetJoggers = {
-			LeftLowerLeg = Vector3.new(-0, 0.102, 0.043),
+			LeftLowerLeg = Vector3.new(-0, 0.09, 0.043),
 			LeftUpperLeg = Vector3.new(0, 0.035, -0.015),
 			LowerTorso = Vector3.new(-0, -0.104, 0.02),
-			RightLowerLeg = Vector3.new(0, 0.102, 0.043),
+			RightLowerLeg = Vector3.new(0, 0.09, 0.043),
 			RightUpperLeg = Vector3.new(-0, 0.035, -0.015),
 		},
 	},
@@ -818,7 +818,7 @@ return {
 		BoxerRobe = {
 			LeftUpperArm = Vector3.new(0.106, 0.353, 0),
 			LeftUpperLeg = Vector3.new(-0.023, 0.101, 0.02),
-			LowerTorso = Vector3.new(-0, -0.12, 0.02),
+			LowerTorso = Vector3.new(-0, -0.12, -0.183),
 			RightUpperArm = Vector3.new(-0.105, 0.353, 0),
 			RightUpperLeg = Vector3.new(0.023, 0.101, 0.02),
 			UpperTorso = Vector3.new(-0, -0.018, -0.108),
@@ -844,7 +844,7 @@ return {
 		},
 		FluoShorts = {
 			LeftUpperLeg = Vector3.new(0, 0.239, 0),
-			LowerTorso = Vector3.new(-0, -0.12, 0.02),
+			LowerTorso = Vector3.new(-0, -0.12, -0.012),
 			RightUpperLeg = Vector3.new(-0, 0.239, 0),
 		},
 		FrownBrows = {
@@ -860,9 +860,9 @@ return {
 			Head_Hair = Vector3.new(-0, -0.192, -0.76),
 		},
 		Hawaiian = {
-			LeftUpperArm = Vector3.new(0.117, 0.353, 0),
-			RightUpperArm = Vector3.new(-0.116, 0.353, 0),
-			UpperTorso = Vector3.new(-0, -0.018, -0.064),
+			LeftUpperArm = Vector3.new(0.139, 0.353, 0),
+			RightUpperArm = Vector3.new(-0.138, 0.353, 0),
+			UpperTorso = Vector3.new(-0, -0.018, -0.12),
 		},
 		Headband = {
 			Head = Vector3.new(-0, 0.267, -0.1),
@@ -870,7 +870,7 @@ return {
 		LeatherPants = {
 			LeftLowerLeg = Vector3.new(-0, 0.102, 0.051),
 			LeftUpperLeg = Vector3.new(-0, 0.036, -0.016),
-			LowerTorso = Vector3.new(-0, -0.12, 0.02),
+			LowerTorso = Vector3.new(-0, -0.12, -0.023),
 			RightLowerLeg = Vector3.new(0, 0.102, 0.051),
 			RightUpperLeg = Vector3.new(0, 0.036, -0.016),
 		},
@@ -885,7 +885,7 @@ return {
 			Head_Skin = Vector3.new(-0, -0.507, -0.378),
 		},
 		MogTank = {
-			UpperTorso = Vector3.new(-0, -0.018, -0.086),
+			UpperTorso = Vector3.new(-0, -0.018, -0.122),
 		},
 		Mohawk = {
 			Head_Hair = Vector3.new(-0, 0.787, -0.084),
@@ -899,7 +899,7 @@ return {
 			LeftUpperArm = Vector3.new(0.117, 0.256, 0),
 			RightLowerArm = Vector3.new(-0, -0.101, 0),
 			RightUpperArm = Vector3.new(-0.116, 0.256, 0),
-			UpperTorso = Vector3.new(-0, -0.018, -0.064),
+			UpperTorso = Vector3.new(-0, -0.018, -0.12),
 		},
 		Pompadour = {
 			Head_Hair = Vector3.new(-0, 0.856, -0.234),
@@ -921,7 +921,7 @@ return {
 			RightLowerArm = Vector3.new(0, -0.402, 0),
 		},
 		TightTank = {
-			UpperTorso = Vector3.new(-0, 0.167, -0.064),
+			UpperTorso = Vector3.new(-0, 0.207, -0.117),
 		},
 		TinySocks = {
 			LeftLowerLeg = Vector3.new(-0, -0.177, 0),
@@ -932,13 +932,13 @@ return {
 			LeftUpperArm = Vector3.new(0.114, 0.263, 0),
 			RightLowerArm = Vector3.new(-0, -0.101, 0),
 			RightUpperArm = Vector3.new(-0.113, 0.263, 0),
-			UpperTorso = Vector3.new(-0, -0.018, -0.064),
+			UpperTorso = Vector3.new(-0, -0.018, -0.132),
 		},
 		VelvetJoggers = {
-			LeftLowerLeg = Vector3.new(-0, 0.109, 0.051),
+			LeftLowerLeg = Vector3.new(-0, 0.103, 0.051),
 			LeftUpperLeg = Vector3.new(0, 0.036, -0.016),
 			LowerTorso = Vector3.new(-0, -0.12, 0.02),
-			RightLowerLeg = Vector3.new(0, 0.109, 0.051),
+			RightLowerLeg = Vector3.new(0, 0.103, 0.051),
 			RightUpperLeg = Vector3.new(-0, 0.036, -0.016),
 		},
 	},
@@ -952,7 +952,7 @@ return {
 		BoxerRobe = {
 			LeftUpperArm = Vector3.new(0.098, 0.342, 0),
 			LeftUpperLeg = Vector3.new(-0.02, 0.098, 0.02),
-			LowerTorso = Vector3.new(-0, -0.114, 0.02),
+			LowerTorso = Vector3.new(-0, -0.114, -0.168),
 			RightUpperArm = Vector3.new(-0.098, 0.342, 0),
 			RightUpperLeg = Vector3.new(0.02, 0.098, 0.02),
 			UpperTorso = Vector3.new(0, -0.017, -0.064),
@@ -977,9 +977,9 @@ return {
 			Head = Vector3.new(-0.003, 0.124, -0.476),
 		},
 		FluoShorts = {
-			LeftUpperLeg = Vector3.new(0, 0.233, 0),
-			LowerTorso = Vector3.new(-0, -0.114, 0.02),
-			RightUpperLeg = Vector3.new(-0, 0.233, 0),
+			LeftUpperLeg = Vector3.new(-0, 0.233, 0),
+			LowerTorso = Vector3.new(-0, -0.114, -0.012),
+			RightUpperLeg = Vector3.new(0, 0.233, 0),
 		},
 		FrownBrows = {
 			Head_Hair = Vector3.new(-0, 0.241, -0.679),
@@ -994,9 +994,9 @@ return {
 			Head_Hair = Vector3.new(-0, -0.221, -0.577),
 		},
 		Hawaiian = {
-			LeftUpperArm = Vector3.new(0.108, 0.342, 0),
-			RightUpperArm = Vector3.new(-0.108, 0.342, 0),
-			UpperTorso = Vector3.new(0, -0.017, -0.014),
+			LeftUpperArm = Vector3.new(0.116, 0.342, 0),
+			RightUpperArm = Vector3.new(-0.116, 0.342, 0),
+			UpperTorso = Vector3.new(0, -0.017, -0.069),
 		},
 		Headband = {
 			Head = Vector3.new(-0, 0.267, -0.067),
@@ -1004,7 +1004,7 @@ return {
 		LeatherPants = {
 			LeftLowerLeg = Vector3.new(-0, 0.108, 0.052),
 			LeftUpperLeg = Vector3.new(-0, 0.036, -0.018),
-			LowerTorso = Vector3.new(-0, -0.114, 0.02),
+			LowerTorso = Vector3.new(-0, -0.114, -0.023),
 			RightLowerLeg = Vector3.new(0, 0.108, 0.052),
 			RightUpperLeg = Vector3.new(0, 0.036, -0.018),
 		},
@@ -1019,7 +1019,7 @@ return {
 			Head_Skin = Vector3.new(-0, -0.466, -0.254),
 		},
 		MogTank = {
-			UpperTorso = Vector3.new(0, -0.017, -0.036),
+			UpperTorso = Vector3.new(0, -0.017, -0.07),
 		},
 		Mohawk = {
 			Head_Hair = Vector3.new(-0, 0.787, -0.052),
@@ -1033,7 +1033,7 @@ return {
 			LeftUpperArm = Vector3.new(0.108, 0.221, 0),
 			RightLowerArm = Vector3.new(-0, -0.097, 0),
 			RightUpperArm = Vector3.new(-0.108, 0.221, 0),
-			UpperTorso = Vector3.new(0, -0.017, -0.014),
+			UpperTorso = Vector3.new(0, -0.017, -0.069),
 		},
 		Pompadour = {
 			Head_Hair = Vector3.new(-0, 0.856, -0.201),
@@ -1055,7 +1055,7 @@ return {
 			RightLowerArm = Vector3.new(-0, -0.39, 0),
 		},
 		TightTank = {
-			UpperTorso = Vector3.new(0, 0.171, -0.014),
+			UpperTorso = Vector3.new(0, 0.212, -0.065),
 		},
 		TinySocks = {
 			LeftLowerLeg = Vector3.new(0, -0.174, 0),
@@ -1066,13 +1066,13 @@ return {
 			LeftUpperArm = Vector3.new(0.105, 0.228, 0),
 			RightLowerArm = Vector3.new(-0, -0.097, 0),
 			RightUpperArm = Vector3.new(-0.105, 0.228, 0),
-			UpperTorso = Vector3.new(0, -0.017, -0.014),
+			UpperTorso = Vector3.new(0, -0.017, -0.081),
 		},
 		VelvetJoggers = {
-			LeftLowerLeg = Vector3.new(-0, 0.116, 0.052),
+			LeftLowerLeg = Vector3.new(-0, 0.107, 0.052),
 			LeftUpperLeg = Vector3.new(0, 0.036, -0.018),
 			LowerTorso = Vector3.new(-0, -0.114, 0.02),
-			RightLowerLeg = Vector3.new(0, 0.116, 0.052),
+			RightLowerLeg = Vector3.new(0, 0.107, 0.052),
 			RightUpperLeg = Vector3.new(-0, 0.036, -0.018),
 		},
 	},
@@ -1086,7 +1086,7 @@ return {
 		BoxerRobe = {
 			LeftUpperArm = Vector3.new(0.124, 0.373, 0),
 			LeftUpperLeg = Vector3.new(-0.026, 0.106, 0.02),
-			LowerTorso = Vector3.new(-0, -0.13, 0.02),
+			LowerTorso = Vector3.new(-0, -0.13, -0.219),
 			RightUpperArm = Vector3.new(-0.123, 0.373, 0),
 			RightUpperLeg = Vector3.new(0.026, 0.106, 0.02),
 			UpperTorso = Vector3.new(-0, -0.018, -0.126),
@@ -1112,7 +1112,7 @@ return {
 		},
 		FluoShorts = {
 			LeftUpperLeg = Vector3.new(-0, 0.249, 0),
-			LowerTorso = Vector3.new(-0, -0.13, 0.02),
+			LowerTorso = Vector3.new(-0, -0.13, -0.012),
 			RightUpperLeg = Vector3.new(0, 0.249, 0),
 		},
 		FrownBrows = {
@@ -1128,9 +1128,9 @@ return {
 			Head_Hair = Vector3.new(-0, -0.164, -0.84),
 		},
 		Hawaiian = {
-			LeftUpperArm = Vector3.new(0.136, 0.373, 0),
-			RightUpperArm = Vector3.new(-0.135, 0.373, 0),
-			UpperTorso = Vector3.new(-0, -0.018, -0.084),
+			LeftUpperArm = Vector3.new(0.156, 0.373, 0),
+			RightUpperArm = Vector3.new(-0.156, 0.373, 0),
+			UpperTorso = Vector3.new(-0, -0.018, -0.141),
 		},
 		Headband = {
 			Head = Vector3.new(-0, 0.26, -0.125),
@@ -1138,7 +1138,7 @@ return {
 		LeatherPants = {
 			LeftLowerLeg = Vector3.new(-0, 0.11, 0.058),
 			LeftUpperLeg = Vector3.new(-0, 0.036, -0.018),
-			LowerTorso = Vector3.new(-0, -0.13, 0.02),
+			LowerTorso = Vector3.new(-0, -0.13, -0.023),
 			RightLowerLeg = Vector3.new(0, 0.11, 0.058),
 			RightUpperLeg = Vector3.new(0, 0.036, -0.018),
 		},
@@ -1153,7 +1153,7 @@ return {
 			Head_Skin = Vector3.new(-0, -0.517, -0.44),
 		},
 		MogTank = {
-			UpperTorso = Vector3.new(-0, -0.018, -0.106),
+			UpperTorso = Vector3.new(-0, -0.018, -0.144),
 		},
 		Mohawk = {
 			Head_Hair = Vector3.new(-0, 0.763, -0.11),
@@ -1167,7 +1167,7 @@ return {
 			LeftUpperArm = Vector3.new(0.136, 0.315, 0),
 			RightLowerArm = Vector3.new(0, -0.104, 0),
 			RightUpperArm = Vector3.new(-0.135, 0.315, 0),
-			UpperTorso = Vector3.new(-0, -0.018, -0.084),
+			UpperTorso = Vector3.new(-0, -0.018, -0.141),
 		},
 		Pompadour = {
 			Head_Hair = Vector3.new(-0, 0.83, -0.254),
@@ -1189,7 +1189,7 @@ return {
 			RightLowerArm = Vector3.new(0, -0.419, 0),
 		},
 		TightTank = {
-			UpperTorso = Vector3.new(-0, 0.175, -0.084),
+			UpperTorso = Vector3.new(-0, 0.215, -0.139),
 		},
 		TinySocks = {
 			LeftLowerLeg = Vector3.new(-0, -0.181, 0),
@@ -1200,13 +1200,13 @@ return {
 			LeftUpperArm = Vector3.new(0.133, 0.322, 0),
 			RightLowerArm = Vector3.new(0, -0.104, 0),
 			RightUpperArm = Vector3.new(-0.132, 0.322, 0),
-			UpperTorso = Vector3.new(-0, -0.018, -0.084),
+			UpperTorso = Vector3.new(-0, -0.018, -0.152),
 		},
 		VelvetJoggers = {
-			LeftLowerLeg = Vector3.new(-0, 0.118, 0.058),
+			LeftLowerLeg = Vector3.new(-0, 0.115, 0.058),
 			LeftUpperLeg = Vector3.new(-0, 0.036, -0.018),
 			LowerTorso = Vector3.new(-0, -0.13, 0.02),
-			RightLowerLeg = Vector3.new(0, 0.118, 0.058),
+			RightLowerLeg = Vector3.new(0, 0.115, 0.058),
 			RightUpperLeg = Vector3.new(0, 0.036, -0.018),
 		},
 	},
@@ -1220,7 +1220,7 @@ return {
 		BoxerRobe = {
 			LeftUpperArm = Vector3.new(0.117, 0.362, 0),
 			LeftUpperLeg = Vector3.new(-0.023, 0.102, 0.02),
-			LowerTorso = Vector3.new(-0, -0.124, 0.02),
+			LowerTorso = Vector3.new(-0, -0.124, -0.188),
 			RightUpperArm = Vector3.new(-0.116, 0.362, 0),
 			RightUpperLeg = Vector3.new(0.023, 0.103, 0.02),
 			UpperTorso = Vector3.new(0, -0.018, -0.071),
@@ -1246,7 +1246,7 @@ return {
 		},
 		FluoShorts = {
 			LeftUpperLeg = Vector3.new(0, 0.243, 0),
-			LowerTorso = Vector3.new(-0, -0.124, 0.02),
+			LowerTorso = Vector3.new(-0, -0.124, -0.012),
 			RightUpperLeg = Vector3.new(-0, 0.243, 0),
 		},
 		FrownBrows = {
@@ -1262,9 +1262,9 @@ return {
 			Head_Hair = Vector3.new(-0, -0.196, -0.571),
 		},
 		Hawaiian = {
-			LeftUpperArm = Vector3.new(0.128, 0.362, 0),
-			RightUpperArm = Vector3.new(-0.127, 0.362, 0),
-			UpperTorso = Vector3.new(0, -0.018, -0.022),
+			LeftUpperArm = Vector3.new(0.132, 0.362, 0),
+			RightUpperArm = Vector3.new(-0.132, 0.362, 0),
+			UpperTorso = Vector3.new(0, -0.018, -0.078),
 		},
 		Headband = {
 			Head = Vector3.new(-0, 0.26, -0.076),
@@ -1272,7 +1272,7 @@ return {
 		LeatherPants = {
 			LeftLowerLeg = Vector3.new(0, 0.116, 0.059),
 			LeftUpperLeg = Vector3.new(0, 0.035, -0.021),
-			LowerTorso = Vector3.new(-0, -0.124, 0.02),
+			LowerTorso = Vector3.new(-0, -0.124, -0.023),
 			RightLowerLeg = Vector3.new(-0, 0.117, 0.059),
 			RightUpperLeg = Vector3.new(0, 0.036, -0.021),
 		},
@@ -1287,7 +1287,7 @@ return {
 			Head_Skin = Vector3.new(-0, -0.472, -0.257),
 		},
 		MogTank = {
-			UpperTorso = Vector3.new(0, -0.018, -0.044),
+			UpperTorso = Vector3.new(0, -0.018, -0.08),
 		},
 		Mohawk = {
 			Head_Hair = Vector3.new(-0, 0.763, -0.061),
@@ -1301,7 +1301,7 @@ return {
 			LeftUpperArm = Vector3.new(0.128, 0.271, 0),
 			RightLowerArm = Vector3.new(0, -0.101, 0),
 			RightUpperArm = Vector3.new(-0.127, 0.271, 0),
-			UpperTorso = Vector3.new(0, -0.018, -0.022),
+			UpperTorso = Vector3.new(0, -0.018, -0.078),
 		},
 		Pompadour = {
 			Head_Hair = Vector3.new(-0, 0.83, -0.205),
@@ -1323,7 +1323,7 @@ return {
 			RightLowerArm = Vector3.new(0, -0.408, 0),
 		},
 		TightTank = {
-			UpperTorso = Vector3.new(0, 0.179, -0.022),
+			UpperTorso = Vector3.new(0, 0.22, -0.075),
 		},
 		TinySocks = {
 			LeftLowerLeg = Vector3.new(-0, -0.179, 0),
@@ -1334,13 +1334,13 @@ return {
 			LeftUpperArm = Vector3.new(0.125, 0.278, 0),
 			RightLowerArm = Vector3.new(0, -0.101, 0),
 			RightUpperArm = Vector3.new(-0.124, 0.278, 0),
-			UpperTorso = Vector3.new(0, -0.018, -0.022),
+			UpperTorso = Vector3.new(0, -0.018, -0.089),
 		},
 		VelvetJoggers = {
-			LeftLowerLeg = Vector3.new(0, 0.124, 0.059),
+			LeftLowerLeg = Vector3.new(0, 0.119, 0.059),
 			LeftUpperLeg = Vector3.new(0, 0.035, -0.021),
 			LowerTorso = Vector3.new(-0, -0.124, 0.02),
-			RightLowerLeg = Vector3.new(-0, 0.125, 0.059),
+			RightLowerLeg = Vector3.new(-0, 0.12, 0.059),
 			RightUpperLeg = Vector3.new(0, 0.036, -0.021),
 		},
 	},
@@ -1354,7 +1354,7 @@ return {
 		BoxerRobe = {
 			LeftUpperArm = Vector3.new(0.137, 0.394, 0),
 			LeftUpperLeg = Vector3.new(-0.03, 0.11, 0.02),
-			LowerTorso = Vector3.new(-0, -0.14, 0.02),
+			LowerTorso = Vector3.new(-0, -0.14, -0.254),
 			RightUpperArm = Vector3.new(-0.136, 0.394, 0),
 			RightUpperLeg = Vector3.new(0.03, 0.11, 0.02),
 			UpperTorso = Vector3.new(-0, -0.019, -0.143),
@@ -1380,8 +1380,8 @@ return {
 		},
 		FluoShorts = {
 			LeftUpperLeg = Vector3.new(0, 0.259, 0),
-			LowerTorso = Vector3.new(-0, -0.14, 0.02),
-			RightUpperLeg = Vector3.new(-0, 0.259, 0),
+			LowerTorso = Vector3.new(-0, -0.14, -0.012),
+			RightUpperLeg = Vector3.new(0, 0.259, 0),
 		},
 		FrownBrows = {
 			Head_Hair = Vector3.new(-0, 0.228, -0.727),
@@ -1396,9 +1396,9 @@ return {
 			Head_Hair = Vector3.new(-0, -0.136, -0.93),
 		},
 		Hawaiian = {
-			LeftUpperArm = Vector3.new(0.149, 0.394, 0),
-			RightUpperArm = Vector3.new(-0.148, 0.394, 0),
-			UpperTorso = Vector3.new(-0, -0.019, -0.104),
+			LeftUpperArm = Vector3.new(0.174, 0.394, 0),
+			RightUpperArm = Vector3.new(-0.174, 0.394, 0),
+			UpperTorso = Vector3.new(-0, -0.019, -0.162),
 		},
 		Headband = {
 			Head = Vector3.new(-0, 0.253, -0.15),
@@ -1406,7 +1406,7 @@ return {
 		LeatherPants = {
 			LeftLowerLeg = Vector3.new(-0, 0.122, 0.067),
 			LeftUpperLeg = Vector3.new(0, 0.037, -0.021),
-			LowerTorso = Vector3.new(-0, -0.14, 0.02),
+			LowerTorso = Vector3.new(-0, -0.14, -0.023),
 			RightLowerLeg = Vector3.new(0, 0.122, 0.067),
 			RightUpperLeg = Vector3.new(0, 0.037, -0.021),
 		},
@@ -1421,7 +1421,7 @@ return {
 			Head_Skin = Vector3.new(-0, -0.527, -0.508),
 		},
 		MogTank = {
-			UpperTorso = Vector3.new(-0, -0.019, -0.126),
+			UpperTorso = Vector3.new(-0, -0.019, -0.166),
 		},
 		Mohawk = {
 			Head_Hair = Vector3.new(-0, 0.739, -0.135),
@@ -1435,7 +1435,7 @@ return {
 			LeftUpperArm = Vector3.new(0.149, 0.375, 0),
 			RightLowerArm = Vector3.new(0, -0.109, 0),
 			RightUpperArm = Vector3.new(-0.148, 0.375, 0),
-			UpperTorso = Vector3.new(-0, -0.019, -0.104),
+			UpperTorso = Vector3.new(-0, -0.019, -0.162),
 		},
 		Pompadour = {
 			Head_Hair = Vector3.new(-0, 0.804, -0.274),
@@ -1457,7 +1457,7 @@ return {
 			RightLowerArm = Vector3.new(0, -0.437, 0),
 		},
 		TightTank = {
-			UpperTorso = Vector3.new(-0, 0.182, -0.104),
+			UpperTorso = Vector3.new(-0, 0.222, -0.161),
 		},
 		TinySocks = {
 			LeftLowerLeg = Vector3.new(-0, -0.186, 0),
@@ -1468,7 +1468,7 @@ return {
 			LeftUpperArm = Vector3.new(0.146, 0.383, 0),
 			RightLowerArm = Vector3.new(0, -0.109, 0),
 			RightUpperArm = Vector3.new(-0.145, 0.382, 0),
-			UpperTorso = Vector3.new(-0, -0.019, -0.104),
+			UpperTorso = Vector3.new(-0, -0.019, -0.173),
 		},
 		VelvetJoggers = {
 			LeftLowerLeg = Vector3.new(-0, 0.13, 0.067),
@@ -1488,7 +1488,7 @@ return {
 		BoxerRobe = {
 			LeftUpperArm = Vector3.new(0.131, 0.377, 0),
 			LeftUpperLeg = Vector3.new(-0.026, 0.106, 0.02),
-			LowerTorso = Vector3.new(-0, -0.132, 0.02),
+			LowerTorso = Vector3.new(-0, -0.132, -0.209),
 			RightUpperArm = Vector3.new(-0.13, 0.377, 0),
 			RightUpperLeg = Vector3.new(0.026, 0.106, 0.02),
 			UpperTorso = Vector3.new(0, -0.019, -0.078),
@@ -1514,7 +1514,7 @@ return {
 		},
 		FluoShorts = {
 			LeftUpperLeg = Vector3.new(0, 0.251, 0),
-			LowerTorso = Vector3.new(-0, -0.132, 0.02),
+			LowerTorso = Vector3.new(-0, -0.132, -0.012),
 			RightUpperLeg = Vector3.new(-0, 0.251, 0),
 		},
 		FrownBrows = {
@@ -1530,9 +1530,9 @@ return {
 			Head_Hair = Vector3.new(-0, -0.172, -0.566),
 		},
 		Hawaiian = {
-			LeftUpperArm = Vector3.new(0.143, 0.377, 0),
-			RightUpperArm = Vector3.new(-0.142, 0.377, 0),
-			UpperTorso = Vector3.new(0, -0.019, -0.03),
+			LeftUpperArm = Vector3.new(0.148, 0.377, 0),
+			RightUpperArm = Vector3.new(-0.147, 0.377, 0),
+			UpperTorso = Vector3.new(0, -0.019, -0.087),
 		},
 		Headband = {
 			Head = Vector3.new(-0, 0.253, -0.085),
@@ -1540,7 +1540,7 @@ return {
 		LeatherPants = {
 			LeftLowerLeg = Vector3.new(0, 0.13, 0.069),
 			LeftUpperLeg = Vector3.new(-0, 0.036, -0.024),
-			LowerTorso = Vector3.new(-0, -0.132, 0.02),
+			LowerTorso = Vector3.new(-0, -0.132, -0.023),
 			RightLowerLeg = Vector3.new(-0, 0.13, 0.069),
 			RightUpperLeg = Vector3.new(0, 0.036, -0.024),
 		},
@@ -1555,7 +1555,7 @@ return {
 			Head_Skin = Vector3.new(-0, -0.477, -0.26),
 		},
 		MogTank = {
-			UpperTorso = Vector3.new(0, -0.019, -0.052),
+			UpperTorso = Vector3.new(0, -0.019, -0.089),
 		},
 		Mohawk = {
 			Head_Hair = Vector3.new(-0, 0.739, -0.071),
@@ -1569,7 +1569,7 @@ return {
 			LeftUpperArm = Vector3.new(0.143, 0.32, 0),
 			RightLowerArm = Vector3.new(0, -0.105, 0),
 			RightUpperArm = Vector3.new(-0.142, 0.32, 0),
-			UpperTorso = Vector3.new(0, -0.019, -0.03),
+			UpperTorso = Vector3.new(0, -0.019, -0.087),
 		},
 		Pompadour = {
 			Head_Hair = Vector3.new(-0, 0.804, -0.209),
@@ -1591,7 +1591,7 @@ return {
 			RightLowerArm = Vector3.new(-0, -0.422, 0),
 		},
 		TightTank = {
-			UpperTorso = Vector3.new(0, 0.186, -0.03),
+			UpperTorso = Vector3.new(0, 0.226, -0.084),
 		},
 		TinySocks = {
 			LeftLowerLeg = Vector3.new(0, -0.183, 0),
@@ -1602,13 +1602,13 @@ return {
 			LeftUpperArm = Vector3.new(0.14, 0.327, 0),
 			RightLowerArm = Vector3.new(0, -0.105, 0),
 			RightUpperArm = Vector3.new(-0.139, 0.327, 0),
-			UpperTorso = Vector3.new(0, -0.019, -0.03),
+			UpperTorso = Vector3.new(0, -0.019, -0.098),
 		},
 		VelvetJoggers = {
-			LeftLowerLeg = Vector3.new(-0, 0.139, 0.069),
+			LeftLowerLeg = Vector3.new(-0, 0.137, 0.069),
 			LeftUpperLeg = Vector3.new(0, 0.036, -0.024),
 			LowerTorso = Vector3.new(-0, -0.132, 0.02),
-			RightLowerLeg = Vector3.new(0, 0.139, 0.069),
+			RightLowerLeg = Vector3.new(0, 0.137, 0.069),
 			RightUpperLeg = Vector3.new(-0, 0.036, -0.024),
 		},
 	},
@@ -1622,7 +1622,7 @@ return {
 		BoxerRobe = {
 			LeftUpperArm = Vector3.new(0.159, 0.433, 0),
 			LeftUpperLeg = Vector3.new(-0.034, 0.119, 0.02),
-			LowerTorso = Vector3.new(-0, -0.16, 0.02),
+			LowerTorso = Vector3.new(-0, -0.16, -0.299),
 			RightUpperArm = Vector3.new(-0.158, 0.433, 0),
 			RightUpperLeg = Vector3.new(0.034, 0.119, 0.02),
 			UpperTorso = Vector3.new(-0, -0.021, -0.166),
@@ -1648,7 +1648,7 @@ return {
 		},
 		FluoShorts = {
 			LeftUpperLeg = Vector3.new(-0, 0.278, 0),
-			LowerTorso = Vector3.new(-0, -0.16, 0.02),
+			LowerTorso = Vector3.new(-0, -0.16, -0.012),
 			RightUpperLeg = Vector3.new(0, 0.278, 0),
 		},
 		FrownBrows = {
@@ -1664,9 +1664,9 @@ return {
 			Head_Hair = Vector3.new(-0, -0.104, -1.051),
 		},
 		Hawaiian = {
-			LeftUpperArm = Vector3.new(0.172, 0.433, 0),
-			RightUpperArm = Vector3.new(-0.171, 0.433, 0),
-			UpperTorso = Vector3.new(-0, -0.021, -0.13),
+			LeftUpperArm = Vector3.new(0.198, 0.433, 0),
+			RightUpperArm = Vector3.new(-0.197, 0.433, 0),
+			UpperTorso = Vector3.new(-0, -0.021, -0.19),
 		},
 		Headband = {
 			Head = Vector3.new(-0, 0.246, -0.185),
@@ -1674,7 +1674,7 @@ return {
 		LeatherPants = {
 			LeftLowerLeg = Vector3.new(-0, 0.135, 0.079),
 			LeftUpperLeg = Vector3.new(-0, 0.038, -0.025),
-			LowerTorso = Vector3.new(-0, -0.16, 0.02),
+			LowerTorso = Vector3.new(-0, -0.16, -0.023),
 			RightLowerLeg = Vector3.new(0, 0.135, 0.079),
 			RightUpperLeg = Vector3.new(0, 0.038, -0.025),
 		},
@@ -1689,7 +1689,7 @@ return {
 			Head_Skin = Vector3.new(-0, -0.545, -0.599),
 		},
 		MogTank = {
-			UpperTorso = Vector3.new(-0, -0.021, -0.152),
+			UpperTorso = Vector3.new(-0, -0.021, -0.195),
 		},
 		Mohawk = {
 			Head_Hair = Vector3.new(-0, 0.715, -0.171),
@@ -1703,7 +1703,7 @@ return {
 			LeftUpperArm = Vector3.new(0.172, 0.433, 0),
 			RightLowerArm = Vector3.new(-0, -0.118, 0),
 			RightUpperArm = Vector3.new(-0.171, 0.433, 0),
-			UpperTorso = Vector3.new(-0, -0.021, -0.13),
+			UpperTorso = Vector3.new(-0, -0.021, -0.19),
 		},
 		Pompadour = {
 			Head_Hair = Vector3.new(-0, 0.778, -0.304),
@@ -1725,7 +1725,7 @@ return {
 			RightLowerArm = Vector3.new(-0, -0.474, 0),
 		},
 		TightTank = {
-			UpperTorso = Vector3.new(-0, 0.198, -0.13),
+			UpperTorso = Vector3.new(-0, 0.238, -0.19),
 		},
 		TinySocks = {
 			LeftLowerLeg = Vector3.new(-0, -0.194, 0),
@@ -1736,7 +1736,7 @@ return {
 			LeftUpperArm = Vector3.new(0.169, 0.433, 0),
 			RightLowerArm = Vector3.new(0, -0.118, 0),
 			RightUpperArm = Vector3.new(-0.168, 0.433, 0),
-			UpperTorso = Vector3.new(-0, -0.021, -0.13),
+			UpperTorso = Vector3.new(-0, -0.021, -0.2),
 		},
 		VelvetJoggers = {
 			LeftLowerLeg = Vector3.new(-0, 0.143, 0.079),
@@ -1756,7 +1756,7 @@ return {
 		BoxerRobe = {
 			LeftUpperArm = Vector3.new(0.154, 0.416, 0),
 			LeftUpperLeg = Vector3.new(-0.029, 0.115, 0.02),
-			LowerTorso = Vector3.new(-0, -0.152, 0.02),
+			LowerTorso = Vector3.new(-0, -0.152, -0.236),
 			RightUpperArm = Vector3.new(-0.154, 0.416, 0),
 			RightUpperLeg = Vector3.new(0.029, 0.115, 0.02),
 			UpperTorso = Vector3.new(0, -0.02, -0.087),
@@ -1782,7 +1782,7 @@ return {
 		},
 		FluoShorts = {
 			LeftUpperLeg = Vector3.new(-0, 0.27, 0),
-			LowerTorso = Vector3.new(-0, -0.152, 0.02),
+			LowerTorso = Vector3.new(-0, -0.152, -0.012),
 			RightUpperLeg = Vector3.new(0, 0.27, 0),
 		},
 		FrownBrows = {
@@ -1798,9 +1798,9 @@ return {
 			Head_Hair = Vector3.new(-0, -0.144, -0.563),
 		},
 		Hawaiian = {
-			LeftUpperArm = Vector3.new(0.167, 0.416, 0),
-			RightUpperArm = Vector3.new(-0.166, 0.416, 0),
-			UpperTorso = Vector3.new(0, -0.02, -0.04),
+			LeftUpperArm = Vector3.new(0.168, 0.416, 0),
+			RightUpperArm = Vector3.new(-0.167, 0.416, 0),
+			UpperTorso = Vector3.new(0, -0.02, -0.098),
 		},
 		Headband = {
 			Head = Vector3.new(-0, 0.246, -0.097),
@@ -1808,7 +1808,7 @@ return {
 		LeatherPants = {
 			LeftLowerLeg = Vector3.new(0, 0.143, 0.081),
 			LeftUpperLeg = Vector3.new(0, 0.037, -0.028),
-			LowerTorso = Vector3.new(-0, -0.152, 0.02),
+			LowerTorso = Vector3.new(-0, -0.152, -0.023),
 			RightLowerLeg = Vector3.new(-0, 0.143, 0.081),
 			RightUpperLeg = Vector3.new(-0, 0.037, -0.028),
 		},
@@ -1823,7 +1823,7 @@ return {
 			Head_Skin = Vector3.new(-0, -0.488, -0.267),
 		},
 		MogTank = {
-			UpperTorso = Vector3.new(0, -0.02, -0.063),
+			UpperTorso = Vector3.new(0, -0.02, -0.102),
 		},
 		Mohawk = {
 			Head_Hair = Vector3.new(-0, 0.715, -0.083),
@@ -1837,7 +1837,7 @@ return {
 			LeftUpperArm = Vector3.new(0.167, 0.396, 0),
 			RightLowerArm = Vector3.new(-0, -0.115, 0),
 			RightUpperArm = Vector3.new(-0.166, 0.395, 0),
-			UpperTorso = Vector3.new(0, -0.02, -0.04),
+			UpperTorso = Vector3.new(0, -0.02, -0.098),
 		},
 		Pompadour = {
 			Head_Hair = Vector3.new(-0, 0.778, -0.217),
@@ -1859,7 +1859,7 @@ return {
 			RightLowerArm = Vector3.new(0, -0.459, 0),
 		},
 		TightTank = {
-			UpperTorso = Vector3.new(0, 0.202, -0.04),
+			UpperTorso = Vector3.new(0, 0.243, -0.097),
 		},
 		TinySocks = {
 			LeftLowerLeg = Vector3.new(-0, -0.192, 0),
@@ -1870,7 +1870,7 @@ return {
 			LeftUpperArm = Vector3.new(0.164, 0.404, 0),
 			RightLowerArm = Vector3.new(0, -0.115, 0),
 			RightUpperArm = Vector3.new(-0.163, 0.403, 0),
-			UpperTorso = Vector3.new(0, -0.02, -0.04),
+			UpperTorso = Vector3.new(0, -0.02, -0.109),
 		},
 		VelvetJoggers = {
 			LeftLowerLeg = Vector3.new(-0, 0.152, 0.081),

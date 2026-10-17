@@ -157,7 +157,16 @@ local function equippedStyle(player: Player, bodyKey: string): { string }
 		local item = StyleItems[itemId]
 		local pieces = StylePieces[bodyKey] and StylePieces[bodyKey][itemId]
 		if item and item.category == category and pieces then
-			table.insert(items, itemId)
+			local complete = true
+			for key in pieces do
+				if not folder:FindFirstChild(`{bodyKey}__{itemId}__{key}`) then
+					complete = false
+					break
+				end
+			end
+			if complete then
+				table.insert(items, itemId)
+			end
 		end
 	end
 	table.sort(items)

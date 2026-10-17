@@ -2,6 +2,10 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-17 (garde-robe de la boutique)
+
+- **D65 — Les habits achetés remplacent la tenue de départ sur les parties couvertes.** Quand un haut est équipé, les pièces `_Top` du corps ne sont plus posées ; idem pour les pièces `_Shorts` avec un bas. Elles traversaient les habits pendant la prise de masse, surtout sur le Normie au short ample. Un article dont l'import est incomplet n'est pas posé. Les 34 articles existants sont reconstruits pour les 14 corps dans Blender ; les 9 habits reçoivent des finitions géométriques (cols, revers, boutons, ourlets, ceintures ovales, poignets et poches) et la poitrine des hauts féminins enveloppe la coque du corps. Le serveur conserve l'interpolation des tailles et décalages de chaque pièce selon le Mog (D41, D60). Un FBX de la garde-robe seule permet la mise à jour sans réimporter les corps.
+
 ## 2026-10-17 (caméra de Mog-off)
 
 - **D64 — Le cadre du duel tient compte de tout le boss.** La caméra vérifie les coins du modèle du boss en plus du corps du joueur et recule selon sa taille avant de choisir son angle ; Pump God, bien plus grand que les autres, doit rester entier dans le champ.

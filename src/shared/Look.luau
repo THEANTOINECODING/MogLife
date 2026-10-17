@@ -152,17 +152,29 @@ function Look.Pieces(bodyKey: string, look: LookData, items: { string }, options
 	local opts = options or {}
 	local pieces: { Piece } = {}
 	local hasHair = opts.noBaseHair == true
+	local hasTop = false
+	local hasBottom = false
 	for _, itemId in items do
 		local item = StyleItems[itemId]
-		if item and item.category == "Hair" then
-			hasHair = true
+		if item then
+			if item.category == "Hair" then
+				hasHair = true
+			elseif item.category == "Top" then
+				hasTop = true
+			elseif item.category == "Bottom" then
+				hasBottom = true
+			end
 		end
 	end
 	for key, offset in BodyPieces[bodyKey] or {} do
 		local split = string.split(key, "_")
 		local part, group = split[1], split[2] or ""
 		local visible, tint = bodyPieceTint(group, look, hasHair)
-		if visible and (not opts.bust or part == "Head") then
+		if
+			visible
+			and not (group == "Top" and hasTop or group == "Shorts" and hasBottom)
+			and (not opts.bust or part == "Head")
+		then
 			table.insert(pieces, {
 				folder = "Bodies",
 				template = `{bodyKey}_{key}`,

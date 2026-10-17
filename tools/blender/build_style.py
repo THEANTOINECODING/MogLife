@@ -13,6 +13,8 @@ et la méga-mâchoire sa couleur de peau (_Skin) : ces cases sont des voiles sem
 - assets/export/characters/MogLife_Characters.fbx : les 7 corps (build_bodies.py, à lancer avant) ET tous les objets
   de style, avec leurs textures à côté : UN SEUL import dans Studio (Accueil -> Importer 3D), puis
   tools/install_characters.luau
+- assets/export/characters/MogLife_Wardrobe.fbx : seuls les objets de style, pour actualiser la boutique sans
+  réimporter les corps ; même script d'installation.
 - src/shared/Config/StylePieces.luau : pièces de chaque objet et leur décalage par rapport à leur partie
 Dans Blender : exec(open(r"...\\tools\\blender\\build_style.py", encoding="utf-8").read())
 """
@@ -120,7 +122,8 @@ def paint_style_atlas():
     a.cell("ribbon", 2, 3, lambda x, y: (0.15, 0.3, 0.75) if x < 16 else (0.85, 0.15, 0.18))
     a.cell("pajama_front", 3, 3, lambda x, y: (0.96, 0.96, 1.0) if x in (15, 16) and y % 8 < 3 else pajama(x, y))
     # Col en V : un débardeur blanc dessous (la peau du joueur n'est pas connue de cette texture)
-    a.cell("hawaiian_front", 4, 3, lambda x, y: (0.96, 0.95, 0.92) if abs(x - 15.5) < (y - 14) * 0.6 else hawaiian(x, y))
+    # Ouverture courte au col : l'ancien triangle blanc descendait jusqu'au ventre.
+    a.cell("hawaiian_front", 4, 3, lambda x, y: (0.96, 0.95, 0.92) if y > 23 and abs(x - 15.5) < (y - 23) * 0.7 else hawaiian(x, y))
     a.cell("fluo", 5, 3, lambda x, y: lit((0.95, 0.95, 0.95) if x in (2, 3) else noise((0.55, 1.0, 0.15), 0.03), y, 0.15))
 
     def velvet(x, y):                                 # velours violet : côtes verticales
@@ -179,6 +182,26 @@ def ring_upright(center, radius, thickness, height, n=16):
     return bm
 
 
+def waist_band(center, radius_x, radius_y, thickness, height, n=12):
+    """Ceinture ovale qui épouse le bassin au lieu de former un cerceau flottant."""
+    bm = bmesh.new()
+    loops = []
+    for rx, ry, z in ((radius_x, radius_y, -height / 2),
+                      (radius_x, radius_y, height / 2),
+                      (radius_x - thickness, radius_y - thickness, height / 2),
+                      (radius_x - thickness, radius_y - thickness, -height / 2)):
+        loops.append([bm.verts.new(Vector((center[0] + math.cos(2 * math.pi * i / n) * rx,
+                                          center[1] + math.sin(2 * math.pi * i / n) * ry,
+                                          center[2] + z))) for i in range(n)])
+    for k in range(4):
+        a, b = loops[k], loops[(k + 1) % 4]
+        for i in range(n):
+            j = (i + 1) % n
+            bm.faces.new((a[i], a[j], b[j], b[i]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return bm
+
+
 def sides():
     return (("Left", 1), ("Right", -1))  # en Blender, la gauche du personnage est vers +X
 
@@ -196,7 +219,8 @@ def torso_cover(w, g, cell, front, t, crop=False, sleeves=None, robe=False, embl
     # Une seule poitrine large et bombée qui recouvre les pectoraux (deux sphères sous un tissu se liraient
     # comme une poitrine : jamais pour un jeu tous publics)
     pec = cfg["pec"]
-    w.make("UpperTorso", lowsphere((0, 0.02 - pec * 0.2, chest_z), (chest_w / 2 + t, depth * 0.55 + pec * 0.45 + t,
+    bust = cfg.get("bust", 0)
+    w.make("UpperTorso", lowsphere((0, 0.02 - pec * 0.2, chest_z), (chest_w / 2 + t, depth * 0.55 + pec * 0.45 + bust + t,
                                                                     h * (0.36 if crop else 0.44) + t), 10, 8),
            cell, front_cell=front)
     for sx in (-1, 1):
@@ -205,7 +229,7 @@ def torso_cover(w, g, cell, front, t, crop=False, sleeves=None, robe=False, embl
                                            (cfg["lat"] + t, depth * 0.38 + t, h * 0.32 + t)), cell)
     if emblem:
         # Emblème posé devant la poitrine (devant les pectoraux s'il y en a)
-        front_y = 0.02 - pec * 0.2 - (depth * 0.55 + pec * 0.45 + t) - 0.02
+        front_y = 0.02 - pec * 0.2 - (depth * 0.55 + pec * 0.45 + bust + t) - 0.02
         size = g["chest_w"] * 0.3
         w.make("UpperTorso", block((0, front_y, neck.z - h * 0.3), (size, 0.05, size * 0.7)), emblem)
     if sleeves:
@@ -230,11 +254,12 @@ def torso_cover(w, g, cell, front, t, crop=False, sleeves=None, robe=False, embl
         w.make("LowerTorso", lowsphere((0, 0.02, root.z + 0.1), (hip_w * 0.5 + t * 1.5, depth * 0.47 + t * 1.5, 0.4)), cell)
         # Revers blancs croisés sur la poitrine : c'est un peignoir de boxeur, pas une robe
         for sx in (-1, 1):
-            w.make("UpperTorso", prism((sx * g["chest_w"] * 0.18, -depth * 0.55 - pec * 0.6 - t, neck.z + 0.05),
-                                       (-sx * g["chest_w"] * 0.05, -depth * 0.5 - pec * 0.55 - t, neck.z - h * 0.7),
+            w.make("UpperTorso", prism((sx * g["chest_w"] * 0.18, -depth * 0.55 - pec * 0.6 - bust - t, neck.z + 0.05),
+                                       (-sx * g["chest_w"] * 0.05, -depth * 0.5 - pec * 0.55 - bust - t, neck.z - h * 0.7),
                                        0.09, 0.09, sides=4), "white")
         # Ceinture nouée
-        w.make("LowerTorso", ring((0, 0.02, root.z + 0.35), max(hip_w * 0.5, depth * 0.5) + t * 2.5, 0.08, 0.16, 10), "white")
+        w.make("LowerTorso", waist_band((0, 0.02, root.z + 0.35), hip_w * 0.5 + t * 1.5,
+                                         depth * 0.47 + t * 1.5, 0.07, 0.16), "white")
         # Pans du peignoir sur les cuisses (suivent les jambes)
         for side, _ in sides():
             hip, knee = J[side + "Hip"], J[side + "Knee"]
@@ -245,18 +270,69 @@ def torso_cover(w, g, cell, front, t, crop=False, sleeves=None, robe=False, embl
 
 def build_tops(w, g):
     t = 0.05 + g["cfg"]["bicep"] * 0.04
+    J, cfg = g["J"], g["cfg"]
+    neck, waist = J["Neck"], J["Waist"]
+    h, depth, chest_w = g["h"], g["depth"], g["chest_w"]
+    front = -depth * 0.55 - cfg["pec"] * 0.65 - cfg.get("bust", 0) - t * 1.9
+
     w.start("TightTank")         # trop petit : s'arrête au-dessus du nombril
     torso_cover(w, g, "white", "white", t, crop=True)
+    for sx in (-1, 1):
+        shoulder = (sx * cfg["neck"] * 1.35, -depth * 0.3, neck.z + 0.02)
+        chest = (sx * chest_w * 0.34, front * 0.82, neck.z - h * 0.24)
+        w.make("UpperTorso", prism(shoulder, chest, 0.07, 0.06, sides=4), "white")
+    w.make("UpperTorso", prism((-chest_w * 0.34, front, neck.z - h * 0.55),
+                                (chest_w * 0.34, front, neck.z - h * 0.55), 0.025, 0.025, sides=5), "terry")
     w.start("MogTank")
     torso_cover(w, g, "black", None, t, emblem="mog_front")
+    for sx in (-1, 1):
+        shoulder = (sx * cfg["neck"] * 1.35, -depth * 0.3, neck.z + 0.02)
+        chest = (sx * chest_w * 0.34, front * 0.82, neck.z - h * 0.24)
+        w.make("UpperTorso", prism(shoulder, chest, 0.085, 0.075, sides=4), "black")
+        w.make("UpperTorso", prism((shoulder[0], shoulder[1] - 0.09, shoulder[2]),
+                                    (chest[0], chest[1] - 0.08, chest[2]), 0.018, 0.018, sides=4), "gold")
+    w.make("UpperTorso", prism((-chest_w * 0.36, front, waist.z + h * 0.2),
+                                (chest_w * 0.36, front, waist.z + h * 0.2), 0.035, 0.035, sides=5), "gold")
     w.start("Hawaiian")
     torso_cover(w, g, "hawaiian", "hawaiian_front", t * 1.4, sleeves="short")
+    # Revers taillés, boutons nacrés et bords de manches : lisibles même sur mobile.
+    for sx in (-1, 1):
+        w.make("UpperTorso", prism((sx * cfg["neck"] * 1.1, front, neck.z - 0.05),
+                                    (sx * chest_w * 0.24, front - 0.035, neck.z - h * 0.38),
+                                    0.045, 0.022, sides=4), "white")
+    for k in range(3):
+        z = neck.z - h * (0.4 + k * 0.17)
+        w.make("UpperTorso", lowsphere((0, front - 0.04, z), (0.035, 0.018, 0.035), 6, 4), "white")
+    for side, _ in sides():
+        sh, el = J[side + "Shoulder"], J[side + "Elbow"]
+        cuff = sh.lerp(el, 0.5)
+        w.make(side + "UpperArm", prism((cuff.x, cuff.y, cuff.z + 0.025),
+                                         (cuff.x, cuff.y, cuff.z - 0.025),
+                                         cfg["bicep"] + t * 1.6, cfg["bicep"] + t * 1.6, sides=8), "white")
     w.start("TrackJacket")
     torso_cover(w, g, "track", "track_front", t * 1.6, sleeves="long")
+    w.make("UpperTorso", prism((0, front - 0.04, neck.z - 0.08),
+                                (0, front - 0.04, waist.z + 0.1), 0.025, 0.025, sides=5), "chrome")
+    w.make("UpperTorso", block((0, front - 0.07, neck.z - h * 0.42), (0.09, 0.05, 0.12)), "gold")
+    for side, _ in sides():
+        sh, el = J[side + "Shoulder"], J[side + "Elbow"]
+        band = sh.lerp(el, 0.65)
+        w.make(side + "UpperArm", prism((band.x, band.y, band.z + 0.025),
+                                         (band.x, band.y, band.z - 0.025),
+                                         cfg["bicep"] + t * 1.9, cfg["bicep"] + t * 1.9, sides=8), "white")
     w.start("BoxerRobe")
     torso_cover(w, g, "satin", None, t * 2.2, sleeves="short", robe=True)
+    for sx in (-1, 1):
+        w.make("LowerTorso", prism((sx * 0.08, front - 0.05, J["Root"].z + 0.3),
+                                    (sx * 0.22, front - 0.09, J["Root"].z - 0.18),
+                                    0.055, 0.035, sides=4), "white")
     w.start("PajamaTop")
     torso_cover(w, g, "pajama", "pajama_front", t * 1.4, sleeves="long")
+    w.make("UpperTorso", block((chest_w * 0.2, front - 0.025, neck.z - h * 0.47),
+                                (chest_w * 0.19, 0.04, h * 0.19)), "pajama_front")
+    for k in range(3):
+        w.make("UpperTorso", lowsphere((0, front - 0.04, neck.z - h * (0.28 + k * 0.2)),
+                                       (0.03, 0.018, 0.03), 6, 4), "white")
 
 
 # ------------------------------------------------------------------ bas (recouvrent le short de base)
@@ -270,8 +346,9 @@ def legs_cover(w, g, cell, t, length):
         hip, knee, ankle = J[side + "Hip"], J[side + "Knee"], J[side + "Ankle"]
         x = hip.x
         if length == "short":
+            short_r = max(thigh * 1.14, 0.24) if cfg.get("baggy") else thigh * 1.14
             w.make(side + "UpperLeg", limb((x, 0, hip.z + 0.05), (x, 0, hip.z - (hip.z - knee.z) * 0.55),
-                                           thigh * 1.08 + t, thigh * 1.14 + t, thigh * 1.12 + t), cell)
+                                           short_r * 0.95 + t, short_r + t, short_r * 1.04 + t), cell)
         else:
             w.make(side + "UpperLeg", limb((x, 0, knee.z), (x, 0, hip.z + 0.05), calf * 0.8 + t, thigh + t, thigh * 1.08 + t,
                                            bulge_dir=(0, -1, 0), bulge=thigh * 0.15), cell)
@@ -283,12 +360,46 @@ def legs_cover(w, g, cell, t, length):
 
 def build_bottoms(w, g):
     t = 0.05 + g["cfg"]["thigh"] * 0.05
+    J, cfg = g["J"], g["cfg"]
+    root = J["Root"]
+    hip_x = g["hip_w"] * 0.5 + t
+    hip_y = g["depth"] * 0.45 + t
+
     w.start("FluoShorts")        # short de sport fluo, liseré blanc
     legs_cover(w, g, "fluo", t, "short")
+    w.make("LowerTorso", waist_band((0, 0.02, root.z + 0.32), hip_x, hip_y, 0.035, 0.09), "white")
+    for sx in (-1, 1):
+        hip, knee = J[("Left" if sx > 0 else "Right") + "Hip"], J[("Left" if sx > 0 else "Right") + "Knee"]
+        w.make(("Left" if sx > 0 else "Right") + "UpperLeg",
+               prism((hip.x + sx * (cfg["thigh"] + t * 1.25), -0.01, hip.z - 0.08),
+                     (hip.x + sx * (cfg["thigh"] + t * 1.25), -0.01, hip.z - (hip.z - knee.z) * 0.53),
+                     0.025, 0.025, sides=4), "white")
+        w.make("LowerTorso", prism((sx * 0.045, -g["depth"] * 0.45 - t, root.z + 0.34),
+                                    (sx * 0.06, -g["depth"] * 0.45 - t - 0.025, root.z + 0.12),
+                                    0.02, 0.02, sides=4), "white")
     w.start("VelvetJoggers")     # jogging en velours violet
     legs_cover(w, g, "velvet", t, "long")
+    w.make("LowerTorso", waist_band((0, 0.02, root.z + 0.32), hip_x, hip_y, 0.035, 0.1), "purple")
+    for side, sx in sides():
+        knee, ankle = J[side + "Knee"], J[side + "Ankle"]
+        cuff = knee.lerp(ankle, 0.85)
+        w.make(side + "LowerLeg", prism((cuff.x, 0, cuff.z + 0.045),
+                                         (cuff.x, 0, cuff.z - 0.045),
+                                         cfg["calf"] * 0.75 + t, cfg["calf"] * 0.75 + t, sides=8), "purple")
+        hip = J[side + "Hip"]
+        w.make(side + "UpperLeg", prism((hip.x + sx * (cfg["thigh"] + t), 0, hip.z - 0.15),
+                                         (knee.x + sx * (cfg["thigh"] * 0.85 + t), 0, knee.z + 0.05),
+                                         0.025, 0.025, sides=4), "purple")
     w.start("LeatherPants")      # pantalon de cuir (qui grince)
     legs_cover(w, g, "leather", t * 0.8, "long")
+    w.make("LowerTorso", waist_band((0, 0.02, root.z + 0.34), hip_x, hip_y, 0.045, 0.13), "strap")
+    w.make("LowerTorso", block((0, -g["depth"] * 0.45 - t - 0.03, root.z + 0.34),
+                                (0.2, 0.07, 0.16)), "gold")
+    for side, _ in sides():
+        knee = J[side + "Knee"]
+        w.make(side + "UpperLeg", block((knee.x, -cfg["thigh"] * 0.65 - t,
+                                         knee.z + cfg["thigh"] * 0.7),
+                                        (cfg["thigh"] * 1.1, 0.035, cfg["thigh"] * 0.65)), "strap")
 
 
 # ------------------------------------------------------------------ coupes (remplacent la coupe de base)
@@ -560,7 +671,8 @@ for image_name, file_name in [("Style_Atlas", "MogLife_Style.png")] + [(f"Body{s
     img.filepath_raw = os.path.join(STYLE_OUT, file_name)
     img.file_format = "PNG"
     img.save()
-# Les corps partent dans le même fichier
+# Les corps partent dans le fichier complet, mais le fichier de mise à jour ne contient que la garde-robe.
+style_objs = list(all_objs)
 for stage in BODY_KEYS:
     all_objs += [o for o in bpy.data.collections["Body_" + stage].objects if o.type == "MESH"]
 
@@ -583,9 +695,21 @@ bpy.ops.export_scene.fbx(
     axis_forward="-Z", axis_up="Y", apply_unit_scale=True, apply_scale_options="FBX_SCALE_ALL",
     mesh_smooth_type="FACE", path_mode="RELATIVE", embed_textures=False,
 )
+for o in all_objs:
+    o.select_set(False)
+for o in style_objs:
+    o.select_set(True)
+bpy.context.view_layer.objects.active = style_objs[0]
+wardrobe_fbx = os.path.join(STYLE_OUT, "MogLife_Wardrobe.fbx")
+bpy.ops.export_scene.fbx(
+    filepath=wardrobe_fbx, use_selection=True, object_types={"MESH"},
+    axis_forward="-Z", axis_up="Y", apply_unit_scale=True, apply_scale_options="FBX_SCALE_ALL",
+    mesh_smooth_type="FACE", path_mode="RELATIVE", embed_textures=False,
+)
 for o, loc in saved.items():
     o.location = loc
 print(f"{len(all_objs)} pièces exportées dans {fbx}")
+print(f"{len(style_objs)} pièces de style exportées dans {wardrobe_fbx}")
 
 lines = [
     "-- Fichier généré par tools/blender/build_style.py : ne pas modifier à la main.",
