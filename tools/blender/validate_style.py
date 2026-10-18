@@ -9,7 +9,8 @@ import bmesh
 
 STAGES = ("Normie", "GymRat", "Bro", "Alpha", "Chad", "Gigachad", "GodMogger")
 BODY_KEYS = tuple(key for stage in STAGES for key in (stage, stage + "F"))
-TOPS = ("TightTank", "MogTank", "Hawaiian", "TrackJacket", "BoxerRobe", "PajamaTop")
+TOPS = ("TightTank", "MogTank", "Hawaiian", "TrackJacket", "BoxerRobe", "PajamaTop",
+        "CircuitJacket", "StreetHoodie", "VictoryJacket")
 
 
 def bounds(obj):
@@ -17,6 +18,7 @@ def bounds(obj):
 
 
 expected_items = None
+expected_parts = None
 total = 0
 for body in BODY_KEYS:
     col = bpy.data.collections["Style_" + body]
@@ -24,9 +26,15 @@ for body in BODY_KEYS:
     items = {obj.name.split("__")[1] for obj in pieces}
     if expected_items is None:
         expected_items = items
+        expected_parts = {item: {obj.name.split("__")[2] for obj in pieces
+                                 if obj.name.split("__")[1] == item} for item in items}
     assert items == expected_items, f"Articles manquants sur {body}: {expected_items - items}"
-    assert len(items) == 34, f"{body}: {len(items)} articles au lieu de 34"
-    assert len(pieces) == 64, f"{body}: {len(pieces)} pièces au lieu de 64"
+    assert {item: {obj.name.split("__")[2] for obj in pieces
+                   if obj.name.split("__")[1] == item} for item in items} == expected_parts, (
+        f"{body}: parties de vêtement incompatibles avec la croissance vers le stade suivant"
+    )
+    assert len(items) == 43, f"{body}: {len(items)} articles au lieu de 43"
+    assert len(pieces) == 94, f"{body}: {len(pieces)} pièces au lieu de 94"
     tris_by_item = {item: 0 for item in items}
     for obj in pieces:
         mesh = obj.data
@@ -53,5 +61,5 @@ for body in BODY_KEYS:
 
 atlas = bpy.data.images["Style_Atlas"]
 assert tuple(atlas.size) == (256, 256) and atlas.channels == 4
-assert total == 896
+assert total == 1316
 print(f"Garde-robe validée : {len(BODY_KEYS)} corps, {len(expected_items)} articles, {total} pièces, atlas RGBA 256²")

@@ -34,6 +34,8 @@ Test de la vision : l'idée tient-elle dans les trois briques (mini-jeux, conten
 
 ## Personnage et style
 
+- **Refonte complète de la garde-robe Blender et ensembles coordonnés** (demande d'Antoine le 18/10/2026) : acceptée en D70 ; modèles préparés, import Studio et prix des nouveaux articles encore à finaliser.
+
 - Poses de victoire à collectionner et choisir.
 - Aura cartoon débloquée aux hauts stades, qui fait réagir les PNJ (ils s'écartent, les vitres vibrent).
 - Album de transformations (photo automatique à chaque nouveau stade).

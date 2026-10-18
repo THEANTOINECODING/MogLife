@@ -1,3 +1,15 @@
+# Passation Codex — garde-robe, 18 octobre 2026
+
+Antoine a demandé une refonte complète dans Blender : humour gym bro spectaculaire, identité originale MOG LIFE, 34 articles existants repris, vêtements adaptables aux 14 corps et à leur croissance, plusieurs ensembles coordonnés. La décision est D70. Les trois ensembles préparés sont Circuit (sport rétro fluorescent), Street (rue) et Victory (champion doré), chacun avec haut, bas et pièce de tête. **Les thèmes définitifs, le mode de vente et les prix ont été demandés à Antoine en QCM ; pas encore de réponse au moment de cette passation.** Aucun chiffre de boutique n'a été modifié.
+
+- Les modèles sont reconstruits dans `tools/blender/build_style.py`, sauvegardés dans `assets/blender/wardrobe.blend` et exportés vers `assets/export/characters/MogLife_Wardrobe.fbx` avec `MogLife_Style.png`. Il y a 43 articles × 14 corps, soit 1 316 pièces de style. L'export complet `MogLife_Characters.fbx` a aussi été régénéré, mais l'import à faire est celui de la garde-robe seule.
+- Les nouveaux décalages sont dans `assets/export/characters/StylePieces.pending.luau`. **Ne pas les copier dans src avant l'import manuel dans Studio**, car l'ancienne garde-robe est encore dans la place et serait décalée. Le fichier actif `src/shared/Config/StylePieces.luau` est resté inchangé. Les 9 nouveaux articles ne sont pas encore vendus dans `StyleItems.luau` : prix en attente.
+- `tools/install_characters.luau` vérifie que les 1 316 pièces et la texture sont présentes avant de remplacer l'ancienne garde-robe. Après l'import manuel d'Antoine, copier les décalages dans src, lancer StyLua/Selene, puis exécuter le script d'installation en mode Édition par MCP et demander Ctrl+S à Antoine.
+- Vérifié **dans Blender et à l'image Blender**, pas dans Roblox Studio : 43 articles pour chacun des 14 corps, mêmes parties du squelette entre les stades, maillages fermés, 1 040 triangles maximum par article, atlas 256×256. Deux planches visuelles : `wardrobe_preview.png` et `wardrobe_extremes.png`. La croissance réelle en Play et l'achat des nouveaux ensembles restent à tester après import.
+- Ne pas committer `assets/blender/bosses.blend` ni `assets/export/props.fbx` : modifications indépendantes d'Antoine.
+
+---
+
 # Passation Codex — 18 octobre 2026
 
 Antoine a autorisé la poursuite des tâches pendant la nuit. J'ai lu les règles, la vision, la roadmap, les décisions D66–D69, les fichiers de design concernés et le code avant modification. Studio est accessible par MCP ; Rojo tourne déjà sur le port 34872. Les changements ont été enregistrés en commits locaux ; rien n'a été publié ni envoyé en ligne.

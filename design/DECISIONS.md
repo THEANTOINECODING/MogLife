@@ -2,6 +2,10 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-18 (refonte de la garde-robe)
+
+- **D70 — Refaire toute la garde-robe dans Blender, avec une identité visuelle propre à MOG LIFE.** Choix d'Antoine : les 34 articles existants (vêtements, coiffures, barbes, visages et accessoires) sont repris avec des formes plus spectaculaires. Les vêtements équipés doivent suivre en continu la prise de masse sur les 14 corps. Plusieurs ensembles coordonnés sont préparés en plus. L'inspiration est la comédie gym bro excessive ; aucune tenue, marque ou graphisme d'un autre jeu n'est copié. Les modèles et leurs décalages sont préparés séparément pour que l'import manuel dans Studio et l'activation du code arrivent ensemble. Thèmes définitifs, mode de vente et prix des nouveaux ensembles : questions posées au créateur, en attente de réponse.
+
 ## 2026-10-18 (porte arrière de la salle)
 
 - **D69 — La salle a une deuxième entrée, au milieu du mur du fond** (demande du créateur). Elle donne sur la salle en plein air, côté centre-ville : plus besoin de faire le tour par la route. Ouverture de 10 × 12 studs avec deux battants automatiques (Door_Shop_GymBack), encadrement et bandeau rouge côté extérieur ; le miroir du fond est coupé en deux et le râtelier d'haltères du milieu retiré pour laisser le passage. Collisions régénérées (tools/gen_colliders.py), bâtiments réexportés depuis Blender et importés dans Studio le 18/10 ; vérifié en jeu (passage libre, battants en place). L'import avait perdu la texture de palette sur les 34 pièces des bâtiments : remise à la main, et tools/install_props.luau la remet désormais tout seul.

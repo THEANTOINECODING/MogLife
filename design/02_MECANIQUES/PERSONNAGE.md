@@ -48,3 +48,9 @@ Le Cash sert **uniquement à l'apparence**. Aucun objet ne donne d'avantage.
 - Chaque boss vaincu donne un objet exclusif.
 - Prix affichés clairement, achat confirmé, objets conservés pour toujours.
 - MVP : environ 15 objets (5 coupes, 5 hauts, 5 accessoires). Chaque mise à jour en ajoute une série à thème (plage, Lune, Olympe…).
+
+### Refonte de la garde-robe (D70, préparation du 18/10/2026)
+
+Les 34 articles déjà possédables sont reconstruits dans Blender avec des détails de silhouette et des finitions plus visibles. Leurs identifiants restent identiques : les achats déjà sauvegardés ne sont pas perdus. Trois ensembles originaux sont préparés, chacun avec un haut, un bas et une pièce de tête. Les thèmes provisoires sont sport rétro fluorescent, vedette de rue et champion doré. Ils ne seront ajoutés à la boutique qu'après la décision du créateur sur les thèmes, la vente et les prix.
+
+Les 43 articles ont une version pour chaque corps masculin et féminin des sept stades. Chaque pièce garde la même partie du squelette d'un stade à l'autre : le serveur peut interpoler sa taille et sa position à chaque gain de Mog, ainsi que le pump. L'import des nouveaux FBX dans Studio reste manuel ; les nouveaux décalages de pièces sont préparés à part pour être activés au même moment que les modèles.

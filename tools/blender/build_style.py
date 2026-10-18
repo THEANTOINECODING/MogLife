@@ -15,7 +15,8 @@ et la méga-mâchoire sa couleur de peau (_Skin) : ces cases sont des voiles sem
   tools/install_characters.luau
 - assets/export/characters/MogLife_Wardrobe.fbx : seuls les objets de style, pour actualiser la boutique sans
   réimporter les corps ; même script d'installation.
-- src/shared/Config/StylePieces.luau : pièces de chaque objet et leur décalage par rapport à leur partie
+- assets/export/characters/StylePieces.pending.luau : décalages des nouveaux modèles, à activer
+  dans src/shared/Config/StylePieces.luau seulement après l'import dans Studio
 Dans Blender : exec(open(r"...\\tools\\blender\\build_style.py", encoding="utf-8").read())
 """
 import bpy, bmesh, math, os, random
@@ -146,6 +147,18 @@ def paint_style_atlas():
         return c
     a.cell("teeth_white", 2, 4, teeth)
     a.cell("lips", 3, 4, lambda x, y: tinge((0.45, 0.06, 0.1), 0.35))
+
+    # Three original MOG LIFE capsules: retro gym, loud streetwear and comic victory gear.
+    a.cell("circuit_navy", 0, 5, plain((0.08, 0.08, 0.24), 0.018, 0.28))
+    a.cell("circuit_cyan", 1, 5, plain((0.05, 0.88, 0.92), 0.018, 0.3))
+    a.cell("circuit_pink", 2, 5, plain((0.98, 0.14, 0.56), 0.025, 0.3))
+    a.cell("street_ink", 3, 5, plain((0.16, 0.12, 0.28), 0.025, 0.22))
+    a.cell("street_orange", 4, 5, plain((1.0, 0.37, 0.08), 0.03, 0.23))
+    a.cell("victory_ivory", 5, 5, plain((0.92, 0.88, 0.72), 0.018, 0.26))
+    a.cell("victory_gold", 6, 5, lambda x, y: lit((0.93, 0.58 + 0.1 * (x % 4 == 0), 0.08), y, 0.3))
+    a.cell("street_patch", 7, 5, lambda x, y:
+           lit((1.0, 0.38, 0.09) if abs(x - 16) + abs(y - 16) < 11
+               else (0.14, 0.11, 0.25), y, 0.2))
     return a
 
 
@@ -603,6 +616,346 @@ def build_accessories(w, g):
     w.make("UpperTorso", ring_upright(tuple(hub), 1.2 * k, 0.06 * k, 0.08), "gold")
 
 
+def build_capsules(w, g):
+    """Three coordinated tops/bottoms/headpieces, each fitted to all 14 bodies."""
+    J, cfg = g["J"], g["cfg"]
+    neck, waist, root = J["Neck"], J["Waist"], J["Root"]
+    chest, depth, h = g["chest_w"], g["depth"], g["h"]
+    r, hy, head_z = g["head_r"], g["hy"], g["head_z"]
+    front = -depth * 0.55 - cfg["pec"] * 0.65 - cfg.get("bust", 0) - 0.18
+    t = 0.065 + cfg["bicep"] * 0.05
+    hip_x = g["hip_w"] * 0.5 + 0.08
+    hip_y = depth * 0.45 + 0.08
+
+    # Neon Circuit: angular sportswear, three saturated colors and a large visor.
+    w.start("CircuitJacket")
+    torso_cover(w, g, "circuit_navy", None, t * 1.5, sleeves="long")
+    for sx in (-1, 1):
+        w.make("UpperTorso", prism((sx * chest * 0.43, front - 0.06, neck.z - h * 0.24),
+                                    (sx * chest * 0.1, front - 0.08, waist.z + h * 0.17),
+                                    0.09, 0.065, sides=4), "circuit_cyan")
+        w.make("UpperTorso", prism((sx * chest * 0.39, front - 0.08, neck.z - h * 0.42),
+                                    (sx * chest * 0.15, front - 0.1, waist.z + h * 0.14),
+                                    0.045, 0.04, sides=4), "circuit_pink")
+        sh, el = J[("Left" if sx > 0 else "Right") + "Shoulder"], J[("Left" if sx > 0 else "Right") + "Elbow"]
+        w.make(("Left" if sx > 0 else "Right") + "UpperArm",
+               prism((sh.x, -cfg["delt"] - t, sh.z - 0.12),
+                     (el.x, -cfg["bicep"] - t, el.z + 0.1),
+                     0.06, 0.035, sides=4), "circuit_pink")
+    w.make("UpperTorso", waist_band((0, 0, waist.z + h * 0.18),
+                                    chest * 0.38, depth * 0.58, 0.045, 0.14), "circuit_cyan")
+    w.make("UpperTorso", prism((0, front - 0.1, neck.z - 0.08),
+                                (0, front - 0.1, waist.z + 0.2),
+                                0.035, 0.035, sides=4), "circuit_cyan")
+
+    w.start("CircuitJoggers")
+    legs_cover(w, g, "circuit_navy", 0.08, "long")
+    w.make("LowerTorso", waist_band((0, 0, root.z + 0.32), hip_x, hip_y, 0.05, 0.15), "circuit_pink")
+    for side, sx in sides():
+        hip, knee, ankle = J[side + "Hip"], J[side + "Knee"], J[side + "Ankle"]
+        w.make(side + "UpperLeg", prism((hip.x + sx * (cfg["thigh"] + 0.1), 0, hip.z - 0.18),
+                                         (knee.x + sx * (cfg["thigh"] + 0.1), 0, knee.z + 0.12),
+                                         0.055, 0.055, sides=4), "circuit_cyan")
+        w.make(side + "LowerLeg", prism((knee.x + sx * (cfg["calf"] + 0.1), 0, knee.z - 0.12),
+                                         (ankle.x + sx * (cfg["calf"] + 0.1), 0, ankle.z + 0.16),
+                                         0.055, 0.055, sides=4), "circuit_pink")
+        w.make(side + "LowerLeg", prism((ankle.x, 0, ankle.z + 0.12),
+                                         (ankle.x, 0, ankle.z + 0.02),
+                                         cfg["calf"] + 0.09, cfg["calf"] + 0.09, sides=8), "circuit_cyan")
+
+    w.start("CircuitVisor")
+    w.make("Head", ring((0, hy, head_z + r * 0.34), r * 0.94, 0.085, r * 0.23, 12), "circuit_navy")
+    w.make("Head", block((0, hy - r * 0.94, head_z + r * 0.26),
+                          (r * 1.62, 0.1, r * 0.3)), "circuit_cyan")
+    for sx in (-1, 1):
+        w.make("Head", block((sx * r * 0.67, hy - r * 0.99, head_z + r * 0.26),
+                              (r * 0.16, 0.13, r * 0.32)), "circuit_pink")
+
+    # Street Spotlight: huge hoodie and cargo pockets, with one original geometric badge.
+    w.start("StreetHoodie")
+    torso_cover(w, g, "street_ink", None, t * 1.9, sleeves="long")
+    w.make("UpperTorso", ring((0, depth * 0.25, neck.z + 0.07),
+                               cfg["neck"] * 1.7 + 0.16, 0.15, 0.28, 12), "street_orange")
+    w.make("UpperTorso", block((0, front - 0.13, neck.z - h * 0.48),
+                                (chest * 0.38, 0.08, h * 0.3)), "street_patch")
+    for sx in (-1, 1):
+        w.make("UpperTorso", prism((sx * chest * 0.38, front - 0.16, neck.z - h * 0.54),
+                                    (sx * chest * 0.18, front - 0.17, waist.z + h * 0.14),
+                                    0.035, 0.035, sides=4), "street_orange")
+    w.make("UpperTorso", waist_band((0, 0, waist.z + h * 0.18),
+                                    chest * 0.39, depth * 0.58, 0.04, 0.16), "street_orange")
+
+    w.start("StreetCargo")
+    legs_cover(w, g, "street_ink", 0.11, "long")
+    w.make("LowerTorso", waist_band((0, 0, root.z + 0.32), hip_x, hip_y, 0.045, 0.15), "street_orange")
+    for side, sx in sides():
+        hip, knee = J[side + "Hip"], J[side + "Knee"]
+        w.make(side + "UpperLeg", block((hip.x + sx * (cfg["thigh"] + 0.08), 0, hip.z - 0.35),
+                                        (cfg["thigh"] * 0.65 + 0.1, cfg["thigh"] * 0.7 + 0.15, 0.47)),
+               "street_orange")
+        w.make(side + "UpperLeg", block((hip.x + sx * (cfg["thigh"] + 0.16), -0.01, hip.z - 0.19),
+                                        (cfg["thigh"] * 0.48 + 0.08, 0.045, 0.07)), "victory_gold")
+        w.make(side + "LowerLeg", prism((knee.x, 0, knee.z - 0.13),
+                                         (knee.x, 0, knee.z - 0.23),
+                                         cfg["calf"] + 0.13, cfg["calf"] + 0.13, sides=8), "street_orange")
+
+    w.start("StreetCap")
+    w.make("Head", half_sphere((0, hy, head_z + r * 0.13), (r * 0.92, r * 1.0, r * 0.88)), "street_ink")
+    w.make("Head", block((0, hy - r * 0.96, head_z + r * 0.28),
+                          (r * 1.24, r * 0.63, 0.075)), "street_orange")
+    w.make("Head", block((0, hy - r * 1.12, head_z + r * 0.65),
+                          (r * 0.3, 0.06, r * 0.28)), "street_patch")
+
+    # Victory Parade: a white-and-gold finale with theatrical shoulders, no copied symbols.
+    w.start("VictoryJacket")
+    torso_cover(w, g, "victory_ivory", None, t * 1.8, sleeves="short")
+    for sx in (-1, 1):
+        w.make("UpperTorso", prism((sx * cfg["neck"] * 1.1, front - 0.1, neck.z + 0.04),
+                                    (sx * chest * 0.28, front - 0.17, neck.z - h * 0.62),
+                                    0.15, 0.08, sides=5), "victory_gold")
+        sh = J[("Left" if sx > 0 else "Right") + "Shoulder"]
+        w.make("UpperTorso", pyramid((sh.x * 0.8, 0, sh.z + 0.08),
+                                      (sh.x * 1.12, 0, sh.z + 0.35),
+                                      0.26, 0.15), "victory_gold")
+    w.make("UpperTorso", waist_band((0, 0, waist.z + h * 0.17),
+                                    chest * 0.39, depth * 0.58, 0.055, 0.16), "victory_gold")
+    w.make("UpperTorso", block((0, front - 0.16, neck.z - h * 0.43),
+                                (chest * 0.31, 0.07, h * 0.18)), "victory_gold")
+
+    w.start("VictoryShorts")
+    legs_cover(w, g, "victory_ivory", 0.11, "short")
+    w.make("LowerTorso", waist_band((0, 0, root.z + 0.32), hip_x, hip_y, 0.055, 0.17), "victory_gold")
+    for side, sx in sides():
+        hip, knee = J[side + "Hip"], J[side + "Knee"]
+        z = hip.z - (hip.z - knee.z) * 0.53
+        w.make(side + "UpperLeg", prism((hip.x - sx * (cfg["thigh"] + 0.14), 0, z),
+                                         (hip.x + sx * (cfg["thigh"] + 0.14), 0, z),
+                                         0.075, 0.075, sides=4), "victory_gold")
+        w.make(side + "UpperLeg", prism((hip.x + sx * (cfg["thigh"] + 0.1), 0, hip.z - 0.1),
+                                         (hip.x + sx * (cfg["thigh"] + 0.1), 0, z),
+                                         0.045, 0.045, sides=4), "victory_gold")
+
+    w.start("VictoryCrown")
+    w.make("Head", ring((0, hy, head_z + r * 0.48), r * 0.91, 0.1, 0.22, 12), "victory_gold")
+    for k in range(7):
+        a = 2 * math.pi * k / 7
+        x, y = math.cos(a) * r * 0.84, hy + math.sin(a) * r * 0.84
+        w.make("Head", pyramid((x, y, head_z + r * 0.58),
+                                (x * 1.09, hy + (y - hy) * 1.09, head_z + r * (1.05 if k % 2 else 1.23)),
+                                0.13, 0.1), "victory_gold")
+    w.make("Head", block((0, hy - r * 0.96, head_z + r * 0.61),
+                          (r * 0.34, 0.07, r * 0.22)), "circuit_cyan")
+
+
+def add_signature_details(w, g):
+    """Bold geometry visible at shop-preview size, fitted from each body's measurements.
+
+    These details stay inside their existing item and skeleton-part meshes, so old purchases
+    keep working and each part still has a matching twin at the next growth stage.
+    """
+    J, cfg = g["J"], g["cfg"]
+    neck, waist, root = J["Neck"], J["Waist"], J["Root"]
+    chest = g["chest_w"]
+    depth = g["depth"]
+    h = g["h"]
+    front = -depth * 0.55 - cfg["pec"] * 0.65 - cfg.get("bust", 0) - 0.2
+    hip = g["hip_w"] * 0.5
+    r, hy, head_z = g["head_r"], g["hy"], g["head_z"]
+
+    # Six tops: oversized trims and emblems separate their silhouettes at a distance.
+    w.start("TightTank")
+    for sx in (-1, 1):
+        w.make("UpperTorso", prism((sx * chest * 0.34, front - 0.015, neck.z - h * 0.56),
+                                    (sx * chest * 0.48, front + 0.02, neck.z - h * 0.73),
+                                    0.045, 0.02, sides=4), "red")
+    w.make("UpperTorso", block((0, front - 0.035, neck.z - h * 0.35),
+                                (chest * 0.38, 0.055, h * 0.11)), "red")
+
+    w.start("MogTank")
+    w.make("UpperTorso", prism((-chest * 0.33, front - 0.07, waist.z + h * 0.19),
+                                (chest * 0.33, front - 0.07, waist.z + h * 0.19),
+                                0.055, 0.055, sides=5), "gold")
+    for sx in (-1, 1):
+        w.make("UpperTorso", prism((sx * chest * 0.3, front - 0.08, neck.z - h * 0.22),
+                                    (sx * chest * 0.11, front - 0.09, neck.z - h * 0.52),
+                                    0.045, 0.045, sides=4), "gold")
+
+    w.start("Hawaiian")
+    for sx in (-1, 1):
+        w.make("UpperTorso", pyramid((sx * cfg["neck"] * 1.25, front - 0.09, neck.z - 0.02),
+                                      (sx * chest * 0.33, front - 0.13, neck.z - h * 0.32),
+                                      0.17, 0.08), "white")
+        w.make("UpperTorso", block((sx * chest * 0.35, front - 0.11, waist.z + h * 0.28),
+                                    (chest * 0.16, 0.045, h * 0.16)), "gold")
+    w.make("UpperTorso", prism((-chest * 0.42, front - 0.03, waist.z + h * 0.12),
+                                (chest * 0.42, front - 0.03, waist.z + h * 0.12),
+                                0.035, 0.035, sides=4), "white")
+
+    w.start("TrackJacket")
+    for sx in (-1, 1):
+        w.make("UpperTorso", prism((sx * cfg["neck"] * 1.03, -depth * 0.45, neck.z + 0.06),
+                                    (sx * chest * 0.27, front - 0.08, neck.z - h * 0.18),
+                                    0.12, 0.08, sides=5), "white")
+        w.make("UpperTorso", prism((sx * chest * 0.42, front - 0.04, neck.z - h * 0.37),
+                                    (sx * chest * 0.14, front - 0.07, waist.z + h * 0.18),
+                                    0.055, 0.055, sides=4), "gold")
+    w.make("UpperTorso", waist_band((0, 0, waist.z + h * 0.2), chest * 0.38, depth * 0.55, 0.035, 0.12), "white")
+
+    w.start("BoxerRobe")
+    for sx in (-1, 1):
+        w.make("UpperTorso", prism((sx * cfg["neck"] * 0.95, front - 0.08, neck.z + 0.1),
+                                    (sx * chest * 0.4, front - 0.12, neck.z - h * 0.67),
+                                    0.15, 0.09, sides=5), "gold")
+    w.make("UpperTorso", block((0, front - 0.15, neck.z - h * 0.47),
+                                (chest * 0.22, 0.06, h * 0.16)), "gold")
+
+    w.start("PajamaTop")
+    w.make("UpperTorso", block((chest * 0.27, front - 0.11, neck.z - h * 0.49),
+                                (chest * 0.21, 0.055, h * 0.18)), "white")
+    for sx in (-1, 1):
+        w.make("UpperTorso", prism((sx * chest * 0.43, front - 0.03, waist.z + h * 0.13),
+                                    (sx * chest * 0.25, front - 0.03, waist.z + h * 0.13),
+                                    0.025, 0.025, sides=4), "white")
+
+    # The three bottoms get different silhouettes, belts and leg motifs.
+    w.start("FluoShorts")
+    w.make("LowerTorso", block((0, -depth * 0.48 - 0.1, root.z + 0.31),
+                                (hip * 0.22, 0.08, 0.13)), "black")
+    for side, sx in sides():
+        upper = J[side + "Hip"]
+        knee = J[side + "Knee"]
+        z = upper.z - (upper.z - knee.z) * 0.42
+        w.make(side + "UpperLeg", prism((upper.x - sx * cfg["thigh"] * 1.3, -0.02, z),
+                                         (upper.x + sx * cfg["thigh"] * 1.3, -0.02, z),
+                                         0.055, 0.055, sides=4), "black")
+
+    w.start("VelvetJoggers")
+    w.make("LowerTorso", block((0, -depth * 0.49 - 0.08, root.z + 0.32),
+                                (hip * 0.26, 0.07, 0.12)), "gold")
+    for side, _ in sides():
+        knee = J[side + "Knee"]
+        w.make(side + "UpperLeg", block((knee.x, -cfg["thigh"] - 0.09, knee.z + cfg["thigh"] * 0.8),
+                                        (cfg["thigh"] * 1.25, 0.055, cfg["thigh"] * 0.95)), "purple")
+
+    w.start("LeatherPants")
+    for side, sx in sides():
+        upper, knee = J[side + "Hip"], J[side + "Knee"]
+        w.make(side + "UpperLeg", block((upper.x + sx * cfg["thigh"] * 0.85, -cfg["thigh"] * 0.35,
+                                         upper.z - 0.28), (cfg["thigh"] * 0.42, 0.065, 0.34)), "gold")
+        w.make(side + "UpperLeg", prism((knee.x - cfg["thigh"] * 0.38, -cfg["thigh"] - 0.08, knee.z + 0.36),
+                                         (knee.x + cfg["thigh"] * 0.38, -cfg["thigh"] - 0.08, knee.z + 0.36),
+                                         0.045, 0.045, sides=4), "gold")
+
+    # Coiffures: crisp streaks and tips reinforce their recognisable outlines.
+    w.start("Banana")
+    w.make("Head", prism((-r * 0.32, hy - r * 0.8, head_z + r * 1.34),
+                          (r * 0.32, hy - r * 0.8, head_z + r * 1.34),
+                          0.055, 0.055, sides=4), "hair_yellow")
+    w.start("Mullet")
+    for sx in (-1, 1):
+        w.make("Head", pyramid((sx * r * 0.72, hy + r * 0.75, head_z - r * 0.7),
+                                (sx * r * 0.82, hy + r * 0.8, head_z - r * 1.65),
+                                r * 0.18, r * 0.11), "hair_brown")
+    w.start("Mohawk")
+    w.make("Head", prism((0, hy - r * 0.78, head_z + r * 1.0),
+                          (0, hy + r * 0.8, head_z + r * 1.0),
+                          r * 0.1, r * 0.1, sides=5), "hair_pink")
+    w.start("ShinyBald")
+    w.make("Head", lowsphere((-r * 0.36, hy - r * 0.56, head_z + r * 0.68),
+                              (r * 0.22, r * 0.08, r * 0.12), 8, 5), "white")
+    w.start("Curly")
+    for sx in (-1, 1):
+        w.make("Head", lowsphere((sx * r * 0.8, hy - r * 0.37, head_z + r * 0.62),
+                                  (r * 0.25, r * 0.25, r * 0.25), 6, 5), "hair_brown")
+    w.start("LongHair")
+    for sx in (-1, 1):
+        w.make("Head", prism((sx * r * 0.77, hy + r * 0.31, head_z - r * 0.68),
+                              (sx * r * 0.86, hy + r * 0.31, head_z - r * 1.32),
+                              r * 0.06, r * 0.06, sides=4), "hair_brown")
+    w.start("Bun")
+    w.make("Head", prism((-r * 0.36, hy + r * 0.18, head_z + r * 1.08),
+                          (r * 0.36, hy + r * 0.18, head_z + r * 1.08),
+                          r * 0.06, r * 0.06, sides=5), "hair_brown")
+    w.start("Bob")
+    for sx in (-1, 1):
+        w.make("Head", prism((sx * r * 0.6, hy - r * 0.65, head_z - r * 0.42),
+                              (sx * r * 0.62, hy - r * 0.65, head_z - r * 0.92),
+                              r * 0.08, r * 0.08, sides=4), "hair_brown")
+    w.start("Pompadour")
+    w.make("Head", pyramid((0, hy - r * 0.5, head_z + r * 1.75),
+                            (0, hy - r * 0.62, head_z + r * 2.18),
+                            r * 0.32, r * 0.22), "hair_black")
+
+    # Beards, faces and extras also receive a unique readable accent.
+    jaw_front, jaw_z = g["jaw_front"], g["jaw_z"]
+    w.start("LumberBeard")
+    for sx in (-1, 1):
+        w.make("Head", pyramid((sx * cfg["jaw_w"] * 0.3, jaw_front - 0.12, jaw_z - cfg["jaw_h"] * 0.5),
+                                (sx * cfg["jaw_w"] * 0.4, jaw_front - 0.14, jaw_z - cfg["jaw_h"] * 1.25),
+                                0.12, 0.08), "beard_brown")
+    w.start("Goatee")
+    w.make("Head", pyramid((0, jaw_front - 0.15, jaw_z - cfg["jaw_h"] * 0.65),
+                            (0, jaw_front - 0.2, jaw_z - cfg["jaw_h"] * 1.22),
+                            0.1, 0.08), "beard_black")
+    w.start("Handlebar")
+    for sx in (-1, 1):
+        w.make("Head", lowsphere((sx * cfg["jaw_w"] * 0.56, jaw_front - 0.09, jaw_z + cfg["jaw_h"] * 0.8),
+                                  (0.08, 0.07, 0.08), 6, 5), "beard_ginger")
+    w.start("ChinStrap")
+    w.make("Head", prism((-cfg["jaw_w"] * 0.42, jaw_front - 0.05, jaw_z - cfg["jaw_h"] * 0.58),
+                          (cfg["jaw_w"] * 0.42, jaw_front - 0.05, jaw_z - cfg["jaw_h"] * 0.58),
+                          0.04, 0.04, sides=4), "beard_black")
+    w.start("FrownBrows")
+    w.make("Head", prism((-r * 0.16, hy - r - 0.08, head_z + r * 0.3),
+                          (r * 0.16, hy - r - 0.08, head_z + r * 0.3),
+                          0.05, 0.05, sides=4), "brow_dark")
+    w.start("SparkleSmile")
+    w.make("Head", lowsphere((cfg["jaw_w"] * 0.48, jaw_front - 0.1, jaw_z + cfg["jaw_h"] * 0.34),
+                              (0.075, 0.03, 0.075), 6, 5), "gold")
+    w.start("MegaJaw")
+    for sx in (-1, 1):
+        w.make("Head", block((sx * cfg["jaw_w"] * 0.58, jaw_front - 0.03, jaw_z - cfg["jaw_h"] * 0.2),
+                              (0.08, 0.07, cfg["jaw_h"] * 0.55)), "skin")
+
+    w.start("Headband")
+    w.make("Head", block((0, hy - r - 0.03, head_z + r * 0.36),
+                          (r * 0.38, 0.06, r * 0.24)), "gold")
+    w.start("Sweatbands")
+    for side, _ in sides():
+        elbow, wrist = J[side + "Elbow"], J[side + "Wrist"]
+        c = elbow.lerp(wrist, 0.82)
+        w.make(side + "LowerArm", prism((c.x, -cfg["forearm"] - 0.08, c.z + 0.08),
+                                         (c.x, -cfg["forearm"] - 0.08, c.z - 0.08),
+                                         0.035, 0.035, sides=4), "red")
+    w.start("DumbbellShades")
+    w.make("Head", block((0, hy - r - 0.12, head_z + r * 0.12),
+                          (r * 0.18, 0.08, r * 0.14)), "gold")
+    w.start("ShakerBackpack")
+    back = depth * 0.55 + cfg["lat"] * 0.35 + 0.15
+    k = max(1, chest / 1.6)
+    w.make("UpperTorso", block((0, back + 0.38 * k, neck.z - h * 0.11),
+                                (0.45 * k, 0.1, 0.2 * k)), "gold")
+    w.start("GoldChain")
+    w.make("UpperTorso", prism((-0.28 * k, front - 0.1, neck.z - h * 0.32),
+                                (0.28 * k, front - 0.1, neck.z - h * 0.32),
+                                0.075 * k, 0.075 * k, sides=6), "gold")
+    w.start("BronzeMedal")
+    w.make("UpperTorso", block((0, front - 0.13, neck.z - h * 0.36),
+                                (0.1 * k, 0.07, 0.32 * k)), "gold")
+    w.start("CoachWhistle")
+    w.make("UpperTorso", lowsphere((0.3 * k, front - 0.12, neck.z - h * 0.3),
+                                    (0.09 * k, 0.06, 0.09 * k), 6, 5), "red")
+    w.start("TinySocks")
+    for side, _ in sides():
+        ankle = J[side + "Ankle"]
+        w.make(side + "LowerLeg", prism((ankle.x, -cfg["calf"] - 0.1, ankle.z + 0.15),
+                                         (ankle.x, -cfg["calf"] - 0.1, ankle.z + 0.09),
+                                         0.035, 0.035, sides=4), "red")
+    w.start("RoyalFan")
+    w.make("UpperTorso", block((0, back + 0.22 * k, neck.z + 0.2 + 0.4 * k),
+                                (0.3 * k, 0.1, 0.3 * k)), "gold")
+
+
 # ------------------------------------------------------------------ assemblage et export
 def merge_item(stage, item, parts, mat, col):
     pieces = {}
@@ -647,6 +1000,8 @@ for i, stage in enumerate(BODY_KEYS):
     build_beards(w, g)
     build_faces(w, g)
     build_accessories(w, g)
+    build_capsules(w, g)
+    add_signature_details(w, g)
     sk = skeleton(stage)["parts"]
     manifest[stage] = {}
     for item, parts in w.items.items():
@@ -729,6 +1084,12 @@ for stage in BODY_KEYS:
         lines.append("\t\t},")
     lines.append("\t},")
 lines.append("}")
-with open(os.path.join(ROOT, "src", "shared", "Config", "StylePieces.luau"), "w", encoding="utf-8", newline="\n") as f:
+pending_config = os.path.join(STYLE_OUT, "StylePieces.pending.luau")
+with open(pending_config, "w", encoding="utf-8", newline="\n") as f:
     f.write("\n".join(lines) + "\n")
-print("StylePieces.luau écrit")
+print(f"StylePieces en attente écrit dans {pending_config}")
+
+# Headless rebuilds can refresh the editable source without touching the user's open Blender scene.
+if os.environ.get("MOG_SAVE_WARDROBE") == "1":
+    bpy.context.preferences.filepaths.save_version = 0
+    bpy.ops.wm.save_as_mainfile(filepath=os.path.join(ROOT, "assets", "blender", "wardrobe.blend"))
