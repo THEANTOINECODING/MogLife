@@ -154,8 +154,10 @@ def _torso(w, body, g, cell, silhouette):
             "varsity": 0.09, "hoodie": 0.13, "robe": 0.09, "cape": 0.095,
             "puffer": 0.18, "bomber": 0.12, "armor": 0.13}[silhouette]
     rings = []
+    outer_radii = []
     for i, z in enumerate(heights):
         ring = []
+        outer_row = []
         for j, base in enumerate(radii[i]):
             a = 2 * math.pi * j / 24
             front = max(0, -math.sin(a))
@@ -163,7 +165,9 @@ def _torso(w, body, g, cell, silhouette):
             extra = ease * (0.75 + 0.25 * math.sin(math.pi * i / 13))
             radius = base + extra + (0.035 * front if silhouette in ("blazer", "puffer", "cape") else 0)
             ring.append((math.cos(a) * radius, math.sin(a) * radius, z))
+            outer_row.append(radius)
         rings.append(ring)
+        outer_radii.append(outer_row)
     w.make("UpperTorso", _loft(rings), cell)
     # Sleeve sections follow their own animated R15 limbs.
     if silhouette != "open":
@@ -177,7 +181,7 @@ def _torso(w, body, g, cell, silhouette):
             if sleeve == "long":
                 w.make(side + "LowerArm", limb(tuple(el), tuple(el.lerp(wr, 0.9)), cfg["forearm"] + ease_arm,
                                                 cfg["forearm"] + ease_arm, cfg["forearm"] * 0.72 + ease_arm), cell)
-    return radii, heights
+    return outer_radii, heights
 
 
 def _bottom(w, body, g, cell, silhouette):
@@ -211,6 +215,7 @@ def _bottom(w, body, g, cell, silhouette):
                                             calf_r * 0.6 + ankle_ease, calf_r + t,
                                             calf_r * 0.82 + t, mid_t=0.62,
                                             bulge_dir=(0, 1, 0), bulge=calf_r * 0.25), cell)
+    return t
 
 
 def build_looks(w, body, g):
@@ -222,13 +227,15 @@ def build_looks(w, body, g):
         primary, secondary, accent = (f"look_{name}_{i}" for i in range(3))
         w.start(name + "Top")
         radii, heights = _torso(w, body, g, primary, silhouette)
-        # Details are attached to sampled fabric radii, never placed in front by a fixed offset.
-        front = lambda z_index: -radii[z_index][18] - 0.015
+        # At each x, place the trim against the actual outer fabric, not the torso centerline.
+        def front(z_index, x=0):
+            j = min(range(12, 24), key=lambda k: abs(math.cos(2 * math.pi * k / 24) * radii[z_index][k] - x))
+            return math.sin(2 * math.pi * j / 24) * radii[z_index][j] - 0.025
         zmid = heights[7]
         if silhouette in ("blazer", "robe", "cape", "open"):
             for sx in (-1, 1):
-                w.make("UpperTorso", prism((sx * chest * 0.10, front(12), neck.z - 0.06),
-                                            (sx * chest * 0.24, front(5), zmid - 0.13),
+                w.make("UpperTorso", prism((sx * chest * 0.10, front(12, sx * chest * 0.10), neck.z - 0.06),
+                                            (sx * chest * 0.24, front(5, sx * chest * 0.24), zmid - 0.13),
                                             0.085, 0.10, sides=4), secondary)
             if silhouette in ("blazer", "robe"):
                 w.make("UpperTorso", prism((0, front(10) - 0.045, heights[10]),
@@ -236,12 +243,12 @@ def build_looks(w, body, g):
                                             0.032, 0.032, sides=4), accent)
         if silhouette in ("racer", "varsity", "bomber", "utility", "armor"):
             for sx in (-1, 1):
-                w.make("UpperTorso", prism((sx * chest * 0.28, front(10), heights[10]),
-                                            (sx * chest * 0.20, front(3), heights[3]),
+                w.make("UpperTorso", prism((sx * chest * 0.28, front(10, sx * chest * 0.28), heights[10]),
+                                            (sx * chest * 0.20, front(3, sx * chest * 0.20), heights[3]),
                                             0.085, 0.07, sides=4), secondary)
             if silhouette == "armor":
                 for sx in (-1, 1):
-                    w.make("UpperTorso", block((sx * chest * 0.19, front(9) - 0.045, heights[9]),
+                    w.make("UpperTorso", block((sx * chest * 0.19, front(9, sx * chest * 0.19) - 0.045, heights[9]),
                                                 (chest * 0.23, 0.075, 0.20)), secondary)
         if silhouette in ("hoodie", "puffer"):
             w.make("UpperTorso", ring((0, 0.10, neck.z + 0.03), cfg["neck"] * 1.38,
@@ -252,33 +259,63 @@ def build_looks(w, body, g):
             w.make("UpperTorso", _cape_mesh(chest, cape_y, neck.z, waist.z), secondary)
         if silhouette == "puffer":
             for k in (4, 7, 10):
-                w.make("UpperTorso", prism((-chest * 0.40, front(k), heights[k]),
-                                            (chest * 0.40, front(k), heights[k]), 0.052, 0.052, sides=4), accent)
+                w.make("UpperTorso", prism((-chest * 0.40, front(k, -chest * 0.40), heights[k]),
+                                            (chest * 0.40, front(k, chest * 0.40), heights[k]), 0.052, 0.052, sides=4), accent)
         if silhouette == "bomber":
-            w.make("UpperTorso", waist_band((0, 0, waist.z + 0.03),
-                                            g["waist_w"] * 0.5 + 0.1, g["depth"] * 0.48 + 0.10,
-                                            0.055, 0.13), secondary)
+            hem = [[(math.cos(2 * math.pi * j / 24) * (radii[k][j] + 0.02),
+                     math.sin(2 * math.pi * j / 24) * (radii[k][j] + 0.02), heights[k])
+                    for j in range(24)] for k in (0, 1)]
+            w.make("UpperTorso", _loft(hem), secondary)
         if signature in ("chevron", "zigzag", "wings", "wave", "orbit"):
             for sx in (-1, 1):
                 w.make("UpperTorso", prism((0, front(8) - 0.015, heights[8]),
-                                            (sx * chest * 0.27, front(6) - 0.015, heights[6]),
+                                            (sx * chest * 0.27, front(6, sx * chest * 0.27) - 0.015, heights[6]),
                                             0.085, 0.085, sides=4), accent)
         elif signature in ("medal", "star", "meteor", "crown", "checker"):
             w.make("UpperTorso", pyramid((0, front(7) - 0.025, zmid),
                                           (0, front(7) - 0.07, zmid + 0.22),
                                           chest * 0.17, 0.10), accent)
-        else:
-            w.make("UpperTorso", block((0, front(7) - 0.035, zmid),
-                                        (chest * 0.36, 0.06, 0.20)), accent)
+        elif signature == "harness":
+            for sx in (-1, 1):
+                w.make("UpperTorso", prism((sx * chest * 0.28, front(10, sx * chest * 0.28), heights[10]),
+                                            (-sx * chest * 0.06, front(4), heights[4]),
+                                            0.058, 0.058, sides=4), accent)
+        elif signature == "spiral":
+            w.make("UpperTorso", ring_upright((0, front(7) - 0.035, zmid), chest * 0.13,
+                                               0.035, 0.04, 12), accent)
+        elif signature == "leaf":
+            for sx in (-1, 1):
+                w.make("UpperTorso", pyramid((sx * chest * 0.06, front(7) - 0.025, zmid - 0.04),
+                                              (sx * chest * 0.20, front(7, sx * chest * 0.20) - 0.04, zmid + 0.16),
+                                              chest * 0.08, 0.05), accent)
+        elif signature == "tool":
+            for sx in (-1, 1):
+                w.make("UpperTorso", prism((sx * chest * 0.12, front(8) - 0.025, heights[8]),
+                                            (-sx * chest * 0.12, front(6) - 0.025, heights[6]),
+                                            0.035, 0.035, sides=4), accent)
+        elif signature == "cloud":
+            for x, z in ((-0.12, 0.0), (0.0, 0.09), (0.12, 0.0)):
+                w.make("UpperTorso", lowsphere((x * chest, front(7, x * chest) - 0.012, zmid + z),
+                                                (chest * 0.09, 0.045, 0.10), 8, 6), accent)
+        elif signature == "tie":
+            w.make("UpperTorso", pyramid((0, front(10) - 0.02, heights[10]),
+                                          (0, front(5) - 0.04, heights[5]), chest * 0.06, 0.06), accent)
+        elif signature == "lapel":
+            for k in (4, 6, 8):
+                w.make("UpperTorso", lowsphere((0, front(k) - 0.025, heights[k]),
+                                                (0.05, 0.035, 0.05), 6, 4), accent)
+        elif signature != "quilt":
+            raise ValueError(f"Unknown outfit signature: {signature}")
         w.start(name + "Bottom")
-        _bottom(w, body, g, primary, lower)
+        leg_ease = _bottom(w, body, g, primary, lower)
         for side, sx in sides():
             hip, knee = J[side + "Hip"], J[side + "Knee"]
             leg_z = hip.z - (hip.z - knee.z) * (0.38 if lower == "short" else 0.55)
-            w.make(side + "UpperLeg", prism((hip.x + sx * (cfg["thigh"] + 0.07), 0, leg_z + 0.13),
-                                            (hip.x + sx * (cfg["thigh"] + 0.07), 0, leg_z - 0.13),
-                                            0.026, 0.026, sides=4), accent)
+            edge = cfg["thigh"] + leg_ease + 0.07
+            w.make(side + "UpperLeg", prism((hip.x + sx * edge, 0, leg_z + 0.13),
+                                            (hip.x + sx * edge, 0, leg_z - 0.13),
+                                            0.045, 0.045, sides=4), accent)
             if lower in ("cargo", "baggy"):
-                w.make(side + "UpperLeg", block((hip.x + sx * (cfg["thigh"] + 0.04),
+                w.make(side + "UpperLeg", block((hip.x + sx * (cfg["thigh"] + leg_ease + 0.05),
                                                  -cfg["thigh"] * 0.35, leg_z),
                                                 (0.16 + cfg["thigh"] * 0.30, 0.08, 0.22)), secondary)
