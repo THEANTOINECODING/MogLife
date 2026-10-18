@@ -2,9 +2,13 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-18 (20 ensembles de vêtements)
+
+- **D71 — Remplacer la sélection de vêtements par 20 ensembles complets et originaux.** Antoine juge le premier lot D70 insuffisant : certains éléments flottent, les articles se ressemblent et ne donnent pas assez envie. Chaque ensemble a un haut et un bas, s'achète et s'équipe en un clic, puis ses deux pièces peuvent être mélangées à d'autres. Les anciens vêtements possédés restent dans la garde-robe des joueurs. Les effets de quelques ensembles sont discrets, réglables et uniquement locaux pour ne pas gêner les autres. Les vêtements doivent suivre les 14 corps et leur croissance. La vente reste désactivée jusqu'à l'import manuel, aux essais visuels en jeu et à la validation des prix par Antoine. Les formes, couleurs et emblèmes sont propres à MOG LIFE ; aucune tenue d'un autre jeu n'est copiée.
+
 ## 2026-10-18 (refonte de la garde-robe)
 
-- **D70 — Refaire toute la garde-robe dans Blender, avec une identité visuelle propre à MOG LIFE.** Choix d'Antoine : les 34 articles existants (vêtements, coiffures, barbes, visages et accessoires) sont repris avec des formes plus spectaculaires. Les vêtements équipés doivent suivre en continu la prise de masse sur les 14 corps. Plusieurs ensembles coordonnés sont préparés en plus. L'inspiration est la comédie gym bro excessive ; aucune tenue, marque ou graphisme d'un autre jeu n'est copié. Les modèles et leurs décalages sont préparés séparément pour que l'import manuel dans Studio et l'activation du code arrivent ensemble. Thèmes définitifs, mode de vente et prix des nouveaux ensembles : questions posées au créateur, en attente de réponse.
+- **D70 — Refaire toute la garde-robe dans Blender, avec une identité visuelle propre à MOG LIFE.** Choix d'Antoine : les 34 articles existants (vêtements, coiffures, barbes, visages et accessoires) sont repris avec des formes plus spectaculaires. Les vêtements équipés doivent suivre en continu la prise de masse sur les 14 corps. Le premier lot de trois ensembles a été rejeté visuellement par Antoine ; D71 remplace cette partie de la décision. Les identifiants des 34 anciens articles sont conservés pour les achats déjà sauvegardés.
 
 ## 2026-10-18 (porte arrière de la salle)
 

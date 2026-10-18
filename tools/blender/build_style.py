@@ -29,12 +29,14 @@ path = os.path.join(D, "build_bodies.py")
 exec(compile(open(path, encoding="utf-8").read(), path, "exec"), globals())
 STYLE_OUT = os.path.join(ROOT, "assets", "export", "characters")
 os.makedirs(STYLE_OUT, exist_ok=True)
+path = os.path.join(D, "outfit_looks.py")
+exec(compile(open(path, encoding="utf-8").read(), path, "exec"), globals())
 
 
 # ------------------------------------------------------------------ texture partagée
 def paint_style_atlas():
     random.seed(7)
-    a = Atlas("Style", ATLAS_SIZE)
+    a = Atlas("Style", 512)
 
     def plain(rgb, amt=0.025, light=0.2):
         return lambda x, y: lit(noise(rgb, amt), y, light)
@@ -159,6 +161,7 @@ def paint_style_atlas():
     a.cell("street_patch", 7, 5, lambda x, y:
            lit((1.0, 0.38, 0.09) if abs(x - 16) + abs(y - 16) < 11
                else (0.14, 0.11, 0.25), y, 0.2))
+    paint_outfit_cells(a)
     return a
 
 
@@ -1000,7 +1003,7 @@ for i, stage in enumerate(BODY_KEYS):
     build_beards(w, g)
     build_faces(w, g)
     build_accessories(w, g)
-    build_capsules(w, g)
+    build_looks(w, stage, g)
     add_signature_details(w, g)
     sk = skeleton(stage)["parts"]
     manifest[stage] = {}

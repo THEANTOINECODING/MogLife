@@ -7,6 +7,7 @@ return {
 		"Music", -- musique de fond
 		"Sounds", -- effets sonores
 		"ScreenFx", -- secousses, éclairs et coups spéciaux des boss, « punch » de caméra sur les Perfect
+		"OutfitFx", -- petites particules de sa propre tenue, visibles uniquement par soi
 		"CloseUp", -- gros plan de la caméra sur son personnage pendant les activités
 		"Names", -- noms au-dessus des autres joueurs
 		"Players", -- afficher les autres joueurs (les masquer allège l'écran et le téléphone)

@@ -5,12 +5,18 @@ Usage : blender -b assets/blender/wardrobe.blend --python tools/blender/validate
 
 import bpy
 import bmesh
+import os
 
 
 STAGES = ("Normie", "GymRat", "Bro", "Alpha", "Chad", "Gigachad", "GodMogger")
 BODY_KEYS = tuple(key for stage in STAGES for key in (stage, stage + "F"))
-TOPS = ("TightTank", "MogTank", "Hawaiian", "TrackJacket", "BoxerRobe", "PajamaTop",
-        "CircuitJacket", "StreetHoodie", "VictoryJacket")
+TOPS = ("TightTank", "MogTank", "Hawaiian", "TrackJacket", "BoxerRobe", "PajamaTop")
+ROOT = r"C:\Users\antoi\Documents\MogLife"
+namespace = {}
+exec(compile(open(os.path.join(ROOT, "tools", "blender", "outfit_looks.py"), encoding="utf-8").read(),
+             "outfit_looks.py", "exec"), namespace)
+LOOKS = namespace["LOOKS"]
+TOPS += tuple(name + "Top" for name, *_ in LOOKS)
 
 
 def bounds(obj):
@@ -33,8 +39,10 @@ for body in BODY_KEYS:
                    if obj.name.split("__")[1] == item} for item in items} == expected_parts, (
         f"{body}: parties de vêtement incompatibles avec la croissance vers le stade suivant"
     )
-    assert len(items) == 43, f"{body}: {len(items)} articles au lieu de 43"
-    assert len(pieces) == 94, f"{body}: {len(pieces)} pièces au lieu de 94"
+    assert len(items) == 74, f"{body}: {len(items)} articles au lieu de 74"
+    assert len(pieces) == 237, f"{body}: {len(pieces)} pièces au lieu de 237"
+    for name, *_ in LOOKS:
+        assert name + "Top" in items and name + "Bottom" in items, f"{body}: ensemble {name} incomplet"
     tris_by_item = {item: 0 for item in items}
     for obj in pieces:
         mesh = obj.data
@@ -60,6 +68,6 @@ for body in BODY_KEYS:
     print(f"{body}: {len(items)} articles, {len(pieces)} pièces, {max(tris_by_item.values())} triangles max/article")
 
 atlas = bpy.data.images["Style_Atlas"]
-assert tuple(atlas.size) == (256, 256) and atlas.channels == 4
-assert total == 1316
-print(f"Garde-robe validée : {len(BODY_KEYS)} corps, {len(expected_items)} articles, {total} pièces, atlas RGBA 256²")
+assert tuple(atlas.size) == (512, 512) and atlas.channels == 4
+assert total == 3318
+print(f"Garde-robe validée : {len(BODY_KEYS)} corps, {len(expected_items)} articles, {total} pièces, atlas RGBA 512²")

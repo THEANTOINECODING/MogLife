@@ -7,6 +7,8 @@ local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local StyleItems = require(ReplicatedStorage.Shared.Config.StyleItems)
+local StyleSets = require(ReplicatedStorage.Shared.Config.StyleSets)
+local StylePieces = require(ReplicatedStorage.Shared.Config.StylePieces)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 
@@ -137,6 +139,9 @@ local function onBuy(player: Player, itemId: unknown)
 	if not item or not data or not item.price or data.StyleOwned[itemId] then
 		return
 	end
+	if StyleSets.Active and (item.category == "Top" or item.category == "Bottom") then
+		return
+	end
 	if data.Cash < item.price then
 		Remotes.Notify:FireClient(player, { key = "Shop.NotEnough" })
 		return
@@ -148,6 +153,71 @@ local function onBuy(player: Player, itemId: unknown)
 	buildVisuals(player)
 	sendState(player)
 	Remotes.Notify:FireClient(player, { key = "Shop.Bought", args = { item = { key = `Style.{itemId}` } } })
+end
+
+local function setModelsReady(set): boolean
+	local folder = ReplicatedStorage:FindFirstChild("Style")
+	if not folder then
+		return false
+	end
+	for body, allPieces in StylePieces do
+		for _, itemId in { set.top, set.bottom } do
+			local pieces = allPieces[itemId]
+			if not pieces then
+				return false
+			end
+			for part in pieces do
+				if not folder:FindFirstChild(`{body}__{itemId}__{part}`) then
+					return false
+				end
+			end
+		end
+	end
+	return true
+end
+
+local function onBuySet(player: Player, setId: unknown)
+	if not StyleSets.Active or typeof(setId) ~= "string" then
+		return
+	end
+	local set = StyleSets.ById[setId]
+	local data = DataService.Get(player)
+	if not set or not data or not set.price or not setModelsReady(set) then
+		return
+	end
+	if data.StyleOwned[set.top] or data.StyleOwned[set.bottom] then
+		return
+	end
+	if data.Cash < set.price then
+		Remotes.Notify:FireClient(player, { key = "Shop.NotEnough" })
+		return
+	end
+	StatsService.Add(player, "Cash", -set.price)
+	data.StyleOwned[set.top] = true
+	data.StyleOwned[set.bottom] = true
+	data.StyleEquipped.Top = set.top
+	data.StyleEquipped.Bottom = set.bottom
+	buildVisuals(player)
+	sendState(player)
+	Remotes.Notify:FireClient(player, { key = "Shop.Bought", args = { item = { key = `StyleSet.{set.id}` } } })
+end
+
+local function onEquipSet(player: Player, setId: unknown)
+	if not StyleSets.Active or typeof(setId) ~= "string" then
+		return
+	end
+	local set = StyleSets.ById[setId]
+	local data = DataService.Get(player)
+	if not set or not data or not data.StyleOwned[set.top] or not data.StyleOwned[set.bottom] then
+		return
+	end
+	if not setModelsReady(set) then
+		return
+	end
+	data.StyleEquipped.Top = set.top
+	data.StyleEquipped.Bottom = set.bottom
+	buildVisuals(player)
+	sendState(player)
 end
 
 local function onEquip(player: Player, category: unknown, itemId: unknown)
@@ -163,6 +233,9 @@ local function onEquip(player: Player, category: unknown, itemId: unknown)
 	elseif typeof(itemId) == "string" then
 		local item = StyleItems[itemId]
 		if not item or item.category ~= category or not (data.StyleOwned[itemId] or item.starter) then
+			return
+		end
+		if item.setId and (not StyleSets.Active or not setModelsReady(StyleSets.ById[item.setId])) then
 			return
 		end
 		data.StyleEquipped[category] = itemId
@@ -225,6 +298,8 @@ function StyleService.Start()
 	DataService.PlayerLoaded:Connect(onPlayerLoaded)
 	Remotes.BuyStyle.OnServerEvent:Connect(onBuy)
 	Remotes.EquipStyle.OnServerEvent:Connect(onEquip)
+	Remotes.BuyStyleSet.OnServerEvent:Connect(onBuySet)
+	Remotes.EquipStyleSet.OnServerEvent:Connect(onEquipSet)
 	Remotes.RequestStats.OnServerEvent:Connect(sendState)
 end
 

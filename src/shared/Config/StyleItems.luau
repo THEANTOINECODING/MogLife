@@ -24,8 +24,11 @@ export type Item = {
 	starter: boolean?,
 	order: number, -- ordre d'affichage dans la boutique
 	pieces: { Piece },
+	swatch: Color3?, -- couleur d'aperçu si l'objet n'a pas de blocs de secours
+	setId: string?, -- ensemble auquel appartient la pièce
 }
 
+local StyleSets = require(script.Parent.StyleSets)
 local V = Vector3.new
 local function rgb(r: number, g: number, b: number): Color3
 	return Color3.fromRGB(r, g, b)
@@ -341,5 +344,24 @@ local StyleItems: { [string]: Item } = {
 		},
 	},
 }
+
+-- Les nouvelles pièces restent indisponibles jusqu'à l'import et l'activation des 20 ensembles.
+-- Après achat d'un ensemble, les deux articles deviennent indépendants : on peut les mélanger.
+for _, set in StyleSets.List do
+	StyleItems[set.top] = {
+		category = "Top",
+		order = 100 + set.order,
+		pieces = {},
+		swatch = set.color,
+		setId = set.id,
+	}
+	StyleItems[set.bottom] = {
+		category = "Bottom",
+		order = 100 + set.order,
+		pieces = {},
+		swatch = set.color,
+		setId = set.id,
+	}
+end
 
 return StyleItems

@@ -21,6 +21,7 @@ local ORDER = {
 	"EmoteController",
 	"EventController",
 	"SettingsController",
+	"OutfitFxController",
 	"DuelController",
 	"WeeklyController",
 }

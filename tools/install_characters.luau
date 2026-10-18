@@ -6,7 +6,7 @@
 	nom est remplacée (pour réimporter après une modification).
 	À coller dans la barre de commande de Studio, en mode édition. Ensuite : Ctrl+S.
 	Les dossiers Bodies et Style ne sont pas gérés par Rojo : une reconnexion ne les efface pas.
-	La version D70 vérifie les 1 316 pièces de style et la palette avant de remplacer les anciens modèles.
+	La version D71 vérifie les 3 318 pièces de style et la palette avant de remplacer les anciens modèles.
 ]]
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -17,7 +17,7 @@ if not imported then
 	return
 end
 
--- La nouvelle palette contient aussi les couleurs des trois ensembles. Si Studio perd toutes les textures
+-- La nouvelle palette contient aussi les couleurs des 20 ensembles. Si Studio perd toutes les textures
 -- pendant l'import, ne remplaçons pas les anciens habits texturés par des modèles gris.
 local styleTexture = ""
 local styleAppearance: SurfaceAppearance? = nil
@@ -31,8 +31,8 @@ for _, part in imported:GetDescendants() do
 		styleAppearance = styleAppearance or part:FindFirstChildOfClass("SurfaceAppearance")
 	end
 end
-if styleCount ~= 1316 then
-	warn(`[install_characters] Import incomplet : {styleCount} pièces de style sur 1316. Rien n'a été remplacé.`)
+if styleCount ~= 3318 then
+	warn(`[install_characters] Import incomplet : {styleCount} pièces de style sur 3318. Rien n'a été remplacé.`)
 	return
 end
 if styleCount > 0 and styleTexture == "" and not styleAppearance then

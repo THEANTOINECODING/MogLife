@@ -23,6 +23,7 @@ return {
 			Music = true,
 			Sounds = true,
 			ScreenFx = true,
+			OutfitFx = true,
 			CloseUp = true,
 			Names = true,
 			Players = true,

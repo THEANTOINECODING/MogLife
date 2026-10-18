@@ -18,6 +18,8 @@ local NAMES = {
 	"HelpState", -- serveur -> client : ({ [helpId]: readyAt }) heure serveur où chaque aide redevient disponible
 	"BuyStyle", -- client -> serveur : (itemId: string)
 	"EquipStyle", -- client -> serveur : (category: string, itemId: string?) nil = retirer
+	"BuyStyleSet", -- client -> serveur : (setId: string), achète haut + bas en une transaction
+	"EquipStyleSet", -- client -> serveur : (setId: string), équipe haut + bas possédés
 	"StyleState", -- serveur -> client : ({ owned: { [itemId]: true }, equipped: { [category]: itemId } })
 	"BuyFurniture", -- client -> serveur : (itemId: string) au comptoir du magasin de meubles
 	"PlaceFurniture", -- client -> serveur : (slot: string, itemId: string?) nil = vider l'emplacement
@@ -95,6 +97,8 @@ return remotes :: {
 	HelpState: RemoteEvent,
 	BuyStyle: RemoteEvent,
 	EquipStyle: RemoteEvent,
+	BuyStyleSet: RemoteEvent,
+	EquipStyleSet: RemoteEvent,
 	StyleState: RemoteEvent,
 	BuyFurniture: RemoteEvent,
 	PlaceFurniture: RemoteEvent,

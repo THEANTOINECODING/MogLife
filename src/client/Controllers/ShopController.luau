@@ -13,6 +13,7 @@ local RunService = game:GetService("RunService")
 
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local StyleItems = require(ReplicatedStorage.Shared.Config.StyleItems)
+local StyleSets = require(ReplicatedStorage.Shared.Config.StyleSets)
 local Look = require(ReplicatedStorage.Shared.Look)
 local Outfit = require(ReplicatedStorage.Shared.Outfit)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
@@ -32,7 +33,7 @@ local panel: Frame
 local titleLabel: TextLabel
 local cashLabel: TextLabel
 local list: ScrollingFrame
-local tabArea: Frame
+local tabArea: ScrollingFrame
 local tabs: { [string]: TextButton } = {}
 local viewport: ViewportFrame
 local world: WorldModel
@@ -40,6 +41,7 @@ local previewLabel: TextLabel
 local previewModel: Model? = nil
 local previewKey = ""
 local previewing: string? = nil -- article essayé (nil : sa tenue actuelle)
+local previewSet: string? = nil -- ensemble essayé en un clic
 local stageIndex = 1
 local spin = 0
 
@@ -57,7 +59,12 @@ local ShopController = {}
 local function sortedItems(cat: string): { string }
 	local ids = {}
 	for id, item in StyleItems do
-		if item.category == cat and (not wardrobe or owned[id] or item.starter) then
+		if
+			item.category == cat
+			and (not wardrobe or owned[id] or item.starter)
+			and (not item.setId or StyleSets.Active)
+			and (wardrobe or not StyleSets.Active or (cat ~= "Top" and cat ~= "Bottom"))
+		then
 			table.insert(ids, id)
 		end
 	end
@@ -71,7 +78,12 @@ end
 local function refreshPreview()
 	local outfit = table.clone(equipped)
 	local name = Texts.Get("Shop.YourLook")
-	if previewing then
+	if previewSet then
+		local set = StyleSets.ById[previewSet]
+		outfit.Top = set.top
+		outfit.Bottom = set.bottom
+		name = Texts.Get("Shop.TryingOn", { item = Texts.Get(`StyleSet.{previewSet}`) })
+	elseif previewing then
 		outfit[StyleItems[previewing].category] = previewing
 		name = Texts.Get("Shop.TryingOn", { item = Texts.Get(`Style.{previewing}`) })
 	end
@@ -107,8 +119,29 @@ end
 
 local render
 
+local function onSetButton(setId: string)
+	previewing = nil
+	previewSet = setId
+	local set = StyleSets.ById[setId]
+	if not set then
+		return
+	end
+	if owned[set.top] and owned[set.bottom] then
+		Remotes.EquipStyleSet:FireServer(setId)
+	elseif set.price then
+		if confirming == setId then
+			confirming = nil
+			Remotes.BuyStyleSet:FireServer(setId)
+		else
+			confirming = setId
+		end
+	end
+	render()
+end
+
 local function onItemButton(itemId: string)
 	previewing = itemId
+	previewSet = nil
 	local item = StyleItems[itemId]
 	if equipped[item.category] == itemId then
 		Remotes.EquipStyle:FireServer(item.category, nil)
@@ -136,6 +169,70 @@ function render()
 		end
 	end
 	refreshPreview()
+	if category == "Sets" then
+		for index, set in StyleSets.List do
+			if wardrobe and not (owned[set.top] and owned[set.bottom]) then
+				continue
+			end
+			local row = Ui.create("TextButton", {
+				Text = "",
+				AutoButtonColor = false,
+				Name = set.id,
+				Size = UDim2.new(1, -12, 0, 58),
+				BackgroundColor3 = if previewSet == set.id
+					then Color3.fromRGB(80, 60, 120)
+					else Color3.fromRGB(40, 35, 55),
+				BackgroundTransparency = 0.2,
+				LayoutOrder = index,
+				Parent = list,
+			}, { Ui.corner(UDim.new(0, 10)) })
+			row.Activated:Connect(function()
+				previewing = nil
+				previewSet = set.id
+				confirming = nil
+				render()
+			end)
+			Ui.create("Frame", {
+				AnchorPoint = Vector2.new(0, 0.5),
+				Position = UDim2.new(0, 10, 0.5, 0),
+				Size = UDim2.fromOffset(36, 36),
+				BackgroundColor3 = set.color,
+				Parent = row,
+			}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 2, 0.3) })
+			Ui.label({
+				Position = UDim2.fromOffset(56, 8),
+				Size = UDim2.new(1, -200, 1, -16),
+				TextXAlignment = Enum.TextXAlignment.Left,
+				Text = Texts.Get(`StyleSet.{set.id}`),
+				Parent = row,
+			})
+			local text, color
+			if equipped.Top == set.top and equipped.Bottom == set.bottom then
+				text, color = Texts.Get("Shop.Equipped"), Color3.fromRGB(60, 170, 80)
+			elseif owned[set.top] and owned[set.bottom] then
+				text, color = Texts.Get("Shop.Equip"), Color3.fromRGB(60, 110, 200)
+			elseif set.price then
+				local price = Format.Short(set.price)
+				text = Texts.Get(if confirming == set.id then "Shop.Confirm" else "Shop.Buy", { price = price })
+				color = if cash >= set.price then Color3.fromRGB(80, 80, 95) else Color3.fromRGB(110, 50, 50)
+			else
+				text, color = Texts.Get("Shop.PendingPrice"), Color3.fromRGB(60, 60, 60)
+			end
+			local button = Ui.button({
+				Name = "Action",
+				AnchorPoint = Vector2.new(1, 0.5),
+				Position = UDim2.new(1, -8, 0.5, 0),
+				Size = UDim2.fromOffset(132, 44),
+				BackgroundColor3 = color,
+				Text = text,
+				Parent = row,
+			})
+			button.Activated:Connect(function()
+				onSetButton(set.id)
+			end)
+		end
+		return
+	end
 
 	local items = sortedItems(category)
 	if wardrobe and #items == 0 then
@@ -173,7 +270,7 @@ function render()
 			AnchorPoint = Vector2.new(0, 0.5),
 			Position = UDim2.new(0, 10, 0.5, 0),
 			Size = UDim2.fromOffset(36, 36),
-			BackgroundColor3 = item.pieces[1].color,
+			BackgroundColor3 = item.swatch or item.pieces[1].color,
 			Parent = row,
 		}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 2, 0.3) })
 
@@ -225,12 +322,12 @@ local function buildTabs()
 		tab:Destroy()
 	end
 	tabs = {}
-	local count = #categories
+	tabArea.CanvasSize = UDim2.fromOffset(#categories * 100, 0)
 	for index, cat in categories do
 		local tab = Ui.button({
 			Name = `Tab{cat}`,
-			Position = UDim2.new((index - 1) / count, 3, 0, 0),
-			Size = UDim2.new(1 / count, -6, 1, 0),
+			Position = UDim2.fromOffset((index - 1) * 100 + 3, 0),
+			Size = UDim2.new(0, 94, 1, -6),
 			Text = Texts.Get(`Shop.Category.{cat}`),
 			Parent = tabArea,
 		})
@@ -238,6 +335,7 @@ local function buildTabs()
 			category = cat
 			confirming = nil
 			previewing = nil
+			previewSet = nil
 			render()
 		end)
 		tabs[cat] = tab
@@ -259,8 +357,12 @@ local function open(mirror: Instance)
 	if #categories == 0 then
 		categories = ALL_CATEGORIES
 	end
+	if StyleSets.Active and store == "Clothes" then
+		categories = { "Sets" }
+	end
 	category = categories[1]
 	previewing = nil
+	previewSet = nil
 	titleLabel.Text = Texts.Get(if typeof(store) == "string" then `Shop.Title.{store}` else "Shop.Title")
 	buildTabs()
 	confirming = nil
@@ -337,11 +439,15 @@ local function buildGui()
 	})
 
 	-- Liste à droite : onglets des catégories, puis les articles
-	tabArea = Ui.create("Frame", {
+	tabArea = Ui.create("ScrollingFrame", {
 		Name = "Tabs",
 		Position = UDim2.new(0.36, 8, 0, 78),
 		Size = UDim2.new(0.64, -24, 0, 40),
 		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
+		ScrollingDirection = Enum.ScrollingDirection.X,
+		ScrollBarThickness = 3,
+		CanvasSize = UDim2.new(),
 		Parent = panel,
 	})
 	list = Ui.create("ScrollingFrame", {
@@ -380,9 +486,12 @@ end
 -- Garde-robe : tout ce qu'on possède, à porter ou retirer
 function ShopController.OpenWardrobe()
 	wardrobe = true
-	categories = ALL_CATEGORIES
+	categories = if StyleSets.Active
+		then { "Sets", "Top", "Bottom", "Hair", "Beard", "Face", "Accessory" }
+		else ALL_CATEGORIES
 	category = categories[1]
 	previewing = nil
+	previewSet = nil
 	confirming = nil
 	titleLabel.Text = Texts.Get("Shop.Title.Wardrobe")
 	buildTabs()

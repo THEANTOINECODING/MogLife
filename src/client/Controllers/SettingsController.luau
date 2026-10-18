@@ -22,6 +22,7 @@ local ShopController
 local SoundController
 local MinigameController
 local UIController
+local OutfitFxController
 
 local values: { [string]: boolean } = {}
 local panel: Frame
@@ -98,6 +99,7 @@ local function toggle(key: string)
 	values[key] = not SettingsController.Get(key)
 	renderSwitch(key)
 	applyAll()
+	OutfitFxController.Refresh()
 	Remotes.SetSetting:FireServer(key, values[key])
 end
 
@@ -231,6 +233,7 @@ function SettingsController.Init(controllers)
 	SoundController = controllers.SoundController
 	MinigameController = controllers.MinigameController
 	UIController = controllers.UIController
+	OutfitFxController = controllers.OutfitFxController
 end
 
 function SettingsController.Start()
@@ -252,6 +255,7 @@ function SettingsController.Start()
 			renderSwitch(key)
 		end
 		applyAll()
+		OutfitFxController.Refresh()
 	end)
 end
 
