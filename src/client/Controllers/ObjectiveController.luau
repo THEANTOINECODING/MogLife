@@ -7,6 +7,7 @@
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
 
 local Exercises = require(ReplicatedStorage.Shared.Config.Exercises)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
@@ -23,15 +24,43 @@ local stats: { Mog: number, Stage: number }? = nil
 local records: { [string]: number } = {}
 local tutorialActive = false
 local hiddenForFight = false
+local crampedLandscape = false
+local mobileMenuOpen = false
 
 local ObjectiveController = {}
+
+local function layoutCard()
+	local camera = workspace.CurrentCamera
+	local size = camera and camera.ViewportSize or Vector2.zero
+	crampedLandscape = size.X > size.Y and size.Y < 500
+	if UserInputService.TouchEnabled then
+		card.Position = UDim2.fromOffset(8, 348)
+		card.Size = if Ui.isPhonePortrait() then UDim2.new(1, -16, 0, 76) else UDim2.fromOffset(250, 84)
+		goalLabel.Position = UDim2.fromOffset(12, 23)
+		goalLabel.Size = UDim2.new(1, -24, 1, -27)
+	else
+		card.Position = UDim2.fromOffset(12, 64)
+		card.Size = UDim2.fromOffset(250, 84)
+		goalLabel.Position = UDim2.fromOffset(12, 28)
+		goalLabel.Size = UDim2.new(1, -24, 1, -36)
+	end
+	card.Visible = stats ~= nil
+		and not tutorialActive
+		and not hiddenForFight
+		and not crampedLandscape
+		and (not UserInputService.TouchEnabled or mobileMenuOpen)
+end
 
 local function exerciseName(id: string): string
 	return Texts.Get(`Exercise.{id}`)
 end
 
 local function render()
-	card.Visible = stats ~= nil and not tutorialActive and not hiddenForFight
+	card.Visible = stats ~= nil
+		and not tutorialActive
+		and not hiddenForFight
+		and not crampedLandscape
+		and (not UserInputService.TouchEnabled or mobileMenuOpen)
 	if not stats then
 		return
 	end
@@ -50,7 +79,10 @@ local function render()
 	local untried, best = nil, nil
 	for id, exercise in Exercises do
 		if exercise.requiredStage <= stats.Stage then
-			if records[id] == nil and (untried == nil or exercise.requiredStage > Exercises[untried].requiredStage) then
+			if
+				records["Playground2." .. id] == nil
+				and (untried == nil or exercise.requiredStage > Exercises[untried].requiredStage)
+			then
 				untried = id
 			end
 			if best == nil or exercise.mogPerRep > Exercises[best].mogPerRep then
@@ -72,6 +104,11 @@ end
 -- Caché pendant un combat de boss (BossController)
 function ObjectiveController.SetHidden(hidden: boolean)
 	hiddenForFight = hidden
+	render()
+end
+
+function ObjectiveController.SetMobileMenuOpen(open: boolean)
+	mobileMenuOpen = open
 	render()
 end
 
@@ -101,6 +138,7 @@ local function buildGui()
 		Parent = card,
 	})
 	gui.Parent = player:WaitForChild("PlayerGui")
+	Ui.watchViewport(layoutCard)
 end
 
 function ObjectiveController.Start()

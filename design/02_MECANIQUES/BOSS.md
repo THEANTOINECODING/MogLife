@@ -1,5 +1,7 @@
 # Boss de stade (Moggers)
 
+> **D76: active mechanics are documented in [PLAYGROUND.md](PLAYGROUND.md).** The historical sections below describe the previous version. Progression IDs, unlocks and reward services remain compatible.
+
 À chaque stade de Mog correspond un **boss**, visible dans le monde. Le battre fait officiellement monter de stade et débloque la suite.
 
 ## Les boss
@@ -8,14 +10,19 @@ Tout le monde commence au stade **Normie**. « Mog requis » = le Mog nécessair
 
 | Boss | Mog requis ❓ | Son mini-jeu | Niveau en direct ❓ | Victoire → stade | Victoire débloque |
 |---|---:|---|---|---|---|
-| **Kevin « demain je commence »** — en pyjama, excuses extravagantes | 50 | Reaction | ~50 / 100 | Gym Rat | Pompes, nouvelles aides |
-| **Brayan le Bronzé** — bronzage orange fluo | 400 | Spotlight | ~59 | Bro | Développé couché |
-| **Coach Turbo** — mégaphone plus gros que lui | 2 500 | Beats | ~65 | Alpha | Squat, transats |
-| **Monsieur Pas-Les-Jambes** — torse énorme sur deux cure-dents, chaussettes géantes | 7 500 | Wobble | ~69 | Chad | Tractions, courses |
-| **Le Roi du Quartier** — arrive avec son propre ventilateur | 20 000 | Combo | ~74 | Gigachad | Corde à sauter, touriste |
+| **Kevin « demain je commence »** — en pyjama, excuses extravagantes | 50 | SofaEscape | ~50 / 100 | Gym Rat | Pompes, nouvelles aides |
+| **Brayan le Bronzé** — bronzage orange fluo | 400 | TanMirror | ~59 | Bro | Développé couché |
+| **Coach Turbo** — mégaphone plus gros que lui | 2 500 | MegaphoneRebel | ~65 | Alpha | Squat, transats |
+| **Monsieur Pas-Les-Jambes** — torse énorme sur deux cure-dents, chaussettes géantes | 7 500 | ToothpickSweep | ~69 | Chad | Tractions, courses |
+| **Le Roi du Quartier** — arrive avec son propre ventilateur | 20 000 | Headwind | ~74 | Gigachad | Corde à sauter, touriste |
 | **Le Dieu du Pump** — sur un nuage, foudre dans chaque biceps | 45 000 | ❓ | ~84 | **GOD MOGGER** | Le titre GOD MOGGER (mise à jour Olympe) |
 
 Le MVP contient les **5 premiers boss** (Normie → Gigachad, décision D25). Le Dieu du Pump est annoncé « coming soon ». Les chiffres sont des hypothèses (voir `tools/simulate_economy.luau`).
+
+Depuis D75, la difficulté monte d'un boss à l'autre : anticipation d'un trajet, visée mobile, maintien au signal, lecture
+puis action, enfin équilibre contre une force variable. Leur précision simulée et leur cadence progressent aussi dans
+`Stages.luau` ; les manches d'un même boss se resserrent via `Balance.Boss`. Cette progression est une intention
+d'équilibrage à vérifier sur appareils réels, car les mécaniques ne se comparent pas par un seul chiffre.
 
 ## Affronter un boss
 
@@ -43,6 +50,7 @@ Défaite automatique et comique : le boss le mogge d'un seul regard, le joueur r
 - 2 manches gagnées = victoire.
 - **Défaite : perte de 5 % du Cash** (plafonnée par stade ❓), annoncée dans la fenêtre de défi. Aucune perte en revanche contre un boss déjà battu.
 - Mode auto interdit en combat.
+- Sur téléphone et tablette, les commandes de déplacement disparaissent pendant le mini-jeu. Spotlight et Wobble ne suivent que le doigt posé dans leur panneau ; le joystick ne peut pas déplacer leur curseur.
 - Après 3 défaites d'affilée, le boss devient un peu moins exigeant ❓ (non implémenté).
 
 ### Victoire

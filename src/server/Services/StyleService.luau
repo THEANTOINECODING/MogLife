@@ -6,6 +6,7 @@
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local StyleItems = require(ReplicatedStorage.Shared.Config.StyleItems)
 local StyleSets = require(ReplicatedStorage.Shared.Config.StyleSets)
 local StylePieces = require(ReplicatedStorage.Shared.Config.StylePieces)
@@ -22,6 +23,24 @@ local BodyService
 local TutorialService
 
 local StyleService = {}
+
+local function nearStore(player: Player, store: string): boolean
+	local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+	if not root or not root:IsA("BasePart") then
+		return false
+	end
+	for _, mirror in CollectionService:GetTagged(MIRROR_TAG) do
+		if
+			mirror:IsA("BasePart")
+			and mirror:IsDescendantOf(workspace)
+			and mirror:GetAttribute("Store") == store
+			and (root.Position - mirror.Position).Magnitude <= Balance.Style.ShopDistance
+		then
+			return true
+		end
+	end
+	return false
+end
 
 local function sendState(player: Player)
 	local data = DataService.Get(player)
@@ -142,6 +161,14 @@ local function onBuy(player: Player, itemId: unknown)
 	if StyleSets.Active and (item.category == "Top" or item.category == "Bottom") then
 		return
 	end
+	local store = if item.category == "Hair"
+			or item.category == "Beard"
+			or item.category == "Face"
+		then "Barber"
+		else "Clothes"
+	if not nearStore(player, store) then
+		return
+	end
 	if data.Cash < item.price then
 		Remotes.Notify:FireClient(player, { key = "Shop.NotEnough" })
 		return
@@ -182,7 +209,7 @@ local function onBuySet(player: Player, setId: unknown)
 	end
 	local set = StyleSets.ById[setId]
 	local data = DataService.Get(player)
-	if not set or not data or not set.price or not setModelsReady(set) then
+	if not set or not data or not set.price or not setModelsReady(set) or not nearStore(player, "Clothes") then
 		return
 	end
 	if data.StyleOwned[set.top] or data.StyleOwned[set.bottom] then

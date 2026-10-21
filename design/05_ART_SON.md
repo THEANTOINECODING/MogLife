@@ -44,13 +44,18 @@ Chaque zone a sa propre ambiance, de plus en plus absurde. Palettes **proposées
 
 ## Interface
 
-- HUD : Mog (avec jauge vers le prochain boss), Cash, prochain objectif, bouton Style. Rien de plus.
+- HUD : Mog et Cash sur une ligne en tactile ; le prochain objectif et Style restent accessibles dans Menu. Sur PC, la jauge vers le boss et l'objectif restent visibles. Rien de plus pendant l'exploration.
 - Mini-jeux : une zone d'interaction claire, en bas de l'écran sur mobile, avec le résultat (Raté / Bien / Parfait) en gros et en couleur.
 - Typographie grasse et exagérée, boutons arrondis et épais.
 - Mobile d'abord : zones de pouce, pas de chevauchement avec les boutons Roblox.
 - **Traduction** (voir 04_MONDE_PNJ.md) : aucun texte dans les images ou textures (il ne serait pas traduit) ; zones de texte prévues 30 % plus larges que l'anglais ; préférer des icônes aux mots quand c'est possible.
 
 ## Son
+
+- D75 : chaque nouveau mini-jeu ajoute un son discret au contact, un impact bref à la réussite et le son de note
+  confirmé par le serveur. Les sons existants de `Config/Sounds.luau` sont réutilisés avec des volumes réduits et une
+  hauteur différente selon Good/Perfect ; ils restent réglables dans Settings. Les scènes montrent aussi le geste,
+  un objet ou un indice propre à l'activité, puis un résultat cartoon immédiat.
 
 - Bruitages cartoon exagérés : grognements d'effort, grincements, « BOING » de défaite.
 - Le coach et les boss ont des cris signatures (volume réglable).

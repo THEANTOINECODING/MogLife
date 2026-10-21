@@ -124,8 +124,11 @@ if os.environ.get("MOG_PREVIEW_BACK") == "1":
     camera.location = (0, 35, 11)
     camera.rotation_euler = (Vector((0, 0, 6.8)) - camera.location).to_track_quat("-Z", "Y").to_euler()
 if all_looks:
-    camera.location = (0, -60, 6)
-    camera.rotation_euler = (Vector((0, 0, 6)) - camera.location).to_track_quat("-Z", "Y").to_euler()
+    back = os.environ.get("MOG_PREVIEW_BACK") == "1"
+    if back:
+        OUTPUT = ROOT + r"\assets\export\characters\outfits_all_back.png"
+    camera.location = (0, 60 if back else -60, 0)
+    camera.rotation_euler = (Vector((0, 0, 0)) - camera.location).to_track_quat("-Z", "Y").to_euler()
     camera.data.ortho_scale = 37
 bpy.context.scene.camera = camera
 

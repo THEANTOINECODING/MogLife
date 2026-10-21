@@ -1,5 +1,7 @@
 # Aider la ville
 
+> **D76: active mechanics are documented in [PLAYGROUND.md](PLAYGROUND.md).** The historical sections below describe the previous version. Progression IDs, unlocks and reward services remain compatible.
+
 Les habitants ont des problèmes absurdes. Les aider **rapporte du Cash**, la seule façon d'en gagner régulièrement.
 
 ## Règles

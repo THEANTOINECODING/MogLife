@@ -78,14 +78,14 @@ def _loft(rings):
     return bm
 
 
-def _cape_mesh(chest, y_back, neck_z, waist_z):
+def _cape_mesh(chest, y_back, neck_z, waist_z, width_scale=1.0, length_scale=1.0):
     """A tapered cloth panel with shallow folds, closed at the edges."""
     bm = bmesh.new()
     front, rear = [], []
     for i in range(7):
         t = i / 6
-        width = chest * (0.34 + 0.17 * t)
-        z = neck_z - 0.10 - (neck_z - waist_z + 0.22) * t
+        width = chest * (0.34 + 0.17 * t) * width_scale
+        z = neck_z - 0.10 - (neck_z - waist_z + 0.22) * t * length_scale
         frow, rrow = [], []
         for j in range(7):
             s = (j - 3) / 3
@@ -110,23 +110,31 @@ def _cape_mesh(chest, y_back, neck_z, waist_z):
     return bm
 
 
-def _body_radii(body, part, z_values, n=24):
-    """Measure the outer surface, including default top/shorts, by radial casts."""
-    objects = [o for o in bpy.data.collections["Body_" + body].objects
-               if o.type == "MESH" and (o.name == body + "_" + part or o.name.startswith(body + "_" + part + "_"))]
-    trees = []
-    for obj in objects:
-        bm = bmesh.new()
-        bm.from_mesh(obj.data)
-        trees.append(BVHTree.FromBMesh(bm))
-        bm.free()
+_BODY_TREES = {}
+
+
+def _body_radii(body, part, z_values, n=24, centers=None):
+    """Measure the actual body envelope in horizontal slices around a moving axis."""
+    key = (body, part)
+    if key not in _BODY_TREES:
+        objects = [o for o in bpy.data.collections["Body_" + body].objects
+                   if o.type == "MESH" and (o.name == body + "_" + part or o.name.startswith(body + "_" + part + "_"))]
+        trees = []
+        for obj in objects:
+            bm = bmesh.new()
+            bm.from_mesh(obj.data)
+            trees.append(BVHTree.FromBMesh(bm))
+            bm.free()
+        _BODY_TREES[key] = trees
+    trees = _BODY_TREES[key]
     rows = []
-    for z in z_values:
+    for i, z in enumerate(z_values):
+        cx, cy = centers[i] if centers else (0, 0)
         row = []
         for j in range(n):
             angle = 2 * math.pi * j / n
             dx, dy = math.cos(angle), math.sin(angle)
-            origin = Vector((dx * 8, dy * 8, z))
+            origin = Vector((cx + dx * 8, cy + dy * 8, z))
             direction = Vector((-dx, -dy, 0))
             distances = [hit[3] for tree in trees if (hit := tree.ray_cast(origin, direction, 8))[0] is not None]
             row.append(8 - min(distances) if distances else None)
@@ -135,7 +143,11 @@ def _body_radii(body, part, z_values, n=24):
     for j in range(n):
         known = [i for i, row in enumerate(rows) if row[j] is not None]
         if not known:
-            raise ValueError(f"No body surface for {body}/{part}, angle {j}")
+            # An eccentric limb can lie entirely to one side of the axis.
+            # Use the widest measured direction rather than leave a skin gap.
+            for row in rows:
+                row[j] = max((value for value in row if value is not None), default=0.1)
+            continue
         for i, row in enumerate(rows):
             if row[j] is None:
                 nearest = min(known, key=lambda k: abs(k - i))
@@ -143,16 +155,38 @@ def _body_radii(body, part, z_values, n=24):
     return rows
 
 
-def _torso(w, body, g, cell, silhouette):
+def _fitted_limb(w, body, part, top, bottom, cell, ease, profile=None, n=16):
+    """A separate R15 garment shell that clears the skin, including deltoid bulges."""
+    count = 19 if part.endswith("LowerArm") else 13
+    if part.endswith("LowerArm"):
+        n = 24
+    heights = [top.z + (bottom.z - top.z) * i / (count - 1) for i in range(count)]
+    centers = [(top.x + (bottom.x - top.x) * i / (count - 1),
+                top.y + (bottom.y - top.y) * i / (count - 1)) for i in range(count)]
+    radii = _body_radii(body, part, heights, n, centers)
+    rings = []
+    for i, z in enumerate(heights):
+        t = i / (count - 1)
+        extra = ease + (profile(t) if profile else 0)
+        round_envelope = max(radii[i]) if part.endswith("LowerArm") else 0
+        # Skin and cloth use the same R15 part, so their clearance scales together.
+        rings.append([(centers[i][0] + math.cos(2 * math.pi * j / n) * (max(r, round_envelope) + extra),
+                       centers[i][1] + math.sin(2 * math.pi * j / n) * (max(r, round_envelope) + extra), z)
+                      for j, r in enumerate(radii[i])])
+    w.make(part, _loft(rings), cell)
+    return radii, heights, centers
+
+
+def _torso(w, body, g, cell, silhouette, name):
     J, cfg = g["J"], g["cfg"]
     waist, neck = J["Waist"], J["Neck"]
     # Overlap the waistband; otherwise the animation reveals a strip of empty torso.
     low, high = waist.z - 0.06, neck.z + 0.02
     heights = [low + (high - low) * i / 13 for i in range(14)]
     radii = _body_radii(body, "UpperTorso", heights)
-    ease = {"open": 0.055, "racer": 0.065, "blazer": 0.10, "utility": 0.085,
-            "varsity": 0.09, "hoodie": 0.13, "robe": 0.09, "cape": 0.095,
-            "puffer": 0.18, "bomber": 0.12, "armor": 0.13}[silhouette]
+    ease = {"open": 0.135, "racer": 0.075, "blazer": 0.105, "utility": 0.105,
+            "varsity": 0.10, "hoodie": 0.13, "robe": 0.11, "cape": 0.205,
+            "puffer": 0.18, "bomber": 0.13, "armor": 0.15}[silhouette]
     rings = []
     outer_radii = []
     for i, z in enumerate(heights):
@@ -162,7 +196,18 @@ def _torso(w, body, g, cell, silhouette):
             a = 2 * math.pi * j / 24
             front = max(0, -math.sin(a))
             # Give cloth ease without erasing the hourglass silhouette.
-            extra = ease * (0.75 + 0.25 * math.sin(math.pi * i / 13))
+            t = i / 13
+            extra = 0.07 + ease * (0.75 + 0.25 * math.sin(math.pi * t))
+            if silhouette in ("racer", "varsity"):
+                extra += 0.08 * t * t
+            elif silhouette in ("blazer", "robe"):
+                extra += 0.045 * (1 - t) ** 2
+            elif silhouette == "bomber":
+                extra += 0.09 * math.sin(math.pi * t) ** 2
+            elif silhouette == "puffer":
+                extra += 0.11 * math.sin(math.pi * t) ** 2
+            elif silhouette == "armor":
+                extra += 0.05 * t
             radius = base + extra + (0.035 * front if silhouette in ("blazer", "puffer", "cape") else 0)
             ring.append((math.cos(a) * radius, math.sin(a) * radius, z))
             outer_row.append(radius)
@@ -174,17 +219,24 @@ def _torso(w, body, g, cell, silhouette):
         for side, _ in sides():
             sh, el, wr = (J[side + key] for key in ("Shoulder", "Elbow", "Wrist"))
             sleeve = "long" if silhouette in ("blazer", "utility", "hoodie", "robe", "cape", "puffer", "bomber", "armor") else "short"
-            end = el if sleeve == "long" else sh.lerp(el, 0.56)
-            ease_arm = 0.055 if silhouette not in ("puffer", "armor") else 0.13
-            w.make(side + "UpperArm", limb(tuple(sh), tuple(end), cfg["delt"] + ease_arm,
-                                            cfg["bicep"] + ease_arm, cfg["bicep"] * 0.92 + ease_arm), cell)
+            if (name == "DiscoDynamo" and side == "Right") or (name == "GarageGremlin" and side == "Left"):
+                sleeve = "short"
+            end = el if sleeve == "long" else sh.lerp(el, 0.59)
+            ease_arm = 0.115 if silhouette not in ("puffer", "armor") else 0.21
+            profile = (lambda t: 0.045 * math.sin(math.pi * t) ** 2) if silhouette in ("bomber", "hoodie") else None
+            _fitted_limb(w, body, side + "UpperArm", sh, end, cell, ease_arm, profile)
             if sleeve == "long":
-                w.make(side + "LowerArm", limb(tuple(el), tuple(el.lerp(wr, 0.9)), cfg["forearm"] + ease_arm,
-                                                cfg["forearm"] + ease_arm, cfg["forearm"] * 0.72 + ease_arm), cell)
+                cuff_top = Vector((el.x, el.y, el.z + cfg["forearm"] * 0.7))
+                _fitted_limb(w, body, side + "LowerArm", cuff_top, el.lerp(wr, 0.91),
+                             cell, ease_arm * 0.85)
+            elif name in ("DiscoDynamo", "GarageGremlin"):
+                # An exposed forearm with a fitted wrist band keeps the growth key stable.
+                _fitted_limb(w, body, side + "LowerArm", el.lerp(wr, 0.72),
+                             el.lerp(wr, 0.89), cell, ease_arm * 0.85)
     return outer_radii, heights
 
 
-def _bottom(w, body, g, cell, silhouette):
+def _bottom(w, body, g, cell, silhouette, name):
     J, cfg = g["J"], g["cfg"]
     root = J["Root"]
     height = [root.z - 0.26 + i * 0.075 for i in range(11)]
@@ -195,26 +247,25 @@ def _bottom(w, body, g, cell, silhouette):
                        math.sin(2 * math.pi * j / 24) * (radii[i][j] + 0.052), z) for j in range(24)])
     w.make("LowerTorso", _loft(rings), cell)
     length = "short" if silhouette == "short" else "long"
-    t = {"short": 0.04, "taper": 0.065, "straight": 0.10, "cargo": 0.13,
-         "flare": 0.10, "baggy": 0.18}[silhouette]
+    t = {"short": 0.10, "taper": 0.115, "straight": 0.15, "cargo": 0.18,
+         "flare": 0.14, "baggy": 0.22}[silhouette]
     for side, _ in sides():
         hip, knee, ankle = (J[side + key] for key in ("Hip", "Knee", "Ankle"))
-        x = hip.x
         if length == "short":
-            short_r = max(cfg["thigh"] * 1.14, 0.24) if cfg.get("baggy") else cfg["thigh"] * 1.14
-            w.make(side + "UpperLeg", limb((x, 0, hip.z + 0.05),
-                                            (x, 0, hip.z - (hip.z - knee.z) * 0.55),
-                                            short_r + t, short_r * 1.03 + t, short_r * 1.08 + t), cell)
+            short_length = {"BoardwalkBolt": 0.46, "GoldenHour": 0.54,
+                            "BrickhouseBrawler": 0.73, "RoyalRumble": 0.63,
+                            "JungleJolt": 0.67, "TurboTaxi": 0.58}.get(name, 0.60)
+            _fitted_limb(w, body, side + "UpperLeg", Vector((hip.x, 0, hip.z + 0.05)),
+                         hip.lerp(knee, short_length), cell,
+                         t + (0.10 if name == "TurboTaxi" else 0.03),
+                         lambda f: 0.04 * f * f)
         else:
-            thigh_r, calf_r = cfg["thigh"], cfg["calf"]
-            w.make(side + "UpperLeg", limb((x, 0, knee.z), (x, 0, hip.z + 0.05),
-                                            calf_r * 0.82 + t, thigh_r + t, thigh_r * 1.08 + t,
-                                            bulge_dir=(0, -1, 0), bulge=thigh_r * 0.15), cell)
-            ankle_ease = t * (1.8 if silhouette == "flare" else 1.0)
-            w.make(side + "LowerLeg", limb((x, 0, ankle.z + 0.12), (x, 0, knee.z),
-                                            calf_r * 0.6 + ankle_ease, calf_r + t,
-                                            calf_r * 0.82 + t, mid_t=0.62,
-                                            bulge_dir=(0, 1, 0), bulge=calf_r * 0.25), cell)
+            _fitted_limb(w, body, side + "UpperLeg", Vector((hip.x, 0, hip.z + 0.05)),
+                         knee, cell, t)
+            _fitted_limb(w, body, side + "LowerLeg", knee,
+                         Vector((ankle.x, ankle.y, ankle.z + 0.12)), cell, t,
+                         (lambda f: (0.34 if name == "DiscoDynamo" else 0.23) * f * f)
+                         if silhouette == "flare" else None)
     return t
 
 
@@ -226,7 +277,7 @@ def build_looks(w, body, g):
     for name, _, _, _, _, silhouette, lower, signature in LOOKS:
         primary, secondary, accent = (f"look_{name}_{i}" for i in range(3))
         w.start(name + "Top")
-        radii, heights = _torso(w, body, g, primary, silhouette)
+        radii, heights = _torso(w, body, g, primary, silhouette, name)
         # At each x, place the trim against the actual outer fabric, not the torso centerline.
         def front(z_index, x=0):
             j = min(range(12, 24), key=lambda k: abs(math.cos(2 * math.pi * k / 24) * radii[z_index][k] - x))
@@ -256,7 +307,8 @@ def build_looks(w, body, g):
         if silhouette == "cape":
             # Back panel is welded to the torso. It clears arms but moves with the torso.
             cape_y = max(row[6] for row in radii)
-            w.make("UpperTorso", _cape_mesh(chest, cape_y, neck.z, waist.z), secondary)
+            size = 1.25 if name == "PaperCrown" else 1.0
+            w.make("UpperTorso", _cape_mesh(chest, cape_y, neck.z, waist.z, size, 1.0), secondary)
         if silhouette == "puffer":
             for k in (4, 7, 10):
                 w.make("UpperTorso", prism((-chest * 0.40, front(k, -chest * 0.40), heights[k]),
@@ -306,8 +358,94 @@ def build_looks(w, body, g):
                                                 (0.05, 0.035, 0.05), 6, 4), accent)
         elif signature != "quilt":
             raise ValueError(f"Unknown outfit signature: {signature}")
+        # Large readable tailoring cues distinguish the silhouettes from a distance.
+        def seam(ax, az, bx, bz, width, color):
+            w.make("UpperTorso", prism((ax * chest, front(az, ax * chest) - 0.065, heights[az]),
+                                        (bx * chest, front(bz, bx * chest) - 0.065, heights[bz]),
+                                        width, 0.045, sides=4), color)
+
+        if name == "CircuitAce":
+            for sx in (-1, 1):
+                seam(sx * 0.34, 11, sx * 0.34, 3, 0.06, secondary)
+                seam(sx * 0.34, 11, sx * 0.10, 9, 0.06, accent)
+        elif name == "BoardwalkBolt":
+            for sx in (-1, 1):
+                seam(sx * 0.09, 12, sx * 0.34, 7, 0.075, secondary)
+                seam(sx * 0.34, 7, sx * 0.34, 2, 0.04, accent)
+        elif name == "VelvetVillain":
+            for sx in (-1, 1):
+                seam(sx * 0.08, 12, sx * 0.42, 7, 0.105, secondary)
+                seam(sx * 0.42, 7, sx * 0.16, 3, 0.065, accent)
+        elif name == "MoonMechanic":
+            for sx in (-1, 1):
+                seam(sx * 0.39, 11, -sx * 0.13, 3, 0.095, secondary)
+                w.make("UpperTorso", block((sx * chest * 0.33, front(3, sx * chest * 0.33) - 0.09,
+                                            heights[3]), (chest * 0.18, 0.10, 0.18)), accent)
+        elif name == "GoldenHour":
+            seam(-0.45, 11, 0.45, 11, 0.11, secondary)
+            seam(-0.45, 2, 0.45, 2, 0.08, accent)
+        elif name == "BubblegumBlitz":
+            for sx in (-1, 1):
+                seam(sx * 0.40, 9, sx * 0.18, 2, 0.07, secondary)
+            seam(-0.26, 3, 0.26, 3, 0.10, accent)
+        elif name == "BrickhouseBrawler":
+            for sx in (-1, 1):
+                seam(sx * 0.06, 12, sx * 0.35, 5, 0.12, secondary)
+            seam(-0.46, 2, 0.46, 2, 0.12, accent)
+        elif name == "ThunderArcade":
+            for sx in (-1, 1):
+                seam(sx * 0.42, 11, sx * 0.10, 7, 0.075, accent)
+                seam(sx * 0.10, 7, sx * 0.40, 3, 0.075, secondary)
+        elif name == "RoyalRumble":
+            seam(-0.42, 10, 0.42, 10, 0.13, secondary)
+            seam(-0.22, 3, 0.22, 3, 0.10, accent)
+        elif name == "MidnightExpress":
+            for sx in (-1, 1):
+                seam(sx * 0.08, 12, sx * 0.31, 7, 0.095, secondary)
+                seam(sx * 0.31, 7, sx * 0.09, 3, 0.055, accent)
+            seam(-0.14, 2, 0.14, 2, 0.06, secondary)
+        elif name == "JungleJolt":
+            for sx in (-1, 1):
+                seam(sx * 0.12, 11, sx * 0.32, 6, 0.075, secondary)
+                seam(sx * 0.32, 6, sx * 0.18, 2, 0.055, accent)
+        elif name == "FrostFlex":
+            for k in (2, 5, 8, 11):
+                seam(-0.43, k, 0.43, k, 0.065, secondary)
+        elif name == "TurboTaxi":
+            seam(-0.46, 11, 0.46, 11, 0.13, secondary)
+            for sx in (-1, 1):
+                seam(sx * 0.39, 10, sx * 0.39, 3, 0.06, accent)
+        elif name == "DiscoDynamo":
+            seam(-0.40, 10, 0.28, 5, 0.105, secondary)
+            seam(0.32, 10, -0.24, 4, 0.06, accent)
+        elif name == "CometCoach":
+            for sx in (-1, 1):
+                seam(0, 10, sx * 0.44, 12, 0.11, secondary)
+                seam(sx * 0.40, 3, sx * 0.15, 1, 0.06, accent)
+        elif name == "SunsetStunt":
+            seam(-0.43, 11, 0.27, 3, 0.09, secondary)
+            seam(0.43, 11, -0.27, 3, 0.07, accent)
+        elif name == "GarageGremlin":
+            seam(-0.40, 11, 0.16, 4, 0.09, secondary)
+            for sx in (-1, 1):
+                w.make("UpperTorso", block((sx * chest * 0.32, front(3, sx * chest * 0.32) - 0.10,
+                                            heights[3]), (chest * 0.20, 0.12, 0.20)), accent)
+        elif name == "CloudCruiser":
+            for sx in (-1, 1):
+                w.make("UpperTorso", lowsphere((sx * chest * 0.36, front(9, sx * chest * 0.36) - 0.035,
+                                                heights[9]), (chest * 0.20, 0.09, 0.16), 8, 6), secondary)
+            seam(-0.30, 2, 0.30, 2, 0.09, accent)
+        elif name == "IronMeteor":
+            for sx in (-1, 1):
+                w.make("UpperTorso", block((sx * chest * 0.26, front(9, sx * chest * 0.26) - 0.105,
+                                            heights[9]), (chest * 0.30, 0.11, 0.24)), secondary)
+                seam(sx * 0.36, 6, sx * 0.18, 3, 0.07, accent)
+        elif name == "PaperCrown":
+            for sx in (-1, 1):
+                seam(0, 11, sx * 0.42, 8, 0.12, secondary)
+                seam(sx * 0.42, 8, sx * 0.19, 2, 0.06, accent)
         w.start(name + "Bottom")
-        leg_ease = _bottom(w, body, g, primary, lower)
+        leg_ease = _bottom(w, body, g, primary, lower, name)
         for side, sx in sides():
             hip, knee = J[side + "Hip"], J[side + "Knee"]
             leg_z = hip.z - (hip.z - knee.z) * (0.38 if lower == "short" else 0.55)

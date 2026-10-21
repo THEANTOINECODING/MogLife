@@ -66,8 +66,13 @@ return {
 	SeriesLength = 20,
 	-- Le serveur refuse une répétition arrivée avant repInterval × cette tolérance
 	RepIntervalTolerance = 0.85,
+	GamepadDeadzone = 0.2,
 	-- Distance max (studs) entre le joueur et la station pendant une série
 	MaxStationDistance = 12,
+	Movement = {
+		WalkSpeed = 16,
+		SprintSpeed = 24,
+	},
 
 	-- Émotes : poses de culturisme (MogOff.Strike), visibles par tous
 	Emotes = {
@@ -170,6 +175,9 @@ return {
 	},
 
 	-- Maison et meubles
+	Style = {
+		ShopDistance = 14, -- achat uniquement près du magasin concerné ; l'équipement reste possible partout
+	},
 	Furniture = {
 		ShopDistance = 14, -- distance max (studs) au comptoir du magasin pour acheter
 		PlaceDistance = 16, -- distance max à l'emplacement pour poser un meuble

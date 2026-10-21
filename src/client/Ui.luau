@@ -2,7 +2,31 @@
 
 local Ui = {}
 
+local UserInputService = game:GetService("UserInputService")
+
 Ui.Font = Enum.Font.FredokaOne
+
+function Ui.isPhonePortrait(): boolean
+	local camera = workspace.CurrentCamera
+	local size = camera and camera.ViewportSize or Vector2.zero
+	return UserInputService.TouchEnabled and size.X < 600 and size.X < size.Y
+end
+
+function Ui.watchViewport(update: () -> ())
+	local connection: RBXScriptConnection? = nil
+	local function watchCamera()
+		if connection then
+			connection:Disconnect()
+		end
+		local camera = workspace.CurrentCamera
+		if camera then
+			connection = camera:GetPropertyChangedSignal("ViewportSize"):Connect(update)
+		end
+		update()
+	end
+	workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(watchCamera)
+	watchCamera()
+end
 
 -- Crée une instance, applique ses propriétés, puis lui ajoute ses enfants.
 -- Parent est appliqué en dernier pour éviter des mises à jour inutiles.

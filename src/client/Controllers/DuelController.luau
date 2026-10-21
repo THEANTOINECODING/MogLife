@@ -57,6 +57,8 @@ local resultTitle: TextLabel
 local resultInfo: TextLabel
 
 local duel: Duel? = nil
+local pendingResult = false
+local resultSequence = 0
 local stopFollow: (() -> ())? = nil
 local prompts: { [Player]: ProximityPrompt } = {}
 
@@ -264,7 +266,10 @@ local function startCamera()
 			local eye = CameraFraming.Best(center, directions, nil, points())
 			local look = (center - eye).Unit
 			local right = look:Cross(Vector3.new(0, 1, 0))
-			return eye, center + right * ((center - eye).Magnitude * 0.22)
+			return eye,
+				center + right * ((center - eye).Magnitude * (math.tan(
+					math.rad(workspace.CurrentCamera.FieldOfView / 2)
+				) * workspace.CurrentCamera.ViewportSize.X / math.max(1, workspace.CurrentCamera.ViewportSize.Y) * 0.50))
 		end,
 		points = points,
 		ignore = function()
@@ -360,6 +365,8 @@ local function onUpdate(update)
 		hideInvite()
 	elseif state == "Started" then
 		hideInvite()
+		resultSequence += 1
+		pendingResult = false
 		resultPanel.Visible = false
 		duel = {
 			opponent = update.opponent,
@@ -371,7 +378,7 @@ local function onUpdate(update)
 			limit = update.limit or Duels.LeanLimit,
 		}
 		refreshAllPrompts()
-		MinigameController.SetGameplayLocked(true)
+		MinigameController.SetGameplayLocked(true, "Duel")
 		setLayout(true)
 		meter.Visible = true
 		meterThem.Text = (duel :: Duel).name
@@ -416,6 +423,8 @@ local function onUpdate(update)
 			shout(Texts.Get("Duel.RoundDraw"), GOLD, nil, 1)
 		end
 	elseif state == "Result" then
+		pendingResult = true
+		local sequence = resultSequence
 		local won = update.result == "Won"
 		if won then
 			shout(Texts.Get("Duel.Mogged"), GOLD, nil, 1.2)
@@ -426,15 +435,19 @@ local function onUpdate(update)
 		end
 		-- La fenêtre arrive après le « MOGGED! » (sinon elle passe dessous)
 		task.delay(if won then 1.5 else 0.6, function()
-			showResult(update)
+			if resultSequence == sequence then
+				showResult(update)
+			end
 		end)
 	elseif state == "Finished" then
 		duel = nil
 		stopCamera()
 		meter.Visible = false
 		vsBand.Visible = false
-		setLayout(false)
-		MinigameController.SetGameplayLocked(false)
+		if not pendingResult then
+			setLayout(false)
+			MinigameController.SetGameplayLocked(false, "Duel")
+		end
 		refreshAllPrompts()
 	end
 end
@@ -449,7 +462,7 @@ local function buildGui()
 		Name = "Invite",
 		AnchorPoint = Vector2.new(0.5, 0),
 		Position = UDim2.new(0.5, 0, 0, 90),
-		Size = UDim2.fromOffset(460, 150),
+		Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 150) else UDim2.fromOffset(460, 150),
 		Visible = false,
 		Parent = gui,
 	})
@@ -634,7 +647,7 @@ local function buildGui()
 		Name = "Result",
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.55),
-		Size = UDim2.fromOffset(480, 270),
+		Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 270) else UDim2.fromOffset(480, 270),
 		Visible = false,
 		Parent = gui,
 	})
@@ -660,6 +673,11 @@ local function buildGui()
 	})
 	ok.Activated:Connect(function()
 		resultPanel.Visible = false
+		pendingResult = false
+		if not duel then
+			setLayout(false)
+			MinigameController.SetGameplayLocked(false, "Duel")
+		end
 	end)
 
 	gui.Parent = player:WaitForChild("PlayerGui")

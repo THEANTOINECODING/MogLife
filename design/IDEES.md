@@ -3,6 +3,78 @@
 Toute nouvelle idée arrive ici. Elle passe dans le design seulement après une décision dans `DECISIONS.md`.
 Test de la vision : l'idée tient-elle dans les trois briques (mini-jeux, contenu en données, personnage) ?
 
+## Research proposal of 20/10/2026 - adopted in D76
+
+À la demande du créateur : étudier les mini-jeux Roblox et d'autres plateformes, la motivation et le ressenti
+visuel, puis proposer une liste entièrement nouvelle avant toute intervention dans Roblox.
+
+Le [rapport de recherche et la proposition complète](../MINIGAME_MAKEOVER_PROPOSAL_2026-10-20.md) proposent
+six nouvelles activités d'entraînement, huit aides repensées, cinq combats propres aux boss et un nouveau
+bras de fer. Une proposition pour le Dieu du Pump reste une extension future, à décider séparément.
+
+Direction proposée : un terrain de jeu de force absurde, fondé sur des objets que l'on comprime, roule,
+attire, balance, découpe ou transforme. Les thèmes des six exercices et plusieurs tâches des habitants
+changeraient ; les boss auraient des objectifs propres. Ces divergences avec le design actuel sont
+explicitement soumises à validation. Premiers prototypes recommandés après accord : Scrap Press,
+Tire Domino, Peel Good et Snack Volley.
+
+**Status: adopted by Antoine, D76.** Implementation in Studio is authorized. Public publishing and unlocking the future PumpGod are outside this delivery.
+
+## Refonte complète des mini-jeux — validée par D75 le 20/10/2026
+
+**Direction.** Faire de chaque activité une petite scène physique jouée dans le décor : le joueur lit un signe clair,
+agit avec un doigt, puis voit immédiatement le corps, l'objet et le PNJ réagir. Les gestes restent simples, mais les
+règles et les situations changent d'une activité à l'autre. Chaque série commence par une action facile, introduit une
+variation, puis se termine par un coup final comique. Les échecs sont courts et amusants. Pas de multitouch, de spam,
+de gyroscope obligatoire, de nouvelle monnaie ou de minuteur de présence.
+
+### Six exercices proposés
+
+| Exercice | Nouveau jeu | Geste et spectacle |
+|---|---|---|
+| Curl haltère | **Pastèque sous tension** | Faire pivoter l'haltère autour du coude en suivant une résistance qui change d'angle ; au sommet, la pastèque se fend et le biceps gonfle. |
+| Pompes | **Catapulte de poitrine** | Maintenir pour comprimer la descente, relâcher pour bondir et retomber sur une marque au sol ; combo de pompes claquées de plus en plus absurdes. |
+| Développé couché | **Sauvetage de barre** | Intercepter la barre qui descend par un toucher, puis la pousser d'un court geste jusqu'au verrouillage ; les disques font tanguer le banc. |
+| Squat | **Plancher fissuré** | Déplacer son appui vers la dalle intacte pendant la descente ; à la remontée, le sol se craquelle sous la charge. |
+| Tractions | **Barre voyageuse** | Faire glisser une prise de main vers le prochain appui pendant que le corps monte ; la barre s'allonge et les prises se dérobent. |
+| Corde à sauter | **Corde de spectacle** | Lire le type de passage de corde, puis faire un petit ou un grand geste vers le haut ; la série finit par un double tour spectaculaire. |
+
+### Huit aides proposées
+
+| Aide | Nouveau jeu | Geste et spectacle |
+|---|---|---|
+| Bocal de Maman | **Le joint secret** | Repérer la bulle d'air sous le couvercle, appuyer dessus pour casser le vide, puis tirer d'un geste ; les cornichons jaillissent quand le joint cède. |
+| Pneu du livreur | **Chasse aux fuites** | Repérer et boucher les bulles autour du pneu, puis actionner la pompe ; le pneu reprend sa forme sous les yeux du joueur. |
+| Clous du voisin | **Le bon angle** | Dessiner la trajectoire du marteau vers chaque clou ; un beau coup enfonce le clou droit, un coup raté le tord sans arrêter la partie. |
+| Voiture du voisin | **Lance-voiture** | Tirer une sangle élastique pour choisir angle et puissance, puis relâcher ; la voiture roule et rebondit jusqu'à sa place. |
+| Piano de Mme Do-Ré | **Déménagement impossible** | Choisir le bon point de pivot à chaque obstacle tandis que le piano avance ; chaque manœuvre réussie joue une note juste. |
+| Transats | **Le coin parfait** | Glisser chaque transat dans la zone d'ombre ou de soleil demandée avant la vague ; l'installation finale ressemble à une plage de star. |
+| Courses de l'épicier | **Sac impossible** | Choisir l'ordre des objets pour mettre le lourd au fond et le fragile en haut ; le sac prend une forme absurde sans casser. |
+| Chemin du touriste | **Carte postale vivante** | Faire tourner un petit panorama jusqu'à retrouver le monument montré sur la carte postale ; le touriste part dans la bonne direction. |
+
+### Cinq boss et le duel proposés
+
+| Adversaire | Nouveau jeu | Geste et spectacle |
+|---|---|---|
+| Kevin | **Éjection du canapé** | Anticiper sa fuite vers le frigo, la télé ou le canapé et poser un équipement de sport sur sa trajectoire d'un toucher ; il trébuche dans une pose athlétique malgré lui. |
+| Brayan | **Miroir de bronzage** | Orienter un miroir pour renvoyer son propre rayon de soleil sur lui ; sa pose et son bronzage s'emballent. |
+| Coach Turbo | **Rébellion au mégaphone** | Maintenir pour encaisser l'onde annoncée, relâcher dans l'accalmie pour poser ; son mégaphone finit par se retourner contre lui. |
+| Monsieur Pas-Les-Jambes | **Balayage des cure-dents** | Lire quelle jambe tremble, puis glisser un tapis sous le bon pied ; son énorme torse bascule au ralenti. |
+| Roi du Quartier | **Vent contraire** | Tirer son appui dans le sens opposé aux rafales du ventilateur ; son manteau et son ventilateur se retournent contre lui. |
+| Bras de fer entre joueurs | **Prise et contre** | À chaque échange, choisir une prise parmi trois positions lisibles, tenir pour résister, relâcher sur l'engagement adverse pour contrer ; le bras et la table bougent à chaque décision. Même règle pour les deux joueurs, sans bonus de Mog. |
+
+**Plus tard, hors MVP :** Le Dieu du Pump pourrait demander de relier des points de foudre sur une silhouette pour
+former la pose finale. Ne pas l'ajouter tant que le boss reste annoncé « coming soon ».
+
+**Répétition sans lassitude :** plusieurs motifs visuels par jeu, record personnel et note déjà existants, première
+réussite avec réaction unique du PNJ, défis hebdomadaires qui invitent à revisiter les activités. Faire varier les
+situations et les choix plutôt que réduire sans cesse les fenêtres de timing. Le mode auto reste accessible pour les
+exercices et aides, avec la récompense de base ; le plaisir et la meilleure note viennent du jeu manuel.
+
+**Jeux à valider d'abord sur appareils réels :** Pastèque sous tension, Le joint secret et Éjection du canapé. Ces trois
+jeux forment la première boucle du tutoriel. Vérifier compréhension, plaisir de répétition et lisibilité sur vrai
+téléphone, puis étendre les essais aux 17 autres. Les effets attendus sont des hypothèses, pas des résultats de joueurs.
+
 ## Économie actuelle — simulation du 17/10/2026, à décider pendant l'alpha
 
 `tools/simulate_economy.luau` a été exécuté dans Studio en mode Édition avec les Config actuels, sans toucher à une sauvegarde. Le calcul applique le combo aux exercices et aux aides, le paiement D57 (qualité, chaîne de Perfect et bonus sans faute), les événements de ville, les achats de boosts, le pareur et les pertes des Mog-off. Il s'arrête au seuil de Pump God, encore « coming soon ».

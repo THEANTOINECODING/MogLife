@@ -368,14 +368,14 @@ local function open(mirror: Instance)
 	confirming = nil
 	panel.Visible = true
 	UIController.SetStatsHidden(true, "Shop")
-	MinigameController.SetGameplayLocked(true)
+	MinigameController.SetGameplayLocked(true, "Shop")
 	render()
 end
 
 local function close()
 	panel.Visible = false
 	UIController.SetStatsHidden(false, "Shop")
-	MinigameController.SetGameplayLocked(false)
+	MinigameController.SetGameplayLocked(false, "Shop")
 end
 
 local function buildGui()
@@ -474,6 +474,32 @@ local function buildGui()
 		Parent = panel,
 	})
 	closeButton.Activated:Connect(close)
+	Ui.watchViewport(function()
+		local camera = workspace.CurrentCamera
+		local size = camera and camera.ViewportSize or Vector2.zero
+		local shortLandscape = size.X > size.Y and size.Y < 500
+		panel.Position = UDim2.fromScale(0.5, if shortLandscape then 0.5 else 0.53)
+		panel.Size = if shortLandscape then UDim2.new(0.96, 0, 1, -16) else UDim2.fromScale(0.94, 0.86)
+		if Ui.isPhonePortrait() then
+			viewport.Position = UDim2.fromOffset(16, 78)
+			viewport.Size = UDim2.new(1, -32, 0, 170)
+			previewLabel.Position = UDim2.fromOffset(16, 252)
+			previewLabel.Size = UDim2.new(1, -32, 0, 26)
+			tabArea.Position = UDim2.fromOffset(16, 286)
+			tabArea.Size = UDim2.new(1, -32, 0, 40)
+			list.Position = UDim2.fromOffset(16, 334)
+			list.Size = UDim2.new(1, -32, 1, -400)
+		else
+			viewport.Position = UDim2.fromOffset(16, 78)
+			viewport.Size = UDim2.new(0.36, -16, 1, -184)
+			previewLabel.Position = UDim2.new(0, 16, 1, -104)
+			previewLabel.Size = UDim2.new(0.36, -16, 0, 26)
+			tabArea.Position = UDim2.new(0.36, 8, 0, 78)
+			tabArea.Size = UDim2.new(0.64, -24, 0, 40)
+			list.Position = UDim2.new(0.36, 8, 0, 126)
+			list.Size = UDim2.new(0.64, -24, 1, -200)
+		end
+	end)
 
 	gui.Parent = player:WaitForChild("PlayerGui")
 end
@@ -497,7 +523,7 @@ function ShopController.OpenWardrobe()
 	buildTabs()
 	panel.Visible = true
 	UIController.SetStatsHidden(true, "Shop")
-	MinigameController.SetGameplayLocked(true)
+	MinigameController.SetGameplayLocked(true, "Shop")
 	render()
 end
 

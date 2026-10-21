@@ -2,12 +2,16 @@
 -- Le client envoie seulement la qualité de chaque répétition ; ce moteur vérifie la cadence, la distance,
 -- le mode auto, puis délègue la récompense au service qui a lancé le run (onRep / onEnd).
 
+local RunService = game:GetService("RunService")
+local HttpService = game:GetService("HttpService")
 local PhysicsService = game:GetService("PhysicsService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Playground = require(ReplicatedStorage.Shared.Playground)
+local PlaygroundConfig = require(ReplicatedStorage.Shared.Config.Playground)
 
 export type EndReason = "Completed" | "Stopped" | "TooFar" | "Left"
 
@@ -25,10 +29,10 @@ export type RunSpec = {
 	titleArgs: { [string]: any }?,
 	-- Appelé pour chaque répétition validée ; renvoie le gain à afficher (ou nil).
 	-- combo : multiplicateur du combo en cours (Balance.Combo), à appliquer au gain si le run en profite
-	onRep: ((player: Player, quality: string, combo: number) -> number?)?,
+	onRep: ((player: Player, quality: string, combo: number, payoutScale: number?, playground: any?) -> number?)?,
 	-- Appelé à la fin du run, quelle qu'en soit la raison. score : précision (0-100) des répétitions jouées à la
 	-- main, nil si la série n'est pas notée. Peut renvoyer des infos à ajouter au message de fin (ex. record).
-	onEnd: ((player: Player, reason: EndReason, reps: number, score: number?) -> { [string]: any }?)?,
+	onEnd: ((player: Player, reason: EndReason, reps: number, score: number?, outcome: any?) -> { [string]: any }?)?,
 }
 
 type Run = {
@@ -39,6 +43,18 @@ type Run = {
 	manual: number, -- répétitions jouées à la main
 	startedAt: number,
 	lastRepAt: number,
+	playground: any?,
+	token: string?,
+	sequence: number?,
+	budget: number?,
+	lastInput: number?,
+	duelHeld: boolean?,
+	lastBudget: number?,
+	nextSnapshot: number?,
+	finishAt: number?,
+	auto: boolean?,
+	usedAuto: boolean?,
+	payoutScale: number?,
 }
 
 -- Écart minimum absolu entre deux répétitions (évite les doublons d'un même geste)
@@ -80,6 +96,7 @@ local function broadcast(player: Player, spec: RunSpec, state: string, quality: 
 		id = spec.id,
 		anchor = spec.anchor,
 		interval = spec.interval,
+		minigame = spec.minigame,
 		quality = quality,
 		streak = streak,
 	})
@@ -105,11 +122,41 @@ function MinigameService.StartRun(player: Player, spec: RunSpec): boolean
 	end
 	-- Assis sur un banc ou un canapé : il se relève pour l'activité
 	SeatService.StandUp(player)
-	runs[player] = { spec = spec, reps = 0, streak = 0, points = 0, manual = 0, startedAt = os.clock(), lastRepAt = 0 }
+	local gameConfig = PlaygroundConfig.Games[spec.minigame]
+	local isPlayground = gameConfig and spec.kind ~= "Duel"
+	if isPlayground then
+		spec.interval = gameConfig.duration
+		spec.total = 1
+		spec.seed = math.random(1, 1000000)
+	end
+	runs[player] = {
+		spec = spec,
+		reps = 0,
+		streak = 0,
+		points = 0,
+		manual = 0,
+		startedAt = os.clock(),
+		lastRepAt = 0,
+		playground = if isPlayground
+			then Playground.New(spec.minigame, spec.seed, math.max(0, 1 / (spec.timingScale or 1) - 1))
+			else nil,
+		token = if gameConfig then HttpService:GenerateGUID(false) else nil,
+		sequence = 0,
+		budget = PlaygroundConfig.InputBurst,
+		lastInput = os.clock(),
+		lastBudget = os.clock(),
+		nextSnapshot = 0,
+		auto = false,
+		usedAuto = false,
+		payoutScale = 1,
+	}
 	-- Visible de tous : les autres clients ne proposent pas de duel à un joueur occupé
 	player:SetAttribute("InRun", true)
 	Remotes.SeriesUpdate:FireClient(player, {
 		state = "Started",
+		token = runs[player].token,
+		playground = if runs[player].playground then Playground.Snapshot(runs[player].playground) else nil,
+		anchor = spec.anchor,
 		kind = spec.kind,
 		id = spec.id,
 		minigame = spec.minigame,
@@ -138,7 +185,18 @@ function MinigameService.EndRun(player: Player, reason: EndReason)
 	if reason == "Completed" and run.manual > 0 and run.manual >= run.reps * Balance.Grade.MinManualShare then
 		score = math.floor(run.points / run.manual + 0.5)
 	end
-	local extra = if run.spec.onEnd then run.spec.onEnd(player, reason, run.reps, score) else nil
+	local outcome = if run.playground
+		then {
+			won = run.playground.won,
+			score = Playground.Score(run.playground),
+			misses = run.playground.misses,
+			auto = run.usedAuto,
+		}
+		else nil
+	if outcome then
+		score = if run.usedAuto then nil else outcome.score
+	end
+	local extra = if run.spec.onEnd then run.spec.onEnd(player, reason, run.reps, score, outcome) else nil
 	if reason ~= "Left" then
 		local message = {
 			state = "Ended",
@@ -156,7 +214,7 @@ function MinigameService.EndRun(player: Player, reason: EndReason)
 	end
 end
 
-local function onRep(player: Player, quality: unknown)
+local function onRep(player: Player, quality: unknown, trusted: boolean?)
 	local run = runs[player]
 	if not run then
 		return
@@ -165,6 +223,9 @@ local function onRep(player: Player, quality: unknown)
 		return
 	end
 	local spec = run.spec
+	if PlaygroundConfig.Games[spec.minigame] and not trusted then
+		return
+	end
 	if quality == "Auto" and not spec.autoAllowed then
 		return
 	end
@@ -198,7 +259,11 @@ local function onRep(player: Player, quality: unknown)
 		run.streak += 1
 	end
 	local combo = MinigameService.ComboMultiplier(run.streak)
-	local gain = if spec.onRep then spec.onRep(player, quality, combo) else nil
+	if run.playground then
+		run.streak = if run.usedAuto then 0 else (run.playground.streak or 0)
+		combo = if run.usedAuto then 1 else Playground.Combo(run.playground)
+	end
+	local gain = if spec.onRep then spec.onRep(player, quality, combo, run.payoutScale or 1, run.playground) else nil
 
 	-- Le run a pu être terminé par onRep
 	if runs[player] ~= run then
@@ -219,17 +284,166 @@ local function onRep(player: Player, quality: unknown)
 	end
 end
 
+-- Input is an intent, never a score. A per-run token prevents stale/replayed actions.
+function MinigameService.GetPlaygroundInput(player)
+	local run = runs[player]
+	return run and MinigameService.IsNear(player, run.spec.anchor) and run.duelHeld == true
+end
+
+function MinigameService.SetDuelState(player, state)
+	local run = runs[player]
+	if run and run.spec.kind == "Duel" then
+		Remotes.PlaygroundState:FireClient(player, { token = run.token, duel = state })
+	end
+end
+
+local function onPlaygroundInput(player, token, sequence, kind, x, y, sentAt)
+	local run = runs[player]
+	if not run or not run.token or token ~= run.token then
+		return
+	end
+	if
+		typeof(sequence) ~= "number"
+		or sequence ~= sequence
+		or sequence % 1 ~= 0
+		or sequence <= run.sequence
+		or sequence > run.sequence + 1000
+	then
+		return
+	end
+	if
+		typeof(x) ~= "number"
+		or typeof(y) ~= "number"
+		or x ~= x
+		or y ~= y
+		or math.abs(x) == math.huge
+		or math.abs(y) == math.huge
+	then
+		return
+	end
+	if
+		kind ~= "down"
+		and kind ~= "up"
+		and kind ~= "move"
+		and kind ~= "autoOn"
+		and kind ~= "autoOff"
+		and kind ~= "ready"
+		and kind ~= "undo"
+	then
+		return
+	end
+	local now = os.clock()
+	run.budget = math.min(PlaygroundConfig.InputBurst, run.budget + (now - run.lastBudget) * PlaygroundConfig.InputRate)
+	run.lastBudget = now
+	if run.budget < 1 then
+		return
+	end
+	run.budget -= 1
+	run.sequence = sequence
+	run.lastInput = now
+	if run.spec.kind == "Duel" then
+		if kind == "down" then
+			run.duelHeld = true
+		elseif kind == "up" then
+			run.duelHeld = false
+		end
+		return
+	end
+	if not run.playground then
+		return
+	end
+	if kind == "autoOn" or kind == "autoOff" then
+		if not run.spec.autoAllowed then
+			return
+		end
+		run.auto = kind == "autoOn"
+		run.usedAuto = run.usedAuto or run.auto
+		Playground.Input(run.playground, "up", x, y)
+	elseif not run.auto then
+		-- Bounded latency allowance for rhythm only; never accept a client grade or unrestricted rewind.
+		local lag = if typeof(sentAt) == "number" and sentAt == sentAt
+			then math.clamp(workspace:GetServerTimeNow() - sentAt, 0, PlaygroundConfig.TimingGrace)
+			else 0
+		run.playground.inputTime = run.playground.t - lag
+		Playground.Input(run.playground, kind, x, y)
+		run.playground.inputTime = nil
+	end
+end
+
+local function stepPlaygrounds(dt)
+	local now = os.clock()
+	for player, run in runs do
+		if run.token and now - run.lastInput > PlaygroundConfig.InputTimeout then
+			run.duelHeld = false
+			if run.playground then
+				run.playground.held = false
+			end
+			run.auto = false
+		end
+		if run.token and (not player.Character or not MinigameService.IsNear(player, run.spec.anchor)) then
+			MinigameService.EndRun(player, "TooFar")
+			continue
+		end
+		local state = run.playground
+		if not state then
+			continue
+		end
+		if not player.Character or not MinigameService.IsNear(player, run.spec.anchor) then
+			MinigameService.EndRun(player, "TooFar")
+			continue
+		end
+		if run.auto and not state.finished then
+			Playground.Auto(state, dt)
+		end
+		Playground.Step(state, dt)
+		if now >= run.nextSnapshot then
+			run.nextSnapshot = now + PlaygroundConfig.SnapshotInterval
+			Remotes.PlaygroundState:FireClient(
+				player,
+				{ token = run.token, state = Playground.Snapshot(state), sequence = run.sequence, auto = run.auto }
+			)
+			for _, viewer in Players:GetPlayers() do
+				if MinigameService.IsNear(viewer, run.spec.anchor, PlaygroundConfig.SpectatorDistance) then
+					Remotes.Activity:FireClient(
+						viewer,
+						{ player = player, state = "Playground", gameState = Playground.Snapshot(state) }
+					)
+				end
+			end
+		end
+		if state.finished then
+			if not run.finishAt then
+				run.finishAt = now + PlaygroundConfig.ResultPause
+				run.payoutScale = Playground.Payout(state)
+			elseif now >= run.finishAt then
+				onRep(player, if run.usedAuto then "Auto" else Playground.Quality(state), true)
+			end
+		end
+	end
+end
+
 function MinigameService.Init(services)
 	SeatService = services.SeatService
 end
 
 function MinigameService.Start()
+	Remotes.PlaygroundInput.OnServerEvent:Connect(onPlaygroundInput)
+	local accumulator = 0
+	RunService.Heartbeat:Connect(function(dt)
+		accumulator += math.min(dt, 0.25)
+		while accumulator >= PlaygroundConfig.Step do
+			accumulator -= PlaygroundConfig.Step
+			stepPlaygrounds(PlaygroundConfig.Step)
+		end
+	end)
 	-- Corps du joueur pendant une activité (ActivityController) : allongé sur un banc ou suspendu à une barre,
 	-- il traverse le décor au lieu de pousser le personnage
 	PhysicsService:RegisterCollisionGroup("ActivityBody")
 	PhysicsService:CollisionGroupSetCollidable("ActivityBody", "Default", false)
 	PhysicsService:CollisionGroupSetCollidable("ActivityBody", "ActivityBody", false)
-	Remotes.Rep.OnServerEvent:Connect(onRep)
+	Remotes.Rep.OnServerEvent:Connect(function(player, quality)
+		onRep(player, quality, false)
+	end)
 	Remotes.StopSeries.OnServerEvent:Connect(function(player)
 		MinigameService.EndRun(player, "Stopped")
 	end)

@@ -2,6 +2,8 @@
 
 local ORDER = {
 	"UIController",
+	"MobileCameraController",
+	"SprintController",
 	"MinigameController",
 	"ActivityController",
 	"BodyFxController",
@@ -20,10 +22,10 @@ local ORDER = {
 	"CreatorController",
 	"EmoteController",
 	"EventController",
+	"WeeklyController",
 	"SettingsController",
 	"OutfitFxController",
 	"DuelController",
-	"WeeklyController",
 }
 
 local controllers = {}

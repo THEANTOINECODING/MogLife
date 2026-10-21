@@ -46,6 +46,8 @@ local gradeLabel: TextLabel
 local starsLabel: TextLabel
 local accuracyLabel: TextLabel
 local recordLabel: TextLabel
+local continueButton: TextButton
+local doneButton: TextButton
 
 -- Couleur de chaque note
 local GRADE_COLORS = {
@@ -80,6 +82,7 @@ type Current = {
 
 local current: Current? = nil
 local SettingsController
+local SprintController
 
 local MinigameController = {}
 MinigameController.LastCombo = 1
@@ -109,13 +112,33 @@ local function setWorldTagsHidden(hidden: boolean)
 	end
 end
 
-function MinigameController.SetGameplayLocked(locked: boolean)
-	ProximityPromptService.Enabled = not locked
-	setWorldTagsHidden(locked)
+local lockReasons: { [string]: boolean } = {}
+local savedTouchGuiEnabled: boolean? = nil
+function MinigameController.SetGameplayLocked(locked: boolean, reason: string?)
+	lockReasons[reason or "Series"] = if locked then true else nil
+	local active = next(lockReasons) ~= nil
+	local touchGui = player:FindFirstChildOfClass("PlayerGui")
+		and player.PlayerGui:FindFirstChild("TouchGui") :: ScreenGui?
+	if touchGui then
+		if active then
+			if savedTouchGuiEnabled == nil then
+				savedTouchGuiEnabled = touchGui.Enabled
+			end
+			touchGui.Enabled = false
+		elseif savedTouchGuiEnabled ~= nil then
+			touchGui.Enabled = savedTouchGuiEnabled
+			savedTouchGuiEnabled = nil
+		end
+	end
+	if active then
+		SprintController.SetLocked(true)
+	end
+	ProximityPromptService.Enabled = not active
+	setWorldTagsHidden(active)
 
 	local character = player.Character
 	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-	if locked then
+	if active then
 		if humanoid and not savedMovement then
 			savedMovement = {
 				walkSpeed = humanoid.WalkSpeed,
@@ -133,6 +156,9 @@ function MinigameController.SetGameplayLocked(locked: boolean)
 			humanoid.JumpPower = savedMovement.jumpPower
 		end
 		savedMovement = nil
+	end
+	if not active then
+		SprintController.SetLocked(false)
 	end
 end
 
@@ -196,6 +222,7 @@ local function closeRun()
 		return
 	end
 	setSideButtonsHidden(false)
+	UIController.SetStatsHidden(false, "Run")
 	for _, connection in current.connections do
 		connection:Disconnect()
 	end
@@ -225,6 +252,7 @@ local function openRun(update)
 	end
 	MinigameController.SetGameplayLocked(true)
 	setSideButtonsHidden(true)
+	UIController.SetStatsHidden(true, "Run")
 
 	-- Le cadre plein écran capte les touches : la caméra ne tourne pas pendant le mini-jeu
 	local root = Ui.create("Frame", {
@@ -234,13 +262,21 @@ local function openRun(update)
 		Active = true,
 		Parent = gui,
 	})
+	local compact = Ui.isPhonePortrait()
+	local touchLandscape = UserInputService.TouchEnabled and not compact
+	local railWidth = math.min(260, math.floor(root.AbsoluteSize.X * 0.28))
+	local railButtonWidth = math.floor((railWidth - 8) / 2)
 
 	if update.titleKey then
 		Ui.label({
 			Name = "Title",
-			AnchorPoint = Vector2.new(0.5, 0),
-			Position = UDim2.new(0.5, 0, 0, 156),
-			Size = UDim2.fromOffset(520, 40),
+			AnchorPoint = if touchLandscape then Vector2.zero else Vector2.new(0.5, 0),
+			Position = if touchLandscape
+				then UDim2.fromOffset(16, 8)
+				else UDim2.new(0.5, 0, 0, if compact then 88 else 156),
+			Size = if touchLandscape
+				then UDim2.fromOffset(railWidth, 32)
+				else if compact then UDim2.new(1, -24, 0, 36) else UDim2.fromOffset(520, 40),
 			TextColor3 = Color3.fromRGB(255, 220, 120),
 			Text = UIController.Resolve({ key = update.titleKey, args = update.titleArgs }),
 			Parent = root,
@@ -248,17 +284,23 @@ local function openRun(update)
 	end
 	local counter = Ui.label({
 		Name = "Counter",
-		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 0, 198),
-		Size = UDim2.fromOffset(200, 40),
+		AnchorPoint = if touchLandscape then Vector2.zero else Vector2.new(0.5, 0),
+		Position = if touchLandscape
+			then UDim2.fromOffset(16, 44)
+			else UDim2.new(0.5, 0, 0, if compact then 126 else 198),
+		Size = if touchLandscape then UDim2.fromOffset(railWidth, 32) else UDim2.fromOffset(200, 40),
 		Text = Texts.Get("Minigame.RepCounter", { reps = 0, total = update.total }),
 		Parent = root,
 	})
 	local feedback = Ui.label({
 		Name = "Feedback",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.42, 0.45),
-		Size = UDim2.fromOffset(420, 80),
+		AnchorPoint = if touchLandscape then Vector2.zero else Vector2.new(0.5, 0.5),
+		Position = if touchLandscape
+			then UDim2.fromOffset(16, 82)
+			else UDim2.fromScale(if compact then 0.5 else 0.42, if compact then 0.25 else 0.45),
+		Size = if touchLandscape
+			then UDim2.fromOffset(railWidth, 44)
+			else if compact then UDim2.new(1, -24, 0, 54) else UDim2.fromOffset(420, 80),
 		TextTransparency = 1,
 		TextStrokeTransparency = 1,
 		Parent = root,
@@ -266,38 +308,40 @@ local function openRun(update)
 	-- Combo (D49) : grossit et change de couleur à chaque palier, « ON FIRE » au dernier
 	local comboLabel = Ui.label({
 		Name = "Combo",
-		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 0, 240),
-		Size = UDim2.fromOffset(320, 34),
+		AnchorPoint = if touchLandscape then Vector2.zero else Vector2.new(0.5, 0),
+		Position = if touchLandscape
+			then UDim2.fromOffset(16, 163)
+			else UDim2.new(0.5, 0, 0, if compact then 162 else 240),
+		Size = if touchLandscape then UDim2.fromOffset(railWidth, 28) else UDim2.fromOffset(320, 34),
 		TextColor3 = COMBO_COLORS[1],
 		Text = "",
 		Parent = root,
 	})
 	local gainLabel = Ui.label({
 		Name = "Gain",
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.42, 0.55),
-		Size = UDim2.fromOffset(260, 40),
+		AnchorPoint = if touchLandscape then Vector2.zero else Vector2.new(0.5, 0.5),
+		Position = if touchLandscape
+			then UDim2.fromOffset(16, 128)
+			else UDim2.fromScale(if compact then 0.5 else 0.42, if compact then 0.31 else 0.55),
+		Size = if touchLandscape then UDim2.fromOffset(railWidth, 32) else UDim2.fromOffset(260, 40),
 		TextTransparency = 1,
 		TextStrokeTransparency = 1,
 		Parent = root,
 	})
-	Ui.label({
-		Name = "Hint",
-		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.5, 0, 1, -84),
-		Size = UDim2.fromOffset(600, 34),
-		Text = Texts.Get(`Minigame.Hint.{update.minigame}`),
-		Parent = root,
-	})
-
 	local stopButton = Ui.button({
 		Name = "Stop",
-		AnchorPoint = Vector2.new(0, 1),
-		Position = UDim2.new(0, 16, 1, -16),
-		Size = UDim2.fromOffset(130, 56),
+		AnchorPoint = if touchLandscape
+			then Vector2.zero
+			else if UserInputService.TouchEnabled then Vector2.new(1, 0) else Vector2.new(0, 1),
+		Position = if touchLandscape
+			then UDim2.fromOffset(16, 260)
+			else if UserInputService.TouchEnabled
+				then UDim2.new(1, -16, 0, if compact then 208 else 80)
+				else UDim2.new(0, 16, 1, -16),
+		Size = if touchLandscape then UDim2.fromOffset(railButtonWidth, 50) else UDim2.fromOffset(130, 56),
 		BackgroundColor3 = Color3.fromRGB(200, 60, 60),
 		Text = Texts.Get("Minigame.Stop"),
+		Selectable = false,
 		Parent = root,
 	})
 
@@ -305,7 +349,13 @@ local function openRun(update)
 		if current and not current.autoHeld then
 			sendRep(quality)
 		end
-	end, { timingScale = update.timingScale, seed = update.seed })
+	end, {
+		timingScale = update.timingScale,
+		seed = update.seed,
+		token = update.token,
+		state = update.playground,
+		anchor = update.anchor,
+	})
 
 	local session: Current = {
 		kind = update.kind,
@@ -327,11 +377,30 @@ local function openRun(update)
 		connections = {},
 	}
 	current = session
+	if update.token then
+		for _, child in root:GetChildren() do
+			if child:IsA("GuiObject") and child ~= minigame.root and child ~= stopButton then
+				child.Visible = false
+			end
+		end
+		stopButton.AnchorPoint = Vector2.new(0, 1)
+		stopButton.Position = UDim2.new(0, 176, 1, -12)
+		stopButton.Size = UDim2.fromOffset(112, 44)
+		stopButton.ZIndex = 20
+	end
 
 	table.insert(
 		session.connections,
 		stopButton.Activated:Connect(function()
 			Remotes.StopSeries:FireServer()
+		end)
+	)
+	table.insert(
+		session.connections,
+		UserInputService.InputBegan:Connect(function(input)
+			if input.KeyCode == Enum.KeyCode.ButtonB then
+				Remotes.StopSeries:FireServer()
+			end
 		end)
 	)
 
@@ -341,14 +410,27 @@ local function openRun(update)
 
 	local autoButton = Ui.button({
 		Name = "Auto",
-		AnchorPoint = Vector2.new(0, 1),
-		Position = UDim2.new(0, 162, 1, -16),
-		Size = UDim2.fromOffset(200, 56),
+		AnchorPoint = if touchLandscape
+			then Vector2.zero
+			else if UserInputService.TouchEnabled then Vector2.new(1, 0) else Vector2.new(0, 1),
+		Position = if touchLandscape
+			then UDim2.fromOffset(24 + railButtonWidth, 260)
+			else if UserInputService.TouchEnabled
+				then UDim2.new(1, -162, 0, if compact then 208 else 80)
+				else UDim2.new(0, 162, 1, -16),
+		Size = if touchLandscape then UDim2.fromOffset(railButtonWidth, 50) else UDim2.fromOffset(200, 56),
 		BackgroundColor3 = Color3.fromRGB(60, 110, 200),
 		Text = Texts.Get("Minigame.AutoButton"),
+		Selectable = false,
 		Parent = root,
 	})
 
+	if update.token then
+		autoButton.AnchorPoint = Vector2.new(0, 1)
+		autoButton.Position = UDim2.new(0, 14, 1, -12)
+		autoButton.Size = UDim2.fromOffset(150, 44)
+		autoButton.ZIndex = 20
+	end
 	local function setAuto(held: boolean)
 		session.autoHeld = held
 		minigame:SetAuto(held)
@@ -382,7 +464,7 @@ local function openRun(update)
 	table.insert(
 		session.connections,
 		RunService.Heartbeat:Connect(function()
-			if session.autoHeld then
+			if session.autoHeld and not update.token then
 				sendRep("Auto")
 			end
 		end)
@@ -466,9 +548,12 @@ local function onEnded(update)
 	closeRun()
 	-- Les manches de boss et de duel s'enchaînent : c'est BossController / DuelController qui rend la main
 	if update.kind == "Boss" or update.kind == "Duel" then
+		MinigameController.SetGameplayLocked(false, "Series")
 		return
 	end
 	if (update.kind == "Exercise" or update.kind == "Help") and update.reason == "Completed" then
+		continueButton.Visible = update.kind == "Exercise"
+		doneButton.Size = if update.kind == "Help" then UDim2.new(1, -32, 0, 60) else UDim2.new(0.5, -24, 0, 60)
 		if update.kind == "Help" then
 			-- Aide : le Cash vraiment versé (bonus sans faute compris), ou rien si tout est raté
 			local cash = update.cash or 0
@@ -518,12 +603,15 @@ local function buildGui()
 		Name = "EndPanel",
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(440, 260),
+		Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 260) else UDim2.fromOffset(440, 260),
 		BackgroundColor3 = Color3.fromRGB(20, 20, 20),
 		BackgroundTransparency = 0.15,
 		Visible = false,
 		Parent = gui,
 	}, { Ui.corner(UDim.new(0, 16)) })
+	Ui.watchViewport(function()
+		endPanel.Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 260) else UDim2.fromOffset(440, 260)
+	end)
 
 	-- Note (S/A/B/C) à gauche, détails à droite
 	gradeLabel = Ui.label({
@@ -560,7 +648,7 @@ local function buildGui()
 		Parent = endPanel,
 	})
 
-	local continueButton = Ui.button({
+	continueButton = Ui.button({
 		Name = "Continue",
 		AnchorPoint = Vector2.new(0, 1),
 		Position = UDim2.new(0, 16, 1, -16),
@@ -569,7 +657,7 @@ local function buildGui()
 		Text = Texts.Get("Series.Continue"),
 		Parent = endPanel,
 	})
-	local doneButton = Ui.button({
+	doneButton = Ui.button({
 		Name = "Done",
 		AnchorPoint = Vector2.new(1, 1),
 		Position = UDim2.new(1, -16, 1, -16),
@@ -610,6 +698,7 @@ end
 
 function MinigameController.Init(controllers)
 	SettingsController = controllers.SettingsController
+	SprintController = controllers.SprintController
 	UIController = controllers.UIController
 end
 

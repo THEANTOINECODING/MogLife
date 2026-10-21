@@ -1,5 +1,7 @@
 # Duels entre joueurs : bras de fer
 
+> **D76: active mechanics are documented in [PLAYGROUND.md](PLAYGROUND.md).** The historical sections below describe the previous version. Progression IDs, unlocks and reward services remain compatible.
+
 Décision D68 (18/10/2026, demande du créateur ; remplace le Tug of Mog de D67). Un bras de fer contre **n'importe quel
 joueur, n'importe où** dans la ville. C'est le seul mode où l'on affronte un autre joueur ; il complète le Mog-off
 contre les boss sans le remplacer.
@@ -16,17 +18,19 @@ contre les boss sans le remplacer.
   assez de place (sinon le serveur essaie d'autres sens autour d'eux ; s'il n'y a vraiment pas la place, il le dit).
   Les deux joueurs se placent de chaque côté ; la table disparaît à la fin. Tout le monde voit le duel.
 
-## Le mini-jeu « Gauge » (propre au duel, jamais utilisé ailleurs)
+## Le mini-jeu « GripCounter » (D75, propre au duel)
 
-- Une aiguille balaie la jauge de force d'un bout à l'autre, puis revient. À chaque balayage, une **zone verte** (au
-  cœur doré) apparaît à un autre endroit : appuyer quand l'aiguille est dedans. Cœur doré = Perfect, vert = Good,
-  à côté ou pas d'appui = raté. Un seul appui par balayage.
+- Chaque échange montre la prise que prépare l'adversaire parmi trois positions. Le joueur pose le doigt, clique ou
+  maintient la direction correspondante, résiste, puis relâche lorsque la barre atteint la marque dorée. Le bon grip
+  et le bon moment donnent Perfect ou Good ; une prise erronée, un contre trop tôt/tard ou l'inaction donnent Miss.
+  Un seul geste maintenu par échange, sans multitouch et sans spam.
 - Chaque répétition pousse le bras : Perfect 3 crans, Good 2, raté 0. Les bras vont de -12 à +12 : l'atteindre, c'est
   **plaquer le bras de l'adversaire** et gagner la manche tout de suite. Sinon, après 8 balayages, la manche va au côté
   vers lequel penchent les bras (0 = manche nulle).
-- 3 manches, 2 gagnées = victoire. Chaque manche est plus rapide, avec une zone plus étroite.
-- **Chances égales** : les deux joueurs reçoivent exactement les mêmes zones au même moment (même graine), les mêmes
-  fenêtres et la même vitesse. Ni le Mog, ni le stade, ni la tenue n'entrent dans le calcul.
+- 3 manches, 2 gagnées = victoire. Chaque manche est plus rapide et la fenêtre du contre se réduit.
+- **Chances égales** : les deux joueurs reçoivent exactement les mêmes prises et moments de contre (même graine),
+  les mêmes fenêtres et la même vitesse. Les positions et le temps sont normalisés sur le panneau ; ni le Mog, ni le
+  stade, ni la tenue n'entrent dans le calcul. L'équivalence ressentie entre appareils attend des tests réels.
 
 ## Récompenses
 
@@ -48,6 +52,10 @@ en or ; l'adversaire à droite, en rouge ; le poing glisse vers celui qui gagne)
 LOST », petit recul du perdant de la manche, pose de victoire du gagnant vue par tous, puis la fenêtre du résultat.
 Coude sur la table, mains jointes au centre : elles basculent vers le coussin de plaquage selon le score en direct.
 Musique et jingles du combat de boss.
+Sur tablette, le panneau de prise a une grande surface tactile et le bouton d'arrêt reste hors du joystick. La fin
+de chaque manche gagnée plaque le bras sur son coussin, même lorsque la limite de K.-O. n'a pas été atteinte.
+En paysage tactile, le titre, le compteur, les retours et les commandes occupent une colonne à gauche de la prise.
+La fenêtre du résultat garde cette disposition jusqu'à sa fermeture.
 
 ## Tests
 

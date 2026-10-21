@@ -25,7 +25,7 @@ local TravelController = {}
 
 local function close()
 	panel.Visible = false
-	MinigameController.SetGameplayLocked(false)
+	MinigameController.SetGameplayLocked(false, "Travel")
 end
 
 local function openBus(currentStop: string?)
@@ -52,7 +52,7 @@ local function openBus(currentStop: string?)
 		end)
 	end
 	panel.Visible = true
-	MinigameController.SetGameplayLocked(true)
+	MinigameController.SetGameplayLocked(true, "Travel")
 end
 
 local function buildGui()

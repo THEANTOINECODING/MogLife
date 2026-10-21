@@ -7,7 +7,10 @@ local RunService = game:GetService("RunService")
 local NAMES = {
 	"StatsChanged", -- serveur -> client : (stats: { Mog, Cash, Stage })
 	"RequestStats", -- client -> serveur : redemande l'envoi des stats
+	"SetSprint", -- client -> serveur : (pressed: boolean, locked: boolean) sprint et verrouillage des fenêtres
 	"StartSeries", -- client -> serveur : (exerciseId: string) — relancer une série (« Keep going »)
+	"PlaygroundInput", -- client -> server: run token, sequence, action, normalized pointer
+	"PlaygroundState", -- server -> client: authoritative challenge snapshot
 	"Rep", -- client -> serveur : (quality: "Miss" | "Good" | "Perfect" | "Auto")
 	"StopSeries", -- client -> serveur : arrêter la série en cours
 	"SeriesUpdate", -- serveur -> client : (update: { state: "Started" | "Rep" | "Ended", kind, ... })
@@ -86,7 +89,10 @@ end
 return remotes :: {
 	StatsChanged: RemoteEvent,
 	RequestStats: RemoteEvent,
+	SetSprint: RemoteEvent,
 	StartSeries: RemoteEvent,
+	PlaygroundInput: RemoteEvent,
+	PlaygroundState: RemoteEvent,
 	Rep: RemoteEvent,
 	StopSeries: RemoteEvent,
 	SeriesUpdate: RemoteEvent,

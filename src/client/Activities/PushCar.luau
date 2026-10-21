@@ -1,5 +1,6 @@
--- Aide « Pousser la voiture du voisin » : le joueur se met derrière la voiture en panne et la pousse vraiment ;
--- elle avance un peu à chaque répétition (une ratée patine sur place) et revient à sa place à la fin. D37.
+-- Le joueur tend une sangle de remorquage et propulse la voiture vers sa place à chaque répétition.
+
+local Props = require(script.Parent.Props)
 
 local PushCar = {}
 PushCar.__index = PushCar
@@ -27,7 +28,9 @@ local function findCar(anchor: BasePart): BasePart?
 end
 
 function PushCar.new(ctx)
-	local self = setmetatable({ ctx = ctx }, PushCar)
+	local self = setmetatable({ ctx = ctx, props = Props.new("TowStrap") }, PushCar)
+	self.strap = self.props:Part(Vector3.new(0.12, 0.12, 1), Color3.fromRGB(255, 190, 70), Enum.Material.Fabric)
+	self.strap.Transparency = 1
 	local car = findCar(ctx.anchor)
 	if car then
 		self.car = ctx.borrow(car.Name, false, SEARCH_RADIUS)
@@ -68,31 +71,38 @@ function PushCar:Pose(p: number, shake: number, _u: number, time: number, count:
 	if not self.car then
 		return
 	end
-	-- La voiture avance d'un pas à chaque poussée réussie (une ratée ne fait que trembler)
+	-- La voiture bondit vers la place indiquée, puis roule ; une ratée tremble presque sur place
 	local progress = (math.max(count - 1, 0) + p * (1 - shake * 0.8)) * STEP
 	local wobble = shake * math.sin(time * 35) * 0.04
-	self.car.CFrame = self.carStart + self.forward * (progress + wobble)
+	local hop = math.sin(p * math.pi) * 0.5 * (1 - shake * 0.8)
+	self.car.CFrame = self.carStart + self.forward * (progress + wobble) + Vector3.new(0, hop, 0)
 
-	-- Le joueur colle à l'arrière de la voiture, penché, bras tendus, et marche avec elle
-	local rear = self.car.Position - self.forward * (self.halfLength + m.armLength * 0.75)
+	-- Le joueur reste derrière la place de départ et tire la sangle avant le lâcher
+	local rear = self.carStart.Position - self.forward * (self.halfLength + m.armLength * 0.75)
 	local stand = CFrame.lookAt(
 		Vector3.new(rear.X, root.Position.Y, rear.Z),
-		Vector3.new(self.car.Position.X, root.Position.Y, self.car.Position.Z)
+		Vector3.new(self.carStart.Position.X, root.Position.Y, self.carStart.Position.Z)
 	)
-	local lean = 0.55 + 0.15 * p
-	local stride = math.sin(time * 6) * 0.35 * (0.3 + p)
+	local lean = 0.35 + 0.25 * p
 	rig:Place("LowerTorso", stand * self.lower * CFrame.Angles(-lean, 0, 0))
-	rig:Set("LeftHip", CFrame.Angles(0.3 + stride, 0, 0))
-	rig:Set("RightHip", CFrame.Angles(0.3 - stride, 0, 0))
-	rig:Set("LeftKnee", CFrame.Angles(-0.4 - math.max(stride, 0), 0, 0))
-	rig:Set("RightKnee", CFrame.Angles(-0.4 - math.max(-stride, 0), 0, 0))
+	rig:Set("LeftHip", CFrame.Angles(0.25, 0, 0))
+	rig:Set("RightHip", CFrame.Angles(0.25, 0, 0))
+	rig:Set("LeftKnee", CFrame.Angles(-0.25, 0, 0))
+	rig:Set("RightKnee", CFrame.Angles(-0.25, 0, 0))
 	local contact = self.car.Position - self.forward * (self.halfLength + 0.1) + Vector3.new(0, self.height * 0.15, 0)
+	local gripCenter = stand.Position + stand.LookVector * (m.armLength * 0.55) + Vector3.new(0, m.hipHeight * 0.35, 0)
+	local length = (contact - gripCenter).Magnitude
+	self.strap.Transparency = 0
+	self.strap.Size = Vector3.new(0.12, 0.12, length)
+	self.strap.CFrame = CFrame.lookAt((contact + gripCenter) / 2, contact)
 	for _, sx in { -1, 1 } do
-		local grip = contact + stand.RightVector * sx * m.handSpread
+		local grip = gripCenter + stand.RightVector * sx * m.handSpread * 0.45
 		rig:Reach(if sx < 0 then "LeftArm" else "RightArm", grip, -Vector3.yAxis + stand.RightVector * sx * 0.5)
 	end
 end
 
-function PushCar:Destroy() end
+function PushCar:Destroy()
+	self.props:Destroy()
+end
 
 return PushCar

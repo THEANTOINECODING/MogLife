@@ -6,6 +6,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Format = require(ReplicatedStorage.Shared.Format)
@@ -27,6 +28,7 @@ type Row = { frame: Frame, label: TextLabel, fill: Frame, count: TextLabel, butt
 local state: any = nil
 local receivedAt = 0
 local panel: Frame
+local weeklyButton: TextButton
 local badge: Frame
 local timerLabel: TextLabel
 local rows: { Row } = {}
@@ -38,6 +40,30 @@ local chestButton: TextButton
 local footerLabel: TextLabel
 
 local WeeklyController = {}
+local mobileMenuOpen = false
+
+local function layoutWeekly()
+	if UserInputService.TouchEnabled then
+		weeklyButton.AnchorPoint = Vector2.zero
+		weeklyButton.Position = UDim2.fromOffset(8, 292)
+		weeklyButton.Size = UDim2.fromOffset(112, 48)
+		weeklyButton.Visible = mobileMenuOpen
+		panel.Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 560) else UDim2.fromOffset(520, 560)
+	else
+		weeklyButton.AnchorPoint = Vector2.new(1, 0)
+		weeklyButton.Position = UDim2.new(1, -12, 0, 12)
+		weeklyButton.Size = UDim2.fromOffset(150, 54)
+		weeklyButton.Visible = true
+		panel.Size = UDim2.fromOffset(520, 560)
+	end
+end
+
+function WeeklyController.SetMobileMenuOpen(open: boolean)
+	mobileMenuOpen = open
+	if weeklyButton then
+		layoutWeekly()
+	end
+end
 
 local function setButton(button: TextButton, text: string, enabled: boolean, color: Color3)
 	button.Text = text
@@ -130,7 +156,7 @@ end
 local function setOpen(open: boolean)
 	panel.Visible = open
 	UIController.SetStatsHidden(open, "Weekly")
-	MinigameController.SetGameplayLocked(open)
+	MinigameController.SetGameplayLocked(open, "Weekly")
 	if open then
 		render()
 		panel.Position = UDim2.fromScale(0.5, 0.56)
@@ -169,6 +195,7 @@ local function buildGui()
 		Text = Texts.Get("Weekly.Button"),
 		Parent = gui,
 	})
+	weeklyButton = open
 	badge = Ui.create("Frame", {
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.new(1, -4, 0, 4),
@@ -344,6 +371,7 @@ local function buildGui()
 	end)
 
 	gui.Parent = player:WaitForChild("PlayerGui")
+	Ui.watchViewport(layoutWeekly)
 end
 
 function WeeklyController.Init(controllers)

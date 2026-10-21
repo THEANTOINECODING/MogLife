@@ -67,8 +67,9 @@ local function spawnCFrame(plot: Model): CFrame?
 	if not spawn or not spawn:IsA("BasePart") then
 		return nil
 	end
-	-- Le repère du point d'apparition regarde la rue : on fait face à la maison
-	return spawn.CFrame * CFrame.Angles(0, math.pi, 0) + Vector3.new(0, 2, 0)
+	-- Le trottoir laisse la caméra derrière le personnage sans traverser le mur de la maison.
+	-- Le repère du point d'apparition regarde la rue : on fait face à la maison.
+	return spawn.CFrame * CFrame.new(0, 0, -8) * CFrame.Angles(0, math.pi, 0) + Vector3.new(0, 2, 0)
 end
 
 local function sendHome(player: Player, character: Model)

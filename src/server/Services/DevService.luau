@@ -2,6 +2,7 @@
 -- Utilisées par les tests automatiques (MCP) pour lire ou modifier les données d'un joueur :
 --   ServerStorage.DevCommands:Invoke("Get", userId)                 -> copie des données
 --   ServerStorage.DevCommands:Invoke("Set", userId, field, value)   -> modifie un champ + resynchronise
+--   ServerStorage.DevCommands:Invoke("Pump", userId, exerciseId, quality) -> vérifie les habits gonflés
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -9,6 +10,7 @@ local ServerStorage = game:GetService("ServerStorage")
 
 local DataService
 local StatsService
+local BodyService
 local StyleService
 local HelpService
 local BossService
@@ -45,6 +47,11 @@ local commands = {
 		FurnitureService.Refresh(player)
 		return true
 	end,
+	-- Gonfle un groupe musculaire sans terminer une série, pour vérifier l'ajustement des habits en Studio.
+	Pump = function(player: Player, exerciseId: string, quality: string)
+		BodyService.Pump(player, exerciseId, quality)
+		return true
+	end,
 	-- Simule le déclenchement du prompt d'un habitant (les prompts ne marchent pas si Studio est réduit)
 	StartHelp = function(player: Player, helpId: string)
 		HelpService.StartHelp(player, helpId)
@@ -75,6 +82,7 @@ local commands = {
 function DevService.Init(services)
 	DataService = services.DataService
 	StatsService = services.StatsService
+	BodyService = services.BodyService
 	StyleService = services.StyleService
 	HelpService = services.HelpService
 	BossService = services.BossService

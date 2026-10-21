@@ -60,10 +60,14 @@ end
 
 -- Panneau principal (à droite de l'écran). Un TextButton si `tappable`, pour capter les touches.
 function Kit:Panel(size: UDim2, tappable: boolean?): GuiObject
+	local compact = Ui.isPhonePortrait()
+	local panelSize = if compact then UDim2.new(1, -24, size.Y.Scale, size.Y.Offset) else size
 	local props = {
-		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -40, 0.5, 20),
-		Size = size,
+		AnchorPoint = if compact then Vector2.new(0.5, 0) else Vector2.new(1, 0.5),
+		Position = if compact
+			then UDim2.new(0.5, 0, 0, 274)
+			else UDim2.new(1, -40, 0.5, if UserInputService.TouchEnabled then 0 else 20),
+		Size = panelSize,
 		Parent = self.parent,
 	}
 	local panel
@@ -71,7 +75,7 @@ function Kit:Panel(size: UDim2, tappable: boolean?): GuiObject
 		panel = Ui.create("TextButton", {
 			AnchorPoint = props.AnchorPoint,
 			Position = props.Position,
-			Size = size,
+			Size = panelSize,
 			BackgroundColor3 = Color3.new(1, 1, 1),
 			BackgroundTransparency = 0.15,
 			AutoButtonColor = false,
@@ -86,6 +90,32 @@ function Kit:Panel(size: UDim2, tappable: boolean?): GuiObject
 		panel = Ui.panel(props)
 	end
 	self.root = panel
+	if compact then
+		local function fitPortrait()
+			local height = self.parent.AbsoluteSize.Y
+			if height <= 0 then
+				return
+			end
+			local top = if height < 600 then 230 else 274
+			local requestedHeight = height * size.Y.Scale + size.Y.Offset
+			panel.Position = UDim2.new(0.5, 0, 0, top)
+			panel.Size = UDim2.new(1, -24, 0, math.max(100, math.min(requestedHeight, height - top - 20)))
+		end
+		self:Connect(self.parent:GetPropertyChangedSignal("AbsoluteSize"), fitPortrait)
+		fitPortrait()
+	end
+	if UserInputService.TouchEnabled and not compact then
+		local scale = Ui.create("UIScale", { Parent = panel })
+		local function fitHeight()
+			local parentHeight = self.parent.AbsoluteSize.Y
+			local requestedHeight = parentHeight * panelSize.Y.Scale + panelSize.Y.Offset
+			if requestedHeight > 0 and parentHeight > 0 then
+				scale.Scale = math.min(1, math.max(1, parentHeight - 24) / requestedHeight)
+			end
+		end
+		self:Connect(self.parent:GetPropertyChangedSignal("AbsoluteSize"), fitHeight)
+		fitHeight()
+	end
 	return panel
 end
 
@@ -134,15 +164,37 @@ end
 
 -- Suivi du pointeur (souris, doigt) en coordonnées d'écran : self.pointer, self.pointerActive
 function Kit:TrackPointer()
-	local function update(input: InputObject)
-		local kind = input.UserInputType
-		if kind == Enum.UserInputType.MouseMovement or kind == Enum.UserInputType.Touch then
-			self.pointer = Vector2.new(input.Position.X, input.Position.Y)
+	local touch: InputObject? = nil
+	local function position(input: InputObject): Vector2
+		return Vector2.new(input.Position.X, input.Position.Y)
+	end
+	local function inPanel(point: Vector2): boolean
+		local root = self.root
+		return root ~= nil
+			and point.X >= root.AbsolutePosition.X
+			and point.Y >= root.AbsolutePosition.Y
+			and point.X <= root.AbsolutePosition.X + root.AbsoluteSize.X
+			and point.Y <= root.AbsolutePosition.Y + root.AbsoluteSize.Y
+	end
+	self:Connect(UserInputService.InputBegan, function(input)
+		if input.UserInputType == Enum.UserInputType.Touch and touch == nil and inPanel(position(input)) then
+			touch = input
+			self.pointer = position(input)
 			self.pointerActive = true
 		end
-	end
-	self:Connect(UserInputService.InputChanged, update)
-	self:Connect(UserInputService.InputBegan, update)
+	end)
+	self:Connect(UserInputService.InputChanged, function(input)
+		if input == touch or (touch == nil and input.UserInputType == Enum.UserInputType.MouseMovement) then
+			self.pointer = position(input)
+			self.pointerActive = true
+		end
+	end)
+	self:Connect(UserInputService.InputEnded, function(input)
+		if input == touch then
+			touch = nil
+			self.pointerActive = false
+		end
+	end)
 end
 
 -- Position du pointeur relative à un objet : (0,0) en haut à gauche, (1,1) en bas à droite
@@ -188,12 +240,42 @@ function Kit:HeldDirection(): Vector2
 	if down(Enum.KeyCode.S, Enum.KeyCode.Down) then
 		y += 1
 	end
+	if down(Enum.KeyCode.DPadLeft) then
+		x -= 1
+	end
+	if down(Enum.KeyCode.DPadRight) then
+		x += 1
+	end
+	if down(Enum.KeyCode.DPadUp) then
+		y -= 1
+	end
+	if down(Enum.KeyCode.DPadDown) then
+		y += 1
+	end
+	local stick = Vector2.zero
+	local dpad = Vector2.zero
 	for _, state in UserInputService:GetGamepadState(Enum.UserInputType.Gamepad1) do
-		if state.KeyCode == Enum.KeyCode.Thumbstick1 and state.Position.Magnitude > 0.2 then
-			x, y = state.Position.X, -state.Position.Y
+		if state.KeyCode == Enum.KeyCode.Thumbstick1 then
+			stick = Vector2.new(state.Position.X, -state.Position.Y)
+		elseif state.UserInputState == Enum.UserInputState.Begin then
+			if state.KeyCode == Enum.KeyCode.DPadLeft then
+				dpad += Vector2.new(-1, 0)
+			elseif state.KeyCode == Enum.KeyCode.DPadRight then
+				dpad += Vector2.new(1, 0)
+			elseif state.KeyCode == Enum.KeyCode.DPadUp then
+				dpad += Vector2.new(0, -1)
+			elseif state.KeyCode == Enum.KeyCode.DPadDown then
+				dpad += Vector2.new(0, 1)
+			end
 		end
 	end
-	return Vector2.new(x, y)
+	if stick.Magnitude > Balance.GamepadDeadzone then
+		x, y = stick.X, stick.Y
+	elseif dpad.Magnitude > 0 then
+		x, y = dpad.X, dpad.Y
+	end
+	local direction = Vector2.new(x, y)
+	return if direction.Magnitude > 1 then direction.Unit else direction
 end
 
 -- Boutons de direction à l'écran (mobile) : une rangée en bas du panneau
@@ -204,11 +286,13 @@ function Kit:AddDirectionButtons(directions: { string }, callback: (string) -> (
 			AnchorPoint = Vector2.new(0.5, 1),
 			Position = UDim2.new((index - 0.5) / count, 0, 1, -10),
 			Size = UDim2.new(1 / count, -12, 0, 56),
-			BackgroundColor3 = Color3.fromRGB(60, 60, 75),
+			BackgroundColor3 = Color3.fromRGB(72, 55, 104),
 			Text = Kit.ARROWS[direction] or direction,
+			Selectable = false,
 			ZIndex = 5,
 			Parent = self.root,
 		})
+		Ui.stroke(Color3.fromRGB(255, 216, 103), 2, 0.35).Parent = button
 		self:Connect(button.Activated, function()
 			if not self.auto then
 				callback(direction)

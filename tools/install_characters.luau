@@ -83,6 +83,9 @@ for _, part in imported:GetDescendants() do
 		part.CanCollide = false
 		part.Parent = destination
 		counts[target] += 1
+		if (counts.Bodies + counts.Style) % 100 == 0 then
+			task.wait()
+		end
 	end
 end
 imported:Destroy()

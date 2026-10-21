@@ -93,10 +93,13 @@ local function buildGui()
 		Name = "Banner",
 		AnchorPoint = Vector2.new(0.5, 0),
 		Position = UDim2.new(0.5, 0, 0, -220),
-		Size = UDim2.fromOffset(460, 104),
+		Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 104) else UDim2.fromOffset(460, 104),
 		Visible = false,
 		Parent = gui,
 	})
+	Ui.watchViewport(function()
+		banner.Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 104) else UDim2.fromOffset(460, 104)
+	end)
 	titleLabel = Ui.label({
 		Position = UDim2.fromOffset(14, 8),
 		Size = UDim2.new(1, -28, 0, 36),

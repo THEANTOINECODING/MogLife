@@ -50,6 +50,7 @@ local doneButton: TextButton
 local cancelButton: TextButton
 local tabButtons: { [string]: TextButton } = {}
 local content: ScrollingFrame
+local layoutCreator: (() -> ())?
 
 local look: Look.LookData = Look.Default()
 local hair = ""
@@ -390,7 +391,7 @@ local function close()
 	end
 	gui.Enabled = false
 	setOthersHidden(false)
-	MinigameController.SetGameplayLocked(false)
+	MinigameController.SetGameplayLocked(false, "Creator")
 	if spinConnection then
 		spinConnection:Disconnect()
 		spinConnection = nil
@@ -415,11 +416,14 @@ local function open(request: { [string]: any })
 	hintLabel.Visible = mode == "Create"
 	doneButton.Text = Texts.Get(if mode == "Edit" then "Creator.Save" else "Creator.Done")
 	cancelButton.Visible = mode == "Edit"
+	if layoutCreator then
+		layoutCreator()
+	end
 	if not gui.Enabled then
 		setOthersHidden(true)
 		gui.Enabled = true
 	end
-	MinigameController.SetGameplayLocked(true)
+	MinigameController.SetGameplayLocked(true, "Creator")
 	if not spinConnection then
 		spinConnection = RunService.RenderStepped:Connect(function(dt)
 			if not dragging and os.clock() - lastDrag > RETURN_DELAY then
@@ -573,10 +577,14 @@ local function buildGui()
 		Size = UDim2.fromScale(0.51, 0.7),
 		Parent = gui,
 	})
-	local tabBar = Ui.create("Frame", {
+	local tabBar = Ui.create("ScrollingFrame", {
 		Position = UDim2.fromScale(0.02, 0.02),
 		Size = UDim2.fromScale(0.96, 0.1),
 		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
+		ScrollingDirection = Enum.ScrollingDirection.X,
+		ScrollBarThickness = 3,
+		CanvasSize = UDim2.new(),
 		Parent = settings,
 	})
 	Ui.create("UIListLayout", {
@@ -644,6 +652,57 @@ local function buildGui()
 		Parent = gui,
 	})
 	cancelButton.Activated:Connect(close)
+
+	local function updateLayout()
+		if Ui.isPhonePortrait() then
+			titleLabel.Size = UDim2.new(1, -24, 0, 48)
+			hintLabel.Size = UDim2.new(1, -24, 0, 26)
+			previewCard.Position = UDim2.fromOffset(12, 100)
+			previewCard.Size = UDim2.new(1, -24, 0, 180)
+			randomButton.Position = UDim2.fromOffset(12, 290)
+			randomButton.Size = UDim2.new(0.5, -18, 0, 42)
+			futureButton.Position = UDim2.new(0.5, 6, 0, 290)
+			futureButton.Size = UDim2.new(0.5, -18, 0, 42)
+			settings.Position = UDim2.fromOffset(12, 340)
+			settings.Size = UDim2.new(1, -24, 1, -430)
+			tabBar.Position = UDim2.fromOffset(8, 8)
+			tabBar.Size = UDim2.new(1, -16, 0, 44)
+			tabBar.CanvasSize = UDim2.fromOffset(#TABS * 90, 0)
+			content.Position = UDim2.fromOffset(8, 58)
+			content.Size = UDim2.new(1, -16, 1, -66)
+			doneButton.Position = UDim2.new(1, -12, 1, -76)
+			doneButton.Size = if cancelButton.Visible then UDim2.new(0.5, -18, 0, 56) else UDim2.new(1, -24, 0, 56)
+			cancelButton.Position = UDim2.new(0.5, -6, 1, -76)
+			cancelButton.Size = UDim2.new(0.5, -18, 0, 56)
+		else
+			titleLabel.Size = UDim2.fromScale(0.6, 0.065)
+			hintLabel.Size = UDim2.fromScale(0.6, 0.03)
+			previewCard.Position = UDim2.fromScale(0.03, 0.12)
+			previewCard.Size = UDim2.fromScale(0.4, 0.7)
+			randomButton.Position = UDim2.fromScale(0.03, 0.84)
+			randomButton.Size = UDim2.fromScale(0.19, 0.08)
+			futureButton.Position = UDim2.fromScale(0.24, 0.84)
+			futureButton.Size = UDim2.fromScale(0.19, 0.08)
+			settings.Position = UDim2.fromScale(0.46, 0.12)
+			settings.Size = UDim2.fromScale(0.51, 0.7)
+			tabBar.Position = UDim2.fromScale(0.02, 0.02)
+			tabBar.Size = UDim2.fromScale(0.96, 0.1)
+			tabBar.CanvasSize = UDim2.new()
+			content.Position = UDim2.fromScale(0.03, 0.15)
+			content.Size = UDim2.fromScale(0.94, 0.82)
+			doneButton.Position = UDim2.fromScale(0.97, 0.84)
+			doneButton.Size = UDim2.fromScale(0.22, 0.1)
+			cancelButton.Position = UDim2.fromScale(0.73, 0.84)
+			cancelButton.Size = UDim2.fromScale(0.15, 0.1)
+		end
+		for _, button in tabButtons do
+			button.Size = if Ui.isPhonePortrait()
+				then UDim2.fromOffset(84, 40)
+				else UDim2.fromScale(1 / #TABS - 0.008, 1)
+		end
+	end
+	layoutCreator = updateLayout
+	Ui.watchViewport(updateLayout)
 
 	gui.Parent = player:WaitForChild("PlayerGui")
 end

@@ -1,5 +1,6 @@
--- Ensembles MOG LIFE. Les prix seront saisis après validation d'Antoine et des essais joueurs.
--- Active reste false tant que les FBX et StylePieces ne sont pas importés et vérifiés dans Studio.
+-- Ensembles MOG LIFE. Classés par prix croissant selon détails, silhouette et effets.
+-- Le premier ensemble suit les premiers gains (25 Cash du bocal + 20 de Kevin) ; les derniers sont des objectifs
+-- de style pour les stades avancés. Les prix restent à confronter aux parcours de l'alpha.
 -- Les articles anciens restent dans les données des joueurs et dans leur garde-robe.
 
 export type Set = {
@@ -7,32 +8,33 @@ export type Set = {
 	top: string,
 	bottom: string,
 	order: number,
-	price: number?,
+	price: number,
 	color: Color3,
 	effect: string?,
 }
 
 local definitions = {
-	{ "CircuitAce", 12, 25, 70, "Pulse" },
-	{ "BoardwalkBolt", 250, 120, 38 },
-	{ "VelvetVillain", 90, 23, 123 },
-	{ "MoonMechanic", 203, 221, 230, "Stardust" },
-	{ "GoldenHour", 239, 194, 79, "Glint" },
-	{ "BubblegumBlitz", 239, 41, 120 },
-	{ "BrickhouseBrawler", 194, 17, 22 },
-	{ "ThunderArcade", 43, 40, 111, "Pulse" },
-	{ "RoyalRumble", 84, 18, 61 },
-	{ "MidnightExpress", 15, 19, 31 },
-	{ "JungleJolt", 21, 107, 53 },
-	{ "FrostFlex", 141, 198, 238, "Snow" },
-	{ "TurboTaxi", 245, 192, 23 },
-	{ "DiscoDynamo", 94, 30, 145, "Glint" },
-	{ "CometCoach", 31, 58, 107 },
-	{ "SunsetStunt", 211, 68, 46 },
-	{ "GarageGremlin", 56, 89, 94 },
-	{ "CloudCruiser", 204, 197, 245, "Snow" },
-	{ "IronMeteor", 52, 59, 74 },
-	{ "PaperCrown", 244, 231, 186, "Glint" },
+	-- id, couleur RGB, prix en Cash, effet facultatif
+	{ "BoardwalkBolt", 250, 120, 38, 45 },
+	{ "JungleJolt", 21, 107, 53, 60 },
+	{ "TurboTaxi", 245, 192, 23, 80 },
+	{ "SunsetStunt", 211, 68, 46, 105 },
+	{ "CometCoach", 31, 58, 107, 130 },
+	{ "BubblegumBlitz", 239, 41, 120, 160 },
+	{ "CloudCruiser", 204, 197, 245, 195, "Snow" },
+	{ "FrostFlex", 141, 198, 238, 235, "Snow" },
+	{ "GarageGremlin", 56, 89, 94, 280 },
+	{ "ThunderArcade", 43, 40, 111, 330, "Pulse" },
+	{ "BrickhouseBrawler", 194, 17, 22, 385 },
+	{ "MidnightExpress", 15, 19, 31, 445 },
+	{ "PaperCrown", 244, 231, 186, 510, "Glint" },
+	{ "MoonMechanic", 203, 221, 230, 585, "Stardust" },
+	{ "CircuitAce", 12, 25, 70, 670, "Pulse" },
+	{ "RoyalRumble", 84, 18, 61, 765 },
+	{ "VelvetVillain", 90, 23, 123, 870 },
+	{ "IronMeteor", 52, 59, 74, 985 },
+	{ "DiscoDynamo", 94, 30, 145, 1110, "Glint" },
+	{ "GoldenHour", 239, 194, 79, 1250, "Glint" },
 }
 
 local list: { Set } = {}
@@ -44,15 +46,16 @@ for order, entry in definitions do
 		top = id .. "Top",
 		bottom = id .. "Bottom",
 		order = order,
+		price = entry[5] :: number,
 		color = Color3.fromRGB(entry[2] :: number, entry[3] :: number, entry[4] :: number),
-		effect = entry[5] :: string?,
+		effect = entry[6] :: string?,
 	}
 	table.insert(list, set)
 	byId[id] = set
 end
 
 return {
-	Active = false,
+	Active = true,
 	List = list,
 	ById = byId,
 	Effects = {

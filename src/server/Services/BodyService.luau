@@ -36,6 +36,7 @@ type Piece = {
 	kind: string,
 	size: Vector3,
 	offset: Vector3,
+	growthRatio: Vector3?,
 	nextSize: Vector3?,
 	nextOffset: Vector3?,
 }
@@ -217,6 +218,30 @@ local function twinOf(entry: Look.Piece, bodyKey: string, nextKey: string): (Vec
 	return size, nextBaseOffset + (entry.offset - baseOffset)
 end
 
+-- Toutes les coques d'une même partie R15 grandissent selon la taille de son corps.
+-- Des interpolations indépendantes de chaque MeshPart décalent les tissus de la peau entre deux stades.
+local function bodyGrowthRatio(bodyKey: string, nextKey: string, part: string): Vector3?
+	local folder = ReplicatedStorage:FindFirstChild("Bodies")
+	if not folder then
+		return nil
+	end
+	local function template(key: string): BasePart?
+		for _, suffix in { "", "_Shorts", "_Top" } do
+			local candidate = folder:FindFirstChild(`{key}_{part}{suffix}`)
+			if candidate and candidate:IsA("BasePart") then
+				return candidate
+			end
+		end
+		return nil
+	end
+	local current = template(bodyKey)
+	local nextPart = template(nextKey)
+	if not current or not nextPart then
+		return nil
+	end
+	return nextPart.Size / current.Size
+end
+
 local function buildShell(
 	character: Model,
 	bodyKey: string,
@@ -231,6 +256,7 @@ local function buildShell(
 	local shell = Instance.new("Model")
 	shell.Name = SHELL_NAME
 	local pieces = {}
+	local growthRatios: { [string]: Vector3? } = {}
 
 	-- Chaque pièce est soudée à sa partie R15, à son décalage de repos : elle suit les animations
 	for _, entry in Look.Pieces(bodyKey, look, styleItems) do
@@ -252,6 +278,11 @@ local function buildShell(
 		local color = entry.tint and Look.Color(look, entry.tint)
 		if color then
 			clone.Color = color
+			-- L'atlas importé rend son voile alpha noir/blanc opaque sur les cheveux dans Roblox.
+			-- Sans cette texture, la couleur choisie reste uniforme sur chaque coupe et barbe.
+			if entry.tint == "Hair" and clone:IsA("MeshPart") then
+				clone.TextureID = ""
+			end
 		end
 		local weld = Instance.new("Weld")
 		weld.Part0 = target
@@ -262,6 +293,9 @@ local function buildShell(
 		local nextSize, nextOffset = nil, nil
 		if nextKey then
 			nextSize, nextOffset = twinOf(entry, bodyKey, nextKey)
+			if not growthRatios[entry.part] then
+				growthRatios[entry.part] = bodyGrowthRatio(bodyKey, nextKey, entry.part)
+			end
 		end
 		table.insert(pieces, {
 			part = clone,
@@ -269,6 +303,7 @@ local function buildShell(
 			kind = kindOf(entry.part),
 			size = template.Size,
 			offset = offset,
+			growthRatio = growthRatios[entry.part],
 			nextSize = nextSize,
 			nextOffset = nextOffset,
 		})
@@ -323,7 +358,11 @@ local function applySizes(player: Player)
 		local extra = (growth + (state.pump[piece.kind] or 0)) * weight
 		local pump = Vector3.new(1 + extra, 1 + extra * GROWTH.LengthShare, 1 + extra)
 		local size, offset = piece.size, piece.offset
-		if piece.nextSize and piece.nextOffset then
+		if piece.growthRatio then
+			local scale = Vector3.new(1, 1, 1):Lerp(piece.growthRatio, progress)
+			size *= scale
+			offset *= scale
+		elseif piece.nextSize and piece.nextOffset then
 			size = size:Lerp(piece.nextSize, progress)
 			offset = offset:Lerp(piece.nextOffset, progress)
 		end

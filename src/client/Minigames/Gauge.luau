@@ -6,8 +6,10 @@
 -- L'inclinaison des bras (qui gagne) est affichée par DuelController ; ici, seulement le geste.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
 
 local Duels = require(ReplicatedStorage.Shared.Config.Duels)
+local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Kit = require(script.Parent.Parent.MinigameKit)
 local Ui = require(script.Parent.Parent.Ui)
 
@@ -18,7 +20,9 @@ local Gauge = {}
 
 function Gauge.new(parent: GuiObject, interval: number, onRep: (string) -> (), options)
 	local self = Kit.new(parent, interval, onRep, options)
-	local panel = self:Panel(UDim2.fromOffset(420, 250), true)
+	local camera = workspace.CurrentCamera
+	local tablet = UserInputService.TouchEnabled and camera and camera.ViewportSize.X >= 900
+	local panel = self:Panel(if tablet then UDim2.fromOffset(500, 300) else UDim2.fromOffset(420, 250), true)
 
 	local seed = (options and options.seed) or math.floor(os.clock() * 1000)
 	local rng = Random.new(seed)
@@ -62,6 +66,23 @@ function Gauge.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 	local arm = self:Emoji(panel, "💪", 90, 4)
 	arm.AnchorPoint = Vector2.new(0.5, 0)
 	arm.Position = UDim2.new(0.5, 0, 0, 120)
+	Ui.label({
+		AnchorPoint = Vector2.new(0.5, 1),
+		Position = UDim2.new(0.5, 0, 1, -12),
+		Size = UDim2.new(1, -24, 0, 34),
+		Text = Texts.Get("Duel.Go"),
+		Parent = panel,
+	})
+	-- Un seul capteur transparent au-dessus de la jauge, de l'aiguille et de l'icône :
+	-- les enfants visuels ne peuvent plus intercepter les appuis tactiles.
+	local tapSurface = Ui.create("TextButton", {
+		Name = "TapSurface",
+		Size = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1,
+		Text = "",
+		ZIndex = 8,
+		Parent = panel,
+	})
 
 	local zones: { number } = {}
 	local resolved: { [number]: boolean } = {}
@@ -127,7 +148,7 @@ function Gauge.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		flash(if quality == "Perfect" then GOLD elseif quality == "Good" then GREEN else Color3.fromRGB(110, 60, 60))
 		zone.BackgroundTransparency = 0.6
 		send(quality)
-	end, panel)
+	end, tapSurface)
 
 	self:OnStep(function(_, t)
 		local k, position = needleAt(t)

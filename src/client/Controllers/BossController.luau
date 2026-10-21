@@ -217,7 +217,10 @@ local function startDuelCamera(bossId: string)
 			local eye = CameraFraming.Best(center, directions, { model }, points())
 			local look = (center - eye).Unit
 			local right = look:Cross(Vector3.new(0, 1, 0))
-			return eye, center + right * ((center - eye).Magnitude * 0.22)
+			return eye,
+				center + right * ((center - eye).Magnitude * (math.tan(
+					math.rad(workspace.CurrentCamera.FieldOfView / 2)
+				) * workspace.CurrentCamera.ViewportSize.X / math.max(1, workspace.CurrentCamera.ViewportSize.Y) * 0.50))
 		end,
 		points = points,
 		ignore = function()
@@ -297,9 +300,11 @@ local function setFightLayout(active: boolean)
 	MinigameController.SetSideButtonsHidden(active, "Fight")
 end
 
-local function endPresentation()
+local function endPresentation(keepLayout: boolean?)
 	endSpecial()
-	setFightLayout(false)
+	if not keepLayout then
+		setFightLayout(false)
+	end
 	fight = nil
 	meter.Visible = false
 	vsBand.Visible = false
@@ -339,7 +344,7 @@ local function onBossPrompt(info)
 	local name = bossName(info.bossId)
 	local required = Texts.Get("Boss.Required", { required = info.mogRequired, mog = math.floor(info.mog) })
 	local line = Texts.Get(`BossLine.{info.bossId}`)
-	MinigameController.SetGameplayLocked(true)
+	MinigameController.SetGameplayLocked(true, "Boss")
 
 	local function confirm()
 		hidePanel()
@@ -485,11 +490,14 @@ local function onBossUpdate(update)
 		bossSays(update.bossId, `BossTaunt.{update.bossId}.{if update.won then "Behind" else "Ahead"}`)
 	elseif update.state == "Mogged" then
 		hidePanel()
-		MinigameController.SetGameplayLocked(false)
+		MinigameController.SetGameplayLocked(false, "Boss")
 		launchPlayer()
 		UIController.Toast(Texts.Get("Boss.Mogged", { cash = update.cash }), 3.5)
 	elseif update.state == "Victory" then
-		endPresentation()
+		-- Results are informational: movement resumes without waiting for the OK button.
+		MinigameController.SetGameplayLocked(false, "Series")
+		MinigameController.SetGameplayLocked(false, "Boss")
+		endPresentation(true)
 		shout(Texts.Get("Boss.MoggedStamp"), GOLD, bossName(update.bossId), 1.2)
 		filmBoss(update.bossId, 1.5, function()
 			shout("✦", GOLD, nil, 0.3)
@@ -515,11 +523,15 @@ local function onBossUpdate(update)
 			end
 			onPrimary = function()
 				hidePanel()
-				MinigameController.SetGameplayLocked(false)
+				setFightLayout(false)
+				MinigameController.SetGameplayLocked(false, "Boss")
 			end
 		end)
 	elseif update.state == "Defeat" then
-		endPresentation()
+		-- Results are informational: movement resumes without waiting for the OK button.
+		MinigameController.SetGameplayLocked(false, "Series")
+		MinigameController.SetGameplayLocked(false, "Boss")
+		endPresentation(true)
 		filmBoss(update.bossId, 1.4)
 		bossSays(update.bossId, `BossTaunt.{update.bossId}.Ahead`)
 		local text = if (update.cash or 0) > 0
@@ -528,12 +540,13 @@ local function onBossUpdate(update)
 		showPanel(bossName(update.bossId), "", text, Texts.Get("Boss.Ok"))
 		onPrimary = function()
 			hidePanel()
-			MinigameController.SetGameplayLocked(false)
+			setFightLayout(false)
+			MinigameController.SetGameplayLocked(false, "Boss")
 		end
 	elseif update.state == "Aborted" then
 		endPresentation()
 		hidePanel()
-		MinigameController.SetGameplayLocked(false)
+		MinigameController.SetGameplayLocked(false, "Boss")
 		UIController.Toast(Texts.Get("Boss.Aborted"))
 	end
 end
@@ -618,8 +631,8 @@ local function buildGui()
 	meter = Ui.create("Frame", {
 		Name = "Meter",
 		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.5, 0, 1, -140),
-		Size = UDim2.new(0.6, 0, 0, 30),
+		Position = UDim2.new(0.26, 0, 1, -100),
+		Size = UDim2.new(0.44, 0, 0, 30),
 		BackgroundColor3 = RED,
 		Visible = false,
 		Parent = gui,
@@ -667,7 +680,7 @@ local function buildGui()
 		Name = "Panel",
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.55),
-		Size = UDim2.fromOffset(520, 300),
+		Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 300) else UDim2.fromOffset(520, 300),
 		Visible = false,
 		Parent = gui,
 	})
@@ -716,7 +729,7 @@ local function buildGui()
 	end)
 	secondaryButton.Activated:Connect(function()
 		hidePanel()
-		MinigameController.SetGameplayLocked(false)
+		MinigameController.SetGameplayLocked(false, "Boss")
 	end)
 
 	gui.Parent = player:WaitForChild("PlayerGui")

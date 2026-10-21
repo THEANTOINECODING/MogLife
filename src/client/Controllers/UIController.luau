@@ -3,6 +3,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
 local Format = require(ReplicatedStorage.Shared.Format)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
@@ -22,6 +23,28 @@ local barFill: Frame
 local toastLabel: TextLabel
 local toastToken = 0
 local hudPanel: Frame
+local progressBar: Frame
+
+local function layoutHud()
+	if UserInputService.TouchEnabled then
+		local phone = Ui.isPhonePortrait()
+		hudPanel.AnchorPoint = if phone then Vector2.zero else Vector2.new(0.5, 0)
+		hudPanel.Position = if phone then UDim2.fromOffset(8, 8) else UDim2.new(0.5, 0, 0, 8)
+		hudPanel.Size = if phone then UDim2.new(1, -106, 0, 48) else UDim2.fromOffset(320, 48)
+		bossLabel.Visible = false
+		progressBar.Visible = false
+		toastLabel.Size = UDim2.new(1, -24, 0, 48)
+	else
+		hudPanel.AnchorPoint = Vector2.new(0.5, 0)
+		hudPanel.Position = UDim2.new(0.5, 0, 0, 8)
+		hudPanel.Size = UDim2.fromOffset(380, 104)
+		bossLabel.Visible = true
+		progressBar.Visible = true
+		progressBar.Position = UDim2.fromOffset(10, 72)
+		progressBar.Size = UDim2.new(1, -20, 0, 24)
+		toastLabel.Size = UDim2.fromOffset(520, 48)
+	end
+end
 
 local function buildHud()
 	local gui = Ui.create("ScreenGui", { Name = "Hud", ResetOnSpawn = false })
@@ -63,6 +86,7 @@ local function buildHud()
 		BackgroundColor3 = Color3.fromRGB(60, 60, 60),
 		Parent = panel,
 	}, { Ui.corner(UDim.new(0, 8)) })
+	progressBar = bar
 	barFill = Ui.create("Frame", {
 		Size = UDim2.fromScale(0, 1),
 		BackgroundColor3 = Color3.fromRGB(255, 190, 40),
@@ -85,6 +109,7 @@ local function buildHud()
 	})
 
 	gui.Parent = player:WaitForChild("PlayerGui")
+	Ui.watchViewport(layoutHud)
 end
 
 local function update(stats)

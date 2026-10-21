@@ -1,4 +1,13 @@
-# Passation Codex — 20 ensembles, 18 octobre 2026
+# Passation Codex — import installé et route rétablie, 18 octobre 2026
+
+- **Studio, mode Édition :** Antoine a importé `MogLife_Wardrobe.fbx`. Codex a lancé `tools/install_characters.luau` : les 3 318 MeshParts de style sont rangés dans `ReplicatedStorage.Style`, tous ont une texture. Les 3 318 décalages correspondants sont maintenant dans `src/shared/Config/StylePieces.luau` et synchronisés par Rojo. L'import brut n'est plus dans Workspace.
+- **Route :** les quatre parties de route existaient, mais `Workspace.Map.Town.Ring.Ground` avait été déplacé de `(0, -0.4, 0)` à `(21, 0.5, 18)` et recouvrait l'asphalte. Codex l'a remis à la position prévue par `world/Map/Town/Ring.model.json`. La route complète et ses marquages ont été revus à l'image avant et après ; la bonne position était encore présente après l'arrêt du Play. **Antoine doit faire Ctrl+S dans Studio pour conserver les modifications de la place.**
+- **Essais Play :** deux ensembles (`GoldenHour` et `CircuitAce`) ont été vus sur le personnage en jeu, sur Normie féminin, Alpha féminin, GodMogger féminin et Alpha masculin à la limite de croissance. Le haut et le bas étaient visibles et suivaient le corps ; les 20 tenues n'ont pas toutes été passées en revue en mouvement. Le serveur a démarré sans erreur du jeu ; seuls des avertissements CorePackages Roblox sont apparus. Les données de test du joueur (Look, Stage, Mog, StyleEquipped, Weekly) ont été remises à leur état initial et vérifiées avec `Get` avant l'arrêt.
+- **Vente :** `StyleSets.Active` reste `false` et les ensembles n'ont pas de prix. Le QCM sur les prix attend la réponse d'Antoine ; l'achat en un clic et les effets restent à essayer après activation. Les silhouettes montrent encore des ressemblances : ne pas présenter la garde-robe comme visuellement validée pour la vente.
+
+---
+
+# Passation précédente — 20 ensembles, 18 octobre 2026
 
 Antoine a rejeté le rendu de la première garde-robe D70 : volumes flottants et manque de variété. Ses choix suivants sont consignés en D71 : 20 ensembles originaux haut + bas, équipement en un clic, pièces mélangeables ensuite, effets discrets et réglables. Le prix des ensembles a été demandé en QCM et attend toujours sa réponse ; **aucun prix ni achat n'est activé**.
 

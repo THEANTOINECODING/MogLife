@@ -1,6 +1,6 @@
 -- Repères pour s'orienter :
 -- - une grande icône flottante au-dessus de chaque bâtiment (tag "Landmark" + attribut Icon), visible de loin ;
--- - quand le joueur a assez de Mog pour son prochain boss, un trait doré le guide jusqu'à lui
+-- - quand le joueur a assez de Mog pour son prochain boss, un repère discret indique sa position proche
 --   (pour Kevin : celui du garage de sa propre maison).
 
 local CollectionService = game:GetService("CollectionService")
@@ -20,8 +20,6 @@ local GUIDE_COLOR = Color3.fromRGB(255, 210, 60)
 local player = Players.LocalPlayer
 
 local targetBossId: string? = nil
-local beam: Beam
-local startAttachment: Attachment
 local endAttachment: Attachment
 local marker: BillboardGui
 
@@ -91,28 +89,17 @@ local function findTarget(bossId: string, from: Vector3): BasePart?
 end
 
 local function buildGuide()
-	beam = Instance.new("Beam")
-	beam.Name = "BossGuide"
-	beam.Color = ColorSequence.new(GUIDE_COLOR)
-	beam.LightEmission = 1
-	beam.Transparency = NumberSequence.new(0.25)
-	beam.Width0 = 0.8
-	beam.Width1 = 0.8
-	beam.FaceCamera = true
-	beam.Segments = 1
-	beam.Enabled = false
 	endAttachment = Instance.new("Attachment")
 	endAttachment.Name = "BossGuideTarget"
 	endAttachment.Parent = workspace.Terrain
-	beam.Attachment1 = endAttachment
-	beam.Parent = workspace.Terrain
 
 	marker = Ui.create("BillboardGui", {
 		Name = "BossGuideMarker",
-		Size = UDim2.fromScale(5, 5),
-		StudsOffsetWorldSpace = Vector3.new(0, 12, 0),
+		Size = UDim2.fromOffset(54, 54),
+		StudsOffsetWorldSpace = Vector3.new(0, 7, 0),
 		AlwaysOnTop = true,
 		LightInfluence = 0,
+		MaxDistance = 140,
 		Enabled = false,
 		Adornee = endAttachment,
 		Parent = player:WaitForChild("PlayerGui"),
@@ -125,27 +112,14 @@ local function buildGuide()
 	})
 end
 
-local function attachToCharacter(character: Model)
-	local root = character:WaitForChild("HumanoidRootPart", 10)
-	if not root then
-		return
-	end
-	startAttachment = Instance.new("Attachment")
-	startAttachment.Name = "BossGuideStart"
-	startAttachment.Position = Vector3.new(0, -2.5, 0)
-	startAttachment.Parent = root
-	beam.Attachment0 = startAttachment
-end
-
 local function update()
 	local character = player.Character
 	local root = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
 	local target = if targetBossId and root then findTarget(targetBossId, root.Position) else nil
-	local visible = target ~= nil and startAttachment ~= nil and startAttachment.Parent ~= nil
+	local visible = target ~= nil
 	if target then
 		endAttachment.WorldPosition = target.Position + Vector3.new(0, 1, 0)
 	end
-	beam.Enabled = visible
 	marker.Enabled = visible
 end
 
@@ -156,10 +130,6 @@ function WayfindingController.Start()
 	CollectionService:GetInstanceAddedSignal(LANDMARK_TAG):Connect(addLandmark)
 
 	buildGuide()
-	player.CharacterAdded:Connect(attachToCharacter)
-	if player.Character then
-		task.spawn(attachToCharacter, player.Character)
-	end
 
 	Remotes.StatsChanged.OnClientEvent:Connect(function(stats)
 		local stage = Stages.List[stats.Stage]

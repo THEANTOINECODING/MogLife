@@ -93,6 +93,9 @@ local function buildStatue(pedestal: BasePart, rank: number, userId: number)
 		descriptions[userId] = result
 		description = result
 	end
+	if shown[rank] ~= userId or not pedestal.Parent then
+		return
+	end
 	local model = Players:CreateHumanoidModelFromDescription(description, Enum.HumanoidRigType.R15)
 	model.Name = "Statue"
 	local humanoid = model:FindFirstChildOfClass("Humanoid") :: Humanoid
@@ -114,13 +117,33 @@ local function buildStatue(pedestal: BasePart, rank: number, userId: number)
 		animator:Destroy()
 	end
 	model:ScaleTo(STATUES.Scale[rank] or 1)
-	-- Posée sur le socle, tournée comme lui (vers la fontaine)
-	local _, size = model:GetBoundingBox()
+	-- Les membres d'un avatar créé hors du monde ne sont pas encore tous à leur position finale.
+	-- On l'assemble invisible, puis on pose sa boîte réelle sur le dessus du socle.
+	local transparencies: { [Instance]: number } = {}
+	for _, part in model:GetDescendants() do
+		if part:IsA("BasePart") or part:IsA("Decal") then
+			transparencies[part] = part.Transparency
+			part.Transparency = 1
+		end
+	end
 	local top = pedestal.Position.Y + pedestal.Size.Y / 2
-	model:PivotTo(pedestal.CFrame.Rotation + Vector3.new(pedestal.Position.X, top + size.Y / 2, pedestal.Position.Z))
+	model:PivotTo(pedestal.CFrame.Rotation + Vector3.new(pedestal.Position.X, top + 3, pedestal.Position.Z))
 	clearStatue(pedestal)
 	model.Parent = pedestal
+	task.wait()
+	if shown[rank] ~= userId or not pedestal.Parent or model.Parent ~= pedestal then
+		model:Destroy()
+		return
+	end
+	local bounds, size = model:GetBoundingBox()
+	local bottom = bounds.Position.Y - size.Y / 2
+	model:PivotTo(model:GetPivot() + Vector3.new(0, top - bottom, 0))
 	flex(model)
+	for part, transparency in transparencies do
+		if part.Parent then
+			(part :: any).Transparency = transparency
+		end
+	end
 end
 
 local function refresh()

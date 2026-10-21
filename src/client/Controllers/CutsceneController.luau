@@ -97,7 +97,7 @@ local function finish()
 	if camera then
 		camera.CameraType = Enum.CameraType.Custom
 	end
-	MinigameController.SetGameplayLocked(false)
+	MinigameController.SetGameplayLocked(false, "Cutscene")
 	if done then
 		done()
 	end
@@ -118,7 +118,7 @@ function CutsceneController.Play(shots: { any }, onDone: (() -> ())?, keepCamera
 	end
 	token += 1
 	local myToken = token
-	MinigameController.SetGameplayLocked(true)
+	MinigameController.SetGameplayLocked(true, "Cutscene")
 	camera.CameraType = Enum.CameraType.Scriptable
 	setBars(true)
 	setInterfaceHidden(true)

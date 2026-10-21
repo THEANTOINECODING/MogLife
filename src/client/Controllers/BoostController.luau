@@ -109,13 +109,13 @@ end
 
 local function open()
 	panel.Visible = true
-	MinigameController.SetGameplayLocked(true)
+	MinigameController.SetGameplayLocked(true, "Boost")
 	render()
 end
 
 local function close()
 	panel.Visible = false
-	MinigameController.SetGameplayLocked(false)
+	MinigameController.SetGameplayLocked(false, "Boost")
 end
 
 local function updateBadge()

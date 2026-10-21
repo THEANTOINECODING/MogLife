@@ -281,6 +281,7 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 	local eyeOffset, aimOffset = eye - start, aim - start
 	local fromEye, fromAim, glideStart = eyeOffset, aimOffset, -math.huge
 	local smoothAnchor = start
+	local viewport = camera.ViewportSize
 	local fader = CameraFraming.NewFader()
 	local nextFade, nextCheck, hiddenSince = 0, 0, nil :: number?
 
@@ -301,7 +302,8 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 		local now = os.clock()
 		-- Suit les vrais déplacements, en douceur (pas les mouvements des répétitions : la racine bouge peu)
 		smoothAnchor = smoothAnchor:Lerp(anchor, math.min(dt * 3, 1))
-		if (anchor - planned).Magnitude > REPLAN_MOVE then
+		if camera.ViewportSize ~= viewport or (anchor - planned).Magnitude > REPLAN_MOVE then
+			viewport = camera.ViewportSize
 			replan(anchor)
 		end
 		-- Contrôle de visibilité : si un grand décor cache le corps trop longtemps, nouvel angle

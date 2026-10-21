@@ -137,6 +137,7 @@ local function averageScore(total: number, reps: number): number
 	return math.floor(total / math.max(reps, 1) + 0.5)
 end
 
+local PlaygroundConfig = require(ReplicatedStorage.Shared.Config.Playground)
 local startRound
 
 -- Résultat de la manche, une fois que le joueur ET le boss ont fini
@@ -269,6 +270,9 @@ function startRound(player: Player, fight: Fight)
 		titleKey = "Boss.RoundTitle",
 		titleArgs = { round = fight.round, rounds = BOSS.Rounds, boss = { key = `Boss.{fight.bossId}` } },
 		onRep = function(p, quality)
+			if PlaygroundConfig.Games[boss.minigame] then
+				return nil
+			end
 			fight.score += BOSS.QualityScore[quality] or 0
 			Remotes.BossUpdate:FireClient(p, {
 				state = "Live",
@@ -278,7 +282,12 @@ function startRound(player: Player, fight: Fight)
 			})
 			return nil
 		end,
-		onEnd = function(p, reason)
+		onEnd = function(p, reason, _reps, _score, outcome)
+			if outcome then
+				fight.score = (if outcome.won then 100 else 0) * BOSS.RepsPerRound
+				fight.bossScore = 50 * BOSS.RepsPerRound
+				fight.bossDone = true
+			end
 			onPlayerRoundEnd(p, fight, reason)
 		end,
 	})
@@ -286,14 +295,21 @@ function startRound(player: Player, fight: Fight)
 		endFight(player)
 		return
 	end
-	task.spawn(playBoss, player, fight, interval, token)
+	if not PlaygroundConfig.Games[boss.minigame] then
+		task.spawn(playBoss, player, fight, interval, token)
+	end
 
 	-- Un joueur qui ne joue pas : sa manche se termine quand même (répétitions manquantes = 0)
-	task.delay(interval * BOSS.RepsPerRound * 2 + 3, function()
-		if fights[player] == fight and fight.token == token and not fight.playerDone then
-			MinigameService.EndRun(player, "Completed")
+	task.delay(
+		if PlaygroundConfig.Games[boss.minigame]
+			then PlaygroundConfig.Games[boss.minigame].duration + PlaygroundConfig.Lead + 5
+			else interval * BOSS.RepsPerRound * 2 + 3,
+		function()
+			if fights[player] == fight and fight.token == token and not fight.playerDone then
+				MinigameService.EndRun(player, "Completed")
+			end
 		end
-	end)
+	)
 end
 
 -- Emplacement de ce boss à portée du joueur (nil s'il est trop loin de tous)

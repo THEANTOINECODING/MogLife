@@ -26,6 +26,9 @@ return {
 	},
 	-- Effets
 	Sfx = {
+		-- Deux couches courtes pour sentir le contact et l'impact, avant la note serveur.
+		SceneTouch = { id = "rbxassetid://140323850218372", volume = 0.12 },
+		SceneImpact = { id = "rbxassetid://18448089848", volume = 0.28 },
 		-- Répétitions (à chaque mouvement) : discrètes
 		RepPerfect = { id = "rbxassetid://18448089848", volume = 0.4 }, -- « ding » + gonflement, crête 55
 		RepGood = { id = "rbxassetid://140323850218372", volume = 0.34 }, -- répétition réussie, crête 64

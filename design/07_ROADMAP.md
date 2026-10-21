@@ -1,5 +1,7 @@
 # 07 — Roadmap
 
+> D76 implementation: see [strength playground](02_MECANIQUES/PLAYGROUND.md). Studio validation is recorded in `PLAYGROUND_DELIVERY_2026-10-21.md`; physical-device playtesting remains an alpha gate.
+
 Principe : **un petit jeu complet d'abord, puis des mises à jour régulières** qui suivent toutes la même recette.
 
 ## Existant dans le dépôt (nuit du 13 au 14 octobre 2026)

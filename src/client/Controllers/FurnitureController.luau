@@ -121,6 +121,7 @@ function render()
 
 	for index, itemId in itemsFor(slot) do
 		local item = Furniture.Items[itemId]
+		local compact = Ui.isPhonePortrait()
 		local row = Ui.create("Frame", {
 			Name = itemId,
 			Size = UDim2.new(1, -12, 0, 58),
@@ -139,7 +140,7 @@ function render()
 		}, { Ui.corner(UDim.new(0, 8)), Ui.stroke(Color3.new(1, 1, 1), 2, 0.3) })
 		Ui.label({
 			Position = UDim2.fromOffset(56, 8),
-			Size = UDim2.new(1, -250, 1, -16),
+			Size = UDim2.new(1, if compact then -200 else -250, 1, -16),
 			TextXAlignment = Enum.TextXAlignment.Left,
 			Text = Texts.Get(`Furniture.{itemId}`),
 			Parent = row,
@@ -149,7 +150,7 @@ function render()
 			Name = "Action",
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -8, 0.5, 0),
-			Size = UDim2.fromOffset(180, 44),
+			Size = UDim2.fromOffset(if compact then 132 else 180, 44),
 			BackgroundColor3 = color,
 			Text = text,
 			Parent = row,
@@ -177,13 +178,13 @@ local function open(newMode: "Store" | "Home", slotName: string?)
 		list.Size = UDim2.new(1, -32, 1, -164)
 	end
 	panel.Visible = true
-	MinigameController.SetGameplayLocked(true)
+	MinigameController.SetGameplayLocked(true, "Furniture")
 	render()
 end
 
 local function close()
 	panel.Visible = false
-	MinigameController.SetGameplayLocked(false)
+	MinigameController.SetGameplayLocked(false, "Furniture")
 end
 
 local function buildGui()
@@ -192,10 +193,13 @@ local function buildGui()
 		Name = "Panel",
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.55),
-		Size = UDim2.fromOffset(600, 480),
+		Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 480) else UDim2.fromOffset(600, 480),
 		Visible = false,
 		Parent = gui,
 	})
+	Ui.watchViewport(function()
+		panel.Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 480) else UDim2.fromOffset(600, 480)
+	end)
 	titleLabel = Ui.label({
 		Position = UDim2.fromOffset(16, 12),
 		Size = UDim2.new(0.62, -16, 0, 40),

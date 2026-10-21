@@ -10,11 +10,13 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local Duels = require(ReplicatedStorage.Shared.Config.Duels)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local CameraFraming = require(script.Parent.Parent.CameraFraming)
 local MogOff = require(script.Parent.Parent.Activities.MogOff)
 local Rig = require(script.Parent.Parent.Activities.Rig)
 
+local PlaygroundConfig = require(ReplicatedStorage.Shared.Config.Playground)
 local Activities = script.Parent.Parent.Activities
 
 -- Amplitude et tremblement du mouvement selon la qualité de la répétition
@@ -182,7 +184,13 @@ startCloseUp = function(character: Model, preset: any, anchor: BasePart?, animat
 			-- Le personnage dans la moitié gauche : on vise un point à sa droite (vu de la caméra)
 			local look = (focus - eye).Unit
 			local right = look:Cross(Vector3.new(0, 1, 0))
-			return eye, focus + right * ((focus - eye).Magnitude * 0.28)
+			return eye,
+				focus
+					+ right
+						* ((focus - eye).Magnitude * (math.tan(math.rad(workspace.CurrentCamera.FieldOfView / 2)) * workspace.CurrentCamera.ViewportSize.X / math.max(
+							1,
+							workspace.CurrentCamera.ViewportSize.Y
+						) * 0.50))
 		end,
 		points = function()
 			return CameraFraming.BodyPoints(character)
@@ -260,7 +268,10 @@ local function start(update)
 	stop(player)
 	stopEmote(player)
 	-- Exercices et aides : un module par activité ; combats de boss : le Mog-off (duel de poses), pour tous les boss
-	local module = Activities:FindFirstChild(if update.kind == "Boss" then "MogOff" else update.id)
+	local isPlayground = PlaygroundConfig.Games[update.minigame] and update.kind ~= "Duel"
+	local module = Activities:FindFirstChild(
+		if isPlayground then "Playground" elseif update.kind == "Boss" then "MogOff" else update.id
+	)
 	local anchor = update.anchor
 	local character = player.Character
 	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
@@ -293,6 +304,7 @@ local function start(update)
 		borrowed = {},
 	}
 	animator.activity = Activity.new({
+		minigame = update.minigame,
 		rig = rig,
 		measures = rig:Measure(humanoid),
 		character = character,
@@ -305,7 +317,7 @@ local function start(update)
 	if update.kind ~= "Boss" then
 		animator.sweat = addSweat(character)
 		-- Duel : DuelController filme les deux joueurs (pas de gros plan sur soi seul)
-		if player == localPlayer and update.kind ~= "Duel" and SettingsController.Get("CloseUp") then
+		if player == localPlayer and update.kind ~= "Duel" and (isPlayground or SettingsController.Get("CloseUp")) then
 			task.spawn(startCloseUp, character, Activity.CloseUp, anchor, animator)
 		end
 	end
@@ -384,6 +396,11 @@ function ActivityController.Start()
 		end
 		if update.state == "Started" then
 			start(update)
+		elseif update.state == "Playground" then
+			local animator = animators[update.player]
+			if animator and animator.activity.SetState then
+				animator.activity:SetState(update.gameState)
+			end
 		elseif update.state == "Rep" then
 			onRep(update)
 		elseif update.state == "OpponentRep" then
@@ -392,7 +409,16 @@ function ActivityController.Start()
 				animator.activity:OpponentRep(update.quality)
 			end
 		elseif update.state == "Ended" then
-			stop(update.player)
+			if update.kind == "Duel" then
+				local animator = animators[update.player]
+				task.delay(Duels.FinishPoseTime, function()
+					if animators[update.player] == animator then
+						stop(update.player)
+					end
+				end)
+			else
+				stop(update.player)
+			end
 		end
 	end)
 	Remotes.EmotePlay.OnClientEvent:Connect(function(who, index)

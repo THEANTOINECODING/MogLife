@@ -7,6 +7,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
 local Settings = require(ReplicatedStorage.Shared.Config.Settings)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
@@ -23,12 +24,37 @@ local SoundController
 local MinigameController
 local UIController
 local OutfitFxController
+local ObjectiveController
+local WeeklyController
 
 local values: { [string]: boolean } = {}
 local panel: Frame
 local switches: { [string]: { track: Frame, knob: Frame, label: TextLabel } } = {}
+local quickMenuButton: TextButton
+local sideButtons: { TextButton } = {}
+local quickMenuOpen = false
 
 local SettingsController = {}
+
+local function layoutSideButtons()
+	local compact = UserInputService.TouchEnabled
+	local phone = Ui.isPhonePortrait()
+	quickMenuButton.Visible = compact
+	quickMenuButton.Position = if phone then UDim2.new(1, -8, 0, 8) else UDim2.fromOffset(12, 12)
+	quickMenuButton.AnchorPoint = if phone then Vector2.new(1, 0) else Vector2.zero
+	quickMenuButton.Size = if phone then UDim2.fromOffset(82, 48) else UDim2.fromOffset(112, 48)
+	for index, button in sideButtons do
+		button.Visible = not compact or quickMenuOpen
+		button.Position = if compact
+			then UDim2.fromOffset(8, 68 + (index - 1) * 56)
+			else UDim2.new(0, 12, 0.5, -64 + (index - 1) * 64)
+		button.Size = if compact then UDim2.fromOffset(112, 48) else UDim2.fromOffset(120, 54)
+		button.AnchorPoint = if compact then Vector2.zero else Vector2.new(0, 0.5)
+	end
+	ObjectiveController.SetMobileMenuOpen(compact and quickMenuOpen)
+	WeeklyController.SetMobileMenuOpen(compact and quickMenuOpen)
+	panel.Size = if phone then UDim2.new(1, -20, 1, -20) else UDim2.new(0, 460, 1, -20)
+end
 
 -- Réglage en cours (activé tant que le serveur n'a rien envoyé)
 function SettingsController.Get(key: string): boolean
@@ -106,7 +132,7 @@ end
 local function setPanel(visible: boolean)
 	panel.Visible = visible
 	UIController.SetStatsHidden(visible, "Settings")
-	MinigameController.SetGameplayLocked(visible)
+	MinigameController.SetGameplayLocked(visible, "Settings")
 end
 
 local function buildGui()
@@ -141,6 +167,36 @@ local function buildGui()
 			setPanel(not panel.Visible)
 		end
 	end)
+	quickMenuButton = Ui.button({
+		Name = "QuickMenu",
+		Position = UDim2.fromOffset(8, 8),
+		Size = UDim2.fromOffset(76, 48),
+		BackgroundColor3 = Color3.fromRGB(70, 60, 95),
+		Text = Texts.Get("Menu.More"),
+		Visible = false,
+		Parent = gui,
+	})
+	quickMenuButton.Activated:Connect(function()
+		quickMenuOpen = not quickMenuOpen
+		layoutSideButtons()
+	end)
+	local playerGui = player:WaitForChild("PlayerGui")
+	sideButtons = {
+		playerGui:WaitForChild("Travel"):WaitForChild("Home") :: TextButton,
+		playerGui:WaitForChild("Emotes"):WaitForChild("Flex") :: TextButton,
+		styleButton,
+		settingsButton,
+	}
+	for _, button in sideButtons do
+		button.Activated:Connect(function()
+			quickMenuOpen = false
+			layoutSideButtons()
+		end)
+	end
+	playerGui:WaitForChild("Weekly"):WaitForChild("Open").Activated:Connect(function()
+		quickMenuOpen = false
+		layoutSideButtons()
+	end)
 
 	panel = Ui.panel({
 		Name = "SettingsPanel",
@@ -158,14 +214,30 @@ local function buildGui()
 		Text = Texts.Get("Settings.Title"),
 		Parent = panel,
 	})
+	local rowList = Ui.create("ScrollingFrame", {
+		Name = "Options",
+		Position = UDim2.fromOffset(16, 60),
+		Size = UDim2.new(1, -32, 1, -136),
+		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
+		ScrollingDirection = Enum.ScrollingDirection.Y,
+		ScrollBarThickness = 6,
+		CanvasSize = UDim2.fromOffset(0, #Settings.List * 64),
+		Parent = panel,
+	})
+	Ui.create("UIListLayout", {
+		Padding = UDim.new(0, 8),
+		SortOrder = Enum.SortOrder.LayoutOrder,
+		Parent = rowList,
+	})
 	for index, key in Settings.List do
 		local row = Ui.create("Frame", {
 			Name = key,
-			Position = UDim2.fromOffset(16, 60 + (index - 1) * 64),
-			Size = UDim2.new(1, -32, 0, 56),
+			LayoutOrder = index,
+			Size = UDim2.new(1, -8, 0, 56),
 			BackgroundColor3 = Color3.fromRGB(40, 35, 55),
 			BackgroundTransparency = 0.2,
-			Parent = panel,
+			Parent = rowList,
 		}, { Ui.corner(UDim.new(0, 10)) })
 		Ui.label({
 			Position = UDim2.fromOffset(12, 4),
@@ -226,6 +298,7 @@ local function buildGui()
 		setPanel(false)
 	end)
 	gui.Parent = player:WaitForChild("PlayerGui")
+	Ui.watchViewport(layoutSideButtons)
 end
 
 function SettingsController.Init(controllers)
@@ -234,6 +307,8 @@ function SettingsController.Init(controllers)
 	MinigameController = controllers.MinigameController
 	UIController = controllers.UIController
 	OutfitFxController = controllers.OutfitFxController
+	ObjectiveController = controllers.ObjectiveController
+	WeeklyController = controllers.WeeklyController
 end
 
 function SettingsController.Start()
