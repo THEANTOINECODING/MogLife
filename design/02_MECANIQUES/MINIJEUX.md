@@ -1,6 +1,6 @@
 # Mini-jeux (mécanique principale)
 
-> **D76: active mechanics are documented in [PLAYGROUND.md](PLAYGROUND.md).** The historical sections below describe the previous version. Progression IDs, unlocks and reward services remain compatible.
+> **D76 : les mini-jeux actuels sont décrits dans [PLAYGROUND.md](PLAYGROUND.md).** Les sections ci-dessous décrivent l'ancienne version, gardée pour l'historique. Identifiants de progression, déblocages et récompenses restent compatibles.
 
 **Chaque activité a son PROPRE mini-jeu** : chaque exercice, chaque aide et chaque boss se joue différemment, et aucun mini-jeu n'est réutilisé ailleurs (décision D23).
 Pour rester simple à produire, tous les mini-jeux partagent une boîte à outils commune (`src/client/MinigameKit.luau` : entrées, notation, mode auto, nettoyage).

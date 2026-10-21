@@ -252,7 +252,7 @@ Games.ParkingKnot = {
 				before[i] = table.clone(c)
 			end
 			local oldX, oldY = car.x, car.y
-			local delta = (if car.horizontal then s.x - s.ax else s.y - s.ay) / (0.76 / g.size)
+			local delta = (if car.horizontal then s.x - s.ax else s.y - s.ay) / (C.GRID_SPAN / g.size)
 			local count = math.floor(math.abs(delta) + 0.5)
 			local direction = if delta >= 0 then 1 else -1
 			for _ = 1, math.min(count, g.size) do
@@ -298,14 +298,14 @@ Games.ParkingKnot = {
 			C.node(
 				s,
 				"car" .. i,
-				0.12 + (car.x + w / 2) * 0.76 / g.size,
-				0.12 + (car.y + h / 2) * 0.76 / g.size,
-				w * 0.76 / g.size - 0.015,
-				h * 0.76 / g.size - 0.015,
+				C.GRID_MIN + (car.x + w / 2) * C.GRID_SPAN / g.size,
+				C.GRID_MIN + (car.y + h / 2) * C.GRID_SPAN / g.size,
+				w * C.GRID_SPAN / g.size - 0.015,
+				h * C.GRID_SPAN / g.size - 0.015,
 				if i == 1 then "taxi" else "car"
 			)
 		end
-		C.node(s, "exit", 0.94, 0.5, 0.07, 0.13, "goal")
+		C.node(s, "exit", 0.975, 0.5, 0.04, 0.15, "goal")
 	end,
 }
 
@@ -346,14 +346,14 @@ Games.PianoPolish = {
 				"dust" .. i,
 				x,
 				y,
-				0.72 / g.size,
-				0.72 / g.size,
+				C.GRID_SPAN * 0.95 / g.size,
+				C.GRID_SPAN * 0.95 / g.size,
 				dust,
 				if s.clean[i] then 0 else (i * 17 + s.seed * 11) % 90
 			)
 		end
 		for i = 1, 10 do
-			C.node(s, "key" .. i, 0.15 + i * 0.063, 0.92, 0.054, 0.08, if i % 3 == 0 then "ink" else "paper")
+			C.node(s, "key" .. i, 0.15 + i * 0.063, 0.975, 0.054, 0.04, if i % 3 == 0 then "ink" else "paper")
 		end
 		C.node(s, "cloth", s.cx, s.cy, 0.17, 0.13, "cloth", math.sin(s.t * 4) * 6)
 	end,

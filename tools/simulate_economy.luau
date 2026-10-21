@@ -38,7 +38,8 @@ local ASSUME = {
 
 -- Profils : répartition Perfect / Good en jeu actif, et comportement
 local PROFILES = {
-	{ name = "1. Mode auto, aucune aide", auto = true, helps = false, perfect = 0.3, good = 0.5 },
+	-- Le mode auto a été retiré (D79) : le profil le plus faible est un joueur maladroit sans aides
+	{ name = "1. Joueur faible, aucune aide", helps = false, perfect = 0.15, good = 0.45 },
 	{
 		name = "2. Joueur moyen, aides + événements",
 		helps = true,
@@ -116,7 +117,7 @@ local function comboMultiplier(streak: number): number
 	return multiplier
 end
 
--- Le joueur gagne-t-il le Mog-off ? (le mode auto est interdit en combat : le joueur « auto » joue normalement)
+-- Le joueur gagne-t-il le Mog-off ?
 local function winsFight(profile, boss): (boolean, number)
 	local wins = 0
 	for round = 1, BOSS.Rounds do
@@ -200,9 +201,6 @@ local function simulate(baseProfile)
 		return randomState / 2147483647
 	end
 	local function quality(): string
-		if profile.auto then
-			return "Auto"
-		end
 		local value = roll()
 		return if value < profile.perfect
 			then "Perfect"
@@ -310,16 +308,13 @@ local function simulate(baseProfile)
 			if bestHelp then
 				local help = Helps[bestHelp]
 				local reps = help.reps or Balance.Helps.Reps
-				local earned, streak, chain, misses, auto = 0, 0, 0, 0, 0
+				local earned, streak, chain, misses = 0, 0, 0, 0
 				for _ = 1, reps do
 					local q = quality()
-					streak = if q == "Miss" or q == "Auto" then 0 else streak + 1
+					streak = if q == "Miss" then 0 else streak + 1
 					chain = if q == "Perfect" then chain + 1 else 0
 					if q == "Miss" then
 						misses += 1
-					end
-					if q == "Auto" then
-						auto += 1
 					end
 					local chainBonus = 1
 						+ math.min(
@@ -330,8 +325,7 @@ local function simulate(baseProfile)
 						streak
 					) * chainBonus
 				end
-				local paid =
-					math.floor(earned * (if misses == 0 and auto == 0 then Balance.Helps.Reward.Flawless else 1) + 0.5)
+				local paid = math.floor(earned * (if misses == 0 then Balance.Helps.Reward.Flawless else 1) + 0.5)
 				if paid > 0 and not helpsDone[bestHelp] and help.firstCash then
 					paid = math.max(paid, help.firstCash)
 				end
@@ -390,7 +384,7 @@ local function simulate(baseProfile)
 		local streak = 0
 		for rep = 1, Balance.SeriesLength do
 			local q = quality()
-			streak = if q == "Miss" or q == "Auto" then 0 else streak + 1
+			streak = if q == "Miss" then 0 else streak + 1
 			local boost = if boostId and t + rep * exercise.repInterval < boostEnds
 				then Boosts[boostId].mogMultiplier
 				else 1

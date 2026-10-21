@@ -162,6 +162,10 @@ function Client.new(name, parent, interval, onRep, options)
 	end
 	updateControls(UserInputService:GetLastInputType())
 	self:Connect(UserInputService.LastInputTypeChanged, updateControls)
+	-- Disposition : la plus grande zone de jeu possible, surtout sur téléphone (D79 : la majorité des joueurs).
+	-- Paysage bas (téléphone) : plateau sur presque toute la hauteur, infos dans une colonne étroite à sa gauche,
+	-- le personnage reste visible à gauche de l'écran. Portrait : plateau sur toute la largeur, en bas.
+	local COLUMN = 148 -- colonne d'infos en paysage compact
 	local function fit()
 		local size = parent.AbsoluteSize
 		local portrait = size.Y > size.X
@@ -170,37 +174,46 @@ function Client.new(name, parent, interval, onRep, options)
 			100,
 			math.min(
 				560,
-				if portrait then size.X - 40 elseif compact then size.X - 230 else size.X * 0.52 - 32,
-				size.Y - (if compact then 100 else 290)
+				if portrait then size.X - 24 elseif compact then size.X - COLUMN - 230 else size.X * 0.52 - 32,
+				size.Y - (if compact then 28 elseif portrait then 300 else 290)
 			)
 		)
+		local column = COLUMN - 12
 		panel.AnchorPoint = if portrait then Vector2.new(0.5, 1) else Vector2.new(1, 0.5)
-		panel.Position = if portrait then UDim2.new(0.5, 0, 1, -70) else UDim2.new(1, -12, 0.5, -28)
-		panel.Size = UDim2.fromOffset(side + (if compact then 192 else 24), if compact then side + 24 else side + 224)
+		panel.Position = if portrait
+			then UDim2.new(0.5, 0, 1, -64)
+			elseif compact then UDim2.new(1, -8, 0.5, 0)
+			else UDim2.new(1, -12, 0.5, -28)
+		panel.Size =
+			UDim2.fromOffset(side + (if compact then COLUMN + 16 else 24), if compact then side + 16 else side + 224)
 		title.Position, title.Size =
-			UDim2.fromOffset(12, 10), if compact then UDim2.fromOffset(158, 38) else UDim2.new(1, -24, 0, 32)
+			UDim2.fromOffset(12, if compact then 8 else 10),
+			if compact then UDim2.fromOffset(column, 30) else UDim2.new(1, -24, 0, 32)
 		hint.Position, hint.Size =
-			UDim2.fromOffset(12, 50), if compact then UDim2.fromOffset(158, 64) else UDim2.new(1, -24, 0, 42)
-		stage.Position = if compact then UDim2.fromOffset(180, 12) else UDim2.fromOffset(12, 106)
+			UDim2.fromOffset(12, if compact then 40 else 50),
+			if compact then UDim2.fromOffset(column, 78) else UDim2.new(1, -24, 0, 42)
+		stage.Position = if compact then UDim2.fromOffset(COLUMN + 8, 8) else UDim2.fromOffset(12, 106)
 		stage.Size = UDim2.fromOffset(side, side)
 		inputZone.Position, inputZone.Size = stage.Position, stage.Size
 		budget.Position, budget.Size =
-			if compact then UDim2.fromOffset(12, 120) else UDim2.fromOffset(12, side + 116),
-			if compact then UDim2.fromOffset(158, 36) else UDim2.new(1, if undo.Visible then -126 else -24, 0, 28)
+			if compact then UDim2.fromOffset(12, 124) else UDim2.fromOffset(12, side + 116),
+			if compact then UDim2.fromOffset(column, 40) else UDim2.new(1, if undo.Visible then -126 else -24, 0, 28)
 		undo.Position, undo.Size =
-			if compact then UDim2.fromOffset(18, side - 40) else UDim2.new(1, -108, 0, side + 110),
-			UDim2.fromOffset(96, 44)
+			if compact then UDim2.fromOffset(12, side - 52) else UDim2.new(1, -108, 0, side + 110),
+			if compact then UDim2.fromOffset(column, 52) else UDim2.fromOffset(96, 44)
 		status.Position, status.Size =
-			if compact then UDim2.fromOffset(12, 160) else UDim2.fromOffset(12, side + 148),
-			if compact then UDim2.fromOffset(158, 26) else UDim2.new(1, -24, 0, 22)
+			if compact then UDim2.fromOffset(12, 170) else UDim2.fromOffset(12, side + 148),
+			if compact then UDim2.fromOffset(column, 26) else UDim2.new(1, -24, 0, 22)
 		mastery.Position, mastery.Size =
-			if compact then UDim2.fromOffset(12, 190) else UDim2.fromOffset(12, side + 174),
-			if compact then UDim2.fromOffset(158, 24) else UDim2.new(1, -24, 0, 20)
+			if compact then UDim2.fromOffset(12, 200) else UDim2.fromOffset(12, side + 174),
+			if compact then UDim2.fromOffset(column, 24) else UDim2.new(1, -24, 0, 20)
 		controls.Position, controls.Size =
-			if compact then UDim2.fromOffset(12, 220) else UDim2.fromOffset(12, side + 198),
-			if compact then UDim2.fromOffset(158, 32) else UDim2.new(1, -24, 0, 18)
+			if compact then UDim2.fromOffset(12, 230) else UDim2.fromOffset(12, side + 198),
+			if compact then UDim2.fromOffset(column, 34) else UDim2.new(1, -24, 0, 18)
+		-- Petits écrans : la ligne des commandes ne tient pas, la consigne suffit
+		controls.Visible = not compact or (side >= 270 and not undo.Visible)
 		track.Position, track.Size =
-			if compact then UDim2.fromOffset(180, side + 16) else UDim2.fromOffset(12, 97),
+			if compact then UDim2.fromOffset(COLUMN + 8, side + 10) else UDim2.fromOffset(12, 97),
 			if compact then UDim2.fromOffset(side, 4) else UDim2.new(1, -24, 0, 4)
 	end
 	fit()

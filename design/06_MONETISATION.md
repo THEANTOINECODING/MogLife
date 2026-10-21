@@ -11,7 +11,7 @@
 
 Les objets en Cash restent toujours obtenables gratuitement ; les objets Robux s'y ajoutent, ils ne les remplacent pas.
 
-À ne pas vendre au lancement : x2 Mog, Cash, mode auto, victoire contre un boss, protection contre la perte de Cash. Le mode auto reste gratuit.
+À ne pas vendre au lancement : x2 Mog, Cash, victoire contre un boss, protection contre la perte de Cash. Il n'y a plus de mode auto du tout (D79).
 Un éventuel accélérateur plus tard = décision séparée, parcours gratuit testé, plafonné, et **jamais** pris en compte dans les Mog-off.
 
 ## Règles d'interface

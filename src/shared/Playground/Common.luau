@@ -33,14 +33,20 @@ function C.node(s, id, x, y, w, h, style, angle)
 	return n
 end
 
+-- Grilles : elles occupent 88 % du plateau (marge GRID_MIN de chaque côté). Sur téléphone, chaque case doit rester
+-- assez grande pour le doigt (D79 : 76 % donnait des cases de 29 pixels sur un 6 x 6 en paysage).
+C.GRID_MIN = 0.06
+C.GRID_SPAN = 0.88
+
 function C.cell(x, y, size)
-	local col = math.clamp(math.floor((x - 0.12) / 0.76 * size) + 1, 1, size)
-	local row = math.clamp(math.floor((y - 0.12) / 0.76 * size) + 1, 1, size)
+	local col = math.clamp(math.floor((x - C.GRID_MIN) / C.GRID_SPAN * size) + 1, 1, size)
+	local row = math.clamp(math.floor((y - C.GRID_MIN) / C.GRID_SPAN * size) + 1, 1, size)
 	return (row - 1) * size + col
 end
 
 function C.xy(index, size)
-	return 0.12 + ((index - 1) % size + 0.5) * 0.76 / size, 0.12 + (math.floor((index - 1) / size) + 0.5) * 0.76 / size
+	return C.GRID_MIN + ((index - 1) % size + 0.5) * C.GRID_SPAN / size,
+		C.GRID_MIN + (math.floor((index - 1) / size) + 0.5) * C.GRID_SPAN / size
 end
 
 function C.adjacent(a, b, size)
@@ -74,7 +80,7 @@ end
 function C.grid(s, size, styles)
 	for i = 1, size * size do
 		local x, y = C.xy(i, size)
-		C.node(s, "tile" .. i, x, y, 0.70 / size, 0.70 / size, styles[i] or "tile")
+		C.node(s, "tile" .. i, x, y, C.GRID_SPAN * 0.92 / size, C.GRID_SPAN * 0.92 / size, styles[i] or "tile")
 	end
 end
 

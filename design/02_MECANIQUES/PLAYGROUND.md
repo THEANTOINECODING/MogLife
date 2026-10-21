@@ -1,65 +1,78 @@
-# Strength playground - D76
+# Le terrain de force : les mini-jeux actuels
 
-Adopted by Antoine following the research proposal dated 20 October 2026.
+Décisions D76 (refonte adoptée par Antoine), D77 (révision après son essai), D78 (place du joueur face aux boss) et
+D79 (plus d'Auto, plus de victoire au hasard, priorité au téléphone). Les anciennes fiches (`MINIJEUX.md`, `AIDES.md`,
+`BOSS.md`, `DUELS.md`) gardent l'historique ; c'est cette fiche qui fait foi pour les mécaniques.
 
-## D77 playtest revision
+## Les 21 jeux
 
-Antoine reported a stuck character after boss results, awkward controls and insufficient difficulty. The game panel now occupies the right side; the left is transparent and the world camera frames the animated player. Server snapshots acknowledge the accepted input sequence, so pending gestures are replayed instead of discarded. Fast grid drags trace crossed cells. A pointer leaving the panel no longer steers the game unless a drag is held.
+Les identifiants de progression (records, déblocages, récompenses) n'ont pas changé : seul le mini-jeu est nouveau.
 
-Training targets and precision requirements are increased. Kevin requires seven faster returns with a narrower tray; Brayan sends more frequent obstacles; Coach requires four later reversals; territory requires multiple smaller loops; the spotlight offers shorter safe windows. Jobs include limited pipe turns, an additional blocking car, timed polishing, tighter folds, bent produce chains and a maze route. See Config/Playground for exact values. Auto issues legal inputs under the new rules.
+| Catégorie | Identifiant | Jeu | Geste | Pourquoi on ne gagne pas au hasard (D79) |
+|---|---|---|---|---|
+| Entraînement | Curl | Scrap Press | Comprimer, relâcher au bon niveau | 4 niveaux tirés au sort, zone étroite |
+| Entraînement | PushUp | Tire Domino | Viser, lancer le pneu | 3 tirs ; colonnes tirées au sort |
+| Entraînement | BenchPress | Magnet Haul | Ramasser, livrer | Le chargement ralentit, le butoir fait tout tomber |
+| Entraînement | Squat | Swing King | Lâcher pour attraper la barre suivante | Le saut part dans le sens du balancement ; barres tirées au sort ; 3 vies |
+| Entraînement | PullUp | Rope Rave | Taper au rythme | Rythme tiré au sort ; 4 vies (taper sans arrêt fait perdre) |
+| Entraînement | JumpRope | Atlas Stack | Placer, lâcher | Il faut viser, la pièce dérive |
+| Aide | OpenJar | Peel Good | Décoller l'opercule | Suivre le tracé sans déchirer |
+| Aide | PumpTire | Airway Express | Tourner les tuyaux | Nombre de tours limité |
+| Aide | Nails | Chop Shop | Tracer une coupe | 5 coupes tirées au sort ; 3 vies |
+| Aide | PushCar | Parking Knot | Glisser les voitures | 8 casse-têtes de 6 à 8 coups minimum ; budget = minimum + 3 |
+| Aide | Piano | Piano Polish | Essuyer la poussière | Tout nettoyer dans le temps |
+| Aide | BeachChairs | Towel Fold | Plier les coins | Pliages précis |
+| Aide | Groceries | Produce Parade | Tracer un groupe de fruits en entier | Groupes de formes tirées au sort ; 3 vies |
+| Aide | Directions | Shortcut Chalk | Tracer un chemin | Labyrinthe, longueur limitée |
+| Boss | Kevin | Snack Volley | Renvoyer le pop-corn | Vies, balles de plus en plus rapides |
+| Boss | Brayan | Sunbed Slalom | Esquiver les plots | Aucun couloir sûr sans bouger |
+| Boss | CoachTurbo | Treadmill Takeover | Inverser après la charge | Inverser trop tôt ou trop tard échoue |
+| Boss | NoLegs | Leg Day Landgrab | Fermer un territoire avant le piétinement | Vies, trace limitée |
+| Boss | BlockKing | Crown Sneak | Avancer et se figer | Repéré en bougeant sous le projecteur |
+| Duel | Bras de fer | Read & Rip | Pousser, récupérer, punir l'épuisement | Simulation du serveur, chances égales |
+| Futur boss | PumpGod | Gravity Gauntlet | Inverser la gravité | ❓ À valider par Antoine ; verrouillé (« coming soon ») |
 
-The Series movement lock is released when each boss/duel run ends, independently of the fight lock. Victory and defeat also release movement immediately; their result dialogs are informational and do not require OK to resume walking.
+## Règles communes
 
-## Roster and preserved progression IDs
+- **Le serveur décide de tout.** Il simule le jeu (30 pas par seconde) à partir des gestes du joueur (appuyer,
+  glisser, relâcher) et envoie l'état toutes les 0,15 s ; le client prédit pour que le geste réponde tout de suite. Une
+  note envoyée par le client est refusée. Chaque partie a un jeton, des numéros de gestes croissants et un débit limité.
+- **Plus de mode Auto (D79).** Ni pour les entraînements, ni pour les aides, ni pour les boss. Le solveur automatique
+  (`Shared/Playground/Autoplay.luau`) ne sert qu'aux tests, pour prouver que chaque jeu se gagne.
+- **Pas de victoire au hasard (D79).** Les essais ratés coûtent des vies là où réessayer était gratuit. Un test
+  permanent vérifie qu'un joueur qui clique au hasard gagne au plus 10 % des parties.
+- **Variété (D79).** Là où c'est sûr, les cibles sont tirées au sort à chaque partie (presse, pneus, clous, rythme,
+  fruits, barres du squat) ; ailleurs, plusieurs plateaux vérifiés (parking, tuyaux, labyrinthe, pliages).
+- **Récompenses.** Entraînement : Mog selon le temps de récompense du jeu, la réussite, la qualité et les boosts
+  (attendre ne rapporte pas plus). Aide : Cash seulement si l'objectif est réussi ; une aide ratée se rejoue. Records :
+  `Playground2.<exerciseId>`.
+- **Boss (D78).** Le joueur se tient devant le boss, tourné vers lui, la table du jeu entre eux, à la première distance
+  libre calculée par le serveur.
 
-| Category | Saved ID | Game | Interaction |
-|---|---|---|---|
-| Training | Curl | Scrap Press | Compress and release |
-| Training | PushUp | Tire Domino | Aim and launch |
-| Training | BenchPress | Magnet Haul | Collect and deliver |
-| Training | Squat | Swing King | Release to catch the next bar |
-| Training | PullUp | Rope Rave | Strike the beat |
-| Training | JumpRope | Atlas Stack | Position and drop |
-| Job | OpenJar | Peel Good | Peel the seal |
-| Job | PumpTire | Airway Express | Turn the pipes |
-| Job | Nails | Chop Shop | Draw a cut |
-| Job | PushCar | Parking Knot | Slide cars |
-| Job | Piano | Piano Polish | Wipe dust |
-| Job | BeachChairs | Towel Fold | Fold corners |
-| Job | Groceries | Produce Parade | Connect matching neighbors |
-| Job | Directions | Shortcut Chalk | Draw a route |
-| Boss | Kevin | Snack Volley | Return popcorn |
-| Boss | Brayan | Sunbed Slalom | Dodge cones |
-| Boss | CoachTurbo | Treadmill Takeover | Reverse after the charge |
-| Boss | NoLegs | Leg Day Landgrab | Close territory before a stomp |
-| Boss | BlockKing | Crown Sneak | Advance and freeze |
-| Duel | ArmWrestle | Read & Rip | Push, recover, punish exhaustion |
-| Future boss | PumpGod | Gravity Gauntlet | Flip gravity |
+## Téléphone d'abord (D79)
 
-## Runtime
+La grande majorité des joueurs jouent sur téléphone, en paysage.
+- **Paysage** : la zone de jeu prend presque toute la hauteur de l'écran ; les infos (titre, consigne, vies, précision)
+  tiennent dans une colonne étroite à sa gauche ; le personnage reste visible à gauche de l'écran.
+- **Grilles** : elles occupent 88 % du plateau. Plus petites cases mesurées : 42 pixels sur un iPhone SE en paysage,
+  48 à 54 sur un téléphone récent (le doigt a besoin d'environ 44).
+- **Consignes** : lisibles entre 15 et 21 pixels dans la colonne étroite (en anglais ; le français et l'allemand,
+  plus longs, réduiront un peu la taille).
+- **Commandes** : toucher, souris, clavier (flèches, ZQSD/WASD, Espace) et manette donnent les mêmes gestes ; les
+  grilles se parcourent case par case au clavier et à la manette.
 
-### Audit follow-up, rules version 4 (21 October 2026)
+## Tests
 
-The resumed working tree already contains the audit fixes: matching slalom collision widths, offset Atlas bases and visible drift, Coach commitment reset on both failures, and rhythm completion separated from precision. Valid Good hits complete the phrase; the phrase ends without an empty timeout tail.
+À lancer avec `execute_luau` dans Studio (aucune donnée de joueur touchée) :
+- `tests/playground.luau` : chaque jeu se gagne sur plusieurs graines, perd si l'on ne fait rien, l'état est figé
+  après la fin ; pas d'Auto pour les boss ;
+- `tests/playground_review.luau` : régressions de l'audit (couloir de Brayan, visée d'Atlas, rythme tout Good, Coach,
+  paiement, annulation, tracés rapides, variantes) ;
+- `tests/playground_random.luau` : personne ne gagne au hasard ;
+- `tests/playground_poses.luau` : les poses du personnage pour chaque jeu.
 
-Training uses configured `rewardTime` and objective completion rather than elapsed waiting time. Validated sub-actions supply combo and precision; misses lower mastery. Playground jobs pay only on objective completion and failed jobs remain retryable. The job result closes instead of restarting the previous exercise. These replace the version 3 reward behavior described below; economy tuning still needs an alpha review.
+## Reste à faire
 
-Portrait play uses more width, grids have discrete keyboard/stick navigation, budgets and error reasons are shown, and pipe/car puzzles have budgeted undo. Variants are defined in configuration. Fast release gestures now trace their final segment before ending the action, including fruit chains and route destinations.
-
-Verification and remaining work: `PLAYGROUND_AUDIT_FOLLOWUP_2026-10-21.md`.
-
-- Shared deterministic rules: `src/shared/Playground`. Principal tuning: `Config/Playground`.
-- Server simulation at 30 steps/second; snapshots every 150 ms; local prediction.
-- `PlaygroundInput` requires a run token, increasing sequence, finite coordinates and a message budget. Legacy `Rep` reports cannot score these games.
-- One result per challenge. Training Mog uses configured reward time, completion and existing quality/boost multipliers. Helper completion gates payouts and cooldowns; Mom retains her first-success minimum.
-- Historical records remain intact; new records use `Playground2.*`.
-- Boss success uses the actual objective, keeping existing rounds, unlocks and rewards.
-- Duel forces are integrated simultaneously with equal stamina rules. The real table receives the server lean.
-- Mouse/touch, Space/A, arrows/WASD/ZQSD/stick. Focus loss releases the action. Free Auto issues legal inputs and cannot earn manual records.
-- Responsive square scenes, sound feedback and localized instructions. Nearby observers see the station diorama and operator pose.
-
-## Validation and remaining limits
-
-`tests/playground.luau`: three seeds per game, a valid solution, idle failure, drawing validity and immutability after completion. Boss Auto is unavailable. Studio network tests verify rejected client grades and real helper/training rewards. A complete practice duel verifies stamina, exhaustion, rounds and participation rewards. Test profiles must always be restored.
-
-Physical phone FPS, touch feel, a duel with a second real player and final art approval need device playtests. Current props are procedural dioramas, not custom Blender machines. Existing static city decorations remain around the stations. Gravity Gauntlet stays behind the existing future-boss lock.
+Ressenti au doigt sur de vrais téléphones et images par seconde, bras de fer avec un deuxième vrai joueur, validation
+artistique des décors (des maquettes générées par le code, pas encore des modèles Blender), mini-jeu du Dieu du Pump
+(❓ Antoine).

@@ -18,7 +18,7 @@ changeraient ; les boss auraient des objectifs propres. Ces divergences avec le 
 explicitement soumises à validation. Premiers prototypes recommandés après accord : Scrap Press,
 Tire Domino, Peel Good et Snack Volley.
 
-**Status: adopted by Antoine, D76.** Implementation in Studio is authorized. Public publishing and unlocking the future PumpGod are outside this delivery.
+**Statut : adopté par Antoine (D76), mis en place.** La publication publique et le déblocage du futur Dieu du Pump ne font pas partie de cette livraison.
 
 ## Refonte complète des mini-jeux — validée par D75 le 20/10/2026
 

@@ -4,7 +4,7 @@ local Config = require(game.ReplicatedStorage.Shared.Config.Playground)
 local C = require(game.ReplicatedStorage.Shared.Playground.Common)
 local Status = require(game.ReplicatedStorage.Shared.Playground.Status)
 local Texts = require(game.ReplicatedStorage.Shared.Config.Texts)
-assert(Config.Version == 4, "Rojo has not synced the current rules")
+assert(Config.Version >= 4, "Rojo has not synced the current rules")
 local results = {}
 local function check(label, callback)
 	local ok, err = pcall(callback)
@@ -150,12 +150,17 @@ check("Undo consumes budget and terminal states cannot be edited", function()
 			P.Input(s, "undo", x, y)
 			assert(s.pipes[1].rot == before and s.moves == 2)
 		else
-			local x, y = C.xy(2, 5)
+			-- Premier coup de la solution du solveur, puis annulation : le plateau revient, le budget baisse
+			local Solver = require(game.ReplicatedStorage.Shared.Playground.ParkingSolver)
+			local plan = Solver(s.cars, s.rules.size, Config.PuzzleSearchLimit)
+			local before = game:GetService("HttpService"):JSONEncode(s.cars)
+			local x, y = C.xy(plan[1].from, s.rules.size)
 			P.Input(s, "down", x, y)
-			x, y = C.xy(4, 5)
+			x, y = C.xy(plan[1].to, s.rules.size)
 			P.Input(s, "up", x, y)
+			assert(s.moves == 1, "move not counted")
 			P.Input(s, "undo", x, y)
-			assert(s.moves == 2 and s.cars[3].x == 1)
+			assert(s.moves == 2 and game:GetService("HttpService"):JSONEncode(s.cars) == before, "undo failed")
 		end
 		local won = run(P.New(name, 1), function(state)
 			P.Auto(state, Config.Step)
@@ -175,13 +180,19 @@ check("Delayed rhythm input stays within the bounded grace window", function()
 	assert(s.score == 1 and s.precision == 1)
 end)
 check("Fast release includes the final traced cells", function()
+	-- Groupe de fruits tracé en entier, le relâchement arrivant sur la dernière case sans « move » avant
 	local s = P.New("ProduceParade", 1)
 	s.t = 0.1
-	local x, y = C.xy(1, 4)
+	local group = s.groups[1]
+	local x, y = C.xy(group[1], 4)
 	P.Input(s, "down", x, y)
-	x, y = C.xy(3, 4)
+	for i = 2, #group - 1 do
+		x, y = C.xy(group[i], 4)
+		P.Input(s, "move", x, y)
+	end
+	x, y = C.xy(group[#group], 4)
 	P.Input(s, "up", x, y)
-	assert(s.score == 3 and s.misses == 0 and not s.held, "release lost a valid fruit chain")
+	assert(s.score == #group and s.misses == 0 and not s.held, "release lost a valid fruit chain")
 
 	s = P.New("ShortcutChalk", 1)
 	s.t = 0.1

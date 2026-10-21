@@ -1,6 +1,6 @@
 # 07 — Roadmap
 
-> D76 implementation: see [strength playground](02_MECANIQUES/PLAYGROUND.md). Studio validation is recorded in `PLAYGROUND_DELIVERY_2026-10-21.md`; physical-device playtesting remains an alpha gate.
+> Mini-jeux actuels (D76, D77, D79) : voir [le terrain de force](02_MECANIQUES/PLAYGROUND.md). Validation dans Studio : `design/archive/rapports/PLAYGROUND_DELIVERY_2026-10-21.md` ; l'essai sur vrais téléphones reste une étape obligatoire de l'alpha.
 
 Principe : **un petit jeu complet d'abord, puis des mises à jour régulières** qui suivent toutes la même recette.
 

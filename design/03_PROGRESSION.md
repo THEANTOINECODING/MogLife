@@ -50,7 +50,7 @@ Coach Turbo est le premier vrai mur : il faut devenir plus précis. Le Cash s'ac
 ## Simulation à faire avant d'ajuster les chiffres
 
 Profils :
-1. Mode auto uniquement, aucune aide.
+1. Joueur faible (beaucoup de ratés), aucune aide (le mode auto a été retiré, D79).
 2. Joueur moyen (mélange Bien/Raté), alterne exercices et aides.
 3. Joueur très précis (beaucoup de Parfait).
 4. Joueur qui dépense tout en style dès que possible.
