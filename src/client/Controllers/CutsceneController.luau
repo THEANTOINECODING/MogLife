@@ -147,6 +147,17 @@ function CutsceneController.Play(shots: { any }, onDone: (() -> ())?, keepCamera
 			onDone()
 		end
 	end
+	-- Sécurité : la cinématique se termine à sa durée prévue même si l'image se fige (application en arrière-plan,
+	-- téléphone qui rame) ; sinon le joueur resterait bloqué, l'interface cachée
+	local total = 0
+	for _, shot in shots do
+		total += shot.duration or 0
+	end
+	task.delay(total + 0.5, function()
+		if playing and playing.token == myToken then
+			finish()
+		end
+	end)
 	playing.connection = RunService.RenderStepped:Connect(function()
 		local shot = shots[index]
 		if not shot then

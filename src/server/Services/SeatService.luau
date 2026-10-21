@@ -1,7 +1,9 @@
 -- Sièges automatiques (Config/Seating.luau) : sur chaque banc, canapé ou fauteuil du décor (et sur les meubles
 -- posés chez soi), des Seat invisibles posés sur l'assise. Un joueur qui monte dessus s'assoit tout seul (il se
 -- relève en sautant). La hauteur et la profondeur de l'assise sont mesurées sur le modèle par lancers de rayons.
+-- Jamais pendant une activité, un combat ou un duel (ni juste après) : le joueur serait bloqué sur place.
 
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Seating = require(ReplicatedStorage.Shared.Config.Seating)
@@ -9,6 +11,48 @@ local Seating = require(ReplicatedStorage.Shared.Config.Seating)
 local SEAT_NAME = "AutoSeat"
 
 local SeatService = {}
+
+local BossService
+local DuelService
+-- Dernier moment où le joueur était occupé (fin d'une série, d'une manche, d'un duel)
+local lastBusy: { [Player]: number } = {}
+
+local function isBusy(player: Player): boolean
+	return player:GetAttribute("InRun") == true
+		or player:GetAttribute("InDuel") == true
+		or BossService.IsFighting(player)
+		or DuelService.IsDueling(player)
+		or os.clock() - (lastBusy[player] or -math.huge) < Seating.BusyGrace
+end
+
+-- Un siège automatique attrape le joueur pendant (ou juste après) une activité : on le relève aussitôt
+local function watchPlayer(player: Player)
+	local function markBusy()
+		lastBusy[player] = os.clock()
+	end
+	player:GetAttributeChangedSignal("InRun"):Connect(markBusy)
+	player:GetAttributeChangedSignal("InDuel"):Connect(markBusy)
+	local function watchCharacter(character: Model)
+		local humanoid = character:WaitForChild("Humanoid", 10) :: Humanoid?
+		if not humanoid then
+			return
+		end
+		humanoid.Seated:Connect(function(active, seat)
+			if active and seat and seat.Name == SEAT_NAME and isBusy(player) then
+				task.defer(SeatService.StandUp, player)
+			end
+		end)
+	end
+	if player.Character then
+		task.spawn(watchCharacter, player.Character)
+	end
+	player.CharacterAdded:Connect(watchCharacter)
+end
+
+function SeatService.Init(services)
+	BossService = services.BossService
+	DuelService = services.DuelService
+end
 
 local function configFor(part: Instance): any
 	if not part:IsA("BasePart") then
@@ -96,6 +140,13 @@ function SeatService.Start()
 		if configFor(part) then
 			task.defer(addSeats, part)
 		end
+	end)
+	for _, player in Players:GetPlayers() do
+		watchPlayer(player)
+	end
+	Players.PlayerAdded:Connect(watchPlayer)
+	Players.PlayerRemoving:Connect(function(player)
+		lastBusy[player] = nil
 	end)
 end
 

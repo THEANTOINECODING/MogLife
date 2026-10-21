@@ -1,11 +1,12 @@
 -- D76: visible tabletop diorama, synchronized from accepted server state.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local PlaygroundConfig = require(ReplicatedStorage.Shared.Config.Playground)
 local Rules = require(ReplicatedStorage.Shared.Playground)
 local View = require(script.Parent.Parent.PlaygroundView)
 local Activity = {}
 Activity.__index = Activity
 function Activity.Stand(top)
-	return top * CFrame.new(0, 0, 3.2)
+	return top * CFrame.new(0, 0, PlaygroundConfig.StationStand)
 end
 function Activity.new(ctx)
 	local folder = Instance.new("Folder")

@@ -324,6 +324,18 @@ local function filmBoss(bossId: string, duration: number, onDone: (() -> ())?)
 	camera.CameraType = Enum.CameraType.Scriptable
 	local t0 = os.clock()
 	local connection
+	local finished = false
+	local function finish()
+		if finished then
+			return
+		end
+		finished = true
+		connection:Disconnect()
+		camera.CameraType = Enum.CameraType.Custom
+		if onDone then
+			onDone()
+		end
+	end
 	connection = RunService.RenderStepped:Connect(function()
 		local t = (os.clock() - t0) / duration
 		local target = if model.Parent then model:GetPivot().Position else base
@@ -331,13 +343,11 @@ local function filmBoss(bossId: string, duration: number, onDone: (() -> ())?)
 		local wanted = CFrame.lookAt(eye + Vector3.new(0, size * 0.2 * math.min(t, 1), 0), target)
 		camera.CFrame = camera.CFrame:Lerp(wanted, 0.25)
 		if t >= 1 then
-			connection:Disconnect()
-			camera.CameraType = Enum.CameraType.Custom
-			if onDone then
-				onDone()
-			end
+			finish()
 		end
 	end)
+	-- Même si l'image se fige, la caméra revient au joueur
+	task.delay(duration + 0.5, finish)
 end
 
 local function onBossPrompt(info)

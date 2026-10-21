@@ -2,6 +2,10 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-21 (joueur bloqué après un combat de boss)
+
+- **D78 — Le joueur se tient devant le boss, et rien ne peut le bloquer à la fin du combat** (bug signalé par Antoine, toujours présent après D77). Trois causes trouvées en jeu : (1) la table du mini-jeu était posée sur l'emplacement du boss et le joueur 3 studs derrière lui : chez Kevin, il tombait sur le canapé et le siège automatique l'asseyait ; chez Coach Turbo, Pas-Les-Jambes et le Roi du Quartier, il se retrouvait dans les cordes ou le bord de l'estrade. Désormais le joueur se tient devant le boss, tourné vers lui, la table entre eux, à la première distance libre (6,8 studs pour Kevin, Brayan et le Dieu du Pump ; 9,6 studs au sol devant les estrades), calculée par le serveur. (2) Un siège automatique n'assoit plus personne pendant une activité, un combat ou un duel, ni dans les 6 secondes qui suivent. (3) La cinématique d'entrée du boss et le plan de sortie se terminent d'eux-mêmes à leur durée prévue, même si l'image se fige (sinon interface cachée et personnage immobile). Vérifié en jeu contre Kevin et Coach Turbo : le joueur repart aussitôt après le résultat.
+
 ## 2026-10-21 (D77: playability revision requested by Antoine)
 
 - **D77 - Correct the post-boss movement lock, keep the game on the right and the animated character on the left, and increase challenge.** Explicit user correction following the D76 playtest. Series locks end with each boss/duel round; fight locks protect introductions and active rounds; victory/defeat release movement immediately, even with the result dialog open. Transparent left side, camera framing based on aspect ratio, direct character feedback, server input acknowledgements and replay of pending gestures. More demanding objectives and tolerances, faster boss hazards, varied pipe rotations, a harder parking puzzle, connected produce paths and a longer route maze. Assisted Auto remains available for training/jobs. This revises D76 without changing progression IDs or saved player balances.

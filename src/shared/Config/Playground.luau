@@ -18,6 +18,12 @@ return {
 	AutoInterval = 0.06,
 	Lead = 2,
 	ResultPause = 0.9,
+	-- Le joueur se tient à cette distance (studs) derrière la table de sa station (Activities/Playground.Stand)
+	StationStand = 3.2,
+	-- Combats de boss : le joueur se tient DEVANT le boss, tourné vers lui, la table entre eux. Le serveur prend la
+	-- première de ces distances où il a de la place (cordes du ring, bord d'estrade) : BossService, attribut
+	-- StandDistance de l'emplacement. Avant, la table était sur l'emplacement et le joueur derrière le boss.
+	BossStandDistances = { 6.8, 5.6, 4.6, 8.2, 9.6 },
 	CursorSpeed = 0.8,
 	Perfect = 0.85,
 	Good = 0.45,

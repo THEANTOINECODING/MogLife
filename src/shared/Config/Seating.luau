@@ -13,4 +13,7 @@ return {
 		BarberChair = { seats = 1 },
 	},
 	SeatSize = Vector3.new(1.8, 0.4, 1.6),
+	-- Pendant une activité, un combat ou un duel, et ce nombre de secondes après, un siège n'assoit pas le joueur
+	-- (il se retrouvait assis sur le canapé de Kevin à la fin du combat, sans pouvoir marcher)
+	BusyGrace = 6,
 }

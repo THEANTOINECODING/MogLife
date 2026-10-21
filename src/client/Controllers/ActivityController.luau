@@ -284,6 +284,12 @@ local function start(update)
 	end
 	local Activity = require(module)
 	local top = anchor.CFrame * CFrame.new(0, anchor.Size.Y / 2, 0)
+	if isPlayground and update.kind == "Boss" then
+		-- La table se tourne vers le boss : le joueur se tient devant lui, à la distance choisie par le serveur
+		-- (BossService), pas derrière lui (Activities/Playground.Stand)
+		local stand = tonumber(anchor:GetAttribute("StandDistance")) or PlaygroundConfig.BossStandDistances[1]
+		top = top * CFrame.new(0, 0, -(stand - PlaygroundConfig.StationStand)) * CFrame.Angles(0, math.pi, 0)
+	end
 
 	-- Son propre personnage : placé au bon endroit de la station, sans se tourner tout seul
 	if player == localPlayer then
