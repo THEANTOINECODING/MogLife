@@ -11,7 +11,7 @@ local NAMES = {
 	"StartSeries", -- client -> serveur : (exerciseId: string) — relancer une série (« Keep going »)
 	"PlaygroundInput", -- client -> server: run token, sequence, action, normalized pointer
 	"PlaygroundState", -- server -> client: authoritative challenge snapshot
-	"Rep", -- client -> serveur : (quality: "Miss" | "Good" | "Perfect" | "Auto")
+	"Rep", -- client -> serveur : (quality: "Miss" | "Good" | "Perfect")
 	"StopSeries", -- client -> serveur : arrêter la série en cours
 	"SeriesUpdate", -- serveur -> client : (update: { state: "Started" | "Rep" | "Ended", kind, ... })
 	"Notify", -- serveur -> client : ({ key: string, args: { [string]: any }? }) message court (toast)

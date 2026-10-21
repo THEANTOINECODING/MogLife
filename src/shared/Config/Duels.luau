@@ -1,5 +1,5 @@
 -- Duels entre joueurs : bras de fer (D68, design/02_MECANIQUES/DUELS.md). Contre n'importe quel joueur, n'importe
--- où : une table apparaît entre les deux. Chances égales : même motif de zones, mêmes fenêtres, mêmes vitesses pour
+-- où : une table apparaît entre les deux. Chances égales : mêmes règles et mêmes vitesses pour
 -- les deux joueurs ; ni le Mog, ni le stade, ni la tenue n'entrent dans le calcul.
 -- Les chiffres sont des hypothèses ❓ à régler pendant l'alpha.
 
@@ -9,23 +9,10 @@ return {
 
 	Rounds = 3,
 	RoundsToWin = 2,
-	RepsPerRound = 8, -- poussées par manche (un balayage de l'aiguille chacune)
+	RepsPerRound = 8, -- échanges par manche (quota de la cadence du serveur)
 	Interval = 1.55, -- temps d'un échange : choisir la prise, tenir, contrer
 	SpeedByRound = { 1, 0.93, 0.87 },
 	TimingScaleByRound = { 1, 0.9, 0.82 },
-	Lead = 0.6, -- balayages d'attente avant le premier (le temps de voir la jauge)
-	MinRepGap = 0.25, -- secondes minimum entre deux poussées envoyées
-	GripCounter = {
-		MomentMin = 0.58,
-		MomentMax = 0.72,
-		PerfectHalf = 0.085,
-		GoodHalf = 0.19,
-	},
-	-- Jauge (fractions de sa largeur) : la zone verte change de place à chaque balayage
-	ZoneHalf = 0.13, -- demi-largeur de la zone verte (Good), × l'échelle de la manche
-	PerfectHalf = 0.045, -- demi-largeur du cœur doré (Perfect), × l'échelle de la manche
-	ZoneMin = 0.2, -- la zone reste entre ces deux bornes de la jauge
-	ZoneMax = 0.8,
 
 	-- Poussée de chaque répétition (en « crans »). Le bras va de -LeanLimit à +LeanLimit : l'atteindre, c'est plaquer
 	-- le bras de l'adversaire sur la table (manche gagnée tout de suite) ; sinon, la manche va au côté vers lequel

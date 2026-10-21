@@ -72,7 +72,6 @@ local function startSeries(player: Player, exerciseId: unknown)
 		interval = exercise.repInterval,
 		total = Balance.SeriesLength,
 		anchor = station,
-		autoAllowed = true,
 		titleKey = `Exercise.{exerciseId}`,
 		onRep = function(p, quality, combo, payoutScale)
 			-- Gain = base × qualité × combo × boost en cours × pareur (+20 % si un autre joueur le pare)

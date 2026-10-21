@@ -236,7 +236,7 @@ function SoundController.SetSoundsEnabled(on: boolean)
 	end
 end
 
-local REP_SOUNDS = { Perfect = "RepPerfect", Good = "RepGood", Auto = "RepGood", Miss = "RepMiss" }
+local REP_SOUNDS = { Perfect = "RepPerfect", Good = "RepGood", Miss = "RepMiss" }
 
 function SoundController.Start()
 	startMusic()

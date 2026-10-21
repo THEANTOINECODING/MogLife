@@ -182,17 +182,64 @@ Games.MagnetHaul = {
 	end,
 }
 
+-- Swing King : position et vitesse au lâcher selon l'instant (le balancier ne dépend que du temps). Le saut part
+-- dans le sens du balancement : lâcher tôt envoie loin et à plat, lâcher tard envoie haut et court.
+local SWING_DT = 1 / 30
+local function swingLaunch(t, g)
+	local angle = math.sin(t * g.speed) * 1.1
+	local spin = 1.1 * g.speed * math.cos(t * g.speed)
+	return 0.22 + math.sin(angle) * 0.25,
+		0.22 + math.cos(angle) * 0.32,
+		math.cos(angle) * 0.25 * spin * g.push,
+		-math.sin(angle) * 0.32 * spin * g.push
+end
+
+-- Plus petite distance entre le vol lâché à l'instant t et la barre visée (même intégration que le jeu)
+local function swingClosest(t, g, tx, ty)
+	local px, py, vx, vy = swingLaunch(t, g)
+	local best = math.huge
+	for _ = 1, 60 do
+		vy += g.gravity * SWING_DT
+		px += vx * SWING_DT
+		py += vy * SWING_DT
+		best = math.min(best, C.distance(px, py, tx, ty))
+		if py > 0.9 or px > 1 then
+			break
+		end
+	end
+	return best
+end
+
 Games.SwingKing = {
-	init = function(s)
+	init = function(s, g)
 		s.bar, s.flying, s.px, s.py, s.pause = 1, false, 0.22, 0.6, 0
+		-- Chaque barre est posée sur une trajectoire possible, tirée au sort : il faut lire l'arc pour lâcher au
+		-- bon moment (une barre fixe se rattrapait presque à tous les coups)
+		local rng = Random.new(s.seed * 131 + 7)
+		local period = 2 * math.pi / g.speed
+		s.bars = {}
+		while #s.bars < g.goal + 2 do
+			local px, py, vx, vy = swingLaunch(rng:NextNumber() * period, g)
+			if vx < g.minForward then
+				continue
+			end
+			local flight = rng:NextInteger(math.floor(g.flightMin / SWING_DT), math.floor(g.flightMax / SWING_DT))
+			for _ = 1, flight do
+				vy += g.gravity * SWING_DT
+				px += vx * SWING_DT
+				py += vy * SWING_DT
+			end
+			if px >= g.barMinX and px <= g.barMaxX and py >= g.barMinY and py <= g.barMaxY then
+				table.insert(s.bars, { x = px, y = py })
+			end
+		end
 	end,
 	action = function(s, kind, g)
 		if kind ~= "down" or s.flying or s.t < s.pause then
 			return
 		end
-		local angle = math.sin(s.t * g.speed) * 1.1
-		s.px, s.py = 0.22 + math.sin(angle) * 0.25, 0.22 + math.cos(angle) * 0.32
-		s.vx, s.vy = g.launch + math.cos(s.t * g.speed) * 0.3, -0.5
+		local px, py, vx, vy = swingLaunch(s.t, g)
+		s.px, s.py, s.vx, s.vy = px, py, vx, vy
 		s.flying = true
 	end,
 	step = function(s, dt, g)
@@ -202,7 +249,8 @@ Games.SwingKing = {
 		s.vy += g.gravity * dt
 		s.px += s.vx * dt
 		s.py += s.vy * dt
-		if C.distance(s.px, s.py, g.targets[(s.bar + s.seed - 2) % #g.targets + 1], 0.42) < g.catch then
+		local bar = s.bars[s.bar]
+		if C.distance(s.px, s.py, bar.x, bar.y) < g.catch then
 			C.mark(s, 1)
 			s.bar += 1
 			s.flying = false
@@ -214,9 +262,15 @@ Games.SwingKing = {
 			s.pause = s.t + g.reset
 		end
 	end,
+	-- Pour le solveur des tests : lâcher maintenant rattrape-t-il la barre ?
+	reaches = function(s, g)
+		local bar = s.bars[s.bar]
+		return bar ~= nil and swingClosest(s.t, g, bar.x, bar.y) < g.catch * 0.6
+	end,
 	draw = function(s, g)
+		local bar = s.bars[math.min(s.bar, #s.bars)]
 		C.node(s, "bar", 0.22, 0.20, 0.29, 0.04, "metal")
-		C.node(s, "next", g.targets[(s.bar + s.seed - 2) % #g.targets + 1], 0.42, 0.24, 0.045, "goal")
+		C.node(s, "next", bar.x, bar.y, 0.20, 0.045, "goal")
 		for i = 1, s.bar - 1 do
 			C.node(s, "flag" .. i, 0.25 + i * 0.12, 0.08, 0.06, 0.08, "pennant")
 		end
@@ -228,17 +282,11 @@ Games.SwingKing = {
 		end
 		C.node(s, "athlete", x, y, 0.10, 0.15, "athlete", if s.flying then -20 else -math.deg(angle))
 		if not s.flying then
-			for i = 1, 5 do
-				local time = i * 0.12
-				C.node(
-					s,
-					"arc" .. i,
-					x + (g.launch + math.cos(s.t * g.speed) * 0.3) * time,
-					y - 0.5 * time + g.gravity * time ^ 2 / 2,
-					0.014,
-					0.014,
-					"goal"
-				)
+			-- Arc en pointillés : là où le saut partirait si l'on lâchait maintenant
+			local _, _, vx, vy = swingLaunch(s.t, g)
+			for i = 1, 7 do
+				local time = i * 0.11
+				C.node(s, "arc" .. i, x + vx * time, y + vy * time + g.gravity * time ^ 2 / 2, 0.018, 0.018, "goal")
 			end
 		end
 	end,

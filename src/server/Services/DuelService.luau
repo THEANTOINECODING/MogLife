@@ -580,7 +580,6 @@ function startRound(duel: Duel)
 			interval = interval,
 			total = Duels.RepsPerRound,
 			anchor = side.spot,
-			autoAllowed = false,
 			timingScale = Duels.TimingScaleByRound[round] or 1,
 			seed = seed,
 			titleKey = "Duel.RoundTitle",

@@ -1,9 +1,8 @@
 -- Boîte à outils commune des mini-jeux : panneau, entrées (clic/toucher, clavier, manette, pointeur),
--- notation Perfect / Good / Miss, boucle d'animation, mode auto et nettoyage.
+-- notation Perfect / Good / Miss, boucle d'animation et nettoyage.
 --
 -- Interface commune de tout mini-jeu (module dans src/client/Minigames/) :
 --   Minigame.new(parent: GuiObject, interval: number, onRep: (quality: string) -> (), options: Options?)
---   minigame:SetAuto(on: boolean)   -- en mode auto, le mini-jeu s'anime tout seul et ne note rien
 --   minigame:Destroy()
 -- options.timingScale (< 1 = fenêtres plus serrées, utilisé en combat de boss et en duel)
 -- options.seed (graine du motif : en duel, les deux joueurs ont exactement la même suite)
@@ -49,12 +48,10 @@ function Kit.new(parent: GuiObject, interval: number, onRep: (string) -> (), opt
 	self.interval = interval
 	self.onRep = onRep
 	self.timingScale = (options and options.timingScale) or 1
-	self.auto = false
 	self.startTime = os.clock()
 	self.connections = {}
 	self.pointer = Vector2.zero
 	self.pointerActive = false
-	self.onAutoChanged = nil :: ((boolean) -> ())?
 	return self
 end
 
@@ -138,15 +135,12 @@ end
 function Kit:OnPress(callback: () -> (), zone: GuiObject?)
 	if zone then
 		self:Connect(zone.InputBegan, function(input)
-			if isPress(input) and not self.auto then
+			if isPress(input) then
 				callback()
 			end
 		end)
 	end
 	self:Connect(UserInputService.InputBegan, function(input)
-		if self.auto then
-			return
-		end
 		local key = input.KeyCode == Enum.KeyCode.Space or input.KeyCode == Enum.KeyCode.ButtonA
 		if key or (not zone and isPress(input)) then
 			callback()
@@ -211,7 +205,7 @@ end
 function Kit:OnDirection(callback: (string) -> ())
 	self:Connect(UserInputService.InputBegan, function(input)
 		local direction = DIRECTION_KEYS[input.KeyCode]
-		if direction and not self.auto then
+		if direction then
 			callback(direction)
 		end
 	end)
@@ -294,9 +288,7 @@ function Kit:AddDirectionButtons(directions: { string }, callback: (string) -> (
 		})
 		Ui.stroke(Color3.fromRGB(255, 216, 103), 2, 0.35).Parent = button
 		self:Connect(button.Activated, function()
-			if not self.auto then
-				callback(direction)
-			end
+			callback(direction)
 		end)
 	end
 end
@@ -323,16 +315,7 @@ function Kit:GradeError(err: number, perfectMax: number, goodMax: number): strin
 end
 
 function Kit:Rep(quality: string)
-	if not self.auto then
-		self.onRep(quality)
-	end
-end
-
-function Kit:SetAuto(on: boolean)
-	self.auto = on
-	if self.onAutoChanged then
-		self.onAutoChanged(on)
-	end
+	self.onRep(quality)
 end
 
 function Kit:Destroy()

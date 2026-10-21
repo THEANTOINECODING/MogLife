@@ -61,6 +61,10 @@ end
 
 function C.miss(s, reason)
 	s.misses += 1
+	-- Jeux à vies (D79) : réessayer à l'infini permettait de gagner en cliquant au hasard
+	if s.rules and s.rules.lives and s.misses >= s.rules.lives then
+		s.lost = true
+	end
 	s.pulse += 1
 	s.streak = 0
 	s.perfectStreak = 0

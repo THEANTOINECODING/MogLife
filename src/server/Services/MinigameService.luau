@@ -1,6 +1,6 @@
 -- Moteur générique des « runs » de mini-jeu : une série d'exercice, une aide en ville, une manche de boss.
 -- Le client envoie seulement la qualité de chaque répétition ; ce moteur vérifie la cadence, la distance,
--- le mode auto, puis délègue la récompense au service qui a lancé le run (onRep / onEnd).
+-- puis délègue la récompense au service qui a lancé le run (onRep / onEnd).
 
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
@@ -22,7 +22,6 @@ export type RunSpec = {
 	interval: number, -- durée d'une répétition (secondes)
 	total: number, -- nombre de répétitions du run
 	anchor: BasePart, -- le joueur doit rester près de cette pièce
-	autoAllowed: boolean,
 	timingScale: number?, -- < 1 = fenêtres de timing plus serrées (combats de boss)
 	seed: number?, -- graine du motif du mini-jeu (duels : les deux joueurs jouent exactement le même)
 	titleKey: string?, -- texte affiché en haut du run (clé Texts)
@@ -52,8 +51,6 @@ type Run = {
 	lastBudget: number?,
 	nextSnapshot: number?,
 	finishAt: number?,
-	auto: boolean?,
-	usedAuto: boolean?,
 	payoutScale: number?,
 }
 
@@ -146,8 +143,6 @@ function MinigameService.StartRun(player: Player, spec: RunSpec): boolean
 		lastInput = os.clock(),
 		lastBudget = os.clock(),
 		nextSnapshot = 0,
-		auto = false,
-		usedAuto = false,
 		payoutScale = 1,
 	}
 	-- Visible de tous : les autres clients ne proposent pas de duel à un joueur occupé
@@ -162,7 +157,6 @@ function MinigameService.StartRun(player: Player, spec: RunSpec): boolean
 		minigame = spec.minigame,
 		interval = spec.interval,
 		total = spec.total,
-		autoAllowed = spec.autoAllowed,
 		timingScale = spec.timingScale,
 		seed = spec.seed,
 		titleKey = spec.titleKey,
@@ -190,11 +184,10 @@ function MinigameService.EndRun(player: Player, reason: EndReason)
 			won = run.playground.won,
 			score = Playground.Score(run.playground),
 			misses = run.playground.misses,
-			auto = run.usedAuto,
 		}
 		else nil
 	if outcome then
-		score = if run.usedAuto then nil else outcome.score
+		score = outcome.score
 	end
 	local extra = if run.spec.onEnd then run.spec.onEnd(player, reason, run.reps, score, outcome) else nil
 	if reason ~= "Left" then
@@ -226,19 +219,12 @@ local function onRep(player: Player, quality: unknown, trusted: boolean?)
 	if PlaygroundConfig.Games[spec.minigame] and not trusted then
 		return
 	end
-	if quality == "Auto" and not spec.autoAllowed then
-		return
-	end
 
 	-- Quota : jamais plus de répétitions que le temps écoulé ne le permet (+1 d'avance).
 	-- Les jeux de réaction peuvent ainsi envoyer deux répétitions rapprochées, sans dépasser le rythme moyen.
 	local now = os.clock()
 	local allowed = math.floor((now - run.startedAt) / (spec.interval * Balance.RepIntervalTolerance)) + 1
 	if run.reps >= allowed or now - run.lastRepAt < MIN_GAP then
-		return
-	end
-	-- Le mode auto garde un rythme strictement régulier
-	if quality == "Auto" and now - run.lastRepAt < spec.interval * Balance.RepIntervalTolerance then
 		return
 	end
 	if not MinigameService.IsNear(player, spec.anchor) then
@@ -248,20 +234,18 @@ local function onRep(player: Player, quality: unknown, trusted: boolean?)
 
 	run.lastRepAt = now
 	run.reps += 1
-	if quality ~= "Auto" then
-		run.manual += 1
-		run.points += Balance.Grade.Points[quality] or 0
-	end
-	-- Combo : un raté (ou le mode auto) le remet à zéro
-	if quality == "Miss" or quality == "Auto" then
+	run.manual += 1
+	run.points += Balance.Grade.Points[quality] or 0
+	-- Combo : un raté le remet à zéro
+	if quality == "Miss" then
 		run.streak = 0
 	else
 		run.streak += 1
 	end
 	local combo = MinigameService.ComboMultiplier(run.streak)
 	if run.playground then
-		run.streak = if run.usedAuto then 0 else (run.playground.streak or 0)
-		combo = if run.usedAuto then 1 else Playground.Combo(run.playground)
+		run.streak = run.playground.streak or 0
+		combo = Playground.Combo(run.playground)
 	end
 	local gain = if spec.onRep then spec.onRep(player, quality, combo, run.payoutScale or 1, run.playground) else nil
 
@@ -321,15 +305,7 @@ local function onPlaygroundInput(player, token, sequence, kind, x, y, sentAt)
 	then
 		return
 	end
-	if
-		kind ~= "down"
-		and kind ~= "up"
-		and kind ~= "move"
-		and kind ~= "autoOn"
-		and kind ~= "autoOff"
-		and kind ~= "ready"
-		and kind ~= "undo"
-	then
+	if kind ~= "down" and kind ~= "up" and kind ~= "move" and kind ~= "undo" then
 		return
 	end
 	local now = os.clock()
@@ -352,22 +328,13 @@ local function onPlaygroundInput(player, token, sequence, kind, x, y, sentAt)
 	if not run.playground then
 		return
 	end
-	if kind == "autoOn" or kind == "autoOff" then
-		if not run.spec.autoAllowed then
-			return
-		end
-		run.auto = kind == "autoOn"
-		run.usedAuto = run.usedAuto or run.auto
-		Playground.Input(run.playground, "up", x, y)
-	elseif not run.auto then
-		-- Bounded latency allowance for rhythm only; never accept a client grade or unrestricted rewind.
-		local lag = if typeof(sentAt) == "number" and sentAt == sentAt
-			then math.clamp(workspace:GetServerTimeNow() - sentAt, 0, PlaygroundConfig.TimingGrace)
-			else 0
-		run.playground.inputTime = run.playground.t - lag
-		Playground.Input(run.playground, kind, x, y)
-		run.playground.inputTime = nil
-	end
+	-- Bounded latency allowance for rhythm only; never accept a client grade or unrestricted rewind.
+	local lag = if typeof(sentAt) == "number" and sentAt == sentAt
+		then math.clamp(workspace:GetServerTimeNow() - sentAt, 0, PlaygroundConfig.TimingGrace)
+		else 0
+	run.playground.inputTime = run.playground.t - lag
+	Playground.Input(run.playground, kind, x, y)
+	run.playground.inputTime = nil
 end
 
 local function stepPlaygrounds(dt)
@@ -378,7 +345,6 @@ local function stepPlaygrounds(dt)
 			if run.playground then
 				run.playground.held = false
 			end
-			run.auto = false
 		end
 		if run.token and (not player.Character or not MinigameService.IsNear(player, run.spec.anchor)) then
 			MinigameService.EndRun(player, "TooFar")
@@ -392,15 +358,12 @@ local function stepPlaygrounds(dt)
 			MinigameService.EndRun(player, "TooFar")
 			continue
 		end
-		if run.auto and not state.finished then
-			Playground.Auto(state, dt)
-		end
 		Playground.Step(state, dt)
 		if now >= run.nextSnapshot then
 			run.nextSnapshot = now + PlaygroundConfig.SnapshotInterval
 			Remotes.PlaygroundState:FireClient(
 				player,
-				{ token = run.token, state = Playground.Snapshot(state), sequence = run.sequence, auto = run.auto }
+				{ token = run.token, state = Playground.Snapshot(state), sequence = run.sequence }
 			)
 			for _, viewer in Players:GetPlayers() do
 				if MinigameService.IsNear(viewer, run.spec.anchor, PlaygroundConfig.SpectatorDistance) then
@@ -416,7 +379,7 @@ local function stepPlaygrounds(dt)
 				run.finishAt = now + PlaygroundConfig.ResultPause
 				run.payoutScale = Playground.Payout(state)
 			elseif now >= run.finishAt then
-				onRep(player, if run.usedAuto then "Auto" else Playground.Quality(state), true)
+				onRep(player, Playground.Quality(state), true)
 			end
 		end
 	end

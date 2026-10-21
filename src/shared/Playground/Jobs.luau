@@ -419,19 +419,97 @@ local function extendProduce(s, g)
 	end
 end
 
+-- Partage la grille en groupes (chemins de 3 à 5 cases tirés au sort), colorés pour que deux groupes voisins
+-- n'aient jamais la même couleur. Même graine = même plateau pour tout le monde (serveur et prédiction du client).
+local function produceBoard(seed, g)
+	local n = g.size * g.size
+	local rng = Random.new(seed * 7919 + 101)
+	local function neighbors(i)
+		local list = {}
+		for _, j in { i - g.size, i + g.size, i - 1, i + 1 } do
+			if j >= 1 and j <= n and C.adjacent(i, j, g.size) then
+				table.insert(list, j)
+			end
+		end
+		return list
+	end
+	for _ = 1, 400 do
+		local owner, groups, ok = {}, {}, true
+		for start = 1, n do
+			if not owner[start] then
+				local id = #groups + 1
+				local group, target = { start }, rng:NextInteger(g.minimum, g.maximum)
+				owner[start] = id
+				while #group < target do
+					local options = {}
+					for _, j in neighbors(group[#group]) do
+						if not owner[j] then
+							table.insert(options, j)
+						end
+					end
+					if #options == 0 then
+						break
+					end
+					local cell = options[rng:NextInteger(1, #options)]
+					owner[cell] = id
+					table.insert(group, cell)
+				end
+				if #group < g.minimum then
+					ok = false
+					break
+				end
+				table.insert(groups, group)
+			end
+		end
+		local colors = {}
+		if ok then
+			for id, group in groups do
+				local used = {}
+				for _, cell in group do
+					for _, j in neighbors(cell) do
+						if owner[j] ~= id and colors[owner[j]] then
+							used[colors[owner[j]]] = true
+						end
+					end
+				end
+				local free = {}
+				for color = 1, g.colors do
+					if not used[color] then
+						table.insert(free, color)
+					end
+				end
+				if #free == 0 then
+					ok = false
+					break
+				end
+				colors[id] = free[rng:NextInteger(1, #free)]
+			end
+		end
+		if ok then
+			return groups, owner, colors
+		end
+	end
+	-- Secours (jamais atteint en pratique) : une rangée par groupe, couleurs alternées
+	local groups, owner, colors = {}, {}, {}
+	for row = 1, g.size do
+		local group = {}
+		for col = 1, g.size do
+			local cell = (row - 1) * g.size + col
+			table.insert(group, cell)
+			owner[cell] = row
+		end
+		groups[row], colors[row] = group, (row - 1) % 2 + 1
+	end
+	return groups, owner, colors
+end
+
 Games.ProduceParade = {
 	init = function(s, g)
-		s.fruit, s.path = {}, {}
+		s.path = {}
+		s.groups, s.group, s.groupColor = produceBoard(s.seed, g)
+		s.fruit = {}
 		for i = 1, g.size * g.size do
-			local row, col = math.floor((i - 1) / g.size), (i - 1) % g.size
-			if math.floor(s.seed / g.colors) % 2 == 1 then
-				row, col = col, row
-			end
-			if math.floor(s.seed / (g.colors * 2)) % 2 == 1 then
-				col = g.size - 1 - col
-			end
-			local snake = row * g.size + (if row % 2 == 0 then col else g.size - 1 - col)
-			s.fruit[i] = (math.floor(snake / g.minimum) + s.seed) % g.colors + 1
+			s.fruit[i] = s.groupColor[s.group[i]]
 		end
 	end,
 	action = function(s, kind, g)
@@ -439,13 +517,16 @@ Games.ProduceParade = {
 			s.path = {}
 			extendProduce(s, g)
 		elseif kind == "up" then
-			if #s.path >= g.minimum then
+			local first = s.path[1]
+			local whole = first ~= nil and #s.path == #s.groups[s.group[first]]
+			if whole then
 				C.mark(s, #s.path)
 				for _, cell in s.path do
 					s.fruit[cell] = 0
 				end
 				s.won = s.score >= g.goal
 			elseif #s.path > 0 then
+				-- Groupe incomplet : la commande est abîmée (une vie en moins)
 				C.miss(s)
 			end
 			s.path = {}
@@ -460,7 +541,7 @@ Games.ProduceParade = {
 		for i, fruit in s.fruit do
 			if fruit > 0 then
 				local x, y = C.xy(i, g.size)
-				C.node(s, "fruit" .. i, x, y, 0.125, 0.125, if table.find(s.path, i) then "gold" else "fruit" .. fruit)
+				C.node(s, "fruit" .. i, x, y, 0.15, 0.15, if table.find(s.path, i) then "gold" else "fruit" .. fruit)
 			end
 		end
 	end,

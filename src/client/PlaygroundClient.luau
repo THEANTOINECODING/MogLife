@@ -206,14 +206,11 @@ function Client.new(name, parent, interval, onRep, options)
 	fit()
 	self:Connect(parent:GetPropertyChangedSignal("AbsoluteSize"), fit)
 	local function send(kind)
-		if self.auto and kind ~= "autoOff" and kind ~= "autoOn" and kind ~= "ready" then
-			return
-		end
 		sequence += 1
 		if options.token then
 			Remotes.PlaygroundInput:FireServer(options.token, sequence, kind, x, y, workspace:GetServerTimeNow())
 		end
-		if state and not self.auto then
+		if state then
 			if options.token and #pending < Config.InputRate then
 				table.insert(pending, { sequence = sequence, kind = kind, x = x, y = y, time = state.t })
 			end
@@ -236,7 +233,7 @@ function Client.new(name, parent, interval, onRep, options)
 		touch = nil
 	end
 	self:Connect(inputZone.InputBegan, function(input)
-		if self.auto or pressed then
+		if pressed then
 			return
 		end
 		if
@@ -252,7 +249,7 @@ function Client.new(name, parent, interval, onRep, options)
 		end
 	end)
 	self:Connect(UserInputService.InputBegan, function(input)
-		if GuiService.MenuIsOpen or self.auto or pressed or UserInputService:GetFocusedTextBox() then
+		if GuiService.MenuIsOpen or pressed or UserInputService:GetFocusedTextBox() then
 			return
 		end
 		if input.KeyCode == Enum.KeyCode.Space or input.KeyCode == Enum.KeyCode.ButtonA then
@@ -286,18 +283,8 @@ function Client.new(name, parent, interval, onRep, options)
 			release()
 		end
 	end)
-	local function suspend()
-		release()
-		if self.auto then
-			self:SetAuto(false)
-		end
-	end
-	self:Connect(UserInputService.WindowFocusReleased, suspend)
-	self:Connect(GuiService.MenuOpened, suspend)
-	self.onAutoChanged = function(on)
-		pressed, touch = false, nil
-		send(if on then "autoOn" else "autoOff")
-	end
+	self:Connect(UserInputService.WindowFocusReleased, release)
+	self:Connect(GuiService.MenuOpened, release)
 	self:Connect(Remotes.PlaygroundState.OnClientEvent, function(update)
 		if update.token ~= options.token then
 			return
@@ -308,24 +295,22 @@ function Client.new(name, parent, interval, onRep, options)
 			while pending[1] and pending[1].sequence <= (update.sequence or sequence) do
 				table.remove(pending, 1)
 			end
-			if not self.auto then
-				local limit = state.t + Config.PredictionLimit
-				for _, action in pending do
-					local ahead = math.max(0, math.min(action.time, limit) - state.t)
-					while ahead > 0 do
-						local step = math.min(ahead, Config.Step)
-						Game.Step(state, step)
-						ahead -= step
-					end
-					Game.Input(state, action.kind, action.x, action.y)
-				end
-				state.x, state.y = x, y
-				local ahead = math.clamp(predictedTime - state.t, 0, Config.PredictionLimit)
+			local limit = state.t + Config.PredictionLimit
+			for _, action in pending do
+				local ahead = math.max(0, math.min(action.time, limit) - state.t)
 				while ahead > 0 do
 					local step = math.min(ahead, Config.Step)
 					Game.Step(state, step)
 					ahead -= step
 				end
+				Game.Input(state, action.kind, action.x, action.y)
+			end
+			state.x, state.y = x, y
+			local ahead = math.clamp(predictedTime - state.t, 0, Config.PredictionLimit)
+			while ahead > 0 do
+				local step = math.min(ahead, Config.Step)
+				Game.Step(state, step)
+				ahead -= step
 			end
 		end
 		if update.duel then
@@ -335,7 +320,7 @@ function Client.new(name, parent, interval, onRep, options)
 	self:OnStep(function(dt)
 		elapsed += dt
 		local direction = self:HeldDirection()
-		if direction.Magnitude > 0 and not self.auto then
+		if direction.Magnitude > 0 then
 			if state and state.rules.size then
 				if elapsed >= gridClock then
 					gridClock = elapsed + Config.GridRepeat
@@ -360,14 +345,11 @@ function Client.new(name, parent, interval, onRep, options)
 		end
 		if elapsed - lastMove >= Config.InputInterval then
 			lastMove = elapsed
-			send(if self.auto then "ready" else "move")
+			send("move")
 		end
 		cursor.Position = UDim2.fromScale(x, y)
-		cursor.Visible = not self.auto and not duel
+		cursor.Visible = not duel
 		if state then
-			if self.auto then
-				Game.Auto(state, math.min(dt, 0.1))
-			end
 			Game.Step(state, math.min(dt, 0.1))
 			Activity.LocalState = state
 			view:Draw(Game.Draw(state))
@@ -442,7 +424,7 @@ function Client.new(name, parent, interval, onRep, options)
 			if state.notice then
 				budget.Text = Texts.Get("Playground.Feedback." .. state.notice)
 			end
-			mastery.Text = Texts.Get(if self.auto then "Playground.Assisted" else "Playground.Mastery", {
+			mastery.Text = Texts.Get("Playground.Mastery", {
 				accuracy = Format.Short(Game.Accuracy(state)),
 				streak = Format.Short(state.streak or 0),
 				bonus = Format.Short((Game.Combo(state) - 1) * 100),

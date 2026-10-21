@@ -96,7 +96,7 @@ return {
 	},
 
 	-- Combo (série de répétitions réussies d'affilée, D49) : multiplie le Mog des exercices. Un raté remet à zéro ;
-	-- le mode auto ne compte pas (il garde le combo à zéro). Paliers : à partir de `at` répétitions réussies.
+	-- Paliers : à partir de `at` répétitions réussies.
 	Combo = {
 		Steps = {
 			{ at = 0, multiplier = 1 },
@@ -106,8 +106,7 @@ return {
 		},
 	},
 
-	-- Note de fin de série (D51) : précision moyenne des répétitions jouées à la main (le mode auto ne compte pas ;
-	-- une série surtout en auto n'a pas de note). Lettre et étoiles selon le score.
+	-- Note de fin de série (D51) : précision moyenne des répétitions. Lettre et étoiles selon le score.
 	Grade = {
 		Points = { Perfect = 100, Good = 70, Miss = 20 },
 		MinManualShare = 0.5, -- au moins la moitié des répétitions jouées à la main pour être noté
@@ -119,12 +118,11 @@ return {
 		},
 	},
 
-	-- Multiplicateur de Mog selon la qualité de la répétition ("Auto" = mode auto)
+	-- Multiplicateur de Mog selon la qualité de la répétition
 	Quality = {
 		Miss = 1,
 		Good = 1.25,
 		Perfect = 1.6,
-		Auto = 1,
 	},
 
 	-- Fenêtres de timing (secondes d'écart avec le temps fort du mini-jeu)
@@ -167,7 +165,7 @@ return {
 		-- partie moyenne (Perfect, Good et quelques ratés) = environ 1 x ; tout raté = 0. ❓ à calibrer.
 		Reward = {
 			Scale = 0.8, -- ramène le gain moyen au cash de l'aide (le combo et les chaînes de Perfect le gonflent)
-			Quality = { Perfect = 1, Good = 0.6, Miss = 0, Auto = 0.3 },
+			Quality = { Perfect = 1, Good = 0.6, Miss = 0 },
 			PerfectChainStep = 0.1, -- +10 % par Perfect d'affilée...
 			PerfectChainMax = 0.5, -- ...jusqu'à +50 %
 			Flawless = 1.25, -- aide entière jouée à la main sans aucun raté : x1,25 sur le total
@@ -274,7 +272,7 @@ return {
 		-- Les os s'allongent beaucoup moins que les muscles ne s'épaississent (les articulations restent en place)
 		LengthShare = 0.25,
 		-- Pump : gonflement par répétition validée, plafond, temps pour redescendre du plafond à zéro
-		PumpPerRep = { Perfect = 0.035, Good = 0.025, Auto = 0.02, Miss = 0.01 },
+		PumpPerRep = { Perfect = 0.035, Good = 0.025, Miss = 0.01 },
 		PumpMax = 0.2,
 		PumpDecayTime = 20,
 		PumpUpdateInterval = 0.25,

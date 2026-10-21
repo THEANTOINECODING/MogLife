@@ -21,7 +21,7 @@ return function(s)
 	elseif n == "PianoPolish" then
 		return "Dust", { left = g.goal - s.score }
 	elseif n == "ProduceParade" then
-		return "Chain", { count = #s.path, goal = g.minimum }
+		return "Chain", { count = #s.path, left = math.max(0, g.lives - s.misses) }
 	elseif n == "ShortcutChalk" then
 		return "Route", { count = #s.path, goal = g.maxPath }
 	elseif g.lives then

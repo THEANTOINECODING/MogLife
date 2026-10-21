@@ -29,7 +29,7 @@ local readyAt: { [Player]: { [string]: number } } = {}
 -- Une même aide peut avoir plusieurs habitants (la maman de chaque maison)
 local anchors: { [string]: { BasePart } } = {}
 -- Aide en cours de chaque joueur : Cash gagné jusqu'ici, Perfect d'affilée, ratés
-type Progress = { earned: number, chain: number, misses: number, auto: number }
+type Progress = { earned: number, chain: number, misses: number }
 local progress: { [Player]: Progress } = {}
 
 local HelpService = {}
@@ -54,8 +54,6 @@ local function repCash(player: Player, helpId: string, quality: string, combo: n
 	end
 	if quality == "Miss" then
 		state.misses += 1
-	elseif quality == "Auto" then
-		state.auto += 1
 	end
 	local base = help.cash / (help.reps or Balance.Helps.Reps) * REWARD.Scale
 	local chainBonus = 1 + math.min(math.max(state.chain - 1, 0) * REWARD.PerfectChainStep, REWARD.PerfectChainMax)
@@ -77,7 +75,7 @@ local function finish(player: Player, helpId: string, reason: string, outcome: a
 	if outcome then
 		state.misses = outcome.misses
 	end
-	local flawless = completed and state.misses == 0 and state.auto == 0
+	local flawless = completed and state.misses == 0
 	-- Playground jobs pay for a completed objective. Failed jobs remain freely retryable.
 	local total = (if outcome and not completed then 0 else state.earned) * (if flawless then REWARD.Flawless else 1)
 	local cash = math.floor(total + 0.5)
@@ -151,7 +149,7 @@ local function startHelp(player: Player, helpId: string)
 		return
 	end
 
-	progress[player] = { earned = 0, chain = 0, misses = 0, auto = 0 }
+	progress[player] = { earned = 0, chain = 0, misses = 0 }
 	local started = MinigameService.StartRun(player, {
 		kind = "Help",
 		id = helpId,
@@ -159,7 +157,6 @@ local function startHelp(player: Player, helpId: string)
 		interval = help.interval,
 		total = help.reps or Balance.Helps.Reps,
 		anchor = anchor,
-		autoAllowed = true,
 		titleKey = `Help.{helpId}`,
 		onRep = function(p, quality, combo, _payoutScale, playground)
 			return repCash(p, helpId, quality, combo, playground)

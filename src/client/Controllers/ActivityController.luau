@@ -23,7 +23,6 @@ local Activities = script.Parent.Parent.Activities
 local QUALITY = {
 	Perfect = { amplitude = 1, shake = 0 },
 	Good = { amplitude = 0.85, shake = 0.15 },
-	Auto = { amplitude = 0.8, shake = 0 },
 	Miss = { amplitude = 0.45, shake = 1 },
 }
 -- Groupe de collision du corps pendant une activité (créé par MinigameService) : allongé sur un banc ou

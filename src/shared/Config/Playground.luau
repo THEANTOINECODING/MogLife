@@ -29,6 +29,7 @@ return {
 	Good = 0.45,
 	Games = {
 		ScrapPress = {
+			randomTargets = { count = 4, min = 0.42, max = 0.70, gap = 0.05 },
 			targetVariants = { { 0.46, 0.68, 0.53, 0.61 }, { 0.57, 0.42, 0.66, 0.49 }, { 0.64, 0.51, 0.43, 0.59 } },
 			rewardTime = 10,
 			duration = 26,
@@ -41,12 +42,13 @@ return {
 			rebound = { 0, 0, 0, 0 },
 		},
 		TireDomino = {
+			randomColumns = { min = 0.26, max = 0.74, gap = 0.17 },
 			columns = { { 0.30, 0.50, 0.70 }, { 0.36, 0.54, 0.72 }, { 0.28, 0.46, 0.64 } },
 			rewardTime = 10,
 			duration = 26,
 			goal = 9,
 			speed = 0.8,
-			radius = 0.065,
+			radius = 0.05,
 			shots = 3,
 			reset = 0.7,
 			minimumPower = 0.35,
@@ -65,21 +67,31 @@ return {
 			loadSlow = 0.025,
 		},
 		SwingKing = {
-			duration = 26,
+			lives = 3, -- trois chutes dans le filet et la série est ratée
+			duration = 30,
 			goal = 4,
 			speed = 2.1,
 			gravity = 0.8,
-			catch = 0.10,
+			catch = 0.06, -- rayon de prise : il faut lâcher au bon moment (0,10 se rattrapait presque toujours)
 			reset = 0.5,
-			launch = 0.6,
-			targets = { 0.69, 0.74, 0.71, 0.76 },
+			push = 1.4, -- élan du saut, dans le sens du balancement
+			minForward = 0.25, -- les barres sont posées sur des sauts qui partent vers l'avant
+			-- Barres tirées au sort sur une trajectoire possible : temps de vol et zone de la scène
+			flightMin = 0.45,
+			flightMax = 0.85,
+			barMinX = 0.55,
+			barMaxX = 0.86,
+			barMinY = 0.28,
+			barMaxY = 0.62,
 			rewardTime = 15,
 		},
 		RopeRave = {
+			randomPhrase = true,
 			phrases = { { 1, 2, 4 }, { 1, 3, 4 }, { 1, 3, 5 } },
 			rewardTime = 18,
 			duration = 26,
 			goal = 15,
+			lives = 4, -- appuis hors rythme et temps oubliés : au 4e, la série est ratée (taper sans arrêt ne marche plus)
 			beat = 0.57,
 			perfect = 0.09,
 			good = 0.18,
@@ -117,6 +129,7 @@ return {
 			routes = { { 1, 4, 5, 6, 9 }, { 1, 2, 5, 8, 9 }, { 1, 4, 7, 8, 5, 2, 3, 6, 9 } },
 		},
 		ChopShop = {
+			randomTargets = { count = 5, min = 0.28, max = 0.74, gap = 0.06 },
 			targetVariants = {
 				{ 0.50, 0.32, 0.68, 0.43, 0.58 },
 				{ 0.62, 0.38, 0.54, 0.70, 0.45 },
@@ -130,21 +143,92 @@ return {
 			},
 			duration = 23,
 			goal = 5,
+			lives = 3, -- trois coupes à côté et la planche est gâchée
 			tolerance = 0.07,
 			perfect = 0.025,
 			targets = { 0.50, 0.32, 0.68, 0.43, 0.58 },
 			reset = 0.55,
 		},
+		-- Casse-têtes vérifiés par le solveur (ParkingSolver) : 6 à 8 coups au minimum. Budget = minimum + 3.
 		ParkingKnot = {
-			duration = 24,
+			duration = 40,
 			goal = 1,
 			size = 5,
-			moves = 8,
+			moves = 11,
 			layouts = {
-				{ { 0, 2, 2, true }, { 2, 1, 2, false }, { 1, 0, 2, true }, { 4, 1, 2, false } },
-				{ { 0, 2, 2, true }, { 2, 2, 2, false }, { 1, 4, 2, true }, { 4, 1, 2, false } },
-				{ { 0, 2, 2, true }, { 3, 1, 2, false }, { 2, 0, 2, true }, { 4, 2, 2, false } },
+				{
+					{ 0, 2, 2, true },
+					{ 2, 3, 2, false },
+					{ 2, 0, 2, false },
+					{ 3, 4, 2, true },
+					{ 0, 3, 2, false },
+					{ 4, 2, 2, false },
+					{ 3, 1, 2, true },
+				},
+				{
+					{ 0, 2, 2, true },
+					{ 2, 0, 2, false },
+					{ 2, 4, 2, true },
+					{ 2, 2, 2, false },
+					{ 4, 2, 2, false },
+					{ 0, 4, 2, true },
+					{ 3, 0, 2, true },
+				},
+				{
+					{ 0, 2, 2, true },
+					{ 4, 1, 2, false },
+					{ 3, 0, 2, false },
+					{ 2, 4, 3, true },
+					{ 1, 0, 2, true },
+					{ 3, 2, 2, false },
+					{ 0, 3, 2, false },
+				},
+				{
+					{ 1, 2, 2, true },
+					{ 3, 3, 2, false },
+					{ 3, 1, 2, false },
+					{ 3, 0, 2, true },
+					{ 0, 2, 2, false },
+					{ 2, 0, 2, false },
+				},
+				{
+					{ 1, 2, 2, true },
+					{ 0, 3, 2, false },
+					{ 1, 1, 2, true },
+					{ 3, 4, 2, true },
+					{ 3, 0, 2, false },
+					{ 3, 2, 2, false },
+					{ 2, 3, 2, false },
+				},
+				{
+					{ 1, 2, 2, true },
+					{ 3, 1, 2, false },
+					{ 3, 0, 2, true },
+					{ 3, 3, 2, false },
+					{ 1, 4, 2, true },
+					{ 1, 3, 2, true },
+					{ 2, 0, 2, false },
+				},
+				{
+					{ 0, 2, 2, true },
+					{ 4, 1, 2, false },
+					{ 3, 3, 2, false },
+					{ 3, 1, 2, false },
+					{ 0, 0, 2, false },
+					{ 0, 4, 2, true },
+					{ 2, 0, 3, true },
+				},
+				{
+					{ 0, 2, 2, true },
+					{ 1, 1, 3, true },
+					{ 3, 4, 2, true },
+					{ 0, 4, 3, true },
+					{ 0, 0, 2, false },
+					{ 3, 0, 2, true },
+					{ 3, 2, 2, false },
+				},
 			},
+			layoutMoves = { 11, 10, 9, 9, 9, 9, 9, 9 },
 		},
 		PianoPolish = {
 			finishHighlight = 6,
@@ -165,7 +249,18 @@ return {
 			reset = 0.5,
 			folds = { { 0.22, 0.22, 0.78, 0.22 }, { 0.78, 0.78, 0.78, 0.22 }, { 0.52, 0.22, 0.78, 0.48 } },
 		},
-		ProduceParade = { trace = true, duration = 18, goal = 15, size = 4, minimum = 3, colors = 3, reset = 0.35 },
+		-- Groupes de fruits tirés au sort (formes et couleurs) : chaque groupe se trace EN ENTIER d'un seul geste
+		ProduceParade = {
+			trace = true,
+			duration = 22,
+			goal = 16, -- toutes les cases
+			size = 4,
+			minimum = 3, -- taille minimum d'un groupe
+			maximum = 5, -- taille maximum d'un groupe
+			colors = 4,
+			lives = 3,
+			reset = 0.35,
+		},
 		ShortcutChalk = {
 			walkSpeed = 14,
 			blocked = { 8, 14, 20, 26, 32, 4, 10, 16, 22 },

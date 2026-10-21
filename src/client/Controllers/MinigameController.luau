@@ -1,11 +1,10 @@
 -- Runs de mini-jeu côté client (série d'exercice, aide, manche de boss) : ouvre le bon mini-jeu,
--- envoie les répétitions au serveur, affiche le feedback, le mode auto et l'écran de fin de série.
+-- envoie les répétitions au serveur, affiche le feedback et l'écran de fin de série.
 -- Le client ne calcule aucun gain : il affiche ce que le serveur confirme.
 
 local Players = game:GetService("Players")
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
@@ -22,7 +21,6 @@ local QUALITY_COLORS = {
 	Perfect = Color3.fromRGB(255, 215, 40),
 	Good = Color3.fromRGB(90, 230, 90),
 	Miss = Color3.fromRGB(170, 170, 170),
-	Auto = Color3.fromRGB(120, 180, 255),
 }
 
 -- Couleur du combo selon son multiplicateur (x1.2, x1.5, x2)
@@ -75,7 +73,6 @@ type Current = {
 	lastLocalRep: number,
 	startedAt: number,
 	sent: number, -- répétitions envoyées au serveur
-	autoHeld: boolean,
 	gained: number, -- somme des gains confirmés par le serveur
 	connections: { RBXScriptConnection },
 }
@@ -185,9 +182,6 @@ local function sendRep(quality: string): boolean
 	if current.sent >= allowed or now - current.lastLocalRep < 0.2 then
 		return false
 	end
-	if quality == "Auto" and now - current.lastLocalRep < current.interval then
-		return false
-	end
 	current.lastLocalRep = now
 	current.sent += 1
 	Remotes.Rep:FireServer(quality)
@@ -229,10 +223,6 @@ local function closeRun()
 	current.minigame:Destroy()
 	current.root:Destroy()
 	current = nil
-end
-
-local function isPress(input: InputObject): boolean
-	return input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch
 end
 
 local function openRun(update)
@@ -346,7 +336,7 @@ local function openRun(update)
 	})
 
 	local minigame = require(module :: ModuleScript).new(root, update.interval, function(quality: string)
-		if current and not current.autoHeld then
+		if current then
 			sendRep(quality)
 		end
 	end, {
@@ -372,7 +362,6 @@ local function openRun(update)
 		lastLocalRep = 0,
 		startedAt = os.clock(),
 		sent = 0,
-		autoHeld = false,
 		gained = 0,
 		connections = {},
 	}
@@ -400,72 +389,6 @@ local function openRun(update)
 		UserInputService.InputBegan:Connect(function(input)
 			if input.KeyCode == Enum.KeyCode.ButtonB then
 				Remotes.StopSeries:FireServer()
-			end
-		end)
-	)
-
-	if not update.autoAllowed then
-		return
-	end
-
-	local autoButton = Ui.button({
-		Name = "Auto",
-		AnchorPoint = if touchLandscape
-			then Vector2.zero
-			else if UserInputService.TouchEnabled then Vector2.new(1, 0) else Vector2.new(0, 1),
-		Position = if touchLandscape
-			then UDim2.fromOffset(24 + railButtonWidth, 260)
-			else if UserInputService.TouchEnabled
-				then UDim2.new(1, -162, 0, if compact then 208 else 80)
-				else UDim2.new(0, 162, 1, -16),
-		Size = if touchLandscape then UDim2.fromOffset(railButtonWidth, 50) else UDim2.fromOffset(200, 56),
-		BackgroundColor3 = Color3.fromRGB(60, 110, 200),
-		Text = Texts.Get("Minigame.AutoButton"),
-		Selectable = false,
-		Parent = root,
-	})
-
-	if update.token then
-		autoButton.AnchorPoint = Vector2.new(0, 1)
-		autoButton.Position = UDim2.new(0, 14, 1, -12)
-		autoButton.Size = UDim2.fromOffset(150, 44)
-		autoButton.ZIndex = 20
-	end
-	local function setAuto(held: boolean)
-		session.autoHeld = held
-		minigame:SetAuto(held)
-	end
-
-	table.insert(
-		session.connections,
-		autoButton.InputBegan:Connect(function(input)
-			if isPress(input) then
-				setAuto(true)
-			end
-		end)
-	)
-	-- Relâcher n'importe où (ou gâchette droite de manette) arrête le mode auto
-	table.insert(
-		session.connections,
-		UserInputService.InputEnded:Connect(function(input)
-			if session.autoHeld and (isPress(input) or input.KeyCode == Enum.KeyCode.ButtonR2) then
-				setAuto(false)
-			end
-		end)
-	)
-	table.insert(
-		session.connections,
-		UserInputService.InputBegan:Connect(function(input)
-			if input.KeyCode == Enum.KeyCode.ButtonR2 then
-				setAuto(true)
-			end
-		end)
-	)
-	table.insert(
-		session.connections,
-		RunService.Heartbeat:Connect(function()
-			if session.autoHeld and not update.token then
-				sendRep("Auto")
 			end
 		end)
 	)

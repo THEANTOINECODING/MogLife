@@ -1,8 +1,8 @@
--- Free assisted play issues the same legal actions. It never awards manual grades.
+-- Solveur des tests automatiques (gestes légaux) : prouve que chaque jeu se gagne. Jamais utilisé en jeu (D79).
 local C = require(script.Parent.Common)
 local ParkingSolver = require(script.Parent.ParkingSolver)
 
-return function(s, dt, config, input)
+return function(s, dt, config, input, rules)
 	s.autoClock = (s.autoClock or 0) + dt
 	if s.t < 0 or s.finished or s.autoClock < config.AutoInterval then
 		return
@@ -47,12 +47,7 @@ return function(s, dt, config, input)
 			end
 		end
 	elseif s.name == "SwingKing" then
-		if
-			not s.flying
-			and s.t > s.pause
-			and math.cos(s.t * g.speed) > 0.5
-			and math.abs(math.sin(s.t * g.speed)) < 0.5
-		then
+		if not s.flying and s.t > s.pause and rules.SwingKing.reaches(s, g) then
 			tap()
 		end
 	elseif s.name == "RopeRave" then
@@ -126,37 +121,24 @@ return function(s, dt, config, input)
 			act("up", f[3], f[4])
 		end
 	elseif s.name == "ProduceParade" then
-		if #s.path >= g.minimum then
+		local group
+		for _, candidate in s.groups do
+			if s.fruit[candidate[1]] > 0 then
+				group = candidate
+				break
+			end
+		end
+		if not group then
+			return
+		end
+		if not s.held then
+			local x, y = C.xy(group[1], g.size)
+			act("down", x, y)
+		elseif #s.path >= #group then
 			act("up")
-		elseif #s.path == 0 then
-			local chosen
-			for i, fruit in s.fruit do
-				if fruit > 0 then
-					local neighbors = 0
-					for j, other in s.fruit do
-						if other == fruit and C.adjacent(i, j, g.size) then
-							neighbors += 1
-						end
-					end
-					if neighbors == 1 then
-						chosen = i
-						break
-					end
-				end
-			end
-			if chosen then
-				local x, y = C.xy(chosen, g.size)
-				act("down", x, y)
-			end
 		else
-			local last = s.path[#s.path]
-			for i, fruit in s.fruit do
-				if fruit == s.fruit[last] and C.adjacent(i, last, g.size) and not table.find(s.path, i) then
-					local x, y = C.xy(i, g.size)
-					act("move", x, y)
-					break
-				end
-			end
+			local x, y = C.xy(group[#s.path + 1], g.size)
+			act("move", x, y)
 		end
 	elseif s.name == "ShortcutChalk" then
 		if s.walk > 0 then

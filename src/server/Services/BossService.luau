@@ -265,7 +265,6 @@ function startRound(player: Player, fight: Fight)
 		interval = interval,
 		total = BOSS.RepsPerRound,
 		anchor = fight.spot,
-		autoAllowed = false,
 		timingScale = BOSS.TimingScaleByRound[fight.round] or 1,
 		titleKey = "Boss.RoundTitle",
 		titleArgs = { round = fight.round, rounds = BOSS.Rounds, boss = { key = `Boss.{fight.bossId}` } },

@@ -123,9 +123,11 @@ function Playground.Step(state, dt)
 	end
 end
 
+-- Solveur des tests automatiques (tests/playground*.luau) : prouve que chaque jeu se gagne. Jamais accessible aux
+-- joueurs : le mode Auto a été retiré du jeu (D79).
 function Playground.Auto(state, dt)
 	state.autoplayInput = true
-	Autoplay(state, dt, Config, Playground.Input)
+	Autoplay(state, dt, Config, Playground.Input, Rules)
 	state.autoplayInput = nil
 end
 
