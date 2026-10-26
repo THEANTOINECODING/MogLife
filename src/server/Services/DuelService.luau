@@ -599,6 +599,7 @@ local function startDuel(a: Player, b: Player?, botSkill: { perfect: number, goo
 	local botSide = duel.sides[2]
 	if not b then
 		botSide.bot = Npc.Spawn("Kevin", botSide.name, spotB, spotA.Position)
+		botSide.bot:SetAttribute("NpcStill", true) -- mannequin d'entraînement : pas d'attitude animée
 		botSide.botSkill = botSkill
 	end
 	for _, side in duel.sides do

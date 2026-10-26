@@ -26,6 +26,7 @@ local ORDER = {
 	"SettingsController",
 	"OutfitFxController",
 	"DuelController",
+	"NpcController",
 }
 
 local controllers = {}
@@ -40,9 +41,23 @@ for _, name in ORDER do
 	end
 end
 
+-- Chaque Start démarre dans son propre fil (D83) : un contrôleur qui attend quelque chose ne bloque plus ceux qui le
+-- suivent. L'ordre reste le même tant qu'aucun n'attend. Dans Studio, ceux qui attendent encore sont signalés.
+local waiting: { [string]: boolean } = {}
 for _, name in ORDER do
 	local controller = controllers[name]
 	if controller.Start then
-		controller.Start()
+		waiting[name] = true
+		task.spawn(function()
+			controller.Start()
+			waiting[name] = nil
+		end)
 	end
+end
+if game:GetService("RunService"):IsStudio() then
+	task.delay(10, function()
+		for name in waiting do
+			warn(`[Client] {name}.Start attend encore après 10 s`)
+		end
+	end)
 end

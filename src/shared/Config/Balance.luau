@@ -80,6 +80,9 @@ return {
 		Duration = 2.6, -- secondes de pose
 		Cooldown = 3, -- secondes minimum entre deux émotes
 		Count = 5, -- nombre de poses (doit suivre MogOff.PoseCount)
+		CelebratePose = 1, -- pose de victoire (double biceps) après un boss battu ou une série notée S (D83)
+		CelebrateDelay = 0.8, -- secondes après la fin (le personnage quitte d'abord son activité)
+		CelebrateZoom = 12, -- la caméra se rapproche (degrés de champ de vision en moins)
 	},
 
 	-- Pareur : un joueur en pare un autre pendant sa série d'exercice

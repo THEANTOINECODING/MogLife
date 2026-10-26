@@ -17,6 +17,12 @@ local badges: { [Model]: TextLabel } = {}
 
 local HelpController = {}
 
+-- Aide faisable tout de suite (stade atteint, délai écoulé) : l'habitant sautille pour attirer l'attention (D83)
+function HelpController.IsAvailable(helpId: string): boolean
+	local help = Helps[helpId]
+	return help ~= nil and stage >= help.requiredStage and (readyAt[helpId] or 0) <= workspace:GetServerTimeNow()
+end
+
 local function addBadge(model: Instance)
 	if not model:IsA("Model") or badges[model] then
 		return

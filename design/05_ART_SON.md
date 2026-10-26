@@ -42,6 +42,30 @@ Chaque zone a sa propre ambiance, de plus en plus absurde. Palettes **proposées
 - **Une coque par stade** (7 pour le joueur) et une par PNJ. Les habits et coupes se posent par-dessus.
 - Pipeline : Blender → export FBX (`assets/export/`) → import dans Studio (un import par lot) → la coque est assemblée par le code.
 
+### Animations (classement validé par Antoine le 26/10/2026, D83)
+
+Les habitants, vendeurs et boss sont une seule pièce 3D, sans squelette : ils sont animés **en entier, par le code**
+(`NpcController`, réglages dans `Config/NpcAnims.luau`), chez chaque joueur.
+
+**Essentiel (fait, D83)**
+1. Habitants et boss respirent, se balancent, se tournent vers le joueur proche ; un habitant dont l'aide est
+   disponible sautille.
+2. Attitude propre à chaque boss : Kevin s'affaisse dans son canapé puis se redresse, Brayan se tourne en prenant la
+   pose avec des reflets, Coach Turbo sautille, Monsieur Pas-Les-Jambes vacille, le ventilateur du Roi souffle, le Dieu
+   du Pump flotte avec un halo.
+3. Réactions pendant une aide : inquiet au début, petit saut sur une réussite, tête basse sur un raté, grande fête
+   (saut, tour sur lui-même, confettis) quand l'aide est réussie ; les autres joueurs le voient remercier.
+4. Combat : le boss encaisse les Perfect et les Good (il s'incline en arrière), se moque des ratés et de la défaite du
+   joueur ; vaincu, il s'envole (serveur).
+5. Célébration du joueur : pose de victoire vue par tous après un boss battu ou une série notée S, caméra qui se
+   rapproche.
+
+**Important (à faire)** : démarche selon le stade, attente du personnage (respiration, flex spontané), interface
+vivante (compteur de Mog qui défile, Cash qui vole vers le compteur, coffre qui s'ouvre), pose du pareur.
+
+**Bonus (plus tard)** : vrais squelettes dans Blender (boss d'abord), ville animée (passants, voitures, oiseaux,
+vent), nouvelles cinématiques, tenues animées et danses.
+
 ## Interface
 
 - HUD : Mog et Cash sur une ligne en tactile ; le prochain objectif et Style restent accessibles dans Menu. Sur PC, la jauge vers le boss et l'objectif restent visibles. Rien de plus pendant l'exploration.

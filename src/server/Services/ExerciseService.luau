@@ -100,6 +100,7 @@ local function startSeries(player: Player, exerciseId: unknown)
 			WeeklyService.Track(p, "SeriesDone")
 			if score and MinigameService.Grade(score) == "S" then
 				WeeklyService.Track(p, "GradeS")
+				SocialService.Celebrate(p)
 			end
 			-- Record personnel de l'exercice (D51)
 			local playerData = DataService.Get(p)

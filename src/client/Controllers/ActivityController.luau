@@ -12,6 +12,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
@@ -441,9 +442,21 @@ function ActivityController.Start()
 			stop(update.player)
 		end
 	end)
-	Remotes.EmotePlay.OnClientEvent:Connect(function(who, index)
+	Remotes.EmotePlay.OnClientEvent:Connect(function(who, index, celebration)
 		if typeof(who) == "Instance" and who:IsA("Player") and typeof(index) == "number" then
 			playEmote(who, index)
+			-- Célébration (D83) : sa propre caméra se rapproche le temps de la pose
+			local camera = workspace.CurrentCamera
+			if celebration == true and who == localPlayer and camera and SettingsController.Get("ScreenFx") then
+				local base = CameraFraming.Fov
+				local hold = Balance.Emotes.Duration - 0.8
+				TweenService:Create(camera, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+					FieldOfView = base - Balance.Emotes.CelebrateZoom,
+				}):Play()
+				task.delay(0.4 + hold, function()
+					TweenService:Create(camera, TweenInfo.new(0.4), { FieldOfView = base }):Play()
+				end)
+			end
 		end
 	end)
 	Players.PlayerRemoving:Connect(function(player)

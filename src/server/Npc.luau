@@ -64,6 +64,8 @@ local function spawnModel(template: Model, lookId: string, displayName: string, 
 	)
 	model:PivotTo(model:GetPivot() + delta)
 	addNameTag(body, displayName)
+	-- Apparence (lookId) : les clients choisissent son attitude animée (Config/NpcAnims.luau, D83)
+	model:SetAttribute("NpcLook", lookId)
 	model.Parent = getFolder()
 	return model, body
 end
@@ -105,6 +107,8 @@ function Npc.Spawn(lookId: string, displayName: string, spot: BasePart, facing: 
 	local position = spot.Position + Vector3.new(0, humanoid.HipHeight + root.Size.Y / 2 + spot.Size.Y / 2, 0)
 	local lookAt = Vector3.new(facing.X, position.Y, facing.Z)
 	model:PivotTo(CFrame.lookAt(position, lookAt))
+	-- Apparence (lookId) : les clients choisissent son attitude animée (Config/NpcAnims.luau, D83)
+	model:SetAttribute("NpcLook", lookId)
 	model.Parent = getFolder()
 	return model, root
 end
@@ -121,7 +125,9 @@ function Npc.Pose(model: Model)
 end
 
 -- Effet comique : le PNJ s'envole en tournoyant, puis revient à sa place.
+-- « Scripted » : pendant ce mouvement, les clients n'animent pas le PNJ (NpcController, D83)
 function Npc.LaunchAndReturn(model: Model, height: number, returnDelay: number)
+	model:SetAttribute("Scripted", true)
 	local origin = model:GetPivot()
 	local value = Instance.new("CFrameValue")
 	value.Value = origin
@@ -139,6 +145,7 @@ function Npc.LaunchAndReturn(model: Model, height: number, returnDelay: number)
 		value:Destroy()
 		if model.Parent then
 			model:PivotTo(origin)
+			model:SetAttribute("Scripted", false)
 		end
 	end)
 end

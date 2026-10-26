@@ -153,6 +153,17 @@ function SocialService.EndSeries(lifter: Player)
 	endSpot(lifter)
 end
 
+-- Célébration (D83) : après un boss battu ou une série notée S, le personnage prend une pose de victoire, vue par
+-- tous (sans délai entre émotes). Le client du joueur rapproche aussi sa caméra un instant.
+function SocialService.Celebrate(player: Player)
+	task.delay(Balance.Emotes.CelebrateDelay, function()
+		if player.Parent and not MinigameService.IsBusy(player) then
+			lastEmote[player] = os.clock()
+			Remotes.EmotePlay:FireAllClients(player, Balance.Emotes.CelebratePose, true)
+		end
+	end)
+end
+
 function SocialService.Init(services)
 	StatsService = services.StatsService
 	MinigameService = services.MinigameService
