@@ -5,6 +5,7 @@ local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
 
 local Boosts = require(ReplicatedStorage.Shared.Config.Boosts)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
@@ -205,6 +206,15 @@ local function buildGui()
 	})
 	closeButton.Activated:Connect(close)
 	gui.Parent = player:WaitForChild("PlayerGui")
+
+	-- Téléphone et tablette en paysage : le badge monte dans la rangée du haut, juste sous le HUD (D82). Placé sous
+	-- la barre de Roblox, il tombait au milieu d'un écran de téléphone.
+	Ui.watchViewport(function()
+		local touchLandscape = UserInputService.TouchEnabled and not Ui.isPhonePortrait()
+		gui.IgnoreGuiInset = touchLandscape
+		badge.Position = if touchLandscape then UDim2.new(0.5, 0, 0, 50) else UDim2.new(0.5, 0, 0, 118)
+		badge.Size = if touchLandscape then UDim2.fromOffset(230, 24) else UDim2.fromOffset(300, 30)
+	end)
 end
 
 function BoostController.Init(controllers)

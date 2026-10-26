@@ -26,15 +26,20 @@ local hudPanel: Frame
 local progressBar: Frame
 
 local function layoutHud()
+	local gui = hudPanel.Parent :: ScreenGui
 	if UserInputService.TouchEnabled then
 		local phone = Ui.isPhonePortrait()
+		-- Paysage : le HUD monte dans la rangée de la barre de Roblox, au centre (libre), pour ne pas cacher le jeu
+		-- (D82). Portrait : les boutons de Roblox occupent le haut à gauche, il reste dessous.
+		gui.IgnoreGuiInset = not phone
 		hudPanel.AnchorPoint = if phone then Vector2.zero else Vector2.new(0.5, 0)
-		hudPanel.Position = if phone then UDim2.fromOffset(8, 8) else UDim2.new(0.5, 0, 0, 8)
-		hudPanel.Size = if phone then UDim2.new(1, -106, 0, 48) else UDim2.fromOffset(320, 48)
+		hudPanel.Position = if phone then UDim2.fromOffset(8, 8) else UDim2.new(0.5, 0, 0, 6)
+		hudPanel.Size = if phone then UDim2.new(1, -106, 0, 48) else UDim2.fromOffset(290, 40)
 		bossLabel.Visible = false
 		progressBar.Visible = false
 		toastLabel.Size = UDim2.new(1, -24, 0, 48)
 	else
+		gui.IgnoreGuiInset = false
 		hudPanel.AnchorPoint = Vector2.new(0.5, 0)
 		hudPanel.Position = UDim2.new(0.5, 0, 0, 8)
 		hudPanel.Size = UDim2.fromOffset(380, 104)

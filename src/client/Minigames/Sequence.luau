@@ -1,7 +1,7 @@
 -- Mini-jeu « Sequence » (aide : indiquer le chemin au touriste perdu, D81) : sur le petit plan, le touriste montre
 -- son chemin (une case après l'autre, depuis l'épingle), puis le chemin s'efface. Le refaire en glissant le pouce
 -- dans chaque direction (n'importe où). Une erreur = raté (le bon chemin s'affiche) ; sans erreur et vite =
--- Perfect, sans erreur = Good. Le chemin s'allonge à chaque niveau (3, puis 4, puis 5 pas).
+-- Perfect, sans erreur = Good. Chemin de 5 pas sur un plan de 6 × 6, puis plus long à chaque niveau (jusqu'à 7).
 -- Clavier : flèches, ZQSD/WASD ; manette : croix, coup de stick.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -11,7 +11,7 @@ local Kit = require(script.Parent.Parent.MinigameKit)
 local Ui = require(script.Parent.Parent.Ui)
 
 local SETTINGS = Balance.Minigames.Sequence
-local GRID = 5
+local GRID = SETTINGS.Grid
 local STEP = { Up = Vector2.new(0, -1), Down = Vector2.new(0, 1), Left = Vector2.new(-1, 0), Right = Vector2.new(1, 0) }
 local OPPOSITE = { Up = "Down", Down = "Up", Left = "Right", Right = "Left" }
 local TOURIST = Color3.fromRGB(255, 200, 60)
@@ -105,7 +105,7 @@ function Sequence.new(parent: GuiObject, interval: number, onRep: (string) -> ()
 	local function newPath()
 		clearTrail()
 		path = {}
-		start = Vector2.new(rng:NextInteger(1, GRID - 2), rng:NextInteger(1, GRID - 2))
+		start = Vector2.new(rng:NextInteger(0, GRID - 1), rng:NextInteger(0, GRID - 1))
 		local cell = start
 		local visited = { [cell.X .. "," .. cell.Y] = true }
 		local previous: string? = nil

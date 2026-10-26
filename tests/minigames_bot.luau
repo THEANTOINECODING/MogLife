@@ -197,10 +197,19 @@ function BOTS.Twist(p, now, c, m)
 		c.key(Enum.KeyCode.Space)
 	end
 end
-function BOTS.Pressure(p, now, c, m)
-	if p.level < 0.6 and now - (m.t or 0) > 0.12 then
-		m.t = now
-		c.key(Enum.KeyCode.Space)
+function BOTS.Pressure(p, _, c)
+	if not c.touching() then
+		c.touchDown()
+	end
+	local range = workspace.CurrentCamera.ViewportSize.Y * 0.35 / 1.15
+	local need = p.center - p.pressure
+	if p.state ~= "Pumping" or need <= p.half * 0.4 then
+		-- Rien à pomper : la poignée remonte (remonter n'envoie pas d'air)
+		c.touchMove(0, -0.1 * range)
+	elseif p.stroke >= 0.95 then
+		c.touchMove(0, -range)
+	else
+		c.touchMove(0, math.min(need / p.airPerStroke, 0.04) * range)
 	end
 end
 function BOTS.Hammer(p, now, c, m)

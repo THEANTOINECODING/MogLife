@@ -420,7 +420,8 @@ local function onBossUpdate(update)
 		hidePanel()
 		fight = { bossId = update.bossId, rounds = update.rounds or 3, results = {} }
 		setFightLayout(true)
-		meter.Visible = true
+		-- La jauge toi / boss n'apparaît que pendant les manches (mini-jeu lancé), voir SeriesUpdate plus bas
+		meter.Visible = false
 		setMeter(0, 0)
 		renderPips()
 		intro(update.bossId, update.intro or 4)
@@ -756,6 +757,17 @@ function BossController.Start()
 	buildGui()
 	Remotes.BossPrompt.OnClientEvent:Connect(onBossPrompt)
 	Remotes.BossUpdate.OnClientEvent:Connect(onBossUpdate)
+	-- Jauge toi / boss : visible seulement pendant que le mini-jeu de la manche tourne (D82)
+	Remotes.SeriesUpdate.OnClientEvent:Connect(function(update)
+		if update.kind ~= "Boss" then
+			return
+		end
+		if update.state == "Started" then
+			meter.Visible = fight ~= nil
+		elseif update.state == "Ended" then
+			meter.Visible = false
+		end
+	end)
 	player.CharacterAdded:Connect(function()
 		if fight then
 			endPresentation()

@@ -4,6 +4,8 @@
 
 local JumpRope = {}
 JumpRope.__index = JumpRope
+-- Le geste du joueur (toucher pour sauter) tombe sur l'impulsion du saut : le personnage décolle à ce moment
+JumpRope.ActionPhase = 0.5
 
 local CURVE = 3.6 -- taille de la boucle de corde
 local HANDLE_COLOR = Color3.fromRGB(205, 45, 45)

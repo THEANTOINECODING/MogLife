@@ -214,6 +214,8 @@ return {
 		-- Bocal : taper vite pour dévisser, s'arrêter quand le couvercle devient rouge
 		Twist = {
 			TapFill = 0.2, -- un appui = 20 % d'un cran
+			NotchesPerJar = 4, -- crans pour ouvrir un bocal (POP !), puis un nouveau bocal arrive
+			PopTime = 1.0, -- secondes de la scène d'ouverture avant le cran suivant
 			PerfectTime = 0.75, -- cran fini en moins de 0,75 intervalle = Perfect
 			MissTime = 1.5, -- au-delà de 1,5 intervalle = raté (taper lentement ne suffit pas)
 			RedChance = 0.55, -- chances qu'un cran ait un moment rouge
@@ -221,22 +223,26 @@ return {
 			WarnShrinkPerLevel = 0.08,
 			RedTime = 0.7,
 		},
-		-- Pneu : pomper pour garder l'aiguille dans le vert, sans monter dans le rouge
+		-- Pneu du coursier (refait en D82) : pomper en glissant vers le bas, s'arrêter dans la zone verte
 		Pressure = {
-			Pump = 0.14, -- environ 3 appuis par seconde pour tenir au niveau 0, 4 au plus haut
-			LeakMin = 0.25, -- fuite (par seconde), tirée au sort entre ces valeurs
-			LeakMax = 0.6,
-			LeakChange = 1.6, -- secondes entre deux changements de fuite
-			LeakLevelBonus = 0.04, -- fuite plus forte à chaque niveau...
-			LeakLevelMax = 3, -- ...jusqu'au niveau 3 (au-delà, il faudrait taper trop vite)
-			GreenMin = 0.5,
-			GreenMax = 0.74,
-			RedMin = 0.86, -- au-dessus : le pneu éclate (raté, la pression retombe)
-			ResetLevel = 0.35,
-			PerfectInside = 0.8, -- part du temps dans le vert pour un Perfect
-			GoodInside = 0.5,
+			AirPerStroke = 0.25, -- un coup de pompe complet envoie 25 % de la jauge
+			StrokeFraction = 0.35, -- part de la hauteur de l'écran pour un coup complet (iPhone : ~135 pt)
+			KeySpeed = 1.6, -- clavier / manette : vitesse de la poignée (coups par seconde)
+			ReturnSpeed = 3, -- la poignée remonte toute seule
+			CenterMin = 0.45, -- centre de la zone verte, tiré au sort à chaque pneu
+			CenterMax = 0.8,
+			ZoneHalf = 0.07,
+			ZoneShrinkPerLevel = 0.01,
+			PerfectHalf = 0.025,
+			Burst = 0.95, -- au-dessus : le pneu éclate
+			HoldTime = 0.45, -- secondes dans le vert sans pomper pour valider
+			Jitter = 0.012, -- hausse de pression ignorée (pouce qui tremble) pendant ce temps
+			TireTime = 3, -- au-delà de 3 intervalles, le coursier part (raté)
+			Leak = 0.02, -- fuite lente (par seconde) : un pneu trop gonflé redescend doucement
+			VaryLevel = 1, -- chaque pneu prend l'air différemment
+			LeakLevel = 2, -- fuite plus forte
+			LeakLevelBonus = 0.05,
 		},
-		-- Clous : taper quand le marteau est au-dessus du clou
 		-- (un seul passage du marteau par pulsation, notation au temps)
 		Hammer = {
 			SweepFraction = 0.75, -- part de la pulsation où le marteau traverse la planche (aller)
@@ -249,15 +255,15 @@ return {
 		},
 		-- Voiture : glisser pour rester sur la route et éviter les obstacles
 		Steer = {
-			RoadWidth = 0.34,
-			CurveAmplitude = 0.2,
-			CurvePerLevel = 0.03,
-			ScrollSpeed = 1.1,
+			RoadWidth = 0.38, -- D82 : un peu plus large et des virages plus doux
+			CurveAmplitude = 0.17,
+			CurvePerLevel = 0.025,
+			ScrollSpeed = 1.0,
 			ObstacleEvery = 2, -- un obstacle toutes les 2 pulsations...
 			ObstacleEveryMin = 1, -- ...jusqu'à 1 aux niveaux élevés
-			HitRadius = 0.09,
-			PerfectMax = 0.08, -- écart moyen au milieu de la route
-			GoodMax = 0.16, -- au-delà : sorti de la route (raté)
+			HitRadius = 0.08,
+			PerfectMax = 0.09, -- écart moyen au milieu de la route
+			GoodMax = 0.18, -- au-delà : sorti de la route (raté)
 		},
 		-- Piano : glisser à gauche / à droite vers la voie libre
 		Lanes = {
@@ -291,21 +297,23 @@ return {
 		},
 		-- Touriste : retenir le chemin sur le plan, puis le refaire en glissant
 		Sequence = {
-			Length = 3,
+			Grid = 6, -- plan de 6 × 6 rues
+			Length = 5, -- 5 pas dès le départ (l'aide se débloque au dernier stade : niveau 0 presque toujours)
 			LengthPerLevel = 1,
-			MaxLength = 5,
-			ShowPerStep = 0.45, -- secondes d'affichage par virage
-			PerfectPerStep = 0.55, -- refait en moins de 0,55 s par virage = Perfect
+			MaxLength = 7,
+			ShowPerStep = 0.36, -- secondes d'affichage par pas
+			PerfectPerStep = 0.45, -- refait en moins de 0,45 s par pas = Perfect
 		},
 
 		-- Kevin : glisser dans le sens de son bras, le plus vite possible
 		Reaction = {
-			WaitMin = 0.25, -- attente avant que Kevin bouge (on ne peut pas deviner)
-			WaitMax = 0.6,
-			PerfectMax = 0.42,
-			GoodMax = 0.75,
-			FeintLevel = 1, -- feintes : le bras part d'un côté puis change
-			FeintChance = 0.3,
+			WaitMin = 0.2, -- attente avant que Kevin bouge (on ne peut pas deviner)
+			WaitMax = 0.45,
+			PerfectMax = 0.5, -- secondes pour réagir (D82 : plus simple)
+			GoodMax = 0.9,
+			FourLevel = 1, -- manche 1 : gauche ou droite ; ensuite les 4 directions
+			FeintLevel = 2, -- feintes à la dernière manche : le bras part d'un côté puis change
+			FeintChance = 0.25,
 			FeintTime = 0.35,
 		},
 		-- Brayan : garder sa crème solaire dans le soleil, éviter les nuages
@@ -320,6 +328,7 @@ return {
 		},
 		-- Coach Turbo : deux pistes, toucher le côté de la note quand elle touche la ligne
 		Beats = {
+			PanelHeight = 0.5, -- part de la hauteur de l'écran (panneau large, en bas)
 			FallFactor = 1.5,
 			FallPerLevel = 0.15,
 			LongLevel = 1, -- notes longues : maintenir jusqu'au bout
@@ -328,18 +337,20 @@ return {
 		},
 		-- Monsieur Pas-Les-Jambes : glisser vers son poing au moment du choc
 		Wobble = {
-			Approach = 1.0, -- temps d'arrivée du poing (× intervalle)
-			ApproachPerLevel = 0.12,
+			Approach = 1.1, -- temps d'arrivée du poing (× intervalle)
+			ApproachPerLevel = 0.1,
+			PerfectTime = 0.15, -- écart (secondes) avec le choc
+			GoodTime = 0.36,
 			DoubleLevel = 2, -- deux poings à la suite
-			DoubleChance = 0.3,
+			DoubleChance = 0.2,
 			UpLevel = 1, -- coups venant aussi d'en haut
 		},
 		-- Roi du Quartier : glisser la combinaison avant que le ventilateur l'efface
 		Combo = {
 			Length = 4,
 			LongLevel = 2, -- 5 flèches à la dernière manche
-			PerfectFraction = 0.4, -- fini en moins de 40 % du temps = Perfect
-			GoodFraction = 0.75,
+			PerfectFraction = 0.5, -- fini en moins de 50 % du temps = Perfect
+			GoodFraction = 0.9,
 		},
 	},
 

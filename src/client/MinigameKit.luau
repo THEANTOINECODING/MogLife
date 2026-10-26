@@ -44,6 +44,10 @@ local guidesShown: { [string]: number } = {}
 
 -- Réglages du joueur (vibrations, effets d'écran) : branché par MinigameController
 local settingsGet: ((string) -> boolean)? = nil
+-- Appelé au moment même de chaque geste noté (le personnage bouge tout de suite) : branché par MinigameController
+local repListener: ((string) -> ())? = nil
+-- Effets sonores (Config/Sounds.luau) : branché par MinigameController sur SoundController.Play
+local soundPlayer: ((string, number?) -> ())? = nil
 
 local Kit = {}
 Kit.__index = Kit
@@ -97,6 +101,21 @@ Kit.QUALITY_COLORS = QUALITY_COLORS
 
 function Kit.SetSettingsGetter(getter: (string) -> boolean)
 	settingsGet = getter
+end
+
+function Kit.SetRepListener(listener: (string) -> ())
+	repListener = listener
+end
+
+function Kit.SetSoundPlayer(player: (string, number?) -> ())
+	soundPlayer = player
+end
+
+-- Petit son du mini-jeu (clic, choc…) : nom d'un effet de Config/Sounds.luau, hauteur facultative
+function Kit.Sound(name: string, pitch: number?)
+	if soundPlayer then
+		soundPlayer(name, pitch)
+	end
 end
 
 -- Tire au sort avec la graine du run si elle existe (duels : même suite pour les deux joueurs)
@@ -168,6 +187,40 @@ function Kit:Panel(size: UDim2, tappable: boolean?): GuiObject
 	return panel
 end
 
+-- Panneau large et bas, pour jouer à deux pouces (D82) : en paysage, il prend toute la largeur à droite de la colonne
+-- d'infos, en bas de l'écran, sur `heightScale` de la hauteur ; la scène 3D (joueur, boss) reste visible au-dessus.
+-- En portrait, même placement que Panel.
+function Kit:WidePanel(heightScale: number): GuiObject
+	local panel = self:Panel(UDim2.new(0, 320, heightScale, 0))
+	if Ui.isPhonePortrait() then
+		return panel
+	end
+	local scale = panel:FindFirstChildOfClass("UIScale")
+	if scale then
+		scale:Destroy()
+	end
+	local function fit()
+		local width = self.parent.AbsoluteSize.X
+		if width <= 0 then
+			return
+		end
+		if UserInputService.TouchEnabled then
+			-- Même largeur de colonne que MinigameController (titre, compteur, Stop à gauche)
+			local rail = math.min(260, math.floor(width * 0.28)) + 32
+			panel.AnchorPoint = Vector2.new(1, 1)
+			panel.Position = UDim2.new(1, -12, 1, -12)
+			panel.Size = UDim2.new(0, width - rail - 12, heightScale, 0)
+		else
+			panel.AnchorPoint = Vector2.new(0.5, 1)
+			panel.Position = UDim2.new(0.5, 0, 1, -16)
+			panel.Size = UDim2.fromScale(0.62, heightScale)
+		end
+	end
+	self:Connect(self.parent:GetPropertyChangedSignal("AbsoluteSize"), fit)
+	fit()
+	return panel
+end
+
 function Kit:Connect(signal: RBXScriptSignal, callback: (...any) -> ())
 	table.insert(self.connections, signal:Connect(callback))
 end
@@ -222,7 +275,8 @@ function Kit:OnRelease(callback: () -> ())
 	end)
 end
 
--- Côté touché : moitié gauche ou droite de l'écran (deux pouces), A / D, flèches, gâchettes et croix de manette.
+-- Côté touché : à gauche ou à droite du milieu du panneau de jeu (deux pouces ; un appui hors du panneau compte pour
+-- le côté où il est), A / D, flèches, gâchettes et croix de manette.
 -- `release` (facultatif) : appelé quand ce doigt ou cette touche est relâché.
 local SIDE_KEYS = {
 	[Enum.KeyCode.A] = "Left",
@@ -242,9 +296,12 @@ function Kit:OnSide(callback: (string) -> (), release: ((string) -> ())?)
 	self:Connect(Kit.Input.InputBegan, function(input)
 		local side = SIDE_KEYS[input.KeyCode]
 		if not side and isPress(input) and not self:_overButton(input.Position) then
-			local camera = workspace.CurrentCamera
-			local width = if camera then camera.ViewportSize.X else 1000
-			side = if input.Position.X < width / 2 then "Left" else "Right"
+			-- Les pistes sont dans le panneau, qui n'est pas forcément au milieu de l'écran
+			local root = self.root
+			local middle = if root and root.AbsoluteSize.X > 0
+				then root.AbsolutePosition.X + root.AbsoluteSize.X / 2
+				else (if workspace.CurrentCamera then workspace.CurrentCamera.ViewportSize.X / 2 else 500)
+			side = if input.Position.X < middle then "Left" else "Right"
 		end
 		if side then
 			held[input] = side
@@ -654,6 +711,9 @@ function Kit:Rep(quality: string, at: GuiObject?)
 	self.reps += 1
 	self.lastSendAt = math.max(os.clock(), sendAt)
 	self:Burst(quality, at)
+	if repListener then
+		repListener(quality)
+	end
 	Kit.Haptic(if quality == "Miss" then "Miss" elseif quality == "Perfect" then "Strong" else "Light")
 	if quality == "Miss" then
 		self:Shake(6)

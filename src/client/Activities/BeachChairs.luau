@@ -1,5 +1,5 @@
 -- Aide « Empiler les transats » (le maître-nageur débordé) : le joueur prend un transat sur le tas et le pose
--- vraiment en haut de la pile, un par répétition ; la pile monte (une ratée est posée de travers). D37.
+-- vraiment en haut de la pile, un par répétition réussie ; la pile monte. Un raté glisse et tombe à côté (D37, D82).
 
 local Props = require(script.Parent.Props)
 
@@ -34,27 +34,40 @@ function BeachChairs:Chair(index: number): Part
 	return chair
 end
 
-function BeachChairs:Pose(_p: number, shake: number, u: number, _time: number, count: number)
+function BeachChairs:Pose(_p: number, shake: number, u: number, _time: number, _count: number, successes: number)
 	local rig, m = self.ctx.rig, self.ctx.measures
 	local root = rig.root.CFrame
 	local floor = CFrame.new(root.Position - Vector3.new(0, root.Position.Y - m.ground, 0)) * root.Rotation
 	local stack = floor * CFrame.new(2.4, 0, -1.5)
 	local pile = floor * CFrame.new(-2.4, 0, -1.5)
-	-- La pile : les transats déjà posés (un raté reste de travers)
-	local placed = math.max(count - (if u > 0 and u < 1 then 1 else 0), 0)
+	local carrying = u > 0 and u < 1
+	-- Une répétition ratée (Miss) : le transat glisse et tombe à côté de la pile, il n'est pas posé
+	local failing = carrying and shake >= 1
+	-- La pile : seulement les transats réussis (celui qu'on porte n'est pas encore posé)
+	local placed = math.max(successes - (if carrying and not failing then 1 else 0), 0)
 	for index = 1, placed do
 		local chair = self:Chair(index)
-		self.tilts[index] = self.tilts[index] or (if shake > 0 then 0.35 else (index % 3 - 1) * 0.06)
+		self.tilts[index] = self.tilts[index] or (index % 3 - 1) * 0.06
 		chair.CFrame = stack * CFrame.new(0, LAYER * (index - 0.5), 0) * CFrame.Angles(0, self.tilts[index], 0)
 	end
 	-- Le transat porté : du tas jusqu'en haut de la pile au fil de la répétition
-	local carrying = u > 0 and u < 1
 	local from = pile * CFrame.new(0, 1.2, 0)
 	local to = stack * CFrame.new(0, LAYER * (placed + 0.5) + 0.3, 0)
 	local arc = math.sin(math.min(u, 1) * math.pi) * 1.4
 	local held = from:Lerp(to, math.clamp(u * 1.25, 0, 1)) * CFrame.new(0, arc, 0)
 	if carrying then
-		self:Chair(placed + 1).CFrame = held
+		local chair = self:Chair(placed + 1)
+		if failing and u > 0.6 then
+			-- Il glisse du haut de la pile et tombe au sol, de travers
+			local fall = math.clamp((u - 0.6) / 0.4, 0, 1)
+			local ground = stack * CFrame.new(2.2, LAYER * 0.5, 0.6) * CFrame.Angles(0.5, 0.9, 0.35)
+			chair.CFrame = held:Lerp(ground, fall * fall)
+		else
+			chair.CFrame = held
+		end
+	elseif self.chairs[placed + 1] then
+		-- Le transat raté disparaît de la scène (il sera repris au tas)
+		self.chairs[placed + 1].CFrame = pile * CFrame.new(0, -5, 0)
 	end
 	-- Le joueur se tourne vers le tas puis vers la pile, bras sous le transat
 	rig:Set("Waist", CFrame.Angles(-0.2, (0.5 - math.clamp(u * 1.25, 0, 1)) * 0.9, 0))

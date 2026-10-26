@@ -3,18 +3,24 @@
 -- (poubelle, chat, flaque). Noté à chaque pulsation : obstacle touché ou sortie de route = raté, sinon selon la
 -- distance au milieu de la route. La partie commence au premier mouvement.
 -- Les virages et les obstacles augmentent avec les niveaux. Clavier : A / D, flèches ; manette : stick.
+-- D82 : route plus large et virages plus doux ; bordures, ligne centrale qui défile, décor sur les côtés, ombre et
+-- fumée de la voiture, mains qui poussent.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Kit = require(script.Parent.Parent.MinigameKit)
 local Ui = require(script.Parent.Parent.Ui)
 
 local SETTINGS = Balance.Minigames.Steer
-local SEGMENTS = 16
+local SEGMENTS = 28
 local CAR_Y = 0.8
 local KEY_SPEED = 1.4 -- largeur de route par seconde
 local OBSTACLES = { "🗑️", "🐈", "💧" }
+local DECOR = { "🌳", "🌲", "🏠", "🌳", "🚏", "🌼" }
+local CURB_RED = Color3.fromRGB(220, 60, 60)
+local CURB_WHITE = Color3.fromRGB(245, 245, 245)
 
 local Steer = {}
 
@@ -31,26 +37,54 @@ function Steer.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		ClipsDescendants = true,
 		Parent = panel,
 	}, { Ui.corner(UDim.new(0, 12)) })
+	-- La route : des tranches, chacune avec ses deux bordures (rouge / blanc) et un tiret de la ligne centrale
 	local segments = {}
 	for index = 1, SEGMENTS do
-		segments[index] = Ui.create("Frame", {
+		local segment = Ui.create("Frame", {
 			AnchorPoint = Vector2.new(0.5, 0.5),
 			Size = UDim2.new(SETTINGS.RoadWidth, 0, 1 / SEGMENTS, 2),
-			BackgroundColor3 = Color3.fromRGB(70, 70, 80),
+			BackgroundColor3 = Color3.fromRGB(70, 70, 82),
 			BorderSizePixel = 0,
+			ZIndex = 2,
 			Parent = field,
-		}, {
-			Ui.create("Frame", {
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.fromScale(0.5, 0.5),
-				Size = UDim2.new(0, 4, 0.5, 0),
-				BackgroundColor3 = Color3.fromRGB(240, 220, 120),
-				BorderSizePixel = 0,
-			}),
 		})
+		local parts = { frame = segment, curbs = {}, dash = nil :: Frame? }
+		for _, side in { 0, 1 } do
+			parts.curbs[side] = Ui.create("Frame", {
+				AnchorPoint = Vector2.new(side, 0.5),
+				Position = UDim2.fromScale(side, 0.5),
+				Size = UDim2.new(0, 7, 1, 0),
+				BorderSizePixel = 0,
+				ZIndex = 3,
+				Parent = segment,
+			})
+		end
+		parts.dash = Ui.create("Frame", {
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(0.5, 0.5),
+			Size = UDim2.new(0, 4, 1, 0),
+			BackgroundColor3 = Color3.fromRGB(245, 220, 110),
+			BorderSizePixel = 0,
+			ZIndex = 3,
+			Parent = segment,
+		})
+		segments[index] = parts
 	end
-	local car = self:Emoji(field, "🚗", 54, 5)
+	local shadow = Ui.create("Frame", {
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Size = UDim2.fromOffset(34, 58),
+		BackgroundColor3 = Color3.new(0, 0, 0),
+		BackgroundTransparency = 0.6,
+		ZIndex = 4,
+		Parent = field,
+	}, { Ui.corner(UDim.new(0, 12)) })
+	local car = self:Emoji(field, "🚗", 54, 6)
 	car.Rotation = -90
+	local hands = self:Emoji(field, "🙌", 30, 6)
+	local decor = {} -- { s, side, label }
+	local nextDecor = 0
+	local nextPuff = 0
+	local shownRotation = -90
 
 	local amplitude = SETTINGS.CurveAmplitude + SETTINGS.CurvePerLevel * math.min(self.level, 4)
 	local function roadCenter(s: number): number
@@ -95,15 +129,63 @@ function Steer.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		if started then
 			distance += SETTINGS.ScrollSpeed * dt
 		end
-		-- La route défile : le bas de l'écran est la position actuelle
-		for index, segment in segments do
+		-- La route défile : le bas de l'écran est la position actuelle. Bordures et tirets défilent avec elle.
+		local stripe = math.floor(distance * SEGMENTS / 2)
+		for index, parts in segments do
 			local y = (index - 0.5) / SEGMENTS
-			segment.Position = UDim2.fromScale(roadCenter(distance + (1 - y) * 2), y)
+			parts.frame.Position = UDim2.fromScale(roadCenter(distance + (1 - y) * 2), y)
+			local odd = (index + stripe) % 2 == 0
+			for _, curb in parts.curbs do
+				curb.BackgroundColor3 = if odd then CURB_RED else CURB_WHITE
+			end
+			if parts.dash then
+				parts.dash.Visible = (index + stripe) % 3 ~= 0
+			end
+		end
+		-- Décor sur les côtés (arbres, maisons) : il défile avec la route
+		if distance >= nextDecor then
+			nextDecor = distance + 0.35 + rng:NextNumber() * 0.3
+			table.insert(decor, {
+				s = distance + 2.2,
+				side = if rng:NextNumber() < 0.5 then -1 else 1,
+				gap = 0.08 + rng:NextNumber() * 0.12,
+				label = self:Emoji(field, DECOR[rng:NextInteger(1, #DECOR)], 36, 1),
+			})
+		end
+		for index = #decor, 1, -1 do
+			local item = decor[index]
+			local y = 1 - (item.s - distance) / 2
+			local x = roadCenter(item.s) + item.side * (SETTINGS.RoadWidth / 2 + item.gap)
+			item.label.Position = UDim2.fromScale(x, y)
+			if y > 1.15 then
+				item.label:Destroy()
+				table.remove(decor, index)
+			end
 		end
 		local center = roadCenter(distance + (1 - CAR_Y) * 2)
 		local offset = math.abs(carX - center)
 		car.Position = UDim2.fromScale(carX, CAR_Y)
-		car.Rotation = -90 + math.clamp(drag.X, -20, 20)
+		-- La voiture penche doucement dans le sens où on la pousse
+		local targetRotation = -90 + math.clamp(drag.X * 1.5 + held * 15, -22, 22)
+		shownRotation += (targetRotation - shownRotation) * math.min(dt * 12, 1)
+		car.Rotation = shownRotation
+		shadow.Position = UDim2.new(carX, 4, CAR_Y, 6)
+		shadow.Rotation = shownRotation + 90
+		hands.Position = UDim2.fromScale(carX, CAR_Y + 0.11)
+		-- Petits nuages derrière la voiture
+		if started and now >= nextPuff then
+			nextPuff = now + 0.22
+			local puff = self:Emoji(field, "💨", 22, 2)
+			puff.Position = UDim2.fromScale(carX + (rng:NextNumber() - 0.5) * 0.04, CAR_Y + 0.13)
+			puff.Rotation = 90
+			TweenService:Create(puff, TweenInfo.new(0.5), {
+				Position = puff.Position + UDim2.fromScale(0, 0.1),
+				TextTransparency = 1,
+			}):Play()
+			task.delay(0.55, function()
+				puff:Destroy()
+			end)
+		end
 
 		for index = #obstacles, 1, -1 do
 			local obstacle = obstacles[index]

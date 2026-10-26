@@ -22,7 +22,11 @@ Dieu du Pump en attendant son vrai combat (voir `IDEES.md`). Tous sont construit
 **Pensé pour le téléphone**
 - On joue **n'importe où sur l'écran**, d'un pouce, sans petit bouton à viser (sauf Stop). Le pouce ne cache jamais
   l'action : les objets déplacés suivent le **déplacement** du doigt (comme un pavé tactile), pas sa position.
-- Gauche/droite = **moitié gauche ou droite de l'écran** (un pouce de chaque côté).
+- Gauche/droite = **à gauche ou à droite du milieu du panneau de jeu** (un pouce de chaque côté ; D82 : avant, c'était
+  le milieu de l'écran, et la piste de gauche du Coach, à droite de l'écran, comptait pour « droite »).
+- **Le personnage bouge au moment du geste** (D82) : son propre personnage fait la répétition dès le geste, sans
+  attendre le serveur (le saut à la corde part à l'appui). Aux transats, seule une répétition réussie pose un transat
+  sur la pile ; un raté glisse et tombe à côté.
 - Clavier, souris et manette donnent exactement les mêmes gestes (Espace / bouton A, flèches, ZQSD/WASD, stick,
   gâchettes).
 - **Vibration** à chaque répétition sur téléphone (`HapticEffect`) et manette ; coupable dans les réglages
@@ -60,24 +64,24 @@ exactement la zone notée.
 
 | Aide | Module | Geste | Surprises (niveau) |
 |---|---|---|---|
-| Bocal de maman | `Twist` | Taper vite pour dévisser un cran ; s'arrêter quand le couvercle devient orange puis rouge | L'alerte orange raccourcit à chaque niveau |
-| Pneu du livreur | `Pressure` | Pomper pour garder l'aiguille dans le vert ; au-dessus du rouge, le pneu éclate | Fuite qui change sans arrêt, plus forte à chaque niveau |
+| Bocal de maman | `Twist` | Taper vite pour dévisser un cran (clic de plus en plus aigu) ; s'arrêter quand le couvercle devient orange puis rouge. 4 crans par bocal, puis POP : le couvercle s'envole, les cornichons jaillissent, maman applaudit (D82) | L'alerte orange raccourcit à chaque niveau |
+| Pneu du coursier | `Pressure` | **Pompe à vélo** (D82) : glisser vers le bas pour pomper (grand coup = beaucoup d'air), s'arrêter dans la zone verte (tirée au sort à chaque pneu) ; trop d'air, il éclate. Dans le vert sans pomper un instant : le coursier repart | Chaque pneu prend l'air différemment (1) ; fuite plus forte et zone plus étroite (2) |
 | Clous du petit voisin | `Hammer` | Toucher quand le marteau est au-dessus du clou | Clou tordu : deux coups (1) ; pouce du petit voisin à ne pas taper (2) |
-| Voiture du voisin | `Steer` | Glisser pour rester sur la route et éviter poubelle, chat, flaque | Virages plus serrés et obstacles plus fréquents à chaque niveau |
+| Voiture du voisin | `Steer` | Glisser pour rester sur la route et éviter poubelle, chat, flaque. D82 : route plus large, virages plus doux, bordures, décor, fumée, mains qui poussent ; esquiver n'est pas une faute | Virages plus serrés et obstacles plus fréquents à chaque niveau |
 | Piano de Mme Do-Ré | `Lanes` | Glisser à gauche/à droite vers la voie libre | Vagues plus rapides à chaque niveau ; vagues doubles (1) |
 | Transats du maître-nageur | `Stack` | Toucher pour lâcher le transat : ce qui dépasse tombe, le suivant est plus étroit | Transat plus rapide à chaque niveau |
 | Courses de l'épicier | `Catch` | Glisser le panier pour attraper les courses | Objets à ne pas attraper (1) ; fruits qui rebondissent (2) |
-| Chemin du touriste | `Sequence` | Retenir le chemin tracé sur le plan, le refaire en glissant | Chemin de 3, puis 4, puis 5 pas |
+| Chemin du touriste | `Sequence` | Retenir le chemin tracé sur le plan (6 × 6), le refaire en glissant | Chemin de 5 pas dès le départ (D82), puis 6, puis 7 |
 
 ## Boss (5 dans le MVP)
 
 | Boss | Module | Geste | Surprises (manche) |
 |---|---|---|---|
-| Kevin | `Reaction` | Glisser dans le sens de son bras, le plus vite possible (trop tôt = raté) | Feintes : flèche grise qui change de sens (2) |
+| Kevin | `Reaction` | Glisser dans le sens de son bras, le plus vite possible (trop tôt = raté) ; un cercle montre le temps qui reste, Kevin encaisse quand on réussit (D82) | Manche 1 : gauche/droite ; manche 2 : 4 directions ; manche 3 : feintes |
 | Brayan le Bronzé | `Spotlight` | Garder sa crème dans le soleil, qui saute (sa prochaine place est annoncée) | Nuages qui cachent le soleil (2) |
-| Coach Turbo | `Beats` | Toucher le côté de la note quand elle touche la ligne | Notes longues à maintenir (2) ; notes plus rapides à chaque manche |
-| Monsieur Pas-Les-Jambes | `Wobble` | Glisser vers son poing au moment du choc pour le bloquer | Coups d'en haut (2) ; deux poings à la suite (3) |
-| Le Roi du Quartier | `Combo` | Glisser la combinaison de flèches avant que le ventilateur l'efface | 5 flèches (3) |
+| Coach Turbo | `Beats` | Toucher le côté de la note quand elle touche la ligne ; panneau large en bas de l'écran, un pouce par piste, le joueur et le coach visibles au-dessus (D82) | Notes longues à maintenir (2) ; notes plus rapides à chaque manche |
+| Monsieur Pas-Les-Jambes | `Wobble` | Glisser vers son poing au moment du choc pour le bloquer (D82 : poing plus lent, fenêtre plus large, boss un peu moins fort) | Coups d'en haut (2) ; deux poings à la suite (3) |
+| Le Roi du Quartier | `Combo` | Glisser la combinaison de flèches avant que le ventilateur l'efface (D82 : plus de temps, boss un peu moins fort) | 5 flèches (3) |
 | Le Dieu du Pump | `Combo` (provisoire) | — | ❓ vrai combat à concevoir plus tard (`IDEES.md`) |
 
 Chaque manche est aussi plus rapide et plus serrée (`Balance.Boss.SpeedByRound`, `TimingScaleByRound`).

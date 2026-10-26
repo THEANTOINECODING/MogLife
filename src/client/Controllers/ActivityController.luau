@@ -3,7 +3,11 @@
 -- qualité (Perfect : mouvement complet ; Good : presque ; Miss : à moitié et en tremblant).
 -- Chaque client anime tous les personnages localement à partir du signal Activity du serveur.
 -- Une activité = un module dans src/client/Activities/ (Stand, new, Pose, Destroy), nommé comme l'exercice ou
--- l'aide (Curl, OpenJar…). Pose(p, shake, u, time, count) : count = répétitions commencées (le clou s'enfonce…).
+-- l'aide (Curl, OpenJar…). Pose(p, shake, u, time, count, successes) : count = répétitions commencées (le clou
+-- s'enfonce…), successes = répétitions réussies (Good ou Perfect : le transat n'est posé que s'il est réussi).
+-- Son propre personnage bouge au moment exact du geste dans le mini-jeu (LocalRep, D82), sans attendre le serveur.
+-- Activity.ActionPhase (facultatif) : moment de la répétition (0 à 1) qui tombe sur le geste (la corde : l'impulsion
+-- du saut à 0,5).
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -37,6 +41,9 @@ type Animator = {
 	interval: number,
 	reps: { Rep },
 	count: number, -- répétitions commencées depuis le début du run
+	successes: number, -- répétitions réussies (Good ou Perfect)
+	kind: string,
+	localDriven: boolean, -- son propre personnage, animé par les gestes du mini-jeu plutôt que par le serveur
 	sweat: ParticleEmitter?, -- sueur qui coule de plus en plus fort avec le combo (exercices et aides)
 	borrowed: { [BasePart]: { cframe: CFrame, transparency: number } },
 }
@@ -295,6 +302,9 @@ local function start(update)
 		interval = update.interval,
 		reps = {},
 		count = 0,
+		successes = 0,
+		kind = update.kind,
+		localDriven = false,
 		borrowed = {},
 	}
 	animator.activity = Activity.new({
@@ -323,14 +333,21 @@ local function onRep(update)
 	if not animator or not quality then
 		return
 	end
-	local now = os.clock()
-	local last = animator.reps[#animator.reps]
-	local duration = math.clamp(animator.interval * 0.8, 0.45, 1.1)
-	animator.count += 1
 	-- Plus le combo est long, plus ça transpire
 	if animator.sweat then
 		local streak = math.min(update.streak or 0, 15)
 		animator.sweat.Rate = if streak == 0 then 1.5 else 3 + streak * 1.6
+	end
+	-- Son propre personnage a déjà fait ce mouvement, au moment du geste (LocalRep)
+	if animator.localDriven then
+		return
+	end
+	local now = os.clock()
+	local last = animator.reps[#animator.reps]
+	local duration = math.clamp(animator.interval * 0.8, 0.45, 1.1)
+	animator.count += 1
+	if update.quality ~= "Miss" then
+		animator.successes += 1
 	end
 	table.insert(animator.reps, {
 		-- Une répétition ne coupe jamais la précédente : elle commence quand l'autre se termine
@@ -360,7 +377,7 @@ local function step()
 			shake = rep.shake
 		end
 		animator.rig:Clear()
-		animator.activity:Pose(p, shake, u, now, animator.count)
+		animator.activity:Pose(p, shake, u, now, animator.count, animator.successes)
 		animator.rig:Apply()
 	end
 	local duration = Balance.Emotes.Duration
@@ -377,6 +394,29 @@ local function step()
 		MogOff.Strike(emote.rig, emote.measures, emote.index, p, 0, now)
 		emote.rig:Apply()
 	end
+end
+
+-- Geste du joueur dans son mini-jeu (appelé par MinigameKit au moment même du geste) : son personnage fait la
+-- répétition tout de suite, au lieu d'attendre la confirmation du serveur (qui peut arriver un peu plus tard)
+function ActivityController.LocalRep(quality: string)
+	local animator = animators[localPlayer]
+	local look = QUALITY[quality]
+	-- Duel : les deux bras sont animés ensemble par le serveur (ArmWrestle)
+	if not animator or not look or animator.kind == "Duel" then
+		return
+	end
+	animator.localDriven = true
+	local now = os.clock()
+	local duration = math.clamp(animator.interval * 0.8, 0.45, 1.1)
+	local phase = animator.activity.ActionPhase or 0
+	animator.count += 1
+	if quality ~= "Miss" then
+		animator.successes += 1
+	end
+	-- Le geste remplace le mouvement en cours : le personnage suit le rythme du joueur
+	animator.reps = {
+		{ start = now - phase * duration, duration = duration, amplitude = look.amplitude, shake = look.shake },
+	}
 end
 
 function ActivityController.Init(controllers)

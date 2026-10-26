@@ -67,7 +67,7 @@ local List: { Stage } = {
 			mogRequired = 7_500,
 			minigame = "Wobble",
 			interval = 1.5,
-			skill = { perfect = 0.3, good = 0.5 },
+			skill = { perfect = 0.25, good = 0.5 }, -- ~65 points par répétition (D82 : un peu plus facile)
 			firstWinCash = 200,
 			styleReward = "TinySocks",
 		},
@@ -79,7 +79,7 @@ local List: { Stage } = {
 			mogRequired = 20_000,
 			minigame = "Combo",
 			interval = 2.6,
-			skill = { perfect = 0.38, good = 0.48 },
+			skill = { perfect = 0.32, good = 0.5 }, -- ~71 points par répétition (D82 : un peu plus facile)
 			firstWinCash = 400,
 			styleReward = "RoyalFan",
 		},

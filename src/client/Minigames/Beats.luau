@@ -18,7 +18,8 @@ local Beats = {}
 
 function Beats.new(parent: GuiObject, interval: number, onRep: (string) -> (), options)
 	local self = Kit.new(parent, interval, onRep, options)
-	local panel = self:Panel(UDim2.fromOffset(300, 430))
+	-- Panneau large et bas : un pouce sur chaque piste, le joueur et le coach visibles au-dessus (D82)
+	local panel = self:WidePanel(SETTINGS.PanelHeight)
 	local rng = self:Random()
 
 	local track = Ui.create("Frame", {

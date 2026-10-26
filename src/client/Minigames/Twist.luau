@@ -2,8 +2,11 @@
 -- d'un cran. Quand il tremble en orange, s'arrêter : il devient rouge et résiste ; taper pendant le rouge fait glisser
 -- la main (raté). Cran fini vite = Perfect, plus lentement = Good, beaucoup trop lentement = raté.
 -- Le moment d'alerte (orange) raccourcit avec les niveaux. Clavier : Espace ; manette : bouton A.
+-- Satisfaisant (D82) : un clic à chaque appui, de plus en plus aigu ; Twist.NotchesPerJar crans par bocal (pastilles) ;
+-- au dernier, POP : le couvercle s'envole, les cornichons jaillissent, maman applaudit, un nouveau bocal arrive.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Kit = require(script.Parent.Parent.MinigameKit)
@@ -64,6 +67,85 @@ function Twist.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		BackgroundColor3 = Color3.fromRGB(90, 220, 100),
 		Parent = meter,
 	}, { Ui.corner(UDim.new(1, 0)) })
+	-- Crans du bocal : une pastille par cran, le bocal s'ouvre quand elles sont toutes pleines
+	local pipsFrame = Ui.create("Frame", {
+		AnchorPoint = Vector2.new(0.5, 0),
+		Position = UDim2.new(0.5, 0, 0, 48),
+		Size = UDim2.fromOffset(160, 22),
+		BackgroundTransparency = 1,
+		Parent = panel,
+	}, {
+		Ui.create("UIListLayout", {
+			FillDirection = Enum.FillDirection.Horizontal,
+			HorizontalAlignment = Enum.HorizontalAlignment.Center,
+			Padding = UDim.new(0, 10),
+		}),
+	})
+	local pips = {}
+	for index = 1, SETTINGS.NotchesPerJar do
+		pips[index] = Ui.create("Frame", {
+			Size = UDim2.fromOffset(22, 22),
+			BackgroundColor3 = Color3.fromRGB(60, 55, 80),
+			LayoutOrder = index,
+			Parent = pipsFrame,
+		}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 2, 0.4) })
+	end
+	local mom = self:Emoji(panel, "👩", 56, 6)
+	mom.Position = UDim2.new(0, 36, 1, -40)
+	local notchesDone = 0
+	local momCheerUntil = 0
+	local jarHome = jar.Position
+
+	-- Le bocal s'ouvre : le couvercle s'envole, les cornichons jaillissent, puis un nouveau bocal arrive
+	local function pop()
+		Kit.Haptic("Strong")
+		Kit.Sound("SceneImpact", 1.35)
+		self:Shake(6)
+		momCheerUntil = os.clock() + 1.2
+		local flying = lid:Clone()
+		flying.Parent = panel
+		flying.ZIndex = 20
+		flying.AnchorPoint = Vector2.new(0.5, 0.5)
+		flying.Position = UDim2.fromOffset(
+			lid.AbsolutePosition.X - panel.AbsolutePosition.X + lid.AbsoluteSize.X / 2,
+			lid.AbsolutePosition.Y - panel.AbsolutePosition.Y + lid.AbsoluteSize.Y / 2
+		)
+		flying.Size = UDim2.fromOffset(lid.AbsoluteSize.X, lid.AbsoluteSize.Y)
+		lid.Visible = false
+		TweenService:Create(flying, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			Position = flying.Position + UDim2.fromOffset(70, -260),
+			Rotation = 540,
+			BackgroundTransparency = 1,
+		}):Play()
+		task.delay(0.75, function()
+			flying:Destroy()
+		end)
+		for index = 1, 6 do
+			local pickle = self:Emoji(panel, "🥒", 40, 19)
+			pickle.Position = flying.Position
+			local angle = math.rad(-150 + index * 20)
+			TweenService:Create(pickle, TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				Position = flying.Position + UDim2.fromOffset(math.cos(angle) * 140, math.sin(angle) * 120),
+				Rotation = 360,
+				TextTransparency = 1,
+			}):Play()
+			task.delay(0.65, function()
+				pickle:Destroy()
+			end)
+		end
+		-- Nouveau bocal : il glisse depuis la droite
+		task.delay(0.6, function()
+			if self.destroyed then
+				return
+			end
+			notchesDone = 0
+			lid.Visible = true
+			jar.Position = jarHome + UDim2.fromOffset(300, 0)
+			TweenService:Create(jar, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+				Position = jarHome,
+			}):Play()
+		end)
+	end
 
 	local fill = 0
 	local turned = 0 -- tours affichés (graduations)
@@ -119,6 +201,8 @@ function Twist.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		end
 		fill = math.min(fill + SETTINGS.TapFill, 1)
 		turned += 1
+		-- Clic du couvercle, de plus en plus aigu à mesure qu'il se desserre
+		Kit.Sound("SceneTouch", 0.85 + fill * 0.6)
 		if fill >= 1 then
 			local took = (now - notchStart) / interval
 			local quality = if took <= SETTINGS.PerfectTime / self.timingScale
@@ -126,7 +210,14 @@ function Twist.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 				elseif took <= SETTINGS.MissTime then "Good"
 				else "Miss"
 			self:Rep(quality, lid)
-			newNotch(now + 0.25)
+			notchesDone += 1
+			if notchesDone >= SETTINGS.NotchesPerJar then
+				pop()
+				newNotch(now + SETTINGS.PopTime)
+			else
+				Kit.Sound("SceneImpact", 0.9 + notchesDone * 0.1)
+				newNotch(now + 0.25)
+			end
 		end
 	end)
 	self:Guide(panel, "Tap")
@@ -160,6 +251,18 @@ function Twist.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		hand.Position = UDim2.fromOffset(lidCenter.X, lidCenter.Y - 34)
 		hand.Rotation = if now < slipUntil then 60 else twist
 		hand.Text = if now < slipUntil then "🖐️" else "✊"
+		hand.Visible = lid.Visible
+		for index, pip in pips do
+			pip.BackgroundColor3 = if index <= notchesDone
+				then Color3.fromRGB(255, 210, 60)
+				else Color3.fromRGB(60, 55, 80)
+		end
+		local cheering = now < momCheerUntil
+		mom.Text = if cheering then "🥳" elseif current == "Red" then "😬" else "👩"
+		mom.Rotation = if cheering then math.sin(now * 20) * 12 else 0
+		-- Le bocal frémit à chaque appui
+		local wiggle = if since < 0.08 then (1 - since / 0.08) * 3 else 0
+		jar.Rotation = wiggle * (if turned % 2 == 0 then 1 else -1)
 	end)
 
 	-- État de la partie pour les tests automatiques (tests/minigames_bot.luau) : ne change rien au jeu

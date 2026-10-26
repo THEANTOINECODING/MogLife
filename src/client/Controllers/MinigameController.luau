@@ -708,6 +708,8 @@ end
 function MinigameController.Init(controllers)
 	SettingsController = controllers.SettingsController
 	MinigameKit.SetSettingsGetter(SettingsController.Get)
+	MinigameKit.SetRepListener(controllers.ActivityController.LocalRep)
+	MinigameKit.SetSoundPlayer(controllers.SoundController.Play)
 	SprintController = controllers.SprintController
 	UIController = controllers.UIController
 end

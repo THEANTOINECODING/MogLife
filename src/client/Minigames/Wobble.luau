@@ -122,7 +122,9 @@ function Wobble.new(parent: GuiObject, interval: number, onRep: (string) -> (), 
 		end
 		blockAt = now
 		blockSide = direction
-		local quality = if direction == fist.side then self:GradeOffset(bestOffset) else "Miss"
+		local quality = if direction == fist.side
+			then self:GradeError(bestOffset, SETTINGS.PerfectTime, SETTINGS.GoodTime)
+			else "Miss"
 		resolve(best, quality)
 	end)
 	self:Guide(panel, "SwipeLeft")
@@ -149,7 +151,7 @@ function Wobble.new(parent: GuiObject, interval: number, onRep: (string) -> (), 
 			fist.label.Rotation = if fist.side == "Right" then 180 elseif fist.side == "Up" then 90 else 0
 			fist.lane.BackgroundTransparency = 0.85 - 0.35 * progress
 			-- Pas bloqué à temps : on vacille
-			if not fist.resolved and now - fist.impactAt > Balance.TimingWindows.Good * self.timingScale then
+			if not fist.resolved and now - fist.impactAt > SETTINGS.GoodTime * self.timingScale then
 				resolve(index, "Miss")
 			end
 		end
