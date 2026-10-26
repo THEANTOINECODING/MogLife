@@ -1,6 +1,6 @@
 # Duels entre joueurs : bras de fer
 
-> **D80 : cette fiche fait de nouveau foi.** La refonte de Codex (D76 à D79, « terrain de force ») a été abandonnée et ses mini-jeux supprimés ; sa fiche est archivée dans `design/archive/PLAYGROUND_codex_abandonne.md`. Plus de mode Auto (D79) ; une répétition ratée rapporte peu et les fenêtres de notation se resserrent pendant la série (D80).
+> **D80, D81 : cette fiche fait foi.** La refonte de Codex (D76 à D79) est abandonnée (archive : `design/archive/PLAYGROUND_codex_abandonne.md`). Le geste exact de chaque mini-jeu, ses surprises et les règles communes (téléphone d'abord, main fantôme, plus de mode Auto) sont décrits dans [MINIJEUX.md](MINIJEUX.md).
 
 Décision D68 (18/10/2026, demande du créateur ; remplace le Tug of Mog de D67). Un bras de fer contre **n'importe quel
 joueur, n'importe où** dans la ville. C'est le seul mode où l'on affronte un autre joueur ; il complète le Mog-off
@@ -18,19 +18,20 @@ contre les boss sans le remplacer.
   assez de place (sinon le serveur essaie d'autres sens autour d'eux ; s'il n'y a vraiment pas la place, il le dit).
   Les deux joueurs se placent de chaque côté ; la table disparaît à la fin. Tout le monde voit le duel.
 
-## Le mini-jeu « GripCounter » (D75, propre au duel)
+## Le mini-jeu « Gauge » (D68, D81, propre au duel)
 
-- Chaque échange montre la prise que prépare l'adversaire parmi trois positions. Le joueur pose le doigt, clique ou
-  maintient la direction correspondante, résiste, puis relâche lorsque la barre atteint la marque dorée. Le bon grip
-  et le bon moment donnent Perfect ou Good ; une prise erronée, un contre trop tôt/tard ou l'inaction donnent Miss.
-  Un seul geste maintenu par échange, sans multitouch et sans spam.
+- Une aiguille balaie la jauge de force ; à chaque balayage, une zone verte (au cœur doré) apparaît à un autre endroit.
+  Toucher l'écran (n'importe où), Espace ou A quand l'aiguille est dedans. Un appui par balayage ; un balayage sans
+  appui est raté. Le bras se crispe et tremble quand l'aiguille entre dans la zone ; vibration à chaque poussée.
+- **Dernier effort** (D81) : le dernier balayage de chaque manche a 3 petites zones orange à toucher à la suite
+  (3 = Perfect, 2 = Good, sinon raté).
 - Chaque répétition pousse le bras : Perfect 3 crans, Good 2, raté 0. Les bras vont de -12 à +12 : l'atteindre, c'est
   **plaquer le bras de l'adversaire** et gagner la manche tout de suite. Sinon, après 8 balayages, la manche va au côté
   vers lequel penchent les bras (0 = manche nulle).
-- 3 manches, 2 gagnées = victoire. Chaque manche est plus rapide et la fenêtre du contre se réduit.
-- **Chances égales** : les deux joueurs reçoivent exactement les mêmes prises et moments de contre (même graine),
-  les mêmes fenêtres et la même vitesse. Les positions et le temps sont normalisés sur le panneau ; ni le Mog, ni le
-  stade, ni la tenue n'entrent dans le calcul. L'équivalence ressentie entre appareils attend des tests réels.
+- 3 manches, 2 gagnées = victoire. Chaque manche est plus rapide et la zone plus étroite.
+- **Chances égales** : les deux joueurs reçoivent exactement les mêmes zones au même moment (même graine), les mêmes
+  fenêtres et la même vitesse ; ni le Mog, ni le stade, ni la tenue n'entrent dans le calcul. L'équivalence ressentie
+  entre appareils attend des tests réels.
 
 ## Récompenses
 

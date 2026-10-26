@@ -20,6 +20,7 @@ export type RunSpec = {
 	anchor: BasePart, -- le joueur doit rester près de cette pièce
 	timingScale: number?, -- < 1 = fenêtres de timing plus serrées (combats de boss)
 	seed: number?, -- graine du motif du mini-jeu (duels : les deux joueurs jouent exactement le même)
+	level: number?, -- difficulté du mini-jeu (0, 1, 2… : débloque ses surprises, Balance.Minigames, D81)
 	titleKey: string?, -- texte affiché en haut du run (clé Texts)
 	titleArgs: { [string]: any }?,
 	-- Appelé pour chaque répétition validée ; renvoie le gain à afficher (ou nil).
@@ -116,6 +117,7 @@ function MinigameService.StartRun(player: Player, spec: RunSpec): boolean
 		total = spec.total,
 		timingScale = spec.timingScale,
 		seed = spec.seed,
+		level = spec.level or 0,
 		titleKey = spec.titleKey,
 		titleArgs = spec.titleArgs,
 	})

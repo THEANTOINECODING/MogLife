@@ -1,110 +1,126 @@
 # Mini-jeux (mécanique principale)
 
-> **D80 : cette fiche fait de nouveau foi.** La refonte de Codex (D76 à D79, « terrain de force ») a été abandonnée et ses mini-jeux supprimés ; sa fiche est archivée dans `design/archive/PLAYGROUND_codex_abandonne.md`. Plus de mode Auto (D79) ; une répétition ratée rapporte peu et les fenêtres de notation se resserrent pendant la série (D80).
+> **D81 : cette fiche fait foi** pour les 20 mini-jeux (entraînements, aides, boss, duel). Retour aux jeux faits
+> ensemble avant Codex (D80), puis amélioration de chacun (D81) : simples à comprendre, satisfaisants, avec du
+> challenge, pensés d'abord pour le téléphone (environ 80 % des joueurs Roblox sont sur iPhone, d'après Antoine).
+> La refonte de Codex (D76 à D79) est archivée dans `design/archive/PLAYGROUND_codex_abandonne.md`.
 
-**Chaque activité a son PROPRE mini-jeu** : chaque exercice, chaque aide et chaque boss se joue différemment, et aucun mini-jeu n'est réutilisé ailleurs (décision D23).
-Pour rester simple à produire, tous les mini-jeux partagent une boîte à outils commune (`src/client/MinigameKit.luau` : entrées, notation, mode auto, nettoyage).
-Depuis D75, les 19 activités du monde ont chacune un module nommé et une règle dans `Config/SceneGames.luau`.
-`SceneChallenge.luau` partage les gestes et les scènes ; `GripCounter.luau` gère le duel. Les résultats et les récompenses
-restent décidés par le serveur.
+**Chaque activité a son propre mini-jeu** (D23) : aucun mini-jeu n'est réutilisé ailleurs, sauf `Combo`, prêté au
+Dieu du Pump en attendant son vrai combat (voir `IDEES.md`). Tous sont construits sur `src/client/MinigameKit.luau`.
 
-## Règles communes
+## Règles communes (D81)
 
-- **Une seule entrée simple** à la fois : un doigt sur mobile, souris ou clavier sur PC, équivalent manette. Jamais de multitouch obligatoire ni de clics frénétiques.
-- Les gestes de précision utilisent des positions relatives au panneau et les fenêtres de temps sont les mêmes sur
-  chaque plateforme. La vitesse du curseur au clavier et celle du geste tactile sont plafonnées par le même paramètre.
-  Le ressenti équivalent reste à vérifier sur iPhone, iPad, ordinateur et manette avec des joueurs.
-- Chaque répétition est notée **Raté / Bien / Parfait**.
-- Le serveur applique un **quota de rythme** : jamais plus de répétitions que le temps écoulé ne le permet (+1 d'avance). Jouer plus vite ne rapporte rien de plus.
-- **Mode auto** gratuit (maintenir un bouton) pour les exercices et les aides : gain de base, sans bonus. Interdit en combat de boss.
-- Option d'accessibilité : fenêtres de timing plus larges (à faire).
+**Simple à comprendre**
+- **Un seul geste par jeu** : toucher, maintenir/relâcher, glisser dans une direction, glisser-déplacer, ou toucher
+  à gauche/à droite. Une seule chose à regarder.
+- **Consigne d'une phrase** affichée en grand au départ, puis gardée dans la colonne (`Minigame.Hint.<Jeu>`).
+- **Main fantôme** : les deux premières parties de chaque mini-jeu (par session), une main montre le geste et
+  appuie au bon moment ; elle disparaît à la première réussite (au plus tard après 3 répétitions).
+- **Nouveauté annoncée** : la première fois qu'une surprise arrive dans une partie, un bandeau l'explique
+  (« Red ring: don't tap! »).
 
-## Gain de Mog (exercices)
+**Pensé pour le téléphone**
+- On joue **n'importe où sur l'écran**, d'un pouce, sans petit bouton à viser (sauf Stop). Le pouce ne cache jamais
+  l'action : les objets déplacés suivent le **déplacement** du doigt (comme un pavé tactile), pas sa position.
+- Gauche/droite = **moitié gauche ou droite de l'écran** (un pouce de chaque côté).
+- Clavier, souris et manette donnent exactement les mêmes gestes (Espace / bouton A, flèches, ZQSD/WASD, stick,
+  gâchettes).
+- **Vibration** à chaque répétition sur téléphone (`HapticEffect`) et manette ; coupable dans les réglages
+  (« Vibration »).
 
-Mog gagné = Mog de base de l'exercice × multiplicateur de qualité (Raté x1, Bien x1,25, Parfait x1,6).
+**Satisfaisant**
+- Chaque geste a un retour immédiat : éclat à l'endroit du geste (étincelles dorées sur un Perfect), vibration,
+  petit tremblement sur un raté, son qui monte avec le combo, gain qui s'envole.
+- Combo visible (x1,2, x1,5, x2) ; au maximum, « ON FIRE » et les bords de l'écran rougeoient.
+- Fin de série : note S/A/B/C qui tombe avec un rebond, étoiles, record personnel.
+
+**Challenge**
+- Les fenêtres de notation se resserrent de 30 % au fil de la série (`Balance.Minigames.SeriesTightening`, D80).
+- **Niveau** envoyé par le serveur : entraînements et aides = stades du joueur au-dessus du stade de déblocage ;
+  boss et duel = manche − 1. Chaque niveau débloque des **surprises** propres au jeu (tableau ci-dessous).
+- Une répétition ratée ne rapporte que 25 % du Mog (`Balance.Quality.Miss`), casse le combo et, dans les jeux de
+  rythme, **ne rien faire est un raté** dès que la partie a commencé (et toujours en combat de boss).
+- **Ne rien faire ne rapporte jamais** : les zones « à ne pas toucher » ne paient que si l'on joue.
 
 ## Exercices (6)
 
-| Exercice | Mini-jeu | Mécanique | Mog/rép ❓ | Débloqué par |
-|---|---|---|---:|---|
-| Curl haltère | WatermelonCurl | Suivre la pastèque contre une résistance qui oscille | 1 | Départ |
-| Pompes | ChestCatapult | Comprimer puis relâcher pour bondir | 2 | Kevin |
-| Développé couché | BarRescue | Rattraper la barre puis la soulever | 4 | Brayan |
-| Squat | CrackedFloor | Choisir la dalle intacte | 8 | Coach Turbo |
-| Tractions | TravelingBar | Suivre la prise mobile pendant la montée | 14 | Monsieur Pas-Les-Jambes |
-| Corde à sauter | ShowRope | Choisir un saut court ou double au passage de la corde : deux grandes zones tactiles, gauche/droite au clavier et à la manette | 24 | Le Roi du Quartier |
+| Exercice | Module | Geste | Surprises (niveau) | Mog/rép ❓ |
+|---|---|---|---|---:|
+| Curl de pastèque | `Swipe` | Glisser vers le haut quand l'anneau touche la ligne dorée | Répétitions lentes « tortue » (1) | 1 |
+| Pompes | `Ring` | Toucher quand l'anneau touche le cercle | Anneau double : deux appuis (1) ; anneau rouge : ne pas toucher (2) | 2 |
+| Développé couché | `HoldRelease` | Maintenir pour pousser, relâcher dans la zone verte (qui change de place) | La zone bouge pendant qu'on pousse (2) | 4 |
+| Squat | `Tilt` | Glisser vers le bas jusqu'à la ligne, lever le doigt pour remonter | Squat avec pause en bas (1) | 8 |
+| Tractions | `Alternate` | Toucher le côté de la main allumée, sur le temps | Les deux mains ensemble (1) ; rythme irrégulier (2) | 14 |
+| Corde à sauter | `Rope` | Toucher pour sauter quand la corde passe sous les pieds | Tours rapides (1) ; fausses accélérations (2) | 24 |
+
+Au développé couché, la barre tremble au-dessus de la zone et retombe tout en haut (raté). La zone dessinée est
+exactement la zone notée.
 
 ## Aides (8)
 
-| Aide | Mini-jeu | Mécanique |
-|---|---|---|
-| Bocal de maman | SecretSeal | Trouver la bulle d'air puis maintenir pour ouvrir le couvercle |
-| Pneu du livreur | LeakHunt | Trouver la fuite puis maintenir pour pomper |
-| Clous du petit voisin | NailAngle | Orienter le marteau vers le clou |
-| Voiture du voisin | CarSlingshot | Tirer la sangle à l'opposé de la place visée |
-| Piano de Mme Do-Ré | PianoPivot | Choisir un pivot devant chaque obstacle |
-| Transats du maître-nageur | PerfectSpot | Amener le transat au bon coin de la plage |
-| Courses de l'épicier | ImpossibleBag | Trouver l'objet lourd et le placer au fond |
-| Chemin du touriste | LivingPostcard | Tourner le panorama vers le repère de la carte |
+| Aide | Module | Geste | Surprises (niveau) |
+|---|---|---|---|
+| Bocal de maman | `Twist` | Taper vite pour dévisser un cran ; s'arrêter quand le couvercle devient orange puis rouge | L'alerte orange raccourcit à chaque niveau |
+| Pneu du livreur | `Pressure` | Pomper pour garder l'aiguille dans le vert ; au-dessus du rouge, le pneu éclate | Fuite qui change sans arrêt, plus forte à chaque niveau |
+| Clous du petit voisin | `Hammer` | Toucher quand le marteau est au-dessus du clou | Clou tordu : deux coups (1) ; pouce du petit voisin à ne pas taper (2) |
+| Voiture du voisin | `Steer` | Glisser pour rester sur la route et éviter poubelle, chat, flaque | Virages plus serrés et obstacles plus fréquents à chaque niveau |
+| Piano de Mme Do-Ré | `Lanes` | Glisser à gauche/à droite vers la voie libre | Vagues plus rapides à chaque niveau ; vagues doubles (1) |
+| Transats du maître-nageur | `Stack` | Toucher pour lâcher le transat : ce qui dépasse tombe, le suivant est plus étroit | Transat plus rapide à chaque niveau |
+| Courses de l'épicier | `Catch` | Glisser le panier pour attraper les courses | Objets à ne pas attraper (1) ; fruits qui rebondissent (2) |
+| Chemin du touriste | `Sequence` | Retenir le chemin tracé sur le plan, le refaire en glissant | Chemin de 3, puis 4, puis 5 pas |
 
 ## Boss (5 dans le MVP)
 
-| Boss | Mini-jeu | Mécanique |
-|---|---|---|
-| Kevin | SofaEscape | Prévoir sa fuite vers le frigo, la télé ou le canapé |
-| Brayan le Bronzé | TanMirror | Viser son reflet avec le miroir pendant que le soleil bouge |
-| Coach Turbo | MegaphoneRebel | Tenir pendant l'onde, relâcher dans l'accalmie |
-| Monsieur Pas-Les-Jambes | ToothpickSweep | Trouver la jambe tremblante puis maintenir pour glisser le tapis |
-| Le Roi du Quartier | Headwind | Corriger son appui contre les rafales du ventilateur |
-| Le Dieu du Pump | ❓ à créer | (mise à jour Olympe) |
+| Boss | Module | Geste | Surprises (manche) |
+|---|---|---|---|
+| Kevin | `Reaction` | Glisser dans le sens de son bras, le plus vite possible (trop tôt = raté) | Feintes : flèche grise qui change de sens (2) |
+| Brayan le Bronzé | `Spotlight` | Garder sa crème dans le soleil, qui saute (sa prochaine place est annoncée) | Nuages qui cachent le soleil (2) |
+| Coach Turbo | `Beats` | Toucher le côté de la note quand elle touche la ligne | Notes longues à maintenir (2) ; notes plus rapides à chaque manche |
+| Monsieur Pas-Les-Jambes | `Wobble` | Glisser vers son poing au moment du choc pour le bloquer | Coups d'en haut (2) ; deux poings à la suite (3) |
+| Le Roi du Quartier | `Combo` | Glisser la combinaison de flèches avant que le ventilateur l'efface | 5 flèches (3) |
+| Le Dieu du Pump | `Combo` (provisoire) | — | ❓ vrai combat à concevoir plus tard (`IDEES.md`) |
+
+Chaque manche est aussi plus rapide et plus serrée (`Balance.Boss.SpeedByRound`, `TimingScaleByRound`).
 
 ## Duel entre joueurs (D68)
 
-| Activité | Mini-jeu | Mécanique |
+| Activité | Module | Geste |
 |---|---|---|
-| Bras de fer | GripCounter | Choisir la prise annoncée, tenir, puis relâcher sur le moment doré ; même motif pour les deux joueurs |
+| Bras de fer | `Gauge` | Toucher quand l'aiguille est dans la zone verte (doré = pleine puissance). **Dernier effort** (D81) : le dernier balayage de chaque manche a 3 petites zones à toucher à la suite (3 = Perfect, 2 = Good). Même motif pour les deux joueurs. |
+
+## Réglages
+
+Tous les chiffres sont dans `Config/Balance.luau` (`Minigames.<Module>`) et `Config/Duels.luau` (`LastEffort`) :
+vitesses, tailles de zones, chances et niveaux d'apparition des surprises. Ce sont des valeurs de départ ❓ à
+régler en jouant, surtout sur téléphone.
 
 ## Ajouter un mini-jeu
 
-Sur les écrans tactiles en paysage, les commandes et les retours restent à gauche du panneau de jeu. Un panneau
-plus haut que l'espace disponible est réduit avec ses commandes pour rester entièrement visible.
-En portrait, le panneau occupe la place entre les boutons Stop/Auto et la consigne du bas ; sa hauteur diminue sur
-les petits téléphones sans réduire la largeur des zones tactiles.
-
-1. Un module dans `src/client/Minigames/` basé sur `MinigameKit` ou `SceneChallenge` (`new`, `SetAuto`, `Destroy`).
-2. Une clé `Minigame.Hint.<Nom>` dans `Texts.luau`.
-3. Le référencer dans `Exercises.luau`, `Helps.luau` ou `Stages.luau`.
+1. Un module dans `src/client/Minigames/` basé sur `MinigameKit` (`new(parent, interval, onRep, options)`,
+   `Destroy`). Utiliser les gestes du kit (`OnPress`, `OnRelease`, `OnSwipe`, `OnSide`, `TrackDrag`, `OnAction`),
+   `Rep(quality, endroit)` pour noter (il respecte la cadence du serveur), `RepReady()` pour les jeux au rythme du
+   joueur, `Guide` / `GuideCue` pour la main fantôme, `Announce` pour une surprise.
+2. Une clé `Minigame.Hint.<Nom>` (et `Minigame.Twist.<Nom>.<Surprise>`) dans `Texts.luau`.
+3. Ses réglages dans `Balance.Minigames.<Nom>`.
+4. Le référencer dans `Exercises.luau`, `Helps.luau` ou `Stages.luau`.
 
 ## Sécurité
 
-Le client envoie la qualité de chaque répétition ; le serveur vérifie le quota de rythme, la distance, le déblocage, et calcule lui-même les gains. Limite connue : un tricheur peut s'attribuer des Parfait (x1,6 au maximum, et en combat il reste borné par le rythme).
+Le client envoie la qualité de chaque répétition ; le serveur vérifie le quota de rythme, la distance, le
+déblocage, et calcule lui-même les gains. Limite connue : un tricheur peut s'attribuer des Perfect (x1,6 au maximum,
+et en combat il reste borné par le rythme).
 
-## Validation de l'équité des commandes (alpha D75)
+## Tests
 
-Faire jouer les mêmes séries, sans mode auto, à des débutants sur iPhone portrait, iPad paysage, ordinateur souris,
-ordinateur clavier et manette. Pour chaque activité, comparer les taux de Good/Perfect, les ratés, le temps de
-compréhension et la vue du personnage. Retoucher `Config/SceneGames.luau`, `Config/Duels.luau` et les tailles de panneau
-si un appareil crée un avantage mesurable. Pour les boss, vérifier que le taux de victoire descend de Kevin au Roi du
-Quartier à progression comparable, sans boss infranchissable au doigt. Vérifier aussi l'audibilité et le confort des
-sons avec musique et effets activés ou coupés. Aucun résultat de ces essais n'est encore établi.
-
-## Refonte de jouabilité du 20 octobre 2026
-
-Les 19 activités définies dans `SceneGames.luau` ont une scène révisée : silhouette dessinée pour chaque activité,
-objet animé, objectif visible, piste de temps, zone de réussite et rappel de commande adapté à la dernière entrée
-utilisée. `Combo`, déjà relié au boss PumpGod dans le code, et le duel `GripCounter` ont également été repris. Le
-choix de design ❓ du mini-jeu final du Dieu du Pump reste ouvert.
-
-- Une seule action à la fois. Les choix à trois cases, l'équilibre, le suivi, la visée et les maintiens n'affichent
-  que les repères utiles à leur geste. Trouver une case et agir dessus se fait en un seul maintien.
-- La corde utilise deux larges zones (court / double), avec la même fenêtre temporelle pour les touches et la
-  manette. Les autres visées et suivis emploient des coordonnées relatives, un déplacement plafonné et une
-  diagonale normalisée ; le doigt ne peut pas téléporter le curseur.
-- La finale `Combo` ne soumet qu'une séquence par intervalle du serveur. Les zones visibles du duel suivent le
-  rétrécissement réel de sa fenêtre selon la manche.
-- Les seuils communs restent dans `SceneGames.luau` et ceux du duel dans `Duels.luau`. Le client calcule la note
-  locale ; le serveur conserve la cadence, les gains et les autres validations existantes.
-
-La création de chaque panneau et son fonctionnement initial ont été vérifiés en Studio. La difficulté **ressentie**
-sur iPhone, iPad et PlayStation n'est pas validée par ce test : elle exige les essais sur appareils prévus ci-dessus
-et un réglage des seuils à partir des résultats.
+Tous faits dans Studio réduit (affichage en pause), sans toucher aux données (`Kit.StepSignal` remplace l'affichage,
+`Kit.Input` remplace l'écran par de faux gestes) :
+- **Sans rien faire** (niveaux 0, 1 et 2, 12 s) : aucun des 20 jeux ne donne de Good ni de Perfect, aucune erreur.
+- **Robot qui joue bien** (`tests/minigames_bot.luau`, niveau 2, toutes les surprises, 22 s, en passant par les vrais
+  gestes : appuis, glissés, glisser-déplacer, touches) : 19 jeux sans aucun raté ou presque ; Brayan 1 raté sur 14 (le
+  soleil saute) ; voiture 0 à 1 raté sur 14 après correction.
+- **Robot qui tape au hasard** : il rate la grande majorité des répétitions. Les plus « généreux » restent le piano
+  (environ 40 % de réussites : 3 voies, on finit parfois dans la bonne) et les transats (environ 30 %).
+- **Parcours complet par le serveur** : série de squats (niveau reçu, consigne, cadre ON FIRE), aide des transats,
+  duel contre le mannequin (2 manches) et combat contre Kevin jusqu'au résultat, sans erreur.
+- **Pas encore fait** : jouer au doigt dans Studio au premier plan, puis sur un vrai iPhone (lisibilité, confort du
+  pouce, vibration, difficulté ressentie, réglage des valeurs ❓).

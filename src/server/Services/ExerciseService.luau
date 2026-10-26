@@ -72,6 +72,8 @@ local function startSeries(player: Player, exerciseId: unknown)
 		interval = exercise.repInterval,
 		total = Balance.SeriesLength,
 		anchor = station,
+		-- Plus le joueur a dépassé le stade de déblocage, plus le mini-jeu a de surprises (D81)
+		level = data.Stage - exercise.requiredStage,
 		titleKey = `Exercise.{exerciseId}`,
 		onRep = function(p, quality, combo)
 			-- Gain = base × qualité × combo × boost en cours × pareur (+20 % si un autre joueur le pare)

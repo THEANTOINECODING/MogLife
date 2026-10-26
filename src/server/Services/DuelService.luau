@@ -518,6 +518,7 @@ function startRound(duel: Duel)
 			anchor = side.spot,
 			timingScale = Duels.TimingScaleByRound[round] or 1,
 			seed = seed,
+			level = round - 1,
 			titleKey = "Duel.RoundTitle",
 			titleArgs = { round = round, rounds = Duels.Rounds, name = other.name },
 			onRep = function(_, quality)

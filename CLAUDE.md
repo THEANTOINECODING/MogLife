@@ -31,7 +31,7 @@ Toujours lire `design/00_VISION.md` puis le fichier concerné avant d'implément
 | Dossier | Dans Studio | Contenu |
 |---|---|---|
 | `src/server/` | ServerScriptService.Server | `init.server.luau` + `Services/` + `Npc.luau` (PNJ provisoires) |
-| `src/client/` | StarterPlayerScripts.Client | `init.client.luau` + `Controllers/` + `Minigames/` (un module par mini-jeu, interface `new / SetAuto / Destroy`) + `Ui.luau` |
+| `src/client/` | StarterPlayerScripts.Client | `init.client.luau` + `Controllers/` + `Minigames/` (un module par mini-jeu, interface `new / Destroy`, gestes et notation dans `MinigameKit.luau`) + `Ui.luau` |
 | `world/` | Workspace (Rojo ignore le reste de la carte) | Objets de jeu versionnés : `Stations/` (tag `Station`), `Bosses/` (tag `BossSpot`), `Helpers/` (tag `HelperSpot`), `Shop/` (tag `Mirror`) |
 | `src/shared/` | ReplicatedStorage.Shared | `Config/`, `Remotes.luau` |
 | `assets/` | — | Sources Blender et exports FBX/OBJ |

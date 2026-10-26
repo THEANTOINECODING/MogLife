@@ -153,6 +153,7 @@ local function startHelp(player: Player, helpId: string)
 		interval = help.interval,
 		total = help.reps or Balance.Helps.Reps,
 		anchor = anchor,
+		level = data.Stage - help.requiredStage, -- D81
 		titleKey = `Help.{helpId}`,
 		onRep = function(p, quality, combo)
 			return repCash(p, helpId, quality, combo)

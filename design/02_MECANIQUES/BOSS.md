@@ -1,6 +1,6 @@
 # Boss de stade (Moggers)
 
-> **D80 : cette fiche fait de nouveau foi.** La refonte de Codex (D76 à D79, « terrain de force ») a été abandonnée et ses mini-jeux supprimés ; sa fiche est archivée dans `design/archive/PLAYGROUND_codex_abandonne.md`. Plus de mode Auto (D79) ; une répétition ratée rapporte peu et les fenêtres de notation se resserrent pendant la série (D80).
+> **D80, D81 : cette fiche fait foi.** La refonte de Codex (D76 à D79) est abandonnée (archive : `design/archive/PLAYGROUND_codex_abandonne.md`). Le geste exact de chaque mini-jeu, ses surprises et les règles communes (téléphone d'abord, main fantôme, plus de mode Auto) sont décrits dans [MINIJEUX.md](MINIJEUX.md).
 
 À chaque stade de Mog correspond un **boss**, visible dans le monde. Le battre fait officiellement monter de stade et débloque la suite.
 
@@ -10,12 +10,12 @@ Tout le monde commence au stade **Normie**. « Mog requis » = le Mog nécessair
 
 | Boss | Mog requis ❓ | Son mini-jeu | Niveau en direct ❓ | Victoire → stade | Victoire débloque |
 |---|---:|---|---|---|---|
-| **Kevin « demain je commence »** — en pyjama, excuses extravagantes | 50 | SofaEscape | ~50 / 100 | Gym Rat | Pompes, nouvelles aides |
-| **Brayan le Bronzé** — bronzage orange fluo | 400 | TanMirror | ~59 | Bro | Développé couché |
-| **Coach Turbo** — mégaphone plus gros que lui | 2 500 | MegaphoneRebel | ~65 | Alpha | Squat, transats |
-| **Monsieur Pas-Les-Jambes** — torse énorme sur deux cure-dents, chaussettes géantes | 7 500 | ToothpickSweep | ~69 | Chad | Tractions, courses |
-| **Le Roi du Quartier** — arrive avec son propre ventilateur | 20 000 | Headwind | ~74 | Gigachad | Corde à sauter, touriste |
-| **Le Dieu du Pump** — sur un nuage, foudre dans chaque biceps | 45 000 | ❓ | ~84 | **GOD MOGGER** | Le titre GOD MOGGER (mise à jour Olympe) |
+| **Kevin « demain je commence »** — en pyjama, excuses extravagantes | 50 | Reaction (glisser dans le sens de son bras) | ~50 / 100 | Gym Rat | Pompes, nouvelles aides |
+| **Brayan le Bronzé** — bronzage orange fluo | 400 | Spotlight (crème dans le soleil) | ~59 | Bro | Développé couché |
+| **Coach Turbo** — mégaphone plus gros que lui | 2 500 | Beats (deux pistes, notes longues) | ~65 | Alpha | Squat, transats |
+| **Monsieur Pas-Les-Jambes** — torse énorme sur deux cure-dents, chaussettes géantes | 7 500 | Wobble (bloquer son poing) | ~69 | Chad | Tractions, courses |
+| **Le Roi du Quartier** — arrive avec son propre ventilateur | 20 000 | Combo (combinaison de glissés) | ~74 | Gigachad | Corde à sauter, touriste |
+| **Le Dieu du Pump** — sur un nuage, foudre dans chaque biceps | 45 000 | ❓ vrai combat à concevoir (`IDEES.md`) ; Combo en attendant | ~84 | **GOD MOGGER** | Le titre GOD MOGGER (mise à jour Olympe) |
 
 Le MVP contient les **5 premiers boss** (Normie → Gigachad, décision D25). Le Dieu du Pump est annoncé « coming soon ». Les chiffres sont des hypothèses (voir `tools/simulate_economy.luau`).
 
@@ -49,8 +49,9 @@ Défaite automatique et comique : le boss le mogge d'un seul regard, le joueur r
 - Score de manche = moyenne des points (Parfait 100, Bien 70, Raté 20, répétition non jouée 0). Égalité = le boss gagne.
 - 2 manches gagnées = victoire.
 - **Défaite : perte de 5 % du Cash** (plafonnée par stade ❓), annoncée dans la fenêtre de défi. Aucune perte en revanche contre un boss déjà battu.
-- Mode auto interdit en combat.
-- Sur téléphone et tablette, les commandes de déplacement disparaissent pendant le mini-jeu. Spotlight et Wobble ne suivent que le doigt posé dans leur panneau ; le joystick ne peut pas déplacer leur curseur.
+- Pas de mode Auto (D79). En combat, ne rien faire est un raté : la manche finit toujours.
+- Chaque manche débloque les surprises du mini-jeu du boss (feintes de Kevin, nuages de Brayan, notes longues du Coach, poings d'en haut puis doubles de Monsieur Pas-Les-Jambes, 5 flèches du Roi), en plus d'être plus rapide et plus serrée (D81).
+- Sur téléphone et tablette, les commandes de déplacement disparaissent pendant le mini-jeu ; on joue n'importe où sur l'écran (D81).
 - Après 3 défaites d'affilée, le boss devient un peu moins exigeant ❓ (non implémenté).
 
 ### Victoire

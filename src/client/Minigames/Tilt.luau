@@ -1,200 +1,198 @@
--- Mini-jeu « Tilt » (squat) : la barre penche aléatoirement, il faut la garder droite.
--- Contrôles : A / D (ou flèches), souris ou doigt à gauche / droite de la zone, stick gauche de manette.
--- Chaque répétition est notée selon l'inclinaison moyenne pendant sa durée.
--- Interface commune : voir Swipe.luau.
+-- Mini-jeu « Tilt » (exercice : squat, D81) : glisser le pouce vers le bas (n'importe où sur l'écran) pour
+-- descendre jusqu'à la ligne verte, puis lever le doigt (ou remonter) pour se relever. La répétition est notée
+-- à la remontée, selon l'écart entre le point le plus bas et la ligne. La ligne change à chaque répétition.
+-- Surprise (niveau Tilt.PauseLevel) : squat avec pause, rester dans la zone le temps que le cercle se remplisse.
+-- Clavier : maintenir flèche bas / S / Espace ; manette : maintenir A ou stick vers le bas.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local Kit = require(script.Parent.Parent.MinigameKit)
 local Ui = require(script.Parent.Parent.Ui)
 
 local SETTINGS = Balance.Minigames.Tilt
-local MAX_ANGLE = 35
+local GREEN = Color3.fromRGB(90, 220, 100)
+local GOLD = Color3.fromRGB(255, 210, 60)
+local TOP = 0.1 -- position de la barre debout (fraction de la piste)
+local BOTTOM = 0.92 -- position tout en bas
+local DOWN_KEYS = { Enum.KeyCode.Down, Enum.KeyCode.S, Enum.KeyCode.Space, Enum.KeyCode.ButtonA }
 
 local Tilt = {}
-Tilt.__index = Tilt
 
-function Tilt.new(parent: GuiObject, interval: number, onRep: (string) -> ())
-	local self = setmetatable({}, Tilt)
-	self.interval = interval
-	self.onRep = onRep
-	self.auto = false
-	self.tilt = 0
-	self.drift = 0
-	self.nextDriftAt = 0
-	self.repStart = os.clock()
-	self.tiltSum = 0
-	self.samples = 0
-	self.pointerControl = 0
-	self.pointerActive = false
-	self.stickControl = 0
-	self.connections = {}
+function Tilt.new(parent: GuiObject, interval: number, onRep: (string) -> (), options)
+	local self = Kit.new(parent, interval, onRep, options)
+	local panel = self:Panel(UDim2.fromOffset(280, 420))
+	local rng = self:Random()
+	self:TrackDrag()
 
-	self.zone = Ui.panel({
-		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -40, 0.5, 20),
-		Size = UDim2.fromOffset(360, 300),
-		Active = true,
-		Parent = parent,
-	})
-
-	-- La barre de squat, qui tourne avec l'inclinaison
-	self.bar = Ui.create("Frame", {
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.4),
-		Size = UDim2.fromOffset(280, 14),
-		BackgroundColor3 = Color3.fromRGB(200, 200, 210),
-		ZIndex = 2,
-		Parent = self.zone,
-	}, { Ui.corner(UDim.new(1, 0)) })
-	for _, side in { 0, 1 } do
-		Ui.label({
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			Position = UDim2.fromScale(side, 0.5),
-			Size = UDim2.fromOffset(70, 70),
-			Text = "🛞",
-			TextStrokeTransparency = 1,
-			ZIndex = 3,
-			Parent = self.bar,
-		})
-	end
-
-	-- Indicateur d'équilibre : zone verte au centre, curseur selon l'inclinaison
-	local meter = Ui.create("Frame", {
-		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.5, 0, 1, -24),
-		Size = UDim2.new(1, -60, 0, 26),
-		BackgroundColor3 = Color3.fromRGB(200, 70, 70),
-		BackgroundTransparency = 0.3,
-		ZIndex = 2,
-		Parent = self.zone,
-	}, { Ui.corner(UDim.new(1, 0)) })
-	Ui.create("Frame", {
+	local track = Ui.create("Frame", {
 		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.fromScale(0.5, 0),
-		Size = UDim2.fromScale(SETTINGS.GoodMax, 1),
-		BackgroundColor3 = Color3.fromRGB(90, 230, 90),
+		Position = UDim2.new(0.5, 0, 0, 14),
+		Size = UDim2.new(1, -40, 1, -28),
+		BackgroundColor3 = Color3.fromRGB(25, 20, 40),
 		BackgroundTransparency = 0.2,
-		ZIndex = 3,
-		Parent = meter,
-	}, { Ui.corner(UDim.new(1, 0)) })
-	Ui.create("Frame", {
-		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.fromScale(0.5, 0),
-		Size = UDim2.fromScale(SETTINGS.PerfectMax, 1),
-		BackgroundColor3 = Color3.fromRGB(255, 215, 40),
-		BackgroundTransparency = 0.1,
-		ZIndex = 4,
-		Parent = meter,
+		ClipsDescendants = true,
+		Parent = panel,
+	}, { Ui.corner(UDim.new(0, 16)) })
+	local band = Ui.create("Frame", {
+		AnchorPoint = Vector2.new(0, 0.5),
+		Size = UDim2.fromScale(1, 0.1),
+		BackgroundColor3 = GREEN,
+		BackgroundTransparency = 0.35,
+		ZIndex = 2,
+		Parent = track,
 	})
-	self.cursor = Ui.create("Frame", {
+	Ui.create("Frame", {
+		AnchorPoint = Vector2.new(0, 0.5),
+		Position = UDim2.fromScale(0, 0.5),
+		Size = UDim2.new(1, 0, 0, 4),
+		BackgroundColor3 = GOLD,
+		ZIndex = 3,
+		Parent = band,
+	})
+	local pause = Ui.create("Frame", {
+		AnchorPoint = Vector2.new(1, 0.5),
+		Position = UDim2.new(1, -6, 0.5, 0),
+		Size = UDim2.fromOffset(36, 36),
+		BackgroundColor3 = Color3.fromRGB(40, 40, 50),
+		ZIndex = 4,
+		Visible = false,
+		Parent = band,
+	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(GOLD, 3, 0) })
+	local pauseFill = Ui.create("Frame", {
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(16, 40),
-		BackgroundColor3 = Color3.new(1, 1, 1),
+		Size = UDim2.fromScale(0, 0),
+		BackgroundColor3 = GOLD,
 		ZIndex = 5,
-		Parent = meter,
-	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(0, 0, 0), 2, 0.3) })
-
-	local function onInput(input: InputObject)
-		local inputType = input.UserInputType
-		if inputType == Enum.UserInputType.MouseMovement or inputType == Enum.UserInputType.Touch then
-			local left = self.zone.AbsolutePosition.X
-			local width = self.zone.AbsoluteSize.X
-			if width > 0 then
-				-- Position par rapport au centre de la zone : -1 (gauche) … 1 (droite)
-				self.pointerControl = math.clamp(((input.Position.X - left) / width - 0.5) * 2, -1, 1)
-				self.pointerActive = true
-			end
-		elseif input.KeyCode == Enum.KeyCode.Thumbstick1 then
-			self.stickControl = if math.abs(input.Position.X) > 0.15 then input.Position.X else 0
-		end
+		Parent = pause,
+	}, { Ui.corner(UDim.new(1, 0)) })
+	-- La barre chargée, sur les épaules
+	local bar = Ui.create("Frame", {
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Size = UDim2.new(1, -24, 0, 12),
+		BackgroundColor3 = Color3.fromRGB(220, 220, 230),
+		ZIndex = 6,
+		Parent = track,
+	}, { Ui.corner(UDim.new(1, 0)) })
+	for _, x in { 0.04, 0.96 } do
+		Ui.create("Frame", {
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(x, 0.5),
+			Size = UDim2.fromOffset(20, 46),
+			BackgroundColor3 = Color3.fromRGB(60, 60, 70),
+			ZIndex = 7,
+			Parent = bar,
+		}, { Ui.corner(UDim.new(0, 5)) })
 	end
-	table.insert(self.connections, UserInputService.InputChanged:Connect(onInput))
-	table.insert(self.connections, UserInputService.InputBegan:Connect(onInput))
-	table.insert(
-		self.connections,
-		UserInputService.InputEnded:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.Touch then
-				self.pointerControl = 0
+	local face = self:Emoji(bar, "😤", 40, 8)
+	face.Position = UDim2.new(0.5, 0, 0.5, 22)
+
+	local depth = 0 -- 0 = debout, 1 = tout en bas
+	local deepest = 0
+	local descending = false
+	local target = 0.7
+	local needsPause = false
+	local pausedFor = 0
+
+	local function newTarget()
+		target = SETTINGS.TargetMin + rng:NextNumber() * (SETTINGS.TargetMax - SETTINGS.TargetMin)
+		needsPause = self.level >= SETTINGS.PauseLevel and rng:NextNumber() < SETTINGS.PauseChance
+		if needsPause then
+			self:Announce("Minigame.Twist.Tilt.Pause")
+		end
+		pausedFor = 0
+	end
+	newTarget()
+
+	local function keyDown(): boolean
+		for _, key in DOWN_KEYS do
+			if UserInputService:IsKeyDown(key) then
+				return true
 			end
-		end)
-	)
-	table.insert(
-		self.connections,
-		RunService.RenderStepped:Connect(function(dt)
-			self:_step(dt)
-		end)
-	)
+		end
+		for _, state in UserInputService:GetGamepadState(Enum.UserInputType.Gamepad1) do
+			if state.KeyCode == Enum.KeyCode.ButtonA and state.UserInputState == Enum.UserInputState.Begin then
+				return true
+			end
+			if state.KeyCode == Enum.KeyCode.Thumbstick1 and state.Position.Y < -0.5 then
+				return true
+			end
+		end
+		return false
+	end
+
+	self:Guide(panel, "SwipeDown")
+
+	self:OnStep(function(dt)
+		local ready = self:RepReady()
+		local drag = self:ConsumeDrag()
+		local camera = workspace.CurrentCamera
+		local range = (if camera then camera.ViewportSize.Y else 600) * SETTINGS.RangeFraction
+		local pushing = self.dragging or keyDown()
+		if self.dragging then
+			depth += drag.Y * Balance.Minigames.DragSensitivity / range
+		elseif keyDown() then
+			depth += SETTINGS.KeySpeed * dt
+		else
+			depth -= SETTINGS.RiseSpeed * dt
+		end
+		-- Pas encore prêt (cadence) : on ne peut pas redescendre, la barre reste en haut
+		if not ready and not descending then
+			depth = math.min(depth, SETTINGS.StartAbove * 0.9)
+		end
+		depth = math.clamp(depth, 0, 1)
+
+		local half = SETTINGS.GoodMax * self.timingScale
+		if depth > SETTINGS.StartAbove and ready then
+			descending = true
+		end
+		if descending then
+			deepest = math.max(deepest, depth)
+			if math.abs(depth - target) <= half then
+				pausedFor += dt
+			end
+			-- Remonté : la répétition est notée
+			if depth < SETTINGS.StandBelow or (not pushing and depth < SETTINGS.StartAbove) then
+				local quality = self:GradeError(math.abs(deepest - target), SETTINGS.PerfectMax, SETTINGS.GoodMax)
+				if needsPause and pausedFor < SETTINGS.PauseTime then
+					quality = "Miss"
+				end
+				self:Rep(quality, band)
+				descending = false
+				deepest = 0
+				newTarget()
+			end
+		end
+
+		local y = TOP + (BOTTOM - TOP) * depth
+		bar.Position = UDim2.fromScale(0.5, y)
+		band.Position = UDim2.fromScale(0, TOP + (BOTTOM - TOP) * target)
+		band.Size = UDim2.fromScale(1, (BOTTOM - TOP) * half * 2)
+		band.BackgroundTransparency = if ready then 0.35 else 0.8
+		pause.Visible = needsPause
+		local pauseProgress = math.clamp(pausedFor / SETTINGS.PauseTime, 0, 1)
+		pauseFill.Size = UDim2.fromScale(pauseProgress, pauseProgress)
+		-- Trop bas : la barre devient rouge
+		local tooDeep = depth > target + half
+		bar.BackgroundColor3 = if tooDeep then Color3.fromRGB(255, 90, 90) else Color3.fromRGB(220, 220, 230)
+		face.Text = if tooDeep then "😵" elseif depth > 0.3 then "😤" else "🙂"
+	end)
+
+	-- État de la partie pour les tests automatiques (tests/minigames_bot.luau) : ne change rien au jeu
+	function self.Probe()
+		return {
+			depth = depth,
+			target = target,
+			needsPause = needsPause,
+			pausedFor = pausedFor,
+			descending = descending,
+			ready = self:RepReady(),
+		}
+	end
 
 	return self
-end
-
-function Tilt:_control(): number
-	local left = UserInputService:IsKeyDown(Enum.KeyCode.A) or UserInputService:IsKeyDown(Enum.KeyCode.Left)
-	local right = UserInputService:IsKeyDown(Enum.KeyCode.D) or UserInputService:IsKeyDown(Enum.KeyCode.Right)
-	if left or right then
-		return (if right then 1 else 0) - (if left then 1 else 0)
-	end
-	if self.stickControl ~= 0 then
-		return self.stickControl
-	end
-	return if self.pointerActive then self.pointerControl else 0
-end
-
-function Tilt:_step(dt: number)
-	local now = os.clock()
-	if self.auto then
-		self.tilt = 0
-	else
-		if now >= self.nextDriftAt then
-			self.drift = (math.random() * 2 - 1) * SETTINGS.DriftStrength
-			self.nextDriftAt = now + SETTINGS.DriftChangeTime
-		end
-		-- Le joueur pousse vers le côté opposé à l'inclinaison : D (droite) compense une barre qui penche à gauche
-		local velocity = self.drift + self.tilt * SETTINGS.Instability + self:_control() * SETTINGS.ControlStrength
-		self.tilt = math.clamp(self.tilt + velocity * dt, -1, 1)
-	end
-
-	self.bar.Rotation = self.tilt * MAX_ANGLE
-	self.cursor.Position = UDim2.fromScale(0.5 + self.tilt / 2, 0.5)
-
-	if self.auto then
-		return
-	end
-	self.tiltSum += math.abs(self.tilt) * dt
-	self.samples += dt
-	if now - self.repStart >= self.interval then
-		local average = if self.samples > 0 then self.tiltSum / self.samples else 1
-		self.repStart = now
-		self.tiltSum = 0
-		self.samples = 0
-		local quality = "Miss"
-		-- Mêmes seuils que les zones jaune (Perfect) et verte (Good) de l'indicateur
-		if average <= SETTINGS.PerfectMax then
-			quality = "Perfect"
-		elseif average <= SETTINGS.GoodMax then
-			quality = "Good"
-		end
-		self.onRep(quality)
-	end
-end
-
-function Tilt:SetAuto(on: boolean)
-	self.auto = on
-	self.tilt = 0
-	self.repStart = os.clock()
-	self.tiltSum = 0
-	self.samples = 0
-end
-
-function Tilt:Destroy()
-	for _, connection in self.connections do
-		connection:Disconnect()
-	end
-	self.zone:Destroy()
 end
 
 return Tilt

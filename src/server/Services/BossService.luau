@@ -265,6 +265,7 @@ function startRound(player: Player, fight: Fight)
 		total = BOSS.RepsPerRound,
 		anchor = fight.spot,
 		timingScale = BOSS.TimingScaleByRound[fight.round] or 1,
+		level = fight.round - 1, -- chaque manche débloque les surprises du mini-jeu du boss (D81)
 		titleKey = "Boss.RoundTitle",
 		titleArgs = { round = fight.round, rounds = BOSS.Rounds, boss = { key = `Boss.{fight.bossId}` } },
 		onRep = function(p, quality)

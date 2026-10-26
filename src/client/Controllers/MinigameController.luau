@@ -13,6 +13,7 @@ local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Format = require(ReplicatedStorage.Shared.Format)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local CameraFraming = require(script.Parent.Parent.CameraFraming)
+local MinigameKit = require(script.Parent.Parent.MinigameKit)
 local Ui = require(script.Parent.Parent.Ui)
 
 local Minigames = script.Parent.Parent.Minigames
@@ -69,6 +70,7 @@ type Current = {
 	feedback: TextLabel,
 	gainLabel: TextLabel,
 	comboLabel: TextLabel,
+	fire: Frame,
 	streak: number,
 	lastLocalRep: number,
 	startedAt: number,
@@ -168,6 +170,24 @@ local function pop(label: TextLabel, text: string, color: Color3)
 		TextTransparency = 1,
 		TextStrokeTransparency = 1,
 	}):Play()
+end
+
+-- Le gain confirmé par le serveur s'envole vers le haut (une copie par répétition : ils peuvent se suivre)
+local function flyGain(label: TextLabel, text: string, color: Color3)
+	local copy = label:Clone()
+	copy.Text = text
+	copy.TextColor3 = color
+	copy.TextTransparency = 0
+	copy.TextStrokeTransparency = 0.3
+	copy.Parent = label.Parent
+	TweenService:Create(copy, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Position = label.Position - UDim2.fromOffset(0, 70),
+		TextTransparency = 1,
+		TextStrokeTransparency = 1,
+	}):Play()
+	task.delay(0.75, function()
+		copy:Destroy()
+	end)
 end
 
 -- Envoie une répétition si la cadence locale le permet. Renvoie true si elle a été envoyée.
@@ -369,7 +389,57 @@ local function openRun(update)
 	end, {
 		timingScale = update.timingScale,
 		seed = update.seed,
+		level = update.level,
+		name = update.minigame,
+		total = update.total,
 	})
+
+	-- Au départ, la consigne s'affiche en grand au milieu de l'écran, puis s'efface (elle reste dans la colonne)
+	local intro = Ui.label({
+		Name = "Intro",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, if compact then 0.2 else 0.16),
+		Size = if compact then UDim2.new(1, -24, 0, 60) else UDim2.new(0.7, 0, 0, 64),
+		TextWrapped = true,
+		TextColor3 = Color3.fromRGB(255, 230, 140),
+		TextStrokeTransparency = 0,
+		Text = hint.Text,
+		ZIndex = 50,
+		Parent = root,
+	})
+	task.delay(Balance.Minigames.AnnounceTime, function()
+		if intro.Parent then
+			TweenService:Create(intro, TweenInfo.new(0.4), { TextTransparency = 1, TextStrokeTransparency = 1 }):Play()
+			task.delay(0.45, function()
+				intro:Destroy()
+			end)
+		end
+	end)
+
+	-- Cadre « EN FEU » : les bords de l'écran rougeoient tant que le combo est au maximum
+	local fire = Ui.create("Frame", {
+		Name = "OnFire",
+		Size = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1,
+		Visible = false,
+		ZIndex = 0,
+		Parent = root,
+	})
+	for _, edge in { { 0, 90 }, { 1, -90 } } do
+		Ui.create("Frame", {
+			AnchorPoint = Vector2.new(0, edge[1]),
+			Position = UDim2.fromScale(0, edge[1]),
+			Size = UDim2.fromScale(1, 0.18),
+			BackgroundColor3 = Color3.fromRGB(255, 110, 30),
+			BorderSizePixel = 0,
+			Parent = fire,
+		}, {
+			Ui.create("UIGradient", {
+				Rotation = edge[2],
+				Transparency = NumberSequence.new(0.35, 1),
+			}),
+		})
+	end
 
 	local session: Current = {
 		kind = update.kind,
@@ -382,6 +452,7 @@ local function openRun(update)
 		feedback = feedback,
 		gainLabel = gainLabel,
 		comboLabel = comboLabel,
+		fire = fire,
 		streak = 0,
 		lastLocalRep = 0,
 		startedAt = os.clock(),
@@ -426,6 +497,7 @@ local function showCombo(session: Current, streak: number, combo: number)
 	local previous = session.streak
 	session.streak = streak
 	if streak == 0 then
+		session.fire.Visible = false
 		if previous >= 5 then
 			pop(label, Texts.Get("Minigame.ComboBroken"), Color3.fromRGB(200, 200, 200))
 		else
@@ -434,6 +506,7 @@ local function showCombo(session: Current, streak: number, combo: number)
 		return
 	end
 	local tier = if combo >= 2 then 4 elseif combo >= 1.5 then 3 elseif combo > 1 then 2 else 1
+	session.fire.Visible = tier == 4
 	-- Un nouveau tween annule le fondu de « Combo broken » encore en cours
 	TweenService:Create(label, TweenInfo.new(0), { TextTransparency = 0, TextStrokeTransparency = 0.3 }):Play()
 	label.TextColor3 = COMBO_COLORS[tier]
@@ -470,7 +543,7 @@ local function onRepConfirmed(update)
 		-- Aides : du Cash (rien sur un raté) ; exercices : du Mog
 		local isCash = current.kind == "Help"
 		if not (isCash and update.gain <= 0) then
-			pop(
+			flyGain(
 				current.gainLabel,
 				Texts.Get(if isCash then "Minigame.GainCash" else "Minigame.Gain", { value = Format.Gain(update.gain) }),
 				if isCash then Color3.fromRGB(120, 230, 120) else Color3.fromRGB(255, 255, 255)
@@ -634,6 +707,7 @@ end
 
 function MinigameController.Init(controllers)
 	SettingsController = controllers.SettingsController
+	MinigameKit.SetSettingsGetter(SettingsController.Get)
 	SprintController = controllers.SprintController
 	UIController = controllers.UIController
 end

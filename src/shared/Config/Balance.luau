@@ -23,6 +23,7 @@ return {
 			Music = true,
 			Sounds = true,
 			ScreenFx = true,
+			Vibration = true,
 			OutfitFx = true,
 			CloseUp = true,
 			Names = true,
@@ -131,30 +132,213 @@ return {
 		Good = 0.3,
 	},
 
-	-- Réglages propres à chaque mini-jeu (valeurs de départ, à ajuster en jouant)
+	-- Réglages propres à chaque mini-jeu (valeurs de départ, à ajuster en jouant ; design/02_MECANIQUES/MINIJEUX.md)
+	-- « Level » : difficulté envoyée par le serveur. Entraînements et aides : stades au-dessus du stade de déblocage ;
+	-- boss et duel : manche - 1. Chaque jeu débloque ses surprises à partir d'un niveau (…Level) (D81).
 	Minigames = {
 		-- Les fenêtres de notation se resserrent pendant la série : à la dernière répétition,
 		-- elles valent (1 - SeriesTightening) × leur taille de départ (D80)
 		SeriesTightening = 0.3,
-		-- Pompes : un anneau rétrécit et touche la cible à HitPhase × intervalle
+		-- Commun (MinigameKit)
+		SwipeMinPixels = 28, -- un glissé compte à partir de ce déplacement du doigt...
+		SwipeScreenFraction = 0.05, -- ...ou de cette part de la hauteur de l'écran si elle est plus grande
+		RepSafetyMargin = 0.12, -- secondes de marge sur la cadence du serveur avant d'envoyer une répétition
+		GuideSessions = 2, -- la main fantôme se montre les 2 premières parties de chaque mini-jeu (par session)
+		GuideMaxReps = 3, -- et disparaît à la première réussite, ou au plus tard après 3 répétitions
+		AnnounceTime = 2.2, -- secondes d'affichage d'une nouveauté (« anneau rouge : ne touche pas ! »)
+		DragSensitivity = 1.15, -- glisser-déplacer : 1 = l'objet suit exactement le doigt
+
+		-- Curl : glisser vers le haut quand le repère touche la ligne dorée
+		Swipe = {
+			HitPhase = 0.7, -- le repère touche la ligne à 70 % du cycle
+			SlowLevel = 1, -- répétitions lentes (tortue) à partir de ce niveau
+			SlowChance = 0.25,
+			SlowFactor = 1.6, -- un cycle lent dure 1,6 intervalle
+		},
+		-- Pompes : un anneau se resserre et touche la cible à HitPhase × intervalle
 		Ring = {
-			HitPhase = 0.75,
+			HitPhase = 0.6,
+			DoubleLevel = 1, -- anneaux doubles (deux appuis rapides)
+			DoubleChance = 0.25,
+			DoubleGap = 0.28, -- part du cycle entre les deux anneaux
+			RedLevel = 2, -- anneaux rouges : ne pas toucher
+			RedChance = 0.2,
 		},
-		-- Développé couché : maintenir remplit la jauge en FillFactor × intervalle, relâcher dans la zone
+		-- Développé couché : maintenir remplit la jauge en FillFactor × intervalle, relâcher dans la zone verte
 		HoldRelease = {
-			FillFactor = 0.75,
-			ZoneMin = 0.68,
-			ZoneMax = 0.9,
-			PerfectHalfWidth = 0.045, -- autour du centre de la zone
+			FillFactor = 1.0, -- jauge pleine en 1 intervalle : Perfect ≈ ±55 ms, Good ≈ ±140 ms au départ
+			ZoneCenterMin = 0.45, -- le centre de la zone est tiré au sort à chaque répétition
+			ZoneCenterMax = 0.85,
+			ZoneHalfWidth = 0.1,
+			ZoneShrinkPerLevel = 0.012,
+			PerfectHalfWidth = 0.04,
+			ShakeStart = 0.25, -- secondes passées au-dessus de la zone avant que la barre tremble fort
+			DriftLevel = 2, -- la zone bouge pendant qu'on pousse
+			DriftSpeed = 0.18,
 		},
-		-- Squat : la barre penche ; on note l'inclinaison moyenne sur chaque répétition (0 = droite, 1 = max)
+		-- Squat : glisser vers le bas jusqu'à la ligne, puis remonter (lever le doigt)
 		Tilt = {
-			DriftStrength = 0.9, -- force de la dérive aléatoire
-			DriftChangeTime = 0.8, -- secondes entre deux changements de dérive
-			Instability = 1.2, -- plus la barre penche, plus elle continue de pencher
-			ControlStrength = 2.6, -- force de correction du joueur
-			PerfectMax = 0.15,
-			GoodMax = 0.35,
+			RangeFraction = 0.6, -- part de la hauteur de l'écran à parcourir pour descendre tout en bas (iPhone : ~230 pt)
+			KeySpeed = 1.3, -- descente au clavier / manette (profondeur par seconde)
+			RiseSpeed = 2.2, -- remontée quand on lâche
+			TargetMin = 0.55,
+			TargetMax = 0.9,
+			PerfectMax = 0.06, -- ≈ ±14 pt du pouce sur iPhone
+			GoodMax = 0.13,
+			StandBelow = 0.08, -- debout
+			StartAbove = 0.18, -- la répétition commence quand on descend plus bas que ça
+			PauseLevel = 1, -- squats avec pause en bas
+			PauseChance = 0.3,
+			PauseTime = 0.5,
+		},
+		-- Tractions : la main indiquée, à gauche ou à droite, sur le temps
+		Alternate = {
+			BothLevel = 1, -- « les deux mains » : toucher les deux côtés ensemble
+			BothChance = 0.2,
+			BothWindow = 0.18, -- secondes entre les deux appuis
+			SwingLevel = 2, -- rythme irrégulier (jamais plus rapide que l'intervalle)
+			SwingMax = 0.35, -- un temps peut durer jusqu'à 1,35 intervalle
+		},
+		-- Corde à sauter : sauter quand la corde passe sous les pieds
+		Rope = {
+			PerfectTime = 0.08, -- écart (secondes) avec le passage sous les pieds
+			GoodTime = 0.18,
+			PeriodMin = 1.05, -- durée d'un tour (× intervalle)
+			PeriodMax = 1.5,
+			FastLevel = 1, -- tours rapides (rouges)
+			FastChance = 0.25,
+			FakeLevel = 2, -- fausses accélérations : la corde fonce puis ralentit juste avant les pieds
+			FakeChance = 0.3,
+		},
+
+		-- Bocal : taper vite pour dévisser, s'arrêter quand le couvercle devient rouge
+		Twist = {
+			TapFill = 0.2, -- un appui = 20 % d'un cran
+			PerfectTime = 0.75, -- cran fini en moins de 0,75 intervalle = Perfect
+			MissTime = 1.5, -- au-delà de 1,5 intervalle = raté (taper lentement ne suffit pas)
+			RedChance = 0.55, -- chances qu'un cran ait un moment rouge
+			WarnTime = 0.45, -- le couvercle tremble (orange) avant de devenir rouge
+			WarnShrinkPerLevel = 0.08,
+			RedTime = 0.7,
+		},
+		-- Pneu : pomper pour garder l'aiguille dans le vert, sans monter dans le rouge
+		Pressure = {
+			Pump = 0.12,
+			LeakMin = 0.25, -- fuite (par seconde), tirée au sort entre ces valeurs
+			LeakMax = 0.6,
+			LeakChange = 1.6, -- secondes entre deux changements de fuite
+			LeakLevelBonus = 0.06, -- fuite plus forte à chaque niveau
+			GreenMin = 0.5,
+			GreenMax = 0.74,
+			RedMin = 0.86, -- au-dessus : le pneu éclate (raté, la pression retombe)
+			ResetLevel = 0.35,
+			PerfectInside = 0.8, -- part du temps dans le vert pour un Perfect
+			GoodInside = 0.5,
+		},
+		-- Clous : taper quand le marteau est au-dessus du clou
+		-- (un seul passage du marteau par pulsation, notation au temps)
+		Hammer = {
+			SweepFraction = 0.75, -- part de la pulsation où le marteau traverse la planche (aller)
+			PerfectTime = 0.08, -- secondes d'écart avec le passage au-dessus du clou
+			GoodTime = 0.18,
+			BentLevel = 1, -- clous tordus : deux coups
+			BentChance = 0.3,
+			ThumbLevel = 2, -- le pouce du petit voisin est sur la planche
+			ThumbChance = 0.5,
+		},
+		-- Voiture : glisser pour rester sur la route et éviter les obstacles
+		Steer = {
+			RoadWidth = 0.34,
+			CurveAmplitude = 0.2,
+			CurvePerLevel = 0.03,
+			ScrollSpeed = 1.1,
+			ObstacleEvery = 2, -- un obstacle toutes les 2 pulsations...
+			ObstacleEveryMin = 1, -- ...jusqu'à 1 aux niveaux élevés
+			HitRadius = 0.09,
+			PerfectMax = 0.08, -- écart moyen au milieu de la route
+			GoodMax = 0.16, -- au-delà : sorti de la route (raté)
+		},
+		-- Piano : glisser à gauche / à droite vers la voie libre
+		Lanes = {
+			FallFactor = 1.6, -- temps de chute d'une vague (× intervalle)
+			FallPerLevel = 0.12,
+			FallMin = 1.1,
+			DoubleLevel = 1, -- deux vagues rapprochées
+			DoubleChance = 0.25,
+			LastSecond = 0.3, -- esquive dans les 0,3 dernières secondes = Good
+		},
+		-- Transats : lâcher le transat pile au-dessus de la pile, ce qui dépasse tombe
+		Stack = {
+			StartWidth = 0.4,
+			MinWidth = 0.1,
+			SweepFactor = 2, -- un aller-retour du transat dure 2 intervalles
+			PerfectSnap = 0.03, -- à moins de 3 % : posé parfaitement, rien ne tombe
+			GoodMax = 0.12, -- au-delà : raté (le transat tombe à côté)
+			SpeedPerLevel = 0.12,
+			Visible = 6, -- transats visibles avant que la vue monte
+		},
+		-- Courses : rattraper les fruits, éviter les objets interdits
+		Catch = {
+			FallFactor = 1.3,
+			MinDistance = 0.25, -- chaque objet tombe au moins à cette distance du panier
+			PerfectMax = 0.06,
+			GoodMax = 0.13,
+			HazardLevel = 1,
+			HazardChance = 0.25,
+			BounceLevel = 2, -- fruits qui rebondissent de gauche à droite
+			BounceChance = 0.35,
+		},
+		-- Touriste : retenir le chemin sur le plan, puis le refaire en glissant
+		Sequence = {
+			Length = 3,
+			LengthPerLevel = 1,
+			MaxLength = 5,
+			ShowPerStep = 0.45, -- secondes d'affichage par virage
+			PerfectPerStep = 0.55, -- refait en moins de 0,55 s par virage = Perfect
+		},
+
+		-- Kevin : glisser dans le sens de son bras, le plus vite possible
+		Reaction = {
+			WaitMin = 0.25, -- attente avant que Kevin bouge (on ne peut pas deviner)
+			WaitMax = 0.6,
+			PerfectMax = 0.42,
+			GoodMax = 0.75,
+			FeintLevel = 1, -- feintes : le bras part d'un côté puis change
+			FeintChance = 0.3,
+			FeintTime = 0.35,
+		},
+		-- Brayan : garder sa crème solaire dans le soleil, éviter les nuages
+		Spotlight = {
+			Radius = 0.16,
+			JumpEvery = 1.8, -- le soleil saute (secondes)...
+			JumpWarn = 0.45, -- ...annoncé par un cercle à sa prochaine place
+			CloudLevel = 1,
+			CloudSpeed = 0.25,
+			PerfectInside = 0.8,
+			GoodInside = 0.5,
+		},
+		-- Coach Turbo : deux pistes, toucher le côté de la note quand elle touche la ligne
+		Beats = {
+			FallFactor = 1.5,
+			FallPerLevel = 0.15,
+			LongLevel = 1, -- notes longues : maintenir jusqu'au bout
+			LongChance = 0.3,
+			LongLength = 0.7, -- longueur (× intervalle)
+		},
+		-- Monsieur Pas-Les-Jambes : glisser vers son poing au moment du choc
+		Wobble = {
+			Approach = 1.0, -- temps d'arrivée du poing (× intervalle)
+			ApproachPerLevel = 0.12,
+			DoubleLevel = 2, -- deux poings à la suite
+			DoubleChance = 0.3,
+			UpLevel = 1, -- coups venant aussi d'en haut
+		},
+		-- Roi du Quartier : glisser la combinaison avant que le ventilateur l'efface
+		Combo = {
+			Length = 4,
+			LongLevel = 2, -- 5 flèches à la dernière manche
+			PerfectFraction = 0.4, -- fini en moins de 40 % du temps = Perfect
+			GoodFraction = 0.75,
 		},
 	},
 

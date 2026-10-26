@@ -1,88 +1,178 @@
--- Mini-jeu « Wobble » (boss : Monsieur Pas-Les-Jambes) : tenir en équilibre sur ses jambes minuscules.
--- La bille dérive dans tous les sens ; la ramener au centre (souris / doigt = direction de la poussée,
--- ou ZQSD/WASD / stick). Noté sur chaque pulsation selon la distance moyenne au centre.
+-- Mini-jeu « Wobble » (boss : Monsieur Pas-Les-Jambes, D81) : il pousse avec son poing ; le poing arrive d'un côté
+-- (sa trajectoire est tracée), glisser le pouce vers lui (n'importe où) au moment du choc pour le bloquer.
+-- Trop tôt, trop tard ou mauvais sens = on vacille (raté). Le poing arrive plus vite à chaque manche.
+-- Surprises : coups venant d'en haut (niveau Wobble.UpLevel), deux poings à la suite (niveau Wobble.DoubleLevel).
+-- Clavier : flèches, ZQSD/WASD ; manette : croix, coup de stick.
 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Kit = require(script.Parent.Parent.MinigameKit)
 local Ui = require(script.Parent.Parent.Ui)
 
-local DRIFT = 0.55
-local INSTABILITY = 1.1
-local CONTROL = 1.6
+local SETTINGS = Balance.Minigames.Wobble
+local ORIGIN = { Left = Vector2.new(-0.05, 0.5), Right = Vector2.new(1.05, 0.5), Up = Vector2.new(0.5, -0.05) }
+local CENTER = Vector2.new(0.5, 0.5)
+local CONTACT = 0.16 -- distance au centre où le poing touche
 
 local Wobble = {}
 
 function Wobble.new(parent: GuiObject, interval: number, onRep: (string) -> (), options)
 	local self = Kit.new(parent, interval, onRep, options)
-	local panel = self:Panel(UDim2.fromOffset(340, 340))
-	self:TrackPointer()
+	local panel = self:Panel(UDim2.fromOffset(360, 360))
+	local rng = self:Random()
 
-	local plate = Ui.create("Frame", {
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(290, 290),
-		BackgroundColor3 = Color3.fromRGB(200, 70, 70),
-		BackgroundTransparency = 0.3,
+	local arena = Ui.create("Frame", {
+		Position = UDim2.fromOffset(10, 10),
+		Size = UDim2.new(1, -20, 1, -20),
+		BackgroundColor3 = Color3.fromRGB(45, 35, 70),
+		ClipsDescendants = true,
 		Parent = panel,
-	}, { Ui.corner(UDim.new(1, 0)) })
+	}, { Ui.corner(UDim.new(0, 12)) })
 	Ui.create("Frame", {
 		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromScale(0.7, 0.7),
-		BackgroundColor3 = Color3.fromRGB(90, 230, 90),
-		BackgroundTransparency = 0.3,
-		Parent = plate,
+		Position = UDim2.fromScale(0.5, 0.62),
+		Size = UDim2.fromOffset(130, 22),
+		BackgroundColor3 = Color3.fromRGB(110, 90, 150),
+		Parent = arena,
 	}, { Ui.corner(UDim.new(1, 0)) })
-	Ui.create("Frame", {
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromScale(0.3, 0.3),
-		BackgroundColor3 = Color3.fromRGB(255, 215, 40),
-		BackgroundTransparency = 0.2,
-		Parent = plate,
-	}, { Ui.corner(UDim.new(1, 0)) })
-	local ball = self:Emoji(plate, "🦵", 50, 4)
+	local me = self:Emoji(arena, "🧍", 90, 4)
+	me.Position = UDim2.fromScale(0.5, 0.5)
+	local shield = self:Emoji(arena, "🛡️", 54, 5)
+	shield.Visible = false
 
-	-- Position de la bille : (0,0) = centre, rayon 1 = bord du plateau
-	local position = Vector2.zero
-	local drift = Vector2.zero
-	local nextDrift = 0
-	local errorSum, total = 0, 0
-	local cycle = 0
-	local strength = DRIFT / self.timingScale
+	local approach = interval * math.max(SETTINGS.Approach - SETTINGS.ApproachPerLevel * self.level, 0.55)
+	-- { side, impactAt, label, lane (trajectoire), resolved }
+	local fists = {}
+	local nextFist = os.clock() + interval * 0.4
+	local blockAt = -math.huge
+	local blockSide = "Left"
+	local wobbleAt = -math.huge
 
-	self:OnStep(function(dt, t)
-		if self.auto then
-			position = Vector2.zero
-		else
-			if t >= nextDrift then
-				local angle = math.random() * 2 * math.pi
-				drift = Vector2.new(math.cos(angle), math.sin(angle)) * strength
-				nextDrift = t + 0.7
+	local function spawnFist(at: number)
+		local sides = { "Left", "Right" }
+		if self.level >= SETTINGS.UpLevel then
+			table.insert(sides, "Up")
+		end
+		local side = sides[rng:NextInteger(1, #sides)]
+		if side == "Up" then
+			self:Announce("Minigame.Twist.Wobble.Up")
+		end
+		local origin = ORIGIN[side]
+		local horizontal = side ~= "Up"
+		table.insert(fists, {
+			side = side,
+			spawnAt = at,
+			impactAt = at + approach,
+			label = self:Emoji(arena, "👊", 64, 6),
+			lane = Ui.create("Frame", {
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Position = UDim2.fromScale((origin.X + CENTER.X) / 2, (origin.Y + CENTER.Y) / 2),
+				Size = if horizontal then UDim2.new(0.5, 0, 0, 16) else UDim2.new(0, 16, 0.5, 0),
+				BackgroundColor3 = Color3.fromRGB(255, 90, 90),
+				BackgroundTransparency = 0.75,
+				ZIndex = 2,
+				Parent = arena,
+			}, { Ui.corner(UDim.new(1, 0)) }),
+			resolved = false,
+		})
+	end
+
+	local function clear(index: number)
+		local fist = fists[index]
+		fist.label:Destroy()
+		fist.lane:Destroy()
+		table.remove(fists, index)
+	end
+
+	local function resolve(index: number, quality: string)
+		local fist = fists[index]
+		fist.resolved = true
+		if quality == "Miss" then
+			wobbleAt = os.clock()
+		end
+		self:Rep(quality, me)
+		task.delay(0.15, function()
+			for position, other in fists do
+				if other == fist then
+					clear(position)
+					break
+				end
 			end
-			local control = self:HeldDirection()
-			if control.Magnitude == 0 and self.pointerActive then
-				-- Le pointeur indique où pousser, par rapport au centre du plateau
-				local relative = self:PointerIn(plate) * 2 - Vector2.one
-				control = if relative.Magnitude > 1 then relative.Unit else relative
-			end
-			local velocity = drift + position * INSTABILITY + control * CONTROL
-			position += velocity * dt
-			if position.Magnitude > 1 then
-				position = position.Unit
+		end)
+	end
+
+	self:OnSwipe(function(direction)
+		local now = os.clock()
+		-- Le poing le plus proche du choc
+		local best, bestOffset = nil, math.huge
+		for index, fist in fists do
+			local offset = math.abs(fist.impactAt - now)
+			if not fist.resolved and offset < bestOffset then
+				best, bestOffset = index, offset
 			end
 		end
-		ball.Position = UDim2.fromScale(0.5 + position.X * 0.45, 0.5 + position.Y * 0.45)
-
-		errorSum += position.Magnitude * dt
-		total += dt
-		local current = math.floor(t / interval)
-		if current > cycle then
-			cycle = current
-			local average = if total > 0 then errorSum / total else 1
-			errorSum, total = 0, 0
-			self:Rep(self:GradeError(average, 0.15, 0.35))
+		if not best then
+			return
 		end
+		local fist = fists[best]
+		-- Trop tôt (le poing est encore loin) : on lance le bras dans le vide
+		if bestOffset > interval * 0.5 then
+			return
+		end
+		blockAt = now
+		blockSide = direction
+		local quality = if direction == fist.side then self:GradeOffset(bestOffset) else "Miss"
+		resolve(best, quality)
 	end)
+	self:Guide(panel, "SwipeLeft")
+
+	self:OnStep(function()
+		local now = os.clock()
+		if now >= nextFist then
+			spawnFist(nextFist)
+			nextFist += interval
+			if self.level >= SETTINGS.DoubleLevel and rng:NextNumber() < SETTINGS.DoubleChance then
+				-- Deuxième poing juste derrière, puis une pause (la cadence moyenne ne change pas)
+				spawnFist(nextFist - interval * 0.5)
+				nextFist += interval * 0.5
+				self:Announce("Minigame.Twist.Wobble.Double")
+			end
+		end
+		for index = #fists, 1, -1 do
+			local fist = fists[index]
+			local progress = math.clamp((now - fist.spawnAt) / approach, 0, 1)
+			local origin = ORIGIN[fist.side]
+			local stop = CENTER + (origin - CENTER).Unit * CONTACT
+			local position = origin:Lerp(stop, progress)
+			fist.label.Position = UDim2.fromScale(position.X, position.Y)
+			fist.label.Rotation = if fist.side == "Right" then 180 elseif fist.side == "Up" then 90 else 0
+			fist.lane.BackgroundTransparency = 0.85 - 0.35 * progress
+			-- Pas bloqué à temps : on vacille
+			if not fist.resolved and now - fist.impactAt > Balance.TimingWindows.Good * self.timingScale then
+				resolve(index, "Miss")
+			end
+		end
+		local first = fists[1]
+		if first and not first.resolved then
+			self.guideDirection = first.side
+			if math.abs(first.impactAt - now) < 0.02 then
+				self:GuideCue()
+			end
+		end
+		-- Bouclier dans le sens du blocage, personnage qui vacille après un raté
+		local sinceBlock = now - blockAt
+		shield.Visible = sinceBlock < 0.25
+		local offset = (ORIGIN[blockSide] or CENTER) - CENTER
+		shield.Position = UDim2.fromScale(0.5 + offset.X * 0.25, 0.5 + offset.Y * 0.25)
+		local sinceWobble = now - wobbleAt
+		me.Rotation = if sinceWobble < 0.5 then math.sin(sinceWobble * 30) * 25 * (1 - sinceWobble / 0.5) else 0
+	end)
+
+	-- État de la partie pour les tests automatiques (tests/minigames_bot.luau) : ne change rien au jeu
+	function self.Probe()
+		return { fists = fists }
+	end
 
 	return self
 end

@@ -1,6 +1,6 @@
 # Aider la ville
 
-> **D80 : cette fiche fait de nouveau foi.** La refonte de Codex (D76 à D79, « terrain de force ») a été abandonnée et ses mini-jeux supprimés ; sa fiche est archivée dans `design/archive/PLAYGROUND_codex_abandonne.md`. Plus de mode Auto (D79) ; une répétition ratée rapporte peu et les fenêtres de notation se resserrent pendant la série (D80).
+> **D80, D81 : cette fiche fait foi.** La refonte de Codex (D76 à D79) est abandonnée (archive : `design/archive/PLAYGROUND_codex_abandonne.md`). Le geste exact de chaque mini-jeu, ses surprises et les règles communes (téléphone d'abord, main fantôme, plus de mode Auto) sont décrits dans [MINIJEUX.md](MINIJEUX.md).
 
 Les habitants ont des problèmes absurdes. Les aider **rapporte du Cash**, la seule façon d'en gagner régulièrement.
 
@@ -19,14 +19,14 @@ Les habitants ont des problèmes absurdes. Les aider **rapporte du Cash**, la se
 
 | Aide | PNJ | Mini-jeu | Stade requis | Cash ❓ |
 |---|---|---|---|---:|
-| Ouvrir le bocal de cornichons | Maman | Twist (dévisser en cercles) | Normie | 5 |
-| Gonfler le pneu du vélo | Le livreur dépassé | Pressure (garder la pression) | Normie | 8 |
-| Planter les clous de la cabane | Le petit voisin | Hammer (marteau au-dessus du clou) | Gym Rat | 15 |
-| Pousser la voiture du voisin | Le voisin | Steer (rester sur la route) | Bro | 30 |
-| Porter le piano de Mme Do-Ré | Mme Do-Ré | Lanes (rejoindre la voie libre) | Bro | 50 |
-| Empiler les transats | Le maître-nageur débordé | Stack (empiler pile au-dessus) | Alpha | 80 |
-| Rattraper les courses | L'épicier maladroit | Catch (panier) | Chad | 120 |
-| Indiquer le chemin | Le touriste perdu | Sequence (mémoriser des flèches) | Gigachad | 180 |
+| Ouvrir le bocal de cornichons | Maman | Twist (taper vite, s'arrêter au rouge) | Normie | 5 |
+| Gonfler le pneu du vélo | Le livreur dépassé | Pressure (pomper dans le vert, pas dans le rouge) | Normie | 8 |
+| Planter les clous de la cabane | Le petit voisin | Hammer (frapper quand le marteau passe au-dessus du clou) | Gym Rat | 15 |
+| Pousser la voiture du voisin | Le voisin | Steer (rester sur la route, éviter les obstacles) | Bro | 30 |
+| Porter le piano de Mme Do-Ré | Mme Do-Ré | Lanes (glisser vers la voie libre) | Bro | 50 |
+| Empiler les transats | Le maître-nageur débordé | Stack (ce qui dépasse tombe) | Alpha | 80 |
+| Rattraper les courses | L'épicier maladroit | Catch (panier, éviter chaussures et cailloux) | Chad | 120 |
+| Indiquer le chemin | Le touriste perdu | Sequence (retenir le chemin sur le plan, le glisser) | Gigachad | 180 |
 
 Le Cash d'une aide augmente avec le stade requis. Les anciennes aides restent faisables mais rapportent moins que les récentes.
 

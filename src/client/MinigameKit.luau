@@ -6,21 +6,51 @@
 --   minigame:Destroy()
 -- options.timingScale (< 1 = fenêtres plus serrées, utilisé en combat de boss et en duel)
 -- options.seed (graine du motif : en duel, les deux joueurs ont exactement la même suite)
+-- options.level (0, 1, 2… : difficulté donnée par le serveur ; débloque les surprises de chaque jeu, D81)
+-- options.name (nom du mini-jeu : la main fantôme ne se montre que les premières fois)
+--
+-- Pensé d'abord pour le téléphone (D81) : on joue n'importe où sur l'écran, d'un seul pouce, sans petit bouton.
+-- Clavier, souris et manette donnent les mêmes gestes.
 
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Ui = require(script.Parent.Ui)
+
+local SETTINGS = Balance.Minigames
 
 export type Options = {
 	timingScale: number?,
 	seed: number?, -- graine du motif (duels : les deux joueurs jouent la même suite)
+	level: number?,
+	name: string?,
+	total: number?,
 }
+
+-- Couleurs communes des notes
+local QUALITY_COLORS = {
+	Perfect = Color3.fromRGB(255, 215, 40),
+	Good = Color3.fromRGB(90, 230, 90),
+	Miss = Color3.fromRGB(255, 80, 80),
+}
+
+-- Nombre de fois où la main fantôme a déjà été montrée pour chaque mini-jeu (pendant la session)
+local guidesShown: { [string]: number } = {}
+
+-- Réglages du joueur (vibrations, effets d'écran) : branché par MinigameController
+local settingsGet: ((string) -> boolean)? = nil
 
 local Kit = {}
 Kit.__index = Kit
+
+-- Source des gestes : l'écran, la souris, le clavier et la manette. Les tests automatiques la remplacent par de faux
+-- gestes (tests/minigames_bot.luau) ; en jeu, c'est toujours UserInputService.
+Kit.Input = UserInputService :: any
 
 -- Directions communes (flèches, ZQSD/WASD, manette, boutons à l'écran)
 Kit.DIRECTIONS = { "Up", "Down", "Left", "Right" }
@@ -52,7 +82,29 @@ function Kit.new(parent: GuiObject, interval: number, onRep: (string) -> (), opt
 	self.connections = {}
 	self.pointer = Vector2.zero
 	self.pointerActive = false
+	self.level = (options and options.level) or 0
+	self.name = (options and options.name) or ""
+	self.seed = options and options.seed
+	self.total = options and options.total -- répétitions du run (nil si inconnu)
+	self.reps = 0 -- répétitions notées
+	self.lastSendAt = -math.huge
+	self.dragDelta = Vector2.zero
+	self.dragging = false
 	return self
+end
+
+Kit.QUALITY_COLORS = QUALITY_COLORS
+
+function Kit.SetSettingsGetter(getter: (string) -> boolean)
+	settingsGet = getter
+end
+
+-- Tire au sort avec la graine du run si elle existe (duels : même suite pour les deux joueurs)
+function Kit:Random(): Random
+	if not self.rng then
+		self.rng = Random.new(self.seed or math.floor(os.clock() * 1000) % 2 ^ 31)
+	end
+	return self.rng
 end
 
 -- Panneau principal (à droite de l'écran). Un TextButton si `tappable`, pour capter les touches.
@@ -121,8 +173,9 @@ function Kit:Connect(signal: RBXScriptSignal, callback: (...any) -> ())
 end
 
 -- Appelle `callback(dt, t)` à chaque image (t = secondes depuis le début du mini-jeu)
+-- Kit.StepSignal : remplace RenderStepped pour les tests dans Studio réduit (l'affichage est alors en pause)
 function Kit:OnStep(callback: (number, number) -> ())
-	self:Connect(RunService.RenderStepped, function(dt)
+	self:Connect(Kit.StepSignal or RunService.RenderStepped, function(dt)
 		callback(dt, os.clock() - self.startTime)
 	end)
 end
@@ -131,29 +184,189 @@ local function isPress(input: InputObject): boolean
 	return input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch
 end
 
--- Appui « action » : clic / toucher sur `zone` (ou n'importe où si nil), Espace, bouton A
-function Kit:OnPress(callback: () -> (), zone: GuiObject?)
-	if zone then
-		self:Connect(zone.InputBegan, function(input)
-			if isPress(input) then
-				callback()
-			end
-		end)
+-- Vrai si l'écran est touché sur un bouton de l'interface hors du mini-jeu (Stop…) : ce n'est pas un geste de jeu
+function Kit:_overButton(position: Vector3): boolean
+	local playerGui = Players.LocalPlayer:FindFirstChildOfClass("PlayerGui")
+	if not playerGui then
+		return false
 	end
-	self:Connect(UserInputService.InputBegan, function(input)
+	for _, object in playerGui:GetGuiObjectsAtPosition(position.X, position.Y) do
+		if
+			object:IsA("GuiButton")
+			and object.Visible
+			and object ~= self.root
+			and not (self.root and object:IsDescendantOf(self.root))
+		then
+			return true
+		end
+	end
+	return false
+end
+
+-- Appui « action » : toucher / clic n'importe où sur l'écran (sauf sur un bouton), Espace, bouton A.
+-- `zone` n'est plus utilisé : l'écran entier compte, on joue d'un pouce sans viser (D81).
+function Kit:OnPress(callback: () -> (), _zone: GuiObject?)
+	self:Connect(Kit.Input.InputBegan, function(input)
 		local key = input.KeyCode == Enum.KeyCode.Space or input.KeyCode == Enum.KeyCode.ButtonA
-		if key or (not zone and isPress(input)) then
+		if key or (isPress(input) and not self:_overButton(input.Position)) then
 			callback()
 		end
 	end)
 end
 
 function Kit:OnRelease(callback: () -> ())
-	self:Connect(UserInputService.InputEnded, function(input)
+	self:Connect(Kit.Input.InputEnded, function(input)
 		if isPress(input) or input.KeyCode == Enum.KeyCode.Space or input.KeyCode == Enum.KeyCode.ButtonA then
 			callback()
 		end
 	end)
+end
+
+-- Côté touché : moitié gauche ou droite de l'écran (deux pouces), A / D, flèches, gâchettes et croix de manette.
+-- `release` (facultatif) : appelé quand ce doigt ou cette touche est relâché.
+local SIDE_KEYS = {
+	[Enum.KeyCode.A] = "Left",
+	[Enum.KeyCode.Q] = "Left",
+	[Enum.KeyCode.Left] = "Left",
+	[Enum.KeyCode.DPadLeft] = "Left",
+	[Enum.KeyCode.ButtonL1] = "Left",
+	[Enum.KeyCode.ButtonL2] = "Left",
+	[Enum.KeyCode.D] = "Right",
+	[Enum.KeyCode.Right] = "Right",
+	[Enum.KeyCode.DPadRight] = "Right",
+	[Enum.KeyCode.ButtonR1] = "Right",
+	[Enum.KeyCode.ButtonR2] = "Right",
+}
+function Kit:OnSide(callback: (string) -> (), release: ((string) -> ())?)
+	local held: { [InputObject]: string } = {}
+	self:Connect(Kit.Input.InputBegan, function(input)
+		local side = SIDE_KEYS[input.KeyCode]
+		if not side and isPress(input) and not self:_overButton(input.Position) then
+			local camera = workspace.CurrentCamera
+			local width = if camera then camera.ViewportSize.X else 1000
+			side = if input.Position.X < width / 2 then "Left" else "Right"
+		end
+		if side then
+			held[input] = side
+			callback(side)
+		end
+	end)
+	self:Connect(Kit.Input.InputEnded, function(input)
+		local side = held[input]
+		if side then
+			held[input] = nil
+			if release then
+				release(side)
+			end
+		end
+	end)
+end
+
+-- Glissé : un geste du doigt (ou de la souris bouton enfoncé) dans une direction, n'importe où sur l'écran.
+-- Le geste compte dès que le doigt a assez bougé (pas besoin de le lever) : un seul par appui.
+-- Clavier (flèches, ZQSD/WASD), croix et coup de stick de manette donnent les mêmes directions.
+function Kit:OnSwipe(callback: (string) -> ())
+	local starts: { [InputObject]: Vector2 } = {}
+	local fired: { [InputObject]: boolean } = {}
+	local function threshold(): number
+		local camera = workspace.CurrentCamera
+		local height = if camera then camera.ViewportSize.Y else 600
+		return math.max(SETTINGS.SwipeMinPixels, height * SETTINGS.SwipeScreenFraction)
+	end
+	local function fire(delta: Vector2)
+		if math.abs(delta.X) > math.abs(delta.Y) then
+			callback(if delta.X > 0 then "Right" else "Left")
+		else
+			callback(if delta.Y > 0 then "Down" else "Up")
+		end
+	end
+	self:Connect(Kit.Input.InputBegan, function(input)
+		if isPress(input) and not self:_overButton(input.Position) then
+			starts[input] = Vector2.new(input.Position.X, input.Position.Y)
+			fired[input] = nil
+		end
+		local direction = DIRECTION_KEYS[input.KeyCode]
+		if direction then
+			callback(direction)
+		end
+	end)
+	-- Coup de stick : la direction compte quand le stick dépasse le seuil, puis il doit revenir au centre
+	local stickArmed = true
+	self:Connect(Kit.Input.InputChanged, function(input)
+		if input.KeyCode == Enum.KeyCode.Thumbstick1 then
+			local stick = Vector2.new(input.Position.X, -input.Position.Y)
+			if stick.Magnitude < 0.3 then
+				stickArmed = true
+			elseif stickArmed and stick.Magnitude > 0.75 then
+				stickArmed = false
+				fire(stick)
+			end
+			return
+		end
+		local key: InputObject? = nil
+		if starts[input] then
+			key = input
+		elseif input.UserInputType == Enum.UserInputType.MouseMovement then
+			-- Souris : le geste appartient à l'appui du bouton gauche en cours
+			for pressInput in starts do
+				if pressInput.UserInputType == Enum.UserInputType.MouseButton1 then
+					key = pressInput
+				end
+			end
+		end
+		if not key or fired[key] then
+			return
+		end
+		local delta = Vector2.new(input.Position.X, input.Position.Y) - starts[key]
+		if delta.Magnitude >= threshold() then
+			fired[key] = true
+			fire(delta)
+		end
+	end)
+	self:Connect(Kit.Input.InputEnded, function(input)
+		starts[input] = nil
+		fired[input] = nil
+	end)
+end
+
+-- Glisser-déplacer relatif (comme un pavé tactile) : le doigt bouge n'importe où et l'objet suit son déplacement,
+-- le pouce ne cache jamais ce qu'il déplace. ConsumeDrag() rend le déplacement (pixels) depuis le dernier appel.
+function Kit:TrackDrag()
+	local touch: InputObject? = nil
+	local last: Vector2? = nil
+	self:Connect(Kit.Input.InputBegan, function(input)
+		if isPress(input) and touch == nil and not self:_overButton(input.Position) then
+			touch = input
+			last = Vector2.new(input.Position.X, input.Position.Y)
+			self.dragging = true
+		end
+	end)
+	self:Connect(Kit.Input.InputChanged, function(input)
+		local moved = input == touch
+			or (
+				touch ~= nil
+				and touch.UserInputType == Enum.UserInputType.MouseButton1
+				and input.UserInputType == Enum.UserInputType.MouseMovement
+			)
+		if moved and last then
+			local position = Vector2.new(input.Position.X, input.Position.Y)
+			self.dragDelta += position - last
+			last = position
+		end
+	end)
+	self:Connect(Kit.Input.InputEnded, function(input)
+		if input == touch then
+			touch = nil
+			last = nil
+			self.dragging = false
+		end
+	end)
+end
+
+function Kit:ConsumeDrag(): Vector2
+	local delta = self.dragDelta
+	self.dragDelta = Vector2.zero
+	return delta
 end
 
 -- Suivi du pointeur (souris, doigt) en coordonnées d'écran : self.pointer, self.pointerActive
@@ -170,20 +383,20 @@ function Kit:TrackPointer()
 			and point.X <= root.AbsolutePosition.X + root.AbsoluteSize.X
 			and point.Y <= root.AbsolutePosition.Y + root.AbsoluteSize.Y
 	end
-	self:Connect(UserInputService.InputBegan, function(input)
+	self:Connect(Kit.Input.InputBegan, function(input)
 		if input.UserInputType == Enum.UserInputType.Touch and touch == nil and inPanel(position(input)) then
 			touch = input
 			self.pointer = position(input)
 			self.pointerActive = true
 		end
 	end)
-	self:Connect(UserInputService.InputChanged, function(input)
+	self:Connect(Kit.Input.InputChanged, function(input)
 		if input == touch or (touch == nil and input.UserInputType == Enum.UserInputType.MouseMovement) then
 			self.pointer = position(input)
 			self.pointerActive = true
 		end
 	end)
-	self:Connect(UserInputService.InputEnded, function(input)
+	self:Connect(Kit.Input.InputEnded, function(input)
 		if input == touch then
 			touch = nil
 			self.pointerActive = false
@@ -203,7 +416,7 @@ end
 
 -- Direction appuyée (clavier / croix de manette). Les boutons à l'écran passent par AddDirectionButtons.
 function Kit:OnDirection(callback: (string) -> ())
-	self:Connect(UserInputService.InputBegan, function(input)
+	self:Connect(Kit.Input.InputBegan, function(input)
 		local direction = DIRECTION_KEYS[input.KeyCode]
 		if direction then
 			callback(direction)
@@ -314,11 +527,285 @@ function Kit:GradeError(err: number, perfectMax: number, goodMax: number): strin
 	return "Miss"
 end
 
-function Kit:Rep(quality: string)
-	self.onRep(quality)
+-- Petite vibration (téléphone et manette), sauf si le joueur l'a coupée dans les réglages.
+-- kind : "Light" (réussite), "Strong" (Perfect, choc), "Miss" (raté)
+function Kit.Haptic(kind: string)
+	if settingsGet and not settingsGet("Vibration") then
+		return
+	end
+	if UserInputService.TouchEnabled then
+		pcall(function()
+			local effect = Instance.new("HapticEffect")
+			effect.Type = if kind == "Strong"
+				then Enum.HapticEffectType.GameplayCollision
+				elseif kind == "Miss" then Enum.HapticEffectType.UINotification
+				else Enum.HapticEffectType.UIClick
+			effect.Parent = workspace.CurrentCamera
+			effect:Play()
+			task.delay(1, function()
+				effect:Destroy()
+			end)
+		end)
+	end
+	if UserInputService.GamepadEnabled then
+		pcall(function()
+			local HapticService = game:GetService("HapticService")
+			local strength = if kind == "Strong" then 0.6 elseif kind == "Miss" then 0.4 else 0.25
+			HapticService:SetMotor(Enum.UserInputType.Gamepad1, Enum.VibrationMotor.Small, strength)
+			task.delay(0.08, function()
+				HapticService:SetMotor(Enum.UserInputType.Gamepad1, Enum.VibrationMotor.Small, 0)
+			end)
+		end)
+	end
+end
+
+-- Éclat à l'endroit du geste : un cercle qui s'ouvre et s'efface, avec des étincelles sur un Perfect
+function Kit:Burst(quality: string, at: GuiObject?)
+	local host = at or self.root
+	if not host or not host.Parent then
+		return
+	end
+	local color = QUALITY_COLORS[quality] or QUALITY_COLORS.Good
+	local ring = Ui.create("Frame", {
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.5),
+		Size = UDim2.fromOffset(30, 30),
+		BackgroundTransparency = 1,
+		ZIndex = 30,
+		Parent = host,
+	}, { Ui.corner(UDim.new(1, 0)) })
+	local stroke = Ui.stroke(color, 6, 0)
+	stroke.Parent = ring
+	local size = if quality == "Perfect" then 170 elseif quality == "Good" then 120 else 80
+	TweenService:Create(ring, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Size = UDim2.fromOffset(size, size),
+	}):Play()
+	TweenService:Create(stroke, TweenInfo.new(0.35), { Transparency = 1 }):Play()
+	task.delay(0.4, function()
+		ring:Destroy()
+	end)
+	if quality ~= "Perfect" then
+		return
+	end
+	for index = 1, 6 do
+		local angle = index / 6 * 2 * math.pi + math.random() * 0.4
+		local spark = Ui.label({
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(0.5, 0.5),
+			Size = UDim2.fromOffset(26, 26),
+			Text = "✦",
+			TextColor3 = color,
+			TextStrokeTransparency = 1,
+			ZIndex = 31,
+			Parent = host,
+		})
+		TweenService:Create(spark, TweenInfo.new(0.45, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			Position = UDim2.new(0.5, math.cos(angle) * 90, 0.5, math.sin(angle) * 90),
+			TextTransparency = 1,
+			Rotation = 90,
+		}):Play()
+		task.delay(0.5, function()
+			spark:Destroy()
+		end)
+	end
+end
+
+-- Le panneau tremble un instant (raté, choc)
+function Kit:Shake(strength: number?)
+	local root = self.root
+	if not root or self.shaking or (settingsGet and not settingsGet("ScreenFx")) then
+		return
+	end
+	self.shaking = true
+	local origin = root.Position
+	local amount = strength or 8
+	task.spawn(function()
+		for step = 1, 6 do
+			if not root.Parent then
+				break
+			end
+			local side = if step % 2 == 0 then 1 else -1
+			root.Position = origin + UDim2.fromOffset(side * amount * (1 - step / 7), 0)
+			task.wait(0.03)
+		end
+		if root.Parent then
+			root.Position = origin
+		end
+		self.shaking = false
+	end)
+end
+
+-- Instant (os.clock) à partir duquel la prochaine répétition peut partir sans être refusée : même quota que
+-- MinigameService et MinigameController (une répétition par intervalle × tolérance), plus une petite marge
+function Kit:NextRepAt(): number
+	local spacing = self.interval * (Balance.RepIntervalTolerance + 0.05)
+	return math.max(self.startTime + self.reps * spacing + SETTINGS.RepSafetyMargin, self.lastSendAt + 0.22)
+end
+
+-- Vrai si une répétition peut partir tout de suite (jeux au rythme du joueur : le geste n'est pas accepté avant)
+function Kit:RepReady(): boolean
+	return os.clock() >= self:NextRepAt()
+end
+
+-- Note une répétition : retour immédiat (éclat, vibration, tremblement), puis envoi au serveur.
+-- Si le geste arrive un peu trop tôt pour la cadence du serveur, l'envoi attend le bon moment au lieu d'être perdu.
+function Kit:Rep(quality: string, at: GuiObject?)
+	local sendAt = self:NextRepAt()
+	self.reps += 1
+	self.lastSendAt = math.max(os.clock(), sendAt)
+	self:Burst(quality, at)
+	Kit.Haptic(if quality == "Miss" then "Miss" elseif quality == "Perfect" then "Strong" else "Light")
+	if quality == "Miss" then
+		self:Shake(6)
+	end
+	if quality ~= "Miss" or self.reps >= SETTINGS.GuideMaxReps then
+		self:HideGuide()
+	end
+	local delay = sendAt - os.clock()
+	if delay <= 0 then
+		self.onRep(quality)
+	else
+		task.delay(delay, function()
+			if not self.destroyed then
+				self.onRep(quality)
+			end
+		end)
+	end
+end
+
+-- ------------------------------------------------------------------ main fantôme (première répétition guidée)
+
+-- Montre le geste avec une main au-dessus de `target` : "Tap" (appuyer), "Hold" (maintenir), "SwipeUp",
+-- "SwipeDown", "SwipeLeft", "SwipeRight", "Drag" (glisser de gauche à droite), "Sides" (un pouce de chaque côté).
+-- Pour les jeux de timing, le jeu appelle GuideCue() au bon moment : la main appuie à cet instant.
+-- Visible les premières fois de la session pour chaque mini-jeu, jusqu'à la première réussite.
+function Kit:Guide(target: GuiObject, gesture: string)
+	local count = guidesShown[self.name] or 0
+	if count >= SETTINGS.GuideSessions then
+		return
+	end
+	guidesShown[self.name] = count + 1
+	local hand = Ui.label({
+		Name = "Guide",
+		AnchorPoint = Vector2.new(0.35, 0.1),
+		Position = UDim2.fromScale(0.5, 0.5),
+		Size = UDim2.fromOffset(64, 64),
+		Text = "👆",
+		TextStrokeTransparency = 1,
+		ZIndex = 40,
+		Parent = target,
+	})
+	self.guide = { hand = hand, cueAt = -math.huge }
+	local directions = {
+		SwipeUp = Vector2.new(0, -1),
+		SwipeDown = Vector2.new(0, 1),
+		SwipeLeft = Vector2.new(-1, 0),
+		SwipeRight = Vector2.new(1, 0),
+	}
+	self:OnStep(function(_, t)
+		local guide = self.guide
+		if not guide or not guide.hand.Parent then
+			return
+		end
+		local pressed = os.clock() - guide.cueAt < 0.2
+		local scale = if pressed then 0.78 else 1
+		local position = Vector2.new(0.5, 0.5)
+		-- Les jeux à direction changeante indiquent la bonne (self.guideDirection : "Up", "Left"…)
+		local direction = directions[if self.guideDirection then `Swipe{self.guideDirection}` else gesture]
+		local transparency = 0
+		if gesture == "Drag" then
+			position += Vector2.new(0.3 * math.sin(t * 2.2), 0)
+		elseif direction then
+			local phase = (t * 1.1) % 1
+			position += direction * (0.34 * math.min(phase * 2, 1) - 0.12)
+			transparency = if phase > 0.7 then (phase - 0.7) / 0.3 else 0
+		elseif gesture == "Hold" then
+			scale = 0.86 + 0.05 * math.sin(t * 6)
+		elseif gesture == "Sides" then
+			-- Le jeu indique le côté attendu (self.guideSide) ; sinon la main alterne
+			local side = self.guideSide or (if math.floor(t * 1.4) % 2 == 0 then "Left" else "Right")
+			position = Vector2.new(if side == "Left" then 0.25 else 0.75, 0.6)
+		end
+		guide.hand.Position = UDim2.fromScale(position.X, position.Y)
+		guide.hand.Size = UDim2.fromOffset(64 * scale, 64 * scale)
+		guide.hand.TextTransparency = transparency
+	end)
+end
+
+-- Annonce d'une nouveauté du jeu (« anneau rouge : ne touche pas ! »), une seule fois par partie et par clé
+function Kit:Announce(key: string)
+	self.announced = self.announced or {}
+	if self.announced[key] or not self.root then
+		return
+	end
+	self.announced[key] = true
+	local banner = Ui.label({
+		Name = "Announce",
+		AnchorPoint = Vector2.new(0.5, 1),
+		Position = UDim2.new(0.5, 0, 0, -6),
+		Size = UDim2.new(1, 0, 0, 40),
+		BackgroundColor3 = Color3.fromRGB(255, 90, 60),
+		BackgroundTransparency = 0.05,
+		Text = Texts.Get(key),
+		ZIndex = 35,
+		Parent = self.root,
+	})
+	Ui.corner(UDim.new(0, 10)).Parent = banner
+	Ui.create("UIPadding", {
+		PaddingLeft = UDim.new(0, 8),
+		PaddingRight = UDim.new(0, 8),
+		PaddingTop = UDim.new(0, 4),
+		PaddingBottom = UDim.new(0, 4),
+		Parent = banner,
+	})
+	banner.Size = UDim2.fromScale(1, 0)
+	TweenService:Create(banner, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+		Size = UDim2.new(1, 0, 0, 40),
+	}):Play()
+	task.delay(SETTINGS.AnnounceTime, function()
+		if banner.Parent then
+			TweenService:Create(banner, TweenInfo.new(0.3), { BackgroundTransparency = 1, TextTransparency = 1 }):Play()
+			task.delay(0.35, function()
+				banner:Destroy()
+			end)
+		end
+	end)
+end
+
+-- Espace, Entrée ou bouton A de la manette (pour les jeux dont le geste tactile est un glissé)
+function Kit:OnAction(callback: () -> ())
+	self:Connect(Kit.Input.InputBegan, function(input)
+		if
+			input.KeyCode == Enum.KeyCode.Space
+			or input.KeyCode == Enum.KeyCode.Return
+			or input.KeyCode == Enum.KeyCode.ButtonA
+		then
+			callback()
+		end
+	end)
+end
+
+-- La main fantôme appuie maintenant (montre le bon moment)
+function Kit:GuideCue()
+	if self.guide then
+		self.guide.cueAt = os.clock()
+	end
+end
+
+function Kit:HideGuide()
+	local guide = self.guide
+	if not guide then
+		return
+	end
+	self.guide = nil
+	TweenService:Create(guide.hand, TweenInfo.new(0.3), { TextTransparency = 1 }):Play()
+	task.delay(0.35, function()
+		guide.hand:Destroy()
+	end)
 end
 
 function Kit:Destroy()
+	self.destroyed = true
 	for _, connection in self.connections do
 		connection:Disconnect()
 	end

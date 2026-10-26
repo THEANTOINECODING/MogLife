@@ -1,180 +1,168 @@
--- Mini-jeu « Ring » (pompes) : un anneau rétrécit vers un cercle cible ; taper au moment où il le touche.
--- Une seule frappe comptée par cycle. Entrées : clic / toucher sur la zone, Espace, bouton A de manette.
--- Interface commune : voir Swipe.luau.
+-- Mini-jeu « Ring » (exercice : pompes, D81) : un anneau se resserre vers le cercle doré ; toucher l'écran
+-- (n'importe où) au moment où il le touche. Une répétition par cycle ; un cycle sans appui est raté.
+-- Surprises : anneau double (deux appuis rapides, niveau Ring.DoubleLevel), anneau rouge (ne pas toucher,
+-- niveau Ring.RedLevel ; le laisser passer = Perfect). Clavier : Espace ; manette : bouton A.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local Kit = require(script.Parent.Parent.MinigameKit)
 local Ui = require(script.Parent.Parent.Ui)
 
 local SETTINGS = Balance.Minigames.Ring
-local ZONE_SIZE = 300
 local TARGET_SIZE = 120
-local START_SIZE = 280
-local END_SIZE = 60
+local START_SIZE = 300
+local GOLD = Color3.fromRGB(255, 200, 40)
+local RED = Color3.fromRGB(255, 70, 70)
+local BLUE = Color3.fromRGB(120, 220, 255)
+local QUALITY_RANK = { Miss = 0, Good = 1, Perfect = 2 }
 
 local Ring = {}
-Ring.__index = Ring
 
-function Ring.new(parent: GuiObject, interval: number, onRep: (string) -> ())
-	local self = setmetatable({}, Ring)
-	self.interval = interval
-	self.timingScale = 1 -- resserré pendant la série par MinigameController
-	self.onRep = onRep
-	self.startTime = os.clock()
-	self.auto = false
-	self.lastHitIndex = -1
-	self.connections = {}
+function Ring.new(parent: GuiObject, interval: number, onRep: (string) -> (), options)
+	local self = Kit.new(parent, interval, onRep, options)
+	local panel = self:Panel(UDim2.fromOffset(330, 330))
+	local rng = self:Random()
 
-	-- La zone entière est un bouton : un tap n'importe où dessus compte
-	self.zone = Ui.create("TextButton", {
-		AnchorPoint = Vector2.new(1, 0.5),
-		Position = UDim2.new(1, -40, 0.5, 20),
-		Size = UDim2.fromOffset(ZONE_SIZE, ZONE_SIZE),
-		BackgroundColor3 = Color3.new(1, 1, 1),
-		BackgroundTransparency = 0.15,
-		AutoButtonColor = false,
-		Text = "",
-		Parent = parent,
-	}, {
-		Ui.corner(UDim.new(0, 18)),
-		Ui.gradient(Color3.fromRGB(70, 45, 110), Color3.fromRGB(25, 20, 40)),
-		Ui.stroke(Color3.fromRGB(255, 220, 120), 3, 0.2),
-	})
-
-	self.target = Ui.create("Frame", {
+	local target = Ui.create("Frame", {
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
 		Size = UDim2.fromOffset(TARGET_SIZE, TARGET_SIZE),
-		BackgroundColor3 = Color3.fromRGB(255, 200, 40),
+		BackgroundColor3 = GOLD,
 		BackgroundTransparency = 0.1,
 		ZIndex = 2,
-		Parent = self.zone,
-	}, {
-		Ui.corner(UDim.new(1, 0)),
-		Ui.stroke(Color3.new(1, 1, 1), 4, 0),
-		Ui.label({
-			Size = UDim2.fromScale(0.7, 0.7),
-			Position = UDim2.fromScale(0.15, 0.15),
-			Text = "💥",
-			TextStrokeTransparency = 1,
-			ZIndex = 2,
-		}),
-	})
+		Parent = panel,
+	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 4, 0) })
+	local icon = self:Emoji(target, "💪", 64, 3)
+	icon.Position = UDim2.fromScale(0.5, 0.5)
 
-	self.ring = Ui.create("Frame", {
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.5),
-		Size = UDim2.fromOffset(START_SIZE, START_SIZE),
-		BackgroundTransparency = 1,
-		ZIndex = 3,
-		Parent = self.zone,
-	}, {
-		Ui.corner(UDim.new(1, 0)),
-	})
-	self.ringStroke = Ui.stroke(Color3.fromRGB(120, 220, 255), 6, 0)
-	self.ringStroke.Parent = self.ring
-
-	table.insert(
-		self.connections,
-		self.zone.InputBegan:Connect(function(input)
-			if
-				input.UserInputType == Enum.UserInputType.MouseButton1
-				or input.UserInputType == Enum.UserInputType.Touch
-			then
-				self:_press()
-			end
-		end)
-	)
-	table.insert(
-		self.connections,
-		UserInputService.InputBegan:Connect(function(input)
-			if input.KeyCode == Enum.KeyCode.Space or input.KeyCode == Enum.KeyCode.ButtonA then
-				self:_press()
-			end
-		end)
-	)
-	table.insert(
-		self.connections,
-		RunService.RenderStepped:Connect(function()
-			self:_step()
-		end)
-	)
-
-	return self
-end
-
--- Taille de l'anneau selon le moment du cycle : il atteint TARGET_SIZE à HitPhase
-function Ring:_sizeAt(phase: number): number
-	local hit = SETTINGS.HitPhase
-	if phase <= hit then
-		return START_SIZE + (TARGET_SIZE - START_SIZE) * (phase / hit)
+	local function newRing(): (Frame, UIStroke)
+		local frame = Ui.create("Frame", {
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(0.5, 0.5),
+			Size = UDim2.fromOffset(START_SIZE, START_SIZE),
+			BackgroundTransparency = 1,
+			ZIndex = 4,
+			Parent = panel,
+		}, { Ui.corner(UDim.new(1, 0)) })
+		local stroke = Ui.stroke(BLUE, 7, 0)
+		stroke.Parent = frame
+		return frame, stroke
 	end
-	return TARGET_SIZE + (END_SIZE - TARGET_SIZE) * ((phase - hit) / (1 - hit))
-end
+	local rings = { { newRing() }, { newRing() } }
 
-function Ring:_step()
-	local t = os.clock() - self.startTime
-	local phase = (t / self.interval) % 1
-	local size = self:_sizeAt(phase)
-	self.ring.Size = UDim2.fromOffset(size, size)
+	-- Cycle : type ("Normal", "Double", "Red"), moments de contact, appuis reçus
+	local cycleStart = os.clock() + interval * 0.4
+	local kind = "Normal"
+	local hits: { number } = {}
+	local presses: { string } = {}
+	local pressedRed = false
+	local started = false
+	local resolved = false
 
-	-- Anneau grisé si la frappe de ce cycle est déjà utilisée
-	local index = math.floor(t / self.interval - SETTINGS.HitPhase + 0.5)
-	local used = index == self.lastHitIndex
-	self.ringStroke.Transparency = if used and not self.auto then 0.7 else 0
-
-	if self.auto and phase >= SETTINGS.HitPhase and self.lastHitIndex ~= index then
-		-- En mode auto, juste un petit effet visuel au bon moment
-		self.lastHitIndex = index
-		self:_flash(Color3.fromRGB(120, 180, 255))
+	local function newCycle(at: number)
+		cycleStart = at
+		kind = "Normal"
+		if self.level >= SETTINGS.RedLevel and rng:NextNumber() < SETTINGS.RedChance then
+			kind = "Red"
+			self:Announce("Minigame.Twist.Ring.Red")
+		elseif self.level >= SETTINGS.DoubleLevel and rng:NextNumber() < SETTINGS.DoubleChance then
+			kind = "Double"
+			self:Announce("Minigame.Twist.Ring.Double")
+		end
+		hits = { at + interval * SETTINGS.HitPhase }
+		if kind == "Double" then
+			table.insert(hits, hits[1] + interval * SETTINGS.DoubleGap)
+		end
+		presses = {}
+		pressedRed = false
+		resolved = false
 	end
-end
+	newCycle(cycleStart)
 
-function Ring:_flash(color: Color3)
-	self.target.BackgroundColor3 = color
-	task.delay(0.15, function()
-		if self.target.Parent then
-			self.target.BackgroundColor3 = Color3.fromRGB(255, 200, 40)
+	local function finish(quality: string)
+		resolved = true
+		self:Rep(quality, target)
+	end
+
+	self:OnPress(function()
+		local now = os.clock()
+		if resolved or now < cycleStart then
+			return
+		end
+		started = true
+		if kind == "Red" then
+			pressedRed = true
+			finish("Miss")
+			return
+		end
+		local index = #presses + 1
+		local hit = hits[index]
+		if not hit then
+			return
+		end
+		local quality = self:GradeOffset(math.abs(now - hit))
+		presses[index] = quality
+		-- Anneau double : la note est la moins bonne des deux ; un raté termine tout de suite
+		if quality == "Miss" or index == #hits then
+			local worst = quality
+			for _, previous in presses do
+				if QUALITY_RANK[previous] < QUALITY_RANK[worst] then
+					worst = previous
+				end
+			end
+			finish(worst)
+		else
+			self:Burst(quality, target)
 		end
 	end)
-end
+	self:Guide(panel, "Tap")
 
-function Ring:_press()
-	if self.auto then
-		return
-	end
-	local t = os.clock() - self.startTime
-	-- Index du « temps fort » le plus proche (un cycle = un temps fort)
-	local beats = t / self.interval - SETTINGS.HitPhase
-	local index = math.floor(beats + 0.5)
-	if index == self.lastHitIndex or index < 0 then
-		return
-	end
-	self.lastHitIndex = index
+	local cued = false
+	self:OnStep(function()
+		local now = os.clock()
+		if now >= cycleStart + interval then
+			if not resolved then
+				if kind == "Red" and not pressedRed then
+					-- Anneau rouge laissé passer : bien joué (seulement en jouant : attendre sans rien faire ne paie pas)
+					if started then
+						finish("Perfect")
+					end
+				elseif started then
+					finish("Miss")
+				end
+			end
+			newCycle(cycleStart + interval)
+			cued = false
+		end
+		for index, pair in rings do
+			local frame, stroke = pair[1], pair[2]
+			local hit = hits[index]
+			frame.Visible = hit ~= nil and not resolved and (presses[index] == nil)
+			if hit then
+				-- L'anneau part de START_SIZE et touche la cible à `hit`, puis continue de rétrécir
+				local lead = interval * SETTINGS.HitPhase
+				local progress = (now - (hit - lead)) / lead
+				local size = START_SIZE + (TARGET_SIZE - START_SIZE) * progress
+				frame.Size = UDim2.fromOffset(math.max(size, 40), math.max(size, 40))
+				stroke.Color = if kind == "Red" then RED else BLUE
+				stroke.Transparency = if progress < 0 then 1 else 0
+			end
+		end
+		target.BackgroundColor3 = if kind == "Red" then RED else GOLD
+		icon.Text = if kind == "Red" then "✋" else "💪"
+		if not cued and now >= hits[1] then
+			cued = true
+			self:GuideCue()
+		end
+	end)
 
-	local offset = math.abs(beats - index) * self.interval
-	local quality = "Miss"
-	if offset <= Balance.TimingWindows.Perfect * self.timingScale then
-		quality = "Perfect"
-	elseif offset <= Balance.TimingWindows.Good * self.timingScale then
-		quality = "Good"
+	-- État de la partie pour les tests automatiques (tests/minigames_bot.luau) : ne change rien au jeu
+	function self.Probe()
+		return { hits = hits, presses = #presses, kind = kind, resolved = resolved, cycleStart = cycleStart }
 	end
-	self:_flash(if quality == "Miss" then Color3.fromRGB(170, 170, 170) else Color3.fromRGB(90, 230, 90))
-	self.onRep(quality)
-end
 
-function Ring:SetAuto(on: boolean)
-	self.auto = on
-end
-
-function Ring:Destroy()
-	for _, connection in self.connections do
-		connection:Disconnect()
-	end
-	self.zone:Destroy()
+	return self
 end
 
 return Ring

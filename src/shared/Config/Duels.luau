@@ -20,6 +20,12 @@ return {
 	PerfectHalf = 0.045, -- demi-largeur du cœur doré (Perfect), × l'échelle de la manche
 	ZoneMin = 0.2, -- la zone reste entre ces deux bornes de la jauge
 	ZoneMax = 0.8,
+	-- Dernier effort (D81) : le dernier balayage de chaque manche a 3 petites zones à toucher à la suite.
+	-- 3 touchées = Perfect, 2 = Good, sinon raté. Mêmes zones pour les deux joueurs.
+	LastEffort = {
+		Zones = { 0.22, 0.5, 0.78 },
+		Half = 0.09, -- demi-largeur de chaque zone, × l'échelle de la manche
+	},
 
 	-- Poussée de chaque répétition (en « crans »). Le bras va de -LeanLimit à +LeanLimit : l'atteindre, c'est plaquer
 	-- le bras de l'adversaire sur la table (manche gagnée tout de suite) ; sinon, la manche va au côté vers lequel
