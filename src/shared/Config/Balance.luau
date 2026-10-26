@@ -223,11 +223,12 @@ return {
 		},
 		-- Pneu : pomper pour garder l'aiguille dans le vert, sans monter dans le rouge
 		Pressure = {
-			Pump = 0.12,
+			Pump = 0.14, -- environ 3 appuis par seconde pour tenir au niveau 0, 4 au plus haut
 			LeakMin = 0.25, -- fuite (par seconde), tirée au sort entre ces valeurs
 			LeakMax = 0.6,
 			LeakChange = 1.6, -- secondes entre deux changements de fuite
-			LeakLevelBonus = 0.06, -- fuite plus forte à chaque niveau
+			LeakLevelBonus = 0.04, -- fuite plus forte à chaque niveau...
+			LeakLevelMax = 3, -- ...jusqu'au niveau 3 (au-delà, il faudrait taper trop vite)
 			GreenMin = 0.5,
 			GreenMax = 0.74,
 			RedMin = 0.86, -- au-dessus : le pneu éclate (raté, la pression retombe)

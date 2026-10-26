@@ -93,7 +93,7 @@ function Pressure.new(parent: GuiObject, interval: number, onRep: (string) -> ()
 			nextLeakChange = t + SETTINGS.LeakChange
 			leak = SETTINGS.LeakMin
 				+ rng:NextNumber() * (SETTINGS.LeakMax - SETTINGS.LeakMin)
-				+ SETTINGS.LeakLevelBonus * self.level
+				+ SETTINGS.LeakLevelBonus * math.min(self.level, SETTINGS.LeakLevelMax)
 		end
 		level = math.max(level - leak * dt, 0)
 		-- Trop gonflé : il éclate

@@ -4,6 +4,8 @@
 
 local PhysicsService = game:GetService("PhysicsService")
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local ServerStorage = game:GetService("ServerStorage")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
@@ -98,6 +100,17 @@ function MinigameService.IsBusy(player: Player): boolean
 	return runs[player] ~= nil
 end
 
+-- Niveau du mini-jeu. Dans Studio seulement, l'attribut DevMinigameLevel (sur ServerStorage, ou sur le joueur) force
+-- un niveau minimum pour tester toutes les surprises sans changer de stade ; aucun effet dans le jeu publié.
+local function levelFor(player: Player, spec: RunSpec): number
+	local level = spec.level or 0
+	local forced = player:GetAttribute("DevMinigameLevel") or ServerStorage:GetAttribute("DevMinigameLevel")
+	if RunService:IsStudio() and typeof(forced) == "number" then
+		level = math.max(level, forced)
+	end
+	return level
+end
+
 -- Lance un run. Renvoie false si le joueur est déjà occupé.
 function MinigameService.StartRun(player: Player, spec: RunSpec): boolean
 	if runs[player] then
@@ -117,7 +130,7 @@ function MinigameService.StartRun(player: Player, spec: RunSpec): boolean
 		total = spec.total,
 		timingScale = spec.timingScale,
 		seed = spec.seed,
-		level = spec.level or 0,
+		level = levelFor(player, spec),
 		titleKey = spec.titleKey,
 		titleArgs = spec.titleArgs,
 	})
