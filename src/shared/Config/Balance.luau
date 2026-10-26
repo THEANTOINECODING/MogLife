@@ -120,7 +120,7 @@ return {
 
 	-- Multiplicateur de Mog selon la qualité de la répétition
 	Quality = {
-		Miss = 1,
+		Miss = 0.25, -- une répétition ratée ne rapporte presque rien (D80)
 		Good = 1.25,
 		Perfect = 1.6,
 	},
@@ -133,6 +133,9 @@ return {
 
 	-- Réglages propres à chaque mini-jeu (valeurs de départ, à ajuster en jouant)
 	Minigames = {
+		-- Les fenêtres de notation se resserrent pendant la série : à la dernière répétition,
+		-- elles valent (1 - SeriesTightening) × leur taille de départ (D80)
+		SeriesTightening = 0.3,
 		-- Pompes : un anneau rétrécit et touche la cible à HitPhase × intervalle
 		Ring = {
 			HitPhase = 0.75,

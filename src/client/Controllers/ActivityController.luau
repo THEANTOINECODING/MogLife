@@ -10,13 +10,11 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
-local Duels = require(ReplicatedStorage.Shared.Config.Duels)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local CameraFraming = require(script.Parent.Parent.CameraFraming)
 local MogOff = require(script.Parent.Parent.Activities.MogOff)
 local Rig = require(script.Parent.Parent.Activities.Rig)
 
-local PlaygroundConfig = require(ReplicatedStorage.Shared.Config.Playground)
 local Activities = script.Parent.Parent.Activities
 
 -- Amplitude et tremblement du mouvement selon la qualité de la répétition
@@ -267,10 +265,7 @@ local function start(update)
 	stop(player)
 	stopEmote(player)
 	-- Exercices et aides : un module par activité ; combats de boss : le Mog-off (duel de poses), pour tous les boss
-	local isPlayground = PlaygroundConfig.Games[update.minigame] and update.kind ~= "Duel"
-	local module = Activities:FindFirstChild(
-		if isPlayground then "Playground" elseif update.kind == "Boss" then "MogOff" else update.id
-	)
+	local module = Activities:FindFirstChild(if update.kind == "Boss" then "MogOff" else update.id)
 	local anchor = update.anchor
 	local character = player.Character
 	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
@@ -283,12 +278,6 @@ local function start(update)
 	end
 	local Activity = require(module)
 	local top = anchor.CFrame * CFrame.new(0, anchor.Size.Y / 2, 0)
-	if isPlayground and update.kind == "Boss" then
-		-- La table se tourne vers le boss : le joueur se tient devant lui, à la distance choisie par le serveur
-		-- (BossService), pas derrière lui (Activities/Playground.Stand)
-		local stand = tonumber(anchor:GetAttribute("StandDistance")) or PlaygroundConfig.BossStandDistances[1]
-		top = top * CFrame.new(0, 0, -(stand - PlaygroundConfig.StationStand)) * CFrame.Angles(0, math.pi, 0)
-	end
 
 	-- Son propre personnage : placé au bon endroit de la station, sans se tourner tout seul
 	if player == localPlayer then
@@ -322,7 +311,7 @@ local function start(update)
 	if update.kind ~= "Boss" then
 		animator.sweat = addSweat(character)
 		-- Duel : DuelController filme les deux joueurs (pas de gros plan sur soi seul)
-		if player == localPlayer and update.kind ~= "Duel" and (isPlayground or SettingsController.Get("CloseUp")) then
+		if player == localPlayer and update.kind ~= "Duel" and SettingsController.Get("CloseUp") then
 			task.spawn(startCloseUp, character, Activity.CloseUp, anchor, animator)
 		end
 	end
@@ -401,11 +390,6 @@ function ActivityController.Start()
 		end
 		if update.state == "Started" then
 			start(update)
-		elseif update.state == "Playground" then
-			local animator = animators[update.player]
-			if animator and animator.activity.SetState then
-				animator.activity:SetState(update.gameState)
-			end
 		elseif update.state == "Rep" then
 			onRep(update)
 		elseif update.state == "OpponentRep" then
@@ -414,16 +398,7 @@ function ActivityController.Start()
 				animator.activity:OpponentRep(update.quality)
 			end
 		elseif update.state == "Ended" then
-			if update.kind == "Duel" then
-				local animator = animators[update.player]
-				task.delay(Duels.FinishPoseTime, function()
-					if animators[update.player] == animator then
-						stop(update.player)
-					end
-				end)
-			else
-				stop(update.player)
-			end
+			stop(update.player)
 		end
 	end)
 	Remotes.EmotePlay.OnClientEvent:Connect(function(who, index)

@@ -29,8 +29,8 @@ local List: { Stage } = {
 		boss = {
 			id = "Kevin",
 			mogRequired = 50,
-			minigame = "SnackVolley",
-			interval = 1.75,
+			minigame = "Reaction",
+			interval = 1.4,
 			skill = { perfect = 0.1, good = 0.45 },
 			firstWinCash = 20,
 			styleReward = "PajamaTop",
@@ -41,8 +41,8 @@ local List: { Stage } = {
 		boss = {
 			id = "Brayan",
 			mogRequired = 400,
-			minigame = "SunbedSlalom",
-			interval = 1.65,
+			minigame = "Spotlight",
+			interval = 1.5,
 			skill = { perfect = 0.18, good = 0.5 },
 			firstWinCash = 50,
 			styleReward = "BronzeMedal",
@@ -53,8 +53,8 @@ local List: { Stage } = {
 		boss = {
 			id = "CoachTurbo",
 			mogRequired = 2_500,
-			minigame = "TreadmillTakeover",
-			interval = 1.55,
+			minigame = "Beats",
+			interval = 0.9,
 			skill = { perfect = 0.25, good = 0.5 },
 			firstWinCash = 100,
 			styleReward = "CoachWhistle",
@@ -65,8 +65,8 @@ local List: { Stage } = {
 		boss = {
 			id = "NoLegs",
 			mogRequired = 7_500,
-			minigame = "LegDayLandgrab",
-			interval = 1.95,
+			minigame = "Wobble",
+			interval = 1.5,
 			skill = { perfect = 0.3, good = 0.5 },
 			firstWinCash = 200,
 			styleReward = "TinySocks",
@@ -77,8 +77,8 @@ local List: { Stage } = {
 		boss = {
 			id = "BlockKing",
 			mogRequired = 20_000,
-			minigame = "CrownSneak",
-			interval = 1.45,
+			minigame = "Combo",
+			interval = 2.6,
 			skill = { perfect = 0.38, good = 0.48 },
 			firstWinCash = 400,
 			styleReward = "RoyalFan",
@@ -89,7 +89,7 @@ local List: { Stage } = {
 		boss = {
 			id = "PumpGod",
 			mogRequired = 45_000,
-			minigame = "GravityGauntlet",
+			minigame = "Combo",
 			interval = 2.2,
 			skill = { perfect = 0.55, good = 0.4 },
 			firstWinCash = 800,

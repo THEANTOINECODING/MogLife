@@ -12,10 +12,7 @@
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 
-local PlaygroundConfig = require(ReplicatedStorage.Shared.Config.Playground)
-local Arm = PlaygroundConfig.Arm
 local Duels = require(ReplicatedStorage.Shared.Config.Duels)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
@@ -34,11 +31,6 @@ type Side = {
 	wins: number,
 	hits: number, -- répétitions réussies pendant tout le duel (participation valide)
 	pushed: number, -- poussée de la manche en cours
-	stamina: number?,
-	held: boolean?,
-	exhaustedUntil: number?,
-	changedAt: number?,
-	participation: number?,
 	done: boolean, -- a fini sa manche
 }
 
@@ -398,46 +390,28 @@ local function resolveRound(duel: Duel)
 		winner.wins += 1
 	end
 	duel.completed += 1
+	for _, side in duel.sides do
+		local other = otherSide(duel, side)
+		sendTo(side, {
+			state = "RoundResult",
+			round = duel.round,
+			result = if winner == nil then "Draw" elseif winner == side then "Won" else "Lost",
+			knockout = pinned,
+			wins = side.wins,
+			theirWins = other.wins,
+		})
+	end
 	local a, b = duel.sides[1], duel.sides[2]
 	local over = a.wins >= Duels.RoundsToWin or b.wins >= Duels.RoundsToWin or duel.round >= Duels.Rounds
-	-- La dernière poussée plaque réellement le bras sur son coussin, même sans K.-O.
-	task.spawn(function()
-		if winner and not pinned then
-			local from = duel.lean
-			local to = winner.sign * Duels.LeanLimit
-			local started = os.clock()
-			local alpha = 0
-			repeat
-				alpha = math.clamp((os.clock() - started) / Duels.FinishSlamTime, 0, 1)
-				duel.lean = from + (to - from) * alpha * alpha
-				publishLean(duel)
-				RunService.Heartbeat:Wait()
-			until alpha >= 1 or duel.over or duel.token ~= token
-		end
+	task.delay(Duels.PauseBetweenRounds, function()
 		if duel.over or duel.token ~= token then
 			return
 		end
-		for _, side in duel.sides do
-			local other = otherSide(duel, side)
-			sendTo(side, {
-				state = "RoundResult",
-				round = duel.round,
-				result = if winner == nil then "Draw" elseif winner == side then "Won" else "Lost",
-				knockout = pinned,
-				wins = side.wins,
-				theirWins = other.wins,
-			})
+		if over then
+			finish(duel, nil)
+		else
+			startRound(duel)
 		end
-		task.delay(Duels.PauseBetweenRounds, function()
-			if duel.over or duel.token ~= token then
-				return
-			end
-			if over then
-				finish(duel, nil)
-			else
-				startRound(duel)
-			end
-		end)
 	end)
 end
 
@@ -465,80 +439,43 @@ local function pin(duel: Duel)
 	end
 end
 
--- Both forces are integrated together, so packet order cannot decide a pin.
-local function playArmRound(duel, token)
-	local elapsed, snapshot = -PlaygroundConfig.Lead, 0
-	while not duel.over and duel.token == token and not duel.sides[1].done do
-		local dt = math.min(RunService.Heartbeat:Wait(), 0.1)
-		elapsed += dt
-		local forces = {}
-		for i, side in duel.sides do
-			local held = if side.player
-				then MinigameService.GetPlaygroundInput(side.player)
-				else elapsed % (Arm.BotPush + Arm.BotRest) < Arm.BotPush
-			if elapsed < 0 then
-				held = false
-			end
-			if held ~= side.held then
-				side.changedAt = elapsed
-				side.held = held
-			end
-			local exhausted = elapsed < side.exhaustedUntil
-			if elapsed >= 0 then
-				if held and not exhausted then
-					side.stamina = math.max(0, side.stamina - Arm.Drain * dt)
-					side.participation += dt
-					if side.participation >= Arm.Participation then
-						side.hits += 1
-						side.participation -= Arm.Participation
-					end
-					if side.stamina <= 0 then
-						side.exhaustedUntil = elapsed + Arm.ExhaustedTime
-						exhausted = true
-					end
-				else
-					side.stamina = math.min(1, side.stamina + Arm.Recovery * dt)
-				end
-			end
-			local force = if exhausted then Arm.ExhaustedForce elseif held then Arm.Force else Arm.Brace
-			if elapsed - side.changedAt < Arm.Transition then
-				force = Arm.Brace
-			end
-			forces[i] = force
-			if held and not exhausted then
-				side.pushed += dt * force
-			end
-		end
-		if elapsed >= 0 then
-			duel.lean =
-				math.clamp(duel.lean + (forces[1] - forces[2]) * dt * Arm.LeanSpeed, -Duels.LeanLimit, Duels.LeanLimit)
-			publishLean(duel)
-		end
-		snapshot += dt
-		if snapshot >= PlaygroundConfig.SnapshotInterval then
-			snapshot = 0
-			sendLive(duel)
-			for _, side in duel.sides do
-				if side.player then
-					local other = otherSide(duel, side)
-					MinigameService.SetDuelState(side.player, {
-						stamina = side.stamina,
-						opponentStamina = other.stamina,
-						held = side.held,
-						exhausted = elapsed < side.exhaustedUntil,
-						opponentExhausted = elapsed < other.exhaustedUntil,
-						lean = duel.lean * side.sign,
-						limit = Duels.LeanLimit,
-						time = math.max(0, Arm.Duration - elapsed),
-					})
-				end
-			end
-		end
-		if math.abs(duel.lean) >= Duels.LeanLimit or elapsed >= Arm.Duration then
-			pin(duel)
+local function push(duel: Duel, side: Side, quality: string, token: number)
+	if duel.over or duel.token ~= token or side.done then
+		return
+	end
+	local amount = Duels.Push[quality] or 0
+	if quality == "Perfect" or quality == "Good" then
+		side.hits += 1
+	end
+	side.pushed += amount
+	duel.lean = math.clamp(duel.lean + side.sign * amount, -Duels.LeanLimit, Duels.LeanLimit)
+	publishLean(duel)
+	sendLive(duel)
+	if math.abs(duel.lean) >= Duels.LeanLimit then
+		pin(duel)
+	end
+end
+
+-- Mannequin d'entraînement (Studio) : pousse au même rythme que le motif du joueur
+local function playBot(duel: Duel, side: Side, interval: number, token: number)
+	-- Premier passage de l'aiguille dans la zone : au milieu du premier balayage, après le temps d'arrivée
+	task.wait(interval * (Duels.Lead + 0.5))
+	for _ = 1, Duels.RepsPerRound do
+		if duel.over or duel.token ~= token or side.done then
 			return
 		end
+		local skill = side.botSkill or Duels.Bot
+		local roll = math.random()
+		local quality = "Miss"
+		if roll < skill.perfect then
+			quality = "Perfect"
+		elseif roll < skill.perfect + skill.good then
+			quality = "Good"
+		end
+		push(duel, side, quality, token)
+		task.wait(interval)
 	end
+	onSideEnd(duel, side, "Completed", token)
 end
 
 function startRound(duel: Duel)
@@ -554,7 +491,6 @@ function startRound(duel: Duel)
 	for _, side in duel.sides do
 		side.done = false
 		side.pushed = 0
-		side.stamina, side.held, side.exhaustedUntil, side.changedAt, side.participation = 1, false, -10, -10, 0
 	end
 	for _, side in duel.sides do
 		local other = otherSide(duel, side)
@@ -569,7 +505,7 @@ function startRound(duel: Duel)
 	for _, side in duel.sides do
 		local player = side.player
 		if not player then
-			-- The shared round loop also controls the practice opponent.
+			task.spawn(playBot, duel, side, interval, token)
 			continue
 		end
 		local other = otherSide(duel, side)
@@ -584,7 +520,8 @@ function startRound(duel: Duel)
 			seed = seed,
 			titleKey = "Duel.RoundTitle",
 			titleArgs = { round = round, rounds = Duels.Rounds, name = other.name },
-			onRep = function()
+			onRep = function(_, quality)
+				push(duel, side, quality, token)
 				return nil
 			end,
 			onEnd = function(_, reason)
@@ -596,7 +533,17 @@ function startRound(duel: Duel)
 			return
 		end
 	end
-	task.spawn(playArmRound, duel, token)
+	-- Un joueur qui ne joue plus : sa manche se termine quand même (le mini-jeu envoie les passages ratés)
+	task.delay(interval * (Duels.RepsPerRound + Duels.Lead + 1) * 2 + 3, function()
+		if duel.over or duel.token ~= token then
+			return
+		end
+		for _, side in duel.sides do
+			if side.player and not side.done then
+				MinigameService.EndRun(side.player, "Completed")
+			end
+		end
+	end)
 end
 
 local function newSide(player: Player?, spot: BasePart, sign: number): Side

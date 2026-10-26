@@ -79,10 +79,7 @@ local function render()
 	local untried, best = nil, nil
 	for id, exercise in Exercises do
 		if exercise.requiredStage <= stats.Stage then
-			if
-				records["Playground2." .. id] == nil
-				and (untried == nil or exercise.requiredStage > Exercises[untried].requiredStage)
-			then
+			if records[id] == nil and (untried == nil or exercise.requiredStage > Exercises[untried].requiredStage) then
 				untried = id
 			end
 			if best == nil or exercise.mogPerRep > Exercises[best].mogPerRep then

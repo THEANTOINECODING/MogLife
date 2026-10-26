@@ -1,6 +1,6 @@
 # 07 — Roadmap
 
-> Mini-jeux actuels (D76, D77, D79) : voir [le terrain de force](02_MECANIQUES/PLAYGROUND.md). Validation dans Studio : `design/archive/rapports/PLAYGROUND_DELIVERY_2026-10-21.md` ; l'essai sur vrais téléphones reste une étape obligatoire de l'alpha.
+> Mini-jeux actuels (D80) : les jeux d'origine, décrits dans [MINIJEUX](02_MECANIQUES/MINIJEUX.md), [AIDES](02_MECANIQUES/AIDES.md), [BOSS](02_MECANIQUES/BOSS.md) et [DUELS](02_MECANIQUES/DUELS.md). La refonte de Codex (D76 à D79) est abandonnée. L'essai sur vrais téléphones reste une étape obligatoire de l'alpha.
 
 Principe : **un petit jeu complet d'abord, puis des mises à jour régulières** qui suivent toutes la même recette.
 

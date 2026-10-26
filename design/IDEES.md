@@ -3,7 +3,13 @@
 Toute nouvelle idée arrive ici. Elle passe dans le design seulement après une décision dans `DECISIONS.md`.
 Test de la vision : l'idée tient-elle dans les trois briques (mini-jeux, contenu en données, personnage) ?
 
-## Research proposal of 20/10/2026 - adopted in D76
+## Le Dieu du Pump : un vrai combat (demande d'Antoine du 22/10/2026, à faire plus tard)
+
+Pour le dernier boss, Antoine veut **un vrai combat** et non un mini-jeu : se battre contre le Dieu du Pump,
+esquiver ses attaques (éclairs, etc.). À concevoir avec lui au moment de la mise à jour de l'Olympe. **Rien n'est fait
+pour l'instant.** Le mini-jeu Gravity Gauntlet préparé par Codex a été supprimé avec son système (D80).
+
+## (Archivé) Proposition de recherche du 20/10/2026 — adoptée en D76, abandonnée en D80
 
 À la demande du créateur : étudier les mini-jeux Roblox et d'autres plateformes, la motivation et le ressenti
 visuel, puis proposer une liste entièrement nouvelle avant toute intervention dans Roblox.
@@ -20,7 +26,7 @@ Tire Domino, Peel Good et Snack Volley.
 
 **Statut : adopté par Antoine (D76), mis en place.** La publication publique et le déblocage du futur Dieu du Pump ne font pas partie de cette livraison.
 
-## Refonte complète des mini-jeux — validée par D75 le 20/10/2026
+## (Archivé) Refonte complète des mini-jeux — D75 du 20/10/2026, abandonnée en D80
 
 **Direction.** Faire de chaque activité une petite scène physique jouée dans le décor : le joueur lit un signe clair,
 agit avec un doigt, puis voit immédiatement le corps, l'objet et le PNJ réagir. Les gestes restent simples, mais les

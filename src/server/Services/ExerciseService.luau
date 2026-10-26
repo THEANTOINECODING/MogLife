@@ -73,14 +73,13 @@ local function startSeries(player: Player, exerciseId: unknown)
 		total = Balance.SeriesLength,
 		anchor = station,
 		titleKey = `Exercise.{exerciseId}`,
-		onRep = function(p, quality, combo, payoutScale)
+		onRep = function(p, quality, combo)
 			-- Gain = base × qualité × combo × boost en cours × pareur (+20 % si un autre joueur le pare)
 			local gain = exercise.mogPerRep
 				* Balance.Quality[quality]
 				* combo
 				* BoostService.Multiplier(p)
 				* SocialService.LifterMultiplier(p)
-				* (payoutScale or 1)
 			StatsService.Add(p, "Mog", gain)
 			SocialService.OnLifterRep(p, gain, quality)
 			-- Les muscles travaillés gonflent (D40)
@@ -105,11 +104,10 @@ local function startSeries(player: Player, exerciseId: unknown)
 			if not score or not playerData then
 				return nil
 			end
-			local recordId = "Playground4." .. exerciseId
-			local best = playerData.Records[recordId]
+			local best = playerData.Records[exerciseId]
 			local newRecord = best == nil or score > best
 			if newRecord then
-				playerData.Records[recordId] = score
+				playerData.Records[exerciseId] = score
 				Remotes.Records:FireClient(p, playerData.Records)
 			end
 			return { record = if newRecord then score else best, newRecord = newRecord }

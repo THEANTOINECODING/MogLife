@@ -17,29 +17,14 @@ export type Help = {
 }
 
 local Helps: { [string]: Help } = {
-	OpenJar = {
-		npc = "Mom",
-		minigame = "PeelGood",
-		reps = 1,
-		interval = 2.1,
-		requiredStage = 1,
-		cash = 5,
-		firstCash = 25,
-	},
-	PumpTire = { npc = "Courier", minigame = "AirwayExpress", reps = 1, interval = 2.2, requiredStage = 1, cash = 8 },
-	Nails = { npc = "Kid", minigame = "ChopShop", reps = 1, interval = 1.6, requiredStage = 2, cash = 15 },
-	PushCar = { npc = "Neighbor", minigame = "ParkingKnot", reps = 1, interval = 1.7, requiredStage = 3, cash = 30 },
-	Piano = { npc = "MrsDoRe", minigame = "PianoPolish", reps = 1, interval = 1.6, requiredStage = 3, cash = 50 },
-	BeachChairs = { npc = "Lifeguard", minigame = "TowelFold", reps = 1, interval = 1.7, requiredStage = 4, cash = 80 },
-	Groceries = { npc = "Grocer", minigame = "ProduceParade", reps = 1, interval = 1.7, requiredStage = 5, cash = 120 },
-	Directions = {
-		npc = "Tourist",
-		minigame = "ShortcutChalk",
-		reps = 1,
-		interval = 1.9,
-		requiredStage = 6,
-		cash = 180,
-	},
+	OpenJar = { npc = "Mom", minigame = "Twist", interval = 1.6, requiredStage = 1, cash = 5, firstCash = 25 },
+	PumpTire = { npc = "Courier", minigame = "Pressure", interval = 1.2, requiredStage = 1, cash = 8 },
+	Nails = { npc = "Kid", minigame = "Hammer", interval = 1.4, requiredStage = 2, cash = 15 },
+	PushCar = { npc = "Neighbor", minigame = "Steer", interval = 1.0, requiredStage = 3, cash = 30 },
+	Piano = { npc = "MrsDoRe", minigame = "Lanes", interval = 1.1, requiredStage = 3, cash = 50 },
+	BeachChairs = { npc = "Lifeguard", minigame = "Stack", interval = 1.4, requiredStage = 4, cash = 80 },
+	Groceries = { npc = "Grocer", minigame = "Catch", interval = 1.1, requiredStage = 5, cash = 120 },
+	Directions = { npc = "Tourist", minigame = "Sequence", interval = 3.5, requiredStage = 6, cash = 180, reps = 6 },
 }
 
 return Helps

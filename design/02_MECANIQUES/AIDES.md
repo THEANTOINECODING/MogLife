@@ -1,6 +1,6 @@
 # Aider la ville
 
-> **D76 : les mini-jeux actuels sont décrits dans [PLAYGROUND.md](PLAYGROUND.md).** Les sections ci-dessous décrivent l'ancienne version, gardée pour l'historique. Identifiants de progression, déblocages et récompenses restent compatibles.
+> **D80 : cette fiche fait de nouveau foi.** La refonte de Codex (D76 à D79, « terrain de force ») a été abandonnée et ses mini-jeux supprimés ; sa fiche est archivée dans `design/archive/PLAYGROUND_codex_abandonne.md`. Plus de mode Auto (D79) ; une répétition ratée rapporte peu et les fenêtres de notation se resserrent pendant la série (D80).
 
 Les habitants ont des problèmes absurdes. Les aider **rapporte du Cash**, la seule façon d'en gagner régulièrement.
 

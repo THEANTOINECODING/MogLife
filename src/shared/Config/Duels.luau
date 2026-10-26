@@ -1,18 +1,25 @@
 -- Duels entre joueurs : bras de fer (D68, design/02_MECANIQUES/DUELS.md). Contre n'importe quel joueur, n'importe
--- où : une table apparaît entre les deux. Chances égales : mêmes règles et mêmes vitesses pour
+-- où : une table apparaît entre les deux. Chances égales : même motif de zones, mêmes fenêtres, mêmes vitesses pour
 -- les deux joueurs ; ni le Mog, ni le stade, ni la tenue n'entrent dans le calcul.
 -- Les chiffres sont des hypothèses ❓ à régler pendant l'alpha.
 
 return {
-	Minigame = "ReadRip", -- prise puis contre, identique pour les deux joueurs
+	Minigame = "Gauge", -- module dans src/client/Minigames/ (jamais utilisé ailleurs)
 	Activity = "ArmWrestle", -- module dans src/client/Activities/ (les deux joueurs, coude sur la table)
 
 	Rounds = 3,
 	RoundsToWin = 2,
-	RepsPerRound = 8, -- échanges par manche (quota de la cadence du serveur)
-	Interval = 1.55, -- temps d'un échange : choisir la prise, tenir, contrer
-	SpeedByRound = { 1, 0.93, 0.87 },
-	TimingScaleByRound = { 1, 0.9, 0.82 },
+	RepsPerRound = 8, -- poussées par manche (un balayage de l'aiguille chacune)
+	Interval = 0.95, -- secondes d'un balayage de l'aiguille (manche 1)
+	SpeedByRound = { 1, 0.88, 0.78 }, -- chaque manche est plus rapide…
+	TimingScaleByRound = { 1, 0.85, 0.7 }, -- … et sa zone de force plus étroite
+	Lead = 0.6, -- balayages d'attente avant le premier (le temps de voir la jauge)
+	MinRepGap = 0.25, -- secondes minimum entre deux poussées envoyées
+	-- Jauge (fractions de sa largeur) : la zone verte change de place à chaque balayage
+	ZoneHalf = 0.13, -- demi-largeur de la zone verte (Good), × l'échelle de la manche
+	PerfectHalf = 0.045, -- demi-largeur du cœur doré (Perfect), × l'échelle de la manche
+	ZoneMin = 0.2, -- la zone reste entre ces deux bornes de la jauge
+	ZoneMax = 0.8,
 
 	-- Poussée de chaque répétition (en « crans »). Le bras va de -LeanLimit à +LeanLimit : l'atteindre, c'est plaquer
 	-- le bras de l'adversaire sur la table (manche gagnée tout de suite) ; sinon, la manche va au côté vers lequel
@@ -32,8 +39,6 @@ return {
 	IntroTime = 5, -- secondes de présentation (bandeau VS, 3-2-1) avant la 1re manche
 	PauseBetweenRounds = 3,
 	ResultTime = 4, -- secondes avant que la table disparaisse
-	FinishSlamTime = 0.38, -- bras gagnant plaqué sur le coussin en fin de manche
-	FinishPoseTime = 1.1, -- maintien de la pose après la fin du mini-jeu
 
 	-- Invitations
 	InviteDistance = 14, -- studs max entre les deux joueurs pour inviter

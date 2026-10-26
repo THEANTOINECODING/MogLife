@@ -318,6 +318,23 @@ local function openRun(update)
 		TextStrokeTransparency = 1,
 		Parent = root,
 	})
+	-- Consigne du mini-jeu, toujours visible (une phrase)
+	local hint = Ui.label({
+		Name = "Hint",
+		AnchorPoint = if touchLandscape or compact then Vector2.zero else Vector2.new(0.5, 1),
+		Position = if touchLandscape
+			then UDim2.fromOffset(16, 196)
+			elseif compact then UDim2.fromOffset(12, 198)
+			else UDim2.new(0.5, 0, 1, -84),
+		Size = if touchLandscape
+			then UDim2.fromOffset(railWidth, 56)
+			elseif compact then UDim2.new(1, -24, 0, 30)
+			else UDim2.fromOffset(600, 34),
+		TextWrapped = true,
+		Text = Texts.Get(`Minigame.Hint.{update.minigame}`),
+		Parent = root,
+	})
+	hint.TextXAlignment = if touchLandscape then Enum.TextXAlignment.Left else Enum.TextXAlignment.Center
 	local stopButton = Ui.button({
 		Name = "Stop",
 		AnchorPoint = if touchLandscape
@@ -335,16 +352,23 @@ local function openRun(update)
 		Parent = root,
 	})
 
-	local minigame = require(module :: ModuleScript).new(root, update.interval, function(quality: string)
+	-- La série se corse : les fenêtres de notation se resserrent à chaque répétition (D80)
+	local baseScale = update.timingScale or 1
+	local total = math.max(1, tonumber(update.total) or 1)
+	local played = 0
+	local minigame
+	minigame = require(module :: ModuleScript).new(root, update.interval, function(quality: string)
 		if current then
 			sendRep(quality)
+		end
+		played += 1
+		if minigame then
+			minigame.timingScale = baseScale
+				* (1 - Balance.Minigames.SeriesTightening * math.min(played, total - 1) / math.max(1, total - 1))
 		end
 	end, {
 		timingScale = update.timingScale,
 		seed = update.seed,
-		token = update.token,
-		state = update.playground,
-		anchor = update.anchor,
 	})
 
 	local session: Current = {
@@ -366,17 +390,6 @@ local function openRun(update)
 		connections = {},
 	}
 	current = session
-	if update.token then
-		for _, child in root:GetChildren() do
-			if child:IsA("GuiObject") and child ~= minigame.root and child ~= stopButton then
-				child.Visible = false
-			end
-		end
-		stopButton.AnchorPoint = Vector2.new(0, 1)
-		stopButton.Position = UDim2.new(0, 176, 1, -12)
-		stopButton.Size = UDim2.fromOffset(112, 44)
-		stopButton.ZIndex = 20
-	end
 
 	table.insert(
 		session.connections,

@@ -41,14 +41,14 @@ end
 local REWARD = Balance.Helps.Reward
 
 -- Cash d'une répétition (le client l'affiche ; le total est versé à la fin)
-local function repCash(player: Player, helpId: string, quality: string, combo: number, playground: any?): number
+local function repCash(player: Player, helpId: string, quality: string, combo: number): number
 	local state = progress[player]
 	if not state then
 		return 0
 	end
 	local help = Helps[helpId]
 	if quality == "Perfect" then
-		state.chain = if playground then playground.perfectStreak or 0 else state.chain + 1
+		state.chain += 1
 	else
 		state.chain = 0
 	end
@@ -63,7 +63,7 @@ local function repCash(player: Player, helpId: string, quality: string, combo: n
 end
 
 -- Fin de l'aide : verse ce qui a été gagné, remercie (ou pas) l'habitant
-local function finish(player: Player, helpId: string, reason: string, outcome: any?): { [string]: any }?
+local function finish(player: Player, helpId: string, reason: string): { [string]: any }?
 	local state = progress[player]
 	progress[player] = nil
 	local help = Helps[helpId]
@@ -71,13 +71,9 @@ local function finish(player: Player, helpId: string, reason: string, outcome: a
 	if not state or not data or reason == "Left" then
 		return nil
 	end
-	local completed = reason == "Completed" and (not outcome or outcome.won)
-	if outcome then
-		state.misses = outcome.misses
-	end
+	local completed = reason == "Completed"
 	local flawless = completed and state.misses == 0
-	-- Playground jobs pay for a completed objective. Failed jobs remain freely retryable.
-	local total = (if outcome and not completed then 0 else state.earned) * (if flawless then REWARD.Flawless else 1)
+	local total = state.earned * (if flawless then REWARD.Flawless else 1)
 	local cash = math.floor(total + 0.5)
 	local firstTime = completed and cash > 0 and data.HelpsDone[helpId] ~= true
 	-- Toute première réussite : au moins la récompense de découverte (le bocal de Maman, D48)
@@ -158,11 +154,11 @@ local function startHelp(player: Player, helpId: string)
 		total = help.reps or Balance.Helps.Reps,
 		anchor = anchor,
 		titleKey = `Help.{helpId}`,
-		onRep = function(p, quality, combo, _payoutScale, playground)
-			return repCash(p, helpId, quality, combo, playground)
+		onRep = function(p, quality, combo)
+			return repCash(p, helpId, quality, combo)
 		end,
-		onEnd = function(p, reason, _reps, _score, outcome)
-			return finish(p, helpId, reason, outcome)
+		onEnd = function(p, reason)
+			return finish(p, helpId, reason)
 		end,
 	})
 	if not started then

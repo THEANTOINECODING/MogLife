@@ -8,7 +8,6 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
-local PlaygroundConfig = require(ReplicatedStorage.Shared.Config.Playground)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
@@ -269,9 +268,6 @@ function startRound(player: Player, fight: Fight)
 		titleKey = "Boss.RoundTitle",
 		titleArgs = { round = fight.round, rounds = BOSS.Rounds, boss = { key = `Boss.{fight.bossId}` } },
 		onRep = function(p, quality)
-			if PlaygroundConfig.Games[boss.minigame] then
-				return nil
-			end
 			fight.score += BOSS.QualityScore[quality] or 0
 			Remotes.BossUpdate:FireClient(p, {
 				state = "Live",
@@ -281,12 +277,7 @@ function startRound(player: Player, fight: Fight)
 			})
 			return nil
 		end,
-		onEnd = function(p, reason, _reps, _score, outcome)
-			if outcome then
-				fight.score = (if outcome.won then 100 else 0) * BOSS.RepsPerRound
-				fight.bossScore = 50 * BOSS.RepsPerRound
-				fight.bossDone = true
-			end
+		onEnd = function(p, reason)
 			onPlayerRoundEnd(p, fight, reason)
 		end,
 	})
@@ -294,21 +285,14 @@ function startRound(player: Player, fight: Fight)
 		endFight(player)
 		return
 	end
-	if not PlaygroundConfig.Games[boss.minigame] then
-		task.spawn(playBoss, player, fight, interval, token)
-	end
+	task.spawn(playBoss, player, fight, interval, token)
 
 	-- Un joueur qui ne joue pas : sa manche se termine quand même (répétitions manquantes = 0)
-	task.delay(
-		if PlaygroundConfig.Games[boss.minigame]
-			then PlaygroundConfig.Games[boss.minigame].duration + PlaygroundConfig.Lead + 5
-			else interval * BOSS.RepsPerRound * 2 + 3,
-		function()
-			if fights[player] == fight and fight.token == token and not fight.playerDone then
-				MinigameService.EndRun(player, "Completed")
-			end
+	task.delay(interval * BOSS.RepsPerRound * 2 + 3, function()
+		if fights[player] == fight and fight.token == token and not fight.playerDone then
+			MinigameService.EndRun(player, "Completed")
 		end
-	)
+	end)
 end
 
 -- Emplacement de ce boss à portée du joueur (nil s'il est trop loin de tous)
@@ -319,44 +303,6 @@ local function nearestSpot(player: Player, bossId: string): BasePart?
 		end
 	end
 	return nil
-end
-
--- Distance du joueur devant le boss pendant le combat : la première où il a de la place (pas dans les cordes du ring
--- ni dans le bord d'une estrade). Calculée au premier défi (les décors sont posés après le démarrage), publiée sur
--- l'emplacement pour que chaque client place le joueur et la table au même endroit (ActivityController).
-local standCache: { [BasePart]: number } = {}
-local function standDistance(spot: BasePart): number
-	local cached = standCache[spot]
-	if cached then
-		return cached
-	end
-	local params = OverlapParams.new()
-	params.RespectCanCollide = true
-	params.FilterType = Enum.RaycastFilterType.Exclude
-	local ignore: { Instance } = {}
-	local npcs = workspace:FindFirstChild("Npcs")
-	if npcs then
-		table.insert(ignore, npcs)
-	end
-	for _, other in Players:GetPlayers() do
-		if other.Character then
-			table.insert(ignore, other.Character)
-		end
-	end
-	params.FilterDescendantsInstances = ignore
-	local top = spot.CFrame * CFrame.new(0, spot.Size.Y / 2, 0)
-	local distances = PlaygroundConfig.BossStandDistances
-	local chosen = distances[1]
-	for _, distance in distances do
-		local body = top * CFrame.new(0, 3, -distance)
-		if #workspace:GetPartBoundsInBox(body, Vector3.new(2, 4.5, 1.2), params) == 0 then
-			chosen = distance
-			break
-		end
-	end
-	standCache[spot] = chosen
-	spot:SetAttribute("StandDistance", chosen)
-	return chosen
 end
 
 local function onChallenge(player: Player, bossId: unknown)
@@ -383,7 +329,6 @@ local function onChallenge(player: Player, bossId: unknown)
 		return
 	end
 
-	standDistance(spot)
 	local fight: Fight = {
 		bossId = bossId,
 		spot = spot,

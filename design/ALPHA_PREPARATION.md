@@ -14,7 +14,7 @@ Ce document prépare l'étape 8 de `07_ROADMAP.md`. Les cibles de temps sont des
 1. Lancer dans Studio **Test → Serveur et 2 clients**. Vérifier : invitation « Arm Wrestle », acceptation, refus et délai sans réponse ; table entre les joueurs ; bras des deux côtés ; résultat identique sur les deux écrans ; trois duels récompensés avec la même paire puis duel sans récompense ; réglage « Duel invites » coupé. Refaire un duel près d'un mur. Cette vérification n'est pas encore faite.
 2. Faire un parcours neuf complet sur un vrai téléphone, puis sur PC : création du personnage, tutoriel, premier curl, bocal, premier look, Kevin, nouveau stade. Noter les minutes réelles et les moments de confusion. Ne pas modifier l'économie à partir de la simulation seule.
 3. Vérifier le tactile sur les mini-jeux, les combats et la jauge du bras de fer. Relever les FPS sur le téléphone choisi pour référence ; la cible du design est **au moins 30 FPS** (`05_ART_SON.md`).
-4. Refaire les vérifications techniques de `08_TESTS_ET_MESURES.md` : cadence serveur, prérequis et distances, achats et récompenses uniques, sauvegarde après reconnexion, tous les corps et habits, mode auto, français et allemand. Tout ce qui n'est pas essayé reste « non vérifié ».
+4. Refaire les vérifications techniques de `08_TESTS_ET_MESURES.md` : cadence serveur, prérequis et distances, achats et récompenses uniques, sauvegarde après reconnexion, tous les corps et habits, absence de mode Auto, français et allemand. Tout ce qui n'est pas essayé reste « non vérifié ».
 5. Décider comment relever les mesures pendant l'alpha. L'instrumentation prévue par `08_TESTS_ET_MESURES.md` manque actuellement dans le code. En attendant, utiliser la fiche ci-dessous et noter l'heure des étapes, sans supposer que les tableaux Roblox contiennent déjà ces événements.
 
 ## Fiche à remplir pour chaque testeur
@@ -41,6 +41,5 @@ Les boosts expliquent la plus grande part du raccourcissement dans ce scénario.
 - Garder ou revoir les cibles de `03_PROGRESSION.md` (Kevin en 3–5 min, Coach Turbo en 25–40 min) ? La simulation moyenne actuelle donne 1:41 et 20:23.
 - Le gain de temps des boosts, seuls puis avec un pareur, convient-il ? Vérifier d'abord si les joueurs trouvent ces aides et les comprennent.
 - Souhaite-t-on garder le Cash abondant pour le style, ou créer plus tard des choix de dépense ? Ne pas fixer de nouveaux prix à partir de ce tableau.
-- Si le mode auto reste bloqué à Coach Turbo, aider par l'apprentissage ou envisager la règle ouverte D19 après observation des joueurs ?
 
 Ces questions restent ouvertes dans `IDEES.md`. Ne changer aucune valeur avant la réponse du créateur.
