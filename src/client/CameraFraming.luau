@@ -301,6 +301,7 @@ local FIT_MARGIN = 0.12 -- part de la zone libre gardée vide autour du sujet (m
 -- Zoom très léger (D88) : la caméra d'une activité ne vient pas beaucoup plus près que la caméra du joueur
 local KEEP_DISTANCE = 0.85 -- part de la distance d'origine (caméra du joueur -> personnage) gardée au minimum
 local distanceFloor = 0 -- fixé par Follow pendant une activité
+local MAX_FLOOR = 22 -- studs : au-delà, la caméra se rapproche quand même
 
 -- Place la caméra pour que tous les `points` tiennent dans la zone libre de l'écran, le plus près possible : la
 -- caméra regarde dans la direction choisie (de `eye` vers `focus`), recule juste ce qu'il faut et se décale pour
@@ -440,7 +441,8 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 	camera.FieldOfView = FOV
 	local t0 = os.clock()
 	local enter = options.enterTime or ENTER_TIME
-	distanceFloor = (startCF.Position - start).Magnitude * KEEP_DISTANCE
+	-- (borné : une caméra du joueur très reculée ne doit pas rendre le personnage minuscule)
+	distanceFloor = math.min((startCF.Position - start).Magnitude * KEEP_DISTANCE, MAX_FLOOR)
 
 	-- Angle choisi : décalages de l'œil et du point visé par rapport au sujet
 	local planned = start
