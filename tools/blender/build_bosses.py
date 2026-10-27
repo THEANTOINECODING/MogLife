@@ -138,6 +138,9 @@ def build_bro(name, cfg):
                torso_d=torso_d, shoulder_w=shoulder_w, chest_w=chest_w, hip_w=hip_w, neck_r=neck_r)
     if cfg.get("extras"):
         cfg["extras"](b, geo)
+    # Articulations (avant l'échelle `scale`) : rig_bosses.py en tire le squelette (D85)
+    geo["torso_bottom"] = torso_bottom
+    b.geo = geo
     return b
 
 

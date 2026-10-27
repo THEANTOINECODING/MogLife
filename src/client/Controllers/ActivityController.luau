@@ -18,9 +18,12 @@ local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local CameraFraming = require(script.Parent.Parent.CameraFraming)
 local MogOff = require(script.Parent.Parent.Activities.MogOff)
+local BossScene = require(script.Parent.Parent.BossFights.Scene)
 local Rig = require(script.Parent.Parent.Activities.Rig)
 
 local Activities = script.Parent.Parent.Activities
+-- Duels de boss (D85) : un module par boss ; sans module, le Mog-off générique (poses de culturisme)
+local BossFights = script.Parent.Parent.BossFights
 
 -- Amplitude et tremblement du mouvement selon la qualité de la répétition
 local QUALITY = {
@@ -272,8 +275,10 @@ local function start(update)
 	local player = update.player
 	stop(player)
 	stopEmote(player)
-	-- Exercices et aides : un module par activité ; combats de boss : le Mog-off (duel de poses), pour tous les boss
-	local module = Activities:FindFirstChild(if update.kind == "Boss" then "MogOff" else update.id)
+	-- Exercices et aides : un module par activité ; combats de boss : le duel du boss (D85), sinon le Mog-off
+	local module = if update.kind == "Boss"
+		then (BossFights:FindFirstChild(update.id) or Activities:FindFirstChild("MogOff"))
+		else Activities:FindFirstChild(update.id)
 	local anchor = update.anchor
 	local character = player.Character
 	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
@@ -317,6 +322,7 @@ local function start(update)
 		top = top,
 		borrow = borrower(animator, anchor),
 		isLocal = player == localPlayer, -- seul le joueur concerné déplace son propre personnage
+		player = player,
 	})
 	animators[player] = animator
 	if update.kind ~= "Boss" then
@@ -349,6 +355,9 @@ local function onRep(update)
 	animator.count += 1
 	if update.quality ~= "Miss" then
 		animator.successes += 1
+	end
+	if animator.activity.PlayerRep then
+		animator.activity:PlayerRep(update.quality)
 	end
 	table.insert(animator.reps, {
 		-- Une répétition ne coupe jamais la précédente : elle commence quand l'autre se termine
@@ -399,8 +408,14 @@ end
 
 -- Ce personnage est-il déjà animé ici (activité, combat, duel, émote) ? Les autres mouvements (démarche, pareur,
 -- MotionController) le laissent alors tranquille.
+local externalBusy: { [Player]: boolean } = {}
 function ActivityController.IsBusy(who: Player): boolean
-	return animators[who] ~= nil or emotes[who] ~= nil
+	return animators[who] ~= nil or emotes[who] ~= nil or externalBusy[who] == true
+end
+
+-- Un autre système anime ce personnage (fin d'un duel de boss) : les autres mouvements le laissent tranquille
+function ActivityController.SetBusy(who: Player, busy: boolean)
+	externalBusy[who] = if busy then true else nil
 end
 
 -- Geste du joueur dans son mini-jeu (appelé par MinigameKit au moment même du geste) : son personnage fait la
@@ -420,6 +435,9 @@ function ActivityController.LocalRep(quality: string)
 	if quality ~= "Miss" then
 		animator.successes += 1
 	end
+	if animator.activity.PlayerRep then
+		animator.activity:PlayerRep(quality)
+	end
 	-- Le geste remplace le mouvement en cours : le personnage suit le rythme du joueur
 	animator.reps = {
 		{ start = now - phase * duration, duration = duration, amplitude = look.amplitude, shake = look.shake },
@@ -428,6 +446,7 @@ end
 
 function ActivityController.Init(controllers)
 	SettingsController = controllers.SettingsController
+	BossScene.Connect(ActivityController.SetBusy, controllers.NpcController.Base)
 end
 
 function ActivityController.Start()
@@ -446,6 +465,9 @@ function ActivityController.Start()
 			end
 		elseif update.state == "Ended" then
 			stop(update.player)
+		elseif update.state == "FightEnd" then
+			-- Fin d'un combat de boss (vue par tous) : le duel joue sa fin
+			BossScene.Finish(update.player, update.won == true)
 		end
 	end)
 	Remotes.EmotePlay.OnClientEvent:Connect(function(who, index, celebration)

@@ -37,7 +37,6 @@ local MinigameService
 local StyleService
 local TutorialService
 local WeeklyService
-local SocialService
 
 -- Un même boss peut avoir plusieurs emplacements (Kevin dans le garage de chaque maison)
 local spots: { [string]: { BasePart } } = {}
@@ -87,7 +86,17 @@ local function finishFight(player: Player, fight: Fight)
 		return
 	end
 
-	if fight.wins < BOSS.RoundsToWin then
+	-- Tout le monde voit la fin du duel (BossFights/Scene, D85) : le perdant tombe, le vainqueur exulte
+	local won = fight.wins >= BOSS.RoundsToWin
+	Remotes.Activity:FireAllClients({
+		player = player,
+		state = "FightEnd",
+		kind = "Boss",
+		id = fight.bossId,
+		won = won,
+	})
+
+	if not won then
 		if fight.stakes > 0 then
 			StatsService.Add(player, "Cash", -fight.stakes)
 		end
@@ -99,11 +108,15 @@ local function finishFight(player: Player, fight: Fight)
 		return
 	end
 
+	-- Vaincu, le boss s'envole... une fois la fin du duel jouée (la pose de victoire est jouée par le duel)
 	local model = models[fight.spot]
 	if model then
-		Npc.LaunchAndReturn(model, 80, 5)
+		task.delay(BOSS.VictoryLaunchDelay, function()
+			if model.Parent then
+				Npc.LaunchAndReturn(model, 80, 5)
+			end
+		end)
 	end
-	SocialService.Celebrate(player)
 	WeeklyService.Track(player, "MogOffsWon")
 
 	local firstWin = data.BossesBeaten[fight.bossId] ~= true and stageIndex == data.Stage
@@ -427,7 +440,6 @@ function BossService.Init(services)
 	StyleService = services.StyleService
 	TutorialService = services.TutorialService
 	WeeklyService = services.WeeklyService
-	SocialService = services.SocialService
 end
 
 -- Première rencontre avec chaque boss : présentation en cinématique (D53), une seule fois par joueur

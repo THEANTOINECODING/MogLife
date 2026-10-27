@@ -54,6 +54,23 @@ Défaite automatique et comique : le boss le mogge d'un seul regard, le joueur r
 - Sur téléphone et tablette, les commandes de déplacement disparaissent pendant le mini-jeu ; on joue n'importe où sur l'écran (D81).
 - Après 3 défaites d'affilée, le boss devient un peu moins exigeant ❓ (non implémenté).
 
+### Duels physiques (D85)
+
+Chaque combat est mis en scène dans le monde par un duel propre au boss, vu par tous les joueurs proches
+(`src/client/BossFights/`, réglages `Config/BossFights.luau`). Le mini-jeu et ses règles ne changent pas : chaque coup
+du joueur et du boss devient une action, et une position visible montre qui mène.
+
+| Boss | Duel | Qui mène | Coup spécial (dernière manche) | Fin |
+|---|---|---|---|---|
+| Kevin | Bataille de polochons (plumes) | Étoiles au-dessus de celui qui est en retard | Il bâille et pique du nez (💤) | Le perdant s'effondre dans les plumes |
+| Brayan | Choc de rayons solaires avec deux miroirs | Le point de choc avance vers celui qui perd | Éclairs de bronzage, le joueur se protège les yeux | Le perdant est soufflé par le rayon |
+| Coach Turbo | Tir à la corde (foulard, ligne au sol) | Le foulard glisse vers celui qui gagne | Il hurle de plus en plus vite dans son mégaphone | Le perdant passe la ligne et tombe |
+| Monsieur Pas-Les-Jambes | Choc de pectoraux sur un ring | Le perdant est repoussé vers le bord | Le ring tremble | Le perdant bascule hors du ring |
+| Le Roi du Quartier | Battle de poses sur un tapis rouge, ventilateur royal | La couronne flotte au-dessus de celui qui mène | Le vent souffle fort | Le perdant met un genou à terre |
+
+Les boss ont un squelette (os aux noms des pièces R15, `tools/blender/rig_bosses.py`) : leurs bras et leurs jambes
+bougent. Sans squelette (ancien modèle), le duel anime leur corps entier.
+
 ### Victoire
 - Montée officielle de stade ; le corps passe au modèle du nouveau stade.
 - Scène absurde de 2–3 s, quittable (le boss traverse le toit, s'envole dans l'espace, se transforme en flaque…).

@@ -14,6 +14,7 @@ local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local CollectionService = game:GetService("CollectionService")
 
+local BossFights = require(ReplicatedStorage.Shared.Config.BossFights)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local BossSpecials = require(script.Parent.Parent.BossSpecials)
@@ -508,13 +509,17 @@ local function onBossUpdate(update)
 		-- Results are informational: movement resumes without waiting for the OK button.
 		MinigameController.SetGameplayLocked(false, "Series")
 		MinigameController.SetGameplayLocked(false, "Boss")
-		endPresentation(true)
 		shout(Texts.Get("Boss.MoggedStamp"), GOLD, bossName(update.bossId), 1.2)
-		filmBoss(update.bossId, 1.5, function()
-			shout("✦", GOLD, nil, 0.3)
+		-- La caméra du duel filme d'abord la fin du duel (BossFights, D85), puis suit le boss qui s'envole
+		local outro = BossFights.FinishTime
+		task.delay(outro, function()
+			endPresentation(true)
+			filmBoss(update.bossId, 1.5, function()
+				shout("✦", GOLD, nil, 0.3)
+			end)
 		end)
 		local name = bossName(update.bossId)
-		task.delay(1.6, function()
+		task.delay(outro + 1.6, function()
 			if update.firstWin then
 				local lines = {
 					Texts.Get("Boss.NewStage", { stage = Texts.Get(`Stage.{update.stageId}`) }),
@@ -542,18 +547,21 @@ local function onBossUpdate(update)
 		-- Results are informational: movement resumes without waiting for the OK button.
 		MinigameController.SetGameplayLocked(false, "Series")
 		MinigameController.SetGameplayLocked(false, "Boss")
-		endPresentation(true)
-		filmBoss(update.bossId, 1.4)
 		bossSays(update.bossId, `BossTaunt.{update.bossId}.Ahead`)
 		local text = if (update.cash or 0) > 0
 			then Texts.Get("Boss.Defeat", { boss = bossName(update.bossId), cash = update.cash })
 			else Texts.Get("Boss.DefeatRematch", { boss = bossName(update.bossId) })
-		showPanel(bossName(update.bossId), "", text, Texts.Get("Boss.Ok"))
-		onPrimary = function()
-			hidePanel()
-			setFightLayout(false)
-			MinigameController.SetGameplayLocked(false, "Boss")
-		end
+		-- La caméra du duel filme d'abord la fin du duel (BossFights, D85)
+		task.delay(BossFights.FinishTime, function()
+			endPresentation(true)
+			filmBoss(update.bossId, 1.4)
+			showPanel(bossName(update.bossId), "", text, Texts.Get("Boss.Ok"))
+			onPrimary = function()
+				hidePanel()
+				setFightLayout(false)
+				MinigameController.SetGameplayLocked(false, "Boss")
+			end
+		end)
 	elseif update.state == "Aborted" then
 		endPresentation()
 		hidePanel()

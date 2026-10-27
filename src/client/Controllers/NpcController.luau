@@ -252,7 +252,8 @@ local function step(dt: number)
 			entries[model] = nil
 			continue
 		end
-		if model:GetAttribute("Scripted") or model:GetAttribute("NpcStill") then
+		-- Mouvement du serveur, mannequin, ou boss en plein duel (BossFights/Scene) : on ne l'anime pas
+		if model:GetAttribute("Scripted") or model:GetAttribute("NpcStill") or model:GetAttribute("FightScene") then
 			continue
 		end
 		local base = entry.base
@@ -413,6 +414,12 @@ function NpcController.Start()
 		end
 	end)
 	RunService.RenderStepped:Connect(step)
+end
+
+-- Position de repos du corps d'un PNJ (le duel de boss part de là)
+function NpcController.Base(model: Model): CFrame?
+	local entry = entries[model]
+	return entry and entry.base
 end
 
 -- Réaction déclenchée par un autre contrôleur (ex. tutoriel) : Happy, Sad, Celebrate, Thanks, Hit, Taunt…
