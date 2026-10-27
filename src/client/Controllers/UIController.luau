@@ -1,10 +1,13 @@
 -- HUD : Mog, Cash, progression vers le prochain boss, et messages courts (toasts).
+-- Interface vivante (D84) : les compteurs défilent jusqu'à leur nouvelle valeur et rebondissent quand ils montent ;
+-- FlyToCounter fait s'envoler des icônes (billets, muscles) vers le compteur.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Format = require(ReplicatedStorage.Shared.Format)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
@@ -48,6 +51,102 @@ local function layoutHud()
 		progressBar.Position = UDim2.fromOffset(10, 72)
 		progressBar.Size = UDim2.new(1, -20, 0, 24)
 		toastLabel.Size = UDim2.fromOffset(520, 48)
+	end
+end
+
+-- Compteurs qui défilent : une valeur affichée par compteur, qui glisse vers la vraie valeur
+local UI_FX = Balance.HudFx
+type Counter = { label: TextLabel, key: string, value: NumberValue, scale: UIScale, target: number?, color: Color3 }
+local counters: { [string]: Counter } = {}
+
+local function counter(name: string, label: TextLabel, key: string): Counter
+	local value = Instance.new("NumberValue")
+	local scale = Instance.new("UIScale")
+	scale.Parent = label
+	local entry = { label = label, key = key, value = value, scale = scale, target = nil, color = label.TextColor3 }
+	value.Changed:Connect(function(current)
+		label.Text = Texts.Get(key, { value = Format.Short(current) })
+	end)
+	counters[name] = entry
+	return entry
+end
+
+-- Petit rebond du compteur (et un éclair de couleur)
+local function pulse(entry: Counter, color: Color3?)
+	entry.scale.Scale = UI_FX.PulseScale
+	TweenService:Create(entry.scale, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+		Scale = 1,
+	}):Play()
+	if color then
+		entry.label.TextColor3 = color
+		TweenService:Create(entry.label, TweenInfo.new(0.6), { TextColor3 = entry.color }):Play()
+	end
+end
+
+local function setCounter(entry: Counter, target: number)
+	local previous = entry.target
+	entry.target = target
+	if previous == nil then
+		entry.value.Value = target
+		entry.label.Text = Texts.Get(entry.key, { value = Format.Short(target) })
+		return
+	end
+	if target == previous then
+		return
+	end
+	TweenService:Create(entry.value, TweenInfo.new(UI_FX.RollTime, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Value = target,
+	}):Play()
+	if target > previous then
+		pulse(entry, UI_FX.GainColor)
+	end
+end
+
+-- Des icônes s'envolent du milieu de l'écran vers un compteur (« Cash » ou « Mog »), puis le compteur rebondit
+local fxGui: ScreenGui
+function UIController.FlyToCounter(name: string, count: number?)
+	local entry = counters[name]
+	if not entry or not hudPanel.Visible or not fxGui then
+		return
+	end
+	local hudGui = hudPanel.Parent :: ScreenGui
+	fxGui.IgnoreGuiInset = hudGui.IgnoreGuiInset
+	local target = entry.label.AbsolutePosition + entry.label.AbsoluteSize / 2
+	local screen = fxGui.AbsoluteSize
+	local start = Vector2.new(screen.X * 0.5, screen.Y * 0.55)
+	local icon = if name == "Cash" then "💵" else "💪"
+	for index = 1, count or UI_FX.FlyCount do
+		task.delay((index - 1) * UI_FX.FlyStagger, function()
+			local label = Ui.label({
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Position = UDim2.fromOffset(start.X + math.random(-60, 60), start.Y + math.random(-30, 30)),
+				Size = UDim2.fromOffset(40, 40),
+				Text = icon,
+				TextStrokeTransparency = 1,
+				ZIndex = 10,
+				Parent = fxGui,
+			})
+			-- Petit envol sur place, puis vol jusqu'au compteur
+			local burst = label.Position + UDim2.fromOffset(math.random(-50, 50), math.random(-70, -30))
+			local up =
+				TweenService:Create(label, TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+					Position = burst,
+				})
+			up:Play()
+			up.Completed:Wait()
+			local fly = TweenService:Create(
+				label,
+				TweenInfo.new(UI_FX.FlyTime, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
+				{
+					Position = UDim2.fromOffset(target.X, target.Y),
+					Size = UDim2.fromOffset(24, 24),
+				}
+			)
+			fly:Play()
+			fly.Completed:Wait()
+			label:Destroy()
+			pulse(entry, nil)
+		end)
 	end
 end
 
@@ -115,11 +214,15 @@ local function buildHud()
 
 	gui.Parent = player:WaitForChild("PlayerGui")
 	Ui.watchViewport(layoutHud)
+	counter("Mog", mogLabel, "Hud.Mog")
+	counter("Cash", cashLabel, "Hud.Cash")
+	fxGui = Ui.create("ScreenGui", { Name = "HudFx", ResetOnSpawn = false, DisplayOrder = 30 })
+	fxGui.Parent = player:WaitForChild("PlayerGui")
 end
 
 local function update(stats)
-	mogLabel.Text = Texts.Get("Hud.Mog", { value = Format.Short(stats.Mog) })
-	cashLabel.Text = Texts.Get("Hud.Cash", { value = Format.Short(stats.Cash) })
+	setCounter(counters.Mog, stats.Mog)
+	setCounter(counters.Cash, stats.Cash)
 
 	local stage = Stages.List[stats.Stage]
 	local boss = stage and stage.boss

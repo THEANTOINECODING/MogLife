@@ -59,6 +59,8 @@ local function sync(player: Player)
 		(leaderstats:FindFirstChild("Mog") :: IntValue).Value = math.floor(data.Mog);
 		(leaderstats:FindFirstChild("Stage") :: StringValue).Value = stageName(data.Stage)
 	end
+	-- Stade visible de tous les clients : démarche, poussière des pas, respiration selon le gabarit (D84)
+	player:SetAttribute("StageIndex", data.Stage)
 
 	Remotes.StatsChanged:FireClient(player, {
 		Mog = data.Mog,

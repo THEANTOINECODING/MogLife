@@ -1,5 +1,5 @@
 -- Badges au-dessus des habitants : « ! » si l'aide est disponible, cadenas si le stade est trop bas,
--- sablier avec le temps restant si le délai n'est pas écoulé.
+-- sablier avec le temps restant si le délai n'est pas écoulé. Le « ! » flotte et s'agite pour attirer l'œil (D84).
 
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -14,6 +14,8 @@ local HELPER_TAG = "Helper"
 local stage = 1
 local readyAt: { [string]: number } = {}
 local badges: { [Model]: TextLabel } = {}
+local billboards: { [Model]: BillboardGui } = {}
+local baseOffsets: { [Model]: number } = {}
 
 local HelpController = {}
 
@@ -27,17 +29,20 @@ local function addBadge(model: Instance)
 	if not model:IsA("Model") or badges[model] then
 		return
 	end
-	local head = model:WaitForChild("Head", 10)
-	if not head then
+	-- PNJ provisoire (R15) : au-dessus de la tête ; PNJ modélisé (une seule pièce) : au-dessus du corps
+	local head = model:FindFirstChild("Head")
+	local body = head or model.PrimaryPart or model:WaitForChild(model.Name, 10)
+	if not body or not body:IsA("BasePart") then
 		return
 	end
+	local offset = if head then 3.2 else body.Size.Y / 2 + 1.6
 	local billboard = Ui.create("BillboardGui", {
 		Name = "HelpBadge",
 		Size = UDim2.fromOffset(90, 50),
-		StudsOffset = Vector3.new(0, 3.2, 0),
+		StudsOffset = Vector3.new(0, offset, 0),
 		AlwaysOnTop = true,
 		MaxDistance = 80,
-		Adornee = head,
+		Adornee = body,
 		Parent = model,
 	})
 	badges[model] = Ui.label({
@@ -45,6 +50,32 @@ local function addBadge(model: Instance)
 		TextColor3 = Color3.fromRGB(255, 220, 60),
 		Parent = billboard,
 	})
+	billboards[model] = billboard
+	baseOffsets[model] = offset
+end
+
+-- Le « ! » d'une aide disponible flotte, puis grossit et s'agite toutes les deux secondes
+local function animateBadges()
+	local now = os.clock()
+	local available = Texts.Get("Help.Available")
+	for model, label in badges do
+		local billboard = billboards[model]
+		if not billboard then
+			continue
+		end
+		if label.Text == available then
+			local beat = now % 2
+			local wiggle = if beat < 0.4 then math.sin(beat / 0.4 * math.pi * 3) * 14 else 0
+			label.Rotation = wiggle
+			local grow = if beat < 0.4 then 1 + 0.25 * math.sin(beat / 0.4 * math.pi) else 1
+			billboard.Size = UDim2.fromOffset(90 * grow, 50 * grow)
+			billboard.StudsOffset = Vector3.new(0, baseOffsets[model] + 0.25 * math.sin(now * 3), 0)
+		else
+			label.Rotation = 0
+			billboard.Size = UDim2.fromOffset(90, 50)
+			billboard.StudsOffset = Vector3.new(0, baseOffsets[model], 0)
+		end
+	end
 end
 
 local function refresh()
@@ -52,6 +83,8 @@ local function refresh()
 	for model, label in badges do
 		if not model.Parent then
 			badges[model] = nil
+			billboards[model] = nil
+			baseOffsets[model] = nil
 			continue
 		end
 		local helpId = model:GetAttribute("HelpId")
@@ -71,6 +104,7 @@ local function refresh()
 end
 
 function HelpController.Start()
+	game:GetService("RunService").RenderStepped:Connect(animateBadges)
 	for _, model in CollectionService:GetTagged(HELPER_TAG) do
 		task.spawn(addBadge, model)
 	end

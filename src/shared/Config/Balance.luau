@@ -76,6 +76,16 @@ return {
 	},
 
 	-- Émotes : poses de culturisme (MogOff.Strike), visibles par tous
+	-- Interface vivante (D84) : compteurs qui défilent, icônes qui s'envolent vers le HUD
+	HudFx = {
+		RollTime = 0.6, -- secondes pour que le compteur atteigne sa nouvelle valeur
+		PulseScale = 1.25, -- rebond du compteur quand il monte
+		GainColor = Color3.fromRGB(255, 235, 120),
+		FlyCount = 7, -- icônes qui s'envolent
+		FlyStagger = 0.06,
+		FlyTime = 0.55,
+	},
+
 	Emotes = {
 		Duration = 2.6, -- secondes de pose
 		Cooldown = 3, -- secondes minimum entre deux émotes

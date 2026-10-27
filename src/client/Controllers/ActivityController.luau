@@ -397,6 +397,12 @@ local function step()
 	end
 end
 
+-- Ce personnage est-il déjà animé ici (activité, combat, duel, émote) ? Les autres mouvements (démarche, pareur,
+-- MotionController) le laissent alors tranquille.
+function ActivityController.IsBusy(who: Player): boolean
+	return animators[who] ~= nil or emotes[who] ~= nil
+end
+
 -- Geste du joueur dans son mini-jeu (appelé par MinigameKit au moment même du geste) : son personnage fait la
 -- répétition tout de suite, au lieu d'attendre la confirmation du serveur (qui peut arriver un peu plus tard)
 function ActivityController.LocalRep(quality: string)

@@ -60,8 +60,17 @@ Les habitants, vendeurs et boss sont une seule pièce 3D, sans squelette : ils s
 5. Célébration du joueur : pose de victoire vue par tous après un boss battu ou une série notée S, caméra qui se
    rapproche.
 
-**Important (à faire)** : démarche selon le stade, attente du personnage (respiration, flex spontané), interface
-vivante (compteur de Mog qui défile, Cash qui vole vers le compteur, coffre qui s'ouvre), pose du pareur.
+**Important (fait, D84)** — `MotionController`, réglages dans `Config/Motion.luau` et `Balance.HudFx` :
+6. Démarche selon le gabarit (stade) : torse bombé, épaules qui roulent, bras écartés, bassin qui se dandine, menton
+   relevé ; elle s'ajoute à la marche de Roblox, de plus en plus marquée de Normie à Gigachad.
+7. Attente : respiration lente et profonde (plus forte chez les gros gabarits) ; son personnage immobile depuis 12 s
+   prend une pose de culturisme (vue par tous), puis toutes les 18 s.
+8. Interface vivante : compteurs de Mog et de Cash qui défilent et rebondissent ; billets (aide) et muscles (série)
+   qui s'envolent vers le compteur ; ouverture du coffre de la semaine (il tombe, tremble, éclate) ; « ! » des
+   habitants qui flottent et s'agitent.
+9. Pareur : il applaudit en rythme devant lui pendant toute la série.
+Ajouts (D84) : poussière à chaque pas, à la couleur du sol, plus abondante avec le gabarit et en courant ; anneau de
+poussière à l'atterrissage et petite secousse de sa caméra à partir d'Alpha ; traînée de vitesse en courant.
 
 **Bonus (plus tard)** : vrais squelettes dans Blender (boss d'abord), ville animée (passants, voitures, oiseaux,
 vent), nouvelles cinématiques, tenues animées et danses.

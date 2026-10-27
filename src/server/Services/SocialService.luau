@@ -64,6 +64,7 @@ local function endSpot(lifter: Player)
 		return
 	end
 	spots[lifter] = nil
+	spot.spotter:SetAttribute("SpottingFor", nil)
 	if spot.spotter.Parent then
 		Remotes.Notify:FireClient(spot.spotter, {
 			key = "Spot.Ended",
@@ -86,6 +87,8 @@ local function startSpot(lifter: Player, spotter: Player)
 		return
 	end
 	spots[lifter] = { spotter = spotter, earned = 0 }
+	-- Posture de pareur (D84) : tous les clients le font applaudir et encourager le pratiquant
+	spotter:SetAttribute("SpottingFor", lifter.UserId)
 	removePrompt(lifter)
 	emote(spotter, SPOT.CheerPose)
 	Remotes.Notify:FireClient(lifter, {

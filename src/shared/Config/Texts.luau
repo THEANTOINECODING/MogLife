@@ -718,6 +718,7 @@ local STRINGS: { [string]: string } = {
 	["Weekly.ChestOpen"] = "Open +{cash}",
 	["Weekly.ChestSunday"] = "Opens Sunday",
 	["Weekly.ChestOpened"] = "Opened ✔",
+	["Weekly.ChestBurst"] = "+{cash} Cash!",
 	["Weekly.ChestReward"] = "Weekly chest: +{cash} Cash for {days} days of gains!",
 	["Weekly.Footer"] = "🏆 {trophies}   Duels: {wins}W {losses}L {draws}D",
 	["Weekly.Day1"] = "M",

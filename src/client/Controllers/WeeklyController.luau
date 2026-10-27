@@ -374,6 +374,106 @@ local function buildGui()
 	Ui.watchViewport(layoutWeekly)
 end
 
+-- Ouverture du coffre (D84) : il tombe, tremble trois fois, éclate (rayons, pièces), affiche le gain, puis les
+-- billets s'envolent vers le compteur de Cash. Un toucher passe la scène.
+local function chestScene(cash: number)
+	local gui = Ui.create("ScreenGui", { Name = "ChestScene", ResetOnSpawn = false, DisplayOrder = 25 })
+	local shade = Ui.create("TextButton", {
+		Size = UDim2.fromScale(1, 1),
+		BackgroundColor3 = Color3.new(0, 0, 0),
+		BackgroundTransparency = 1,
+		Text = "",
+		AutoButtonColor = false,
+		Parent = gui,
+	})
+	local rays = Ui.label({
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.45),
+		Size = UDim2.fromOffset(320, 320),
+		Text = "✴️",
+		TextTransparency = 1,
+		TextStrokeTransparency = 1,
+		Parent = gui,
+	})
+	local chest = Ui.label({
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, -0.2),
+		Size = UDim2.fromOffset(150, 150),
+		Text = "🎁",
+		TextStrokeTransparency = 1,
+		ZIndex = 3,
+		Parent = gui,
+	})
+	local amount = Ui.label({
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.72),
+		Size = UDim2.fromOffset(420, 70),
+		Text = Texts.Get("Weekly.ChestBurst", { cash = Format.Short(cash) }),
+		TextColor3 = GOLD,
+		TextTransparency = 1,
+		TextStrokeTransparency = 1,
+		ZIndex = 4,
+		Parent = gui,
+	})
+	gui.Parent = player:WaitForChild("PlayerGui")
+	local finished = false
+	local function finish()
+		if finished then
+			return
+		end
+		finished = true
+		gui:Destroy()
+		UIController.FlyToCounter("Cash", 10)
+	end
+	shade.Activated:Connect(finish)
+	task.spawn(function()
+		TweenService:Create(shade, TweenInfo.new(0.3), { BackgroundTransparency = 0.45 }):Play()
+		local drop = TweenService:Create(chest, TweenInfo.new(0.5, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out), {
+			Position = UDim2.fromScale(0.5, 0.45),
+		})
+		drop:Play()
+		drop.Completed:Wait()
+		-- Il tremble trois fois, de plus en plus fort
+		for shake = 1, 3 do
+			for _, angle in { -8 * shake, 8 * shake, 0 } do
+				chest.Rotation = angle
+				task.wait(0.05)
+			end
+			task.wait(0.18)
+		end
+		if finished then
+			return
+		end
+		-- Il éclate
+		chest.Text = "💰"
+		chest.Size = UDim2.fromOffset(190, 190)
+		TweenService:Create(chest, TweenInfo.new(0.3, Enum.EasingStyle.Back), { Size = UDim2.fromOffset(150, 150) })
+			:Play()
+		rays.TextTransparency = 0.2
+		TweenService:Create(rays, TweenInfo.new(2.5, Enum.EasingStyle.Linear), { Rotation = 180 }):Play()
+		TweenService:Create(amount, TweenInfo.new(0.3), { TextTransparency = 0, TextStrokeTransparency = 0.2 }):Play()
+		for index = 1, 12 do
+			local coin = Ui.label({
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				Position = UDim2.fromScale(0.5, 0.45),
+				Size = UDim2.fromOffset(44, 44),
+				Text = if index % 2 == 0 then "🪙" else "💵",
+				TextStrokeTransparency = 1,
+				ZIndex = 2,
+				Parent = gui,
+			})
+			local angle = index / 12 * 2 * math.pi
+			TweenService:Create(coin, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				Position = UDim2.new(0.5, math.cos(angle) * 220, 0.45, math.sin(angle) * 160),
+				Rotation = 360,
+				TextTransparency = 1,
+			}):Play()
+		end
+		task.wait(2)
+		finish()
+	end)
+end
+
 function WeeklyController.Init(controllers)
 	UIController = controllers.UIController
 	MinigameController = controllers.MinigameController
@@ -385,9 +485,14 @@ function WeeklyController.Start()
 		if typeof(newState) ~= "table" then
 			return
 		end
+		local wasOpened = state and state.chest and state.chest.opened
 		state = newState
 		receivedAt = os.clock()
 		render()
+		-- Le coffre vient d'être ouvert : la scène d'ouverture
+		if state.chest and state.chest.opened and wasOpened == false then
+			chestScene(state.chest.cash or 0)
+		end
 	end)
 	-- Compte à rebours
 	task.spawn(function()

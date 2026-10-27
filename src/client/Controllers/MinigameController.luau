@@ -572,6 +572,12 @@ local function onEnded(update)
 		else
 			endLabel.Text = Texts.Get("Series.Complete", { mog = Format.Gain(gained) })
 		end
+		-- Le gain s'envole vers le compteur (D84) : billets pour une aide, muscles pour une série
+		if update.kind == "Help" and (update.cash or 0) > 0 then
+			UIController.FlyToCounter("Cash")
+		elseif update.kind == "Exercise" and gained > 0 then
+			UIController.FlyToCounter("Mog")
+		end
 		local grade = update.grade
 		gradeLabel.Text = grade or "-"
 		gradeLabel.TextColor3 = GRADE_COLORS[grade] or GRADE_COLORS.C
