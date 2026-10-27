@@ -1,10 +1,11 @@
--- Animations des habitants et des boss (D83, NpcController) : leurs modèles sont une seule pièce 3D, sans squelette.
--- On anime donc le corps entier, par le code, chez chaque joueur : respiration (le corps monte et descend), balancement,
--- regard vers le joueur proche, sautillements, et réactions (joie, déception, coup encaissé, moquerie, fête).
+-- Animations des habitants et des boss (D83, NpcController) : on anime le corps entier, par le code, chez chaque
+-- joueur : respiration, balancement, regard vers le joueur proche, sautillements, et réactions (joie, déception, coup
+-- encaissé, moquerie, fête). Les boss ont en plus un squelette (D85) : buste qui respire, tête qui suit le joueur,
+-- bras qui bougent (D86). Le corps bascule autour de ses pieds, qui restent au sol (D86).
 -- Distances en studs, angles en degrés, temps en secondes, fréquences en oscillations par seconde.
 
 export type Style = {
-	bob: number?, -- hauteur de la respiration
+	bob: number?, -- ampleur de la respiration (le buste se gonfle : léger tangage, os du buste chez les boss)
 	bobSpeed: number?,
 	sway: number?, -- balancement de côté (roulis)
 	swaySpeed: number?,
@@ -14,8 +15,8 @@ export type Style = {
 	turnSpeed: number?,
 	hopEvery: number?, -- petit saut régulier (secondes entre deux sauts)
 	hopHeight: number?,
-	sink: number?, -- s'affaisse lentement puis se redresse d'un coup (Kevin dans son canapé)
-	sinkEvery: number?,
+	slump: number?, -- pique du nez lentement (degrés) puis se redresse d'un coup (Kevin qui s'endort debout)
+	slumpEvery: number?,
 	float: number?, -- flotte en l'air (Dieu du Pump)
 	sparkle: string?, -- particules autour : "Shine" (Brayan), "Wind" (ventilateur du Roi), "Glow" (Dieu du Pump)
 }
@@ -40,12 +41,19 @@ return {
 		Worried = { duration = 0.6, shake = 3 }, -- l'habitant s'inquiète au début de l'aide
 	},
 	ConfettiCount = 45,
+	BreathAngle = 14, -- degrés de tangage par stud de « bob » (respiration du corps entier)
+	-- Squelette des boss : buste, tête et bras
+	Bones = {
+		Breath = 4, -- degrés de respiration du buste
+		HeadLook = 0.5, -- part du regard prise par la tête (le reste par le corps)
+		ArmSwing = 5, -- degrés de balancement des bras
+	},
 
 	-- Attitude par personnage (lookId : boss, habitants, vendeurs, mentor). Default pour les autres.
 	Default = { bob = 0.06, bobSpeed = 0.35, sway = 1.2, swaySpeed = 0.25 },
 	Styles = {
 		-- Boss
-		Kevin = { bob = 0.05, bobSpeed = 0.22, lean = 4, leanSpeed = 0.12, sink = 0.5, sinkEvery = 5 },
+		Kevin = { bob = 0.05, bobSpeed = 0.22, lean = 4, leanSpeed = 0.12, slump = 9, slumpEvery = 5 },
 		Brayan = { bob = 0.05, bobSpeed = 0.3, turn = 18, turnSpeed = 0.18, sparkle = "Shine" },
 		CoachTurbo = { bob = 0.04, bobSpeed = 0.5, hopEvery = 0.75, hopHeight = 0.45, sway = 2, swaySpeed = 1.3 },
 		NoLegs = { bob = 0.04, bobSpeed = 0.4, sway = 7, swaySpeed = 0.9, lean = 3, leanSpeed = 0.55 },

@@ -8,6 +8,14 @@
 --   rig:Place(part, worldCFrame)      place une pièce dans le monde en réglant l'articulation qui la porte
 --   rig:Reach(limb, target, pole)     bras ou jambe qui atteint un point (deux os, coude ou genou vers `pole`)
 --   rig:PartCFrame(part)              position d'une pièce selon la pose en cours
+--   rig:Grip(limb, target, pole)      le creux de la main (et non le poignet) va exactement sur `target` (D86)
+--   rig:PlantFeet(offsets?, pole?)    les deux pieds à plat sur le vrai sol, jambes pliées d'elles-mêmes (D86)
+--   rig:Plant(side, foot, pole)       un pied posé exactement à `foot` (monde)
+--   rig:Orient(part, rotation)       tourne une pièce (rotation monde) sans la détacher
+--   rig:Sole(side)                    hauteur du centre du pied au-dessus de sa semelle
+--   rig:RestFrame(part)               repère de repos d'une pièce par rapport à la racine
+
+local Ground = require(script.Parent.Parent.Ground)
 
 local Rig = {}
 Rig.__index = Rig
@@ -54,6 +62,8 @@ export type Rig = typeof(setmetatable(
 		joints: { [string]: Joint },
 		byPart: { [string]: Joint },
 		pose: { [string]: CFrame },
+		rest: { [string]: CFrame }, -- repères de repos (RestFrame), mis en cache
+		soles: { [string]: number }, -- hauteur du centre du pied au-dessus de la semelle, au repos
 	},
 	Rig
 ))
@@ -88,7 +98,10 @@ function Rig.new(character: Model): Rig?
 		joints[name] = joint
 		byPart[partName] = joint
 	end
-	return setmetatable({ character = character, root = root, joints = joints, byPart = byPart, pose = {} }, Rig)
+	return setmetatable(
+		{ character = character, root = root, joints = joints, byPart = byPart, pose = {}, rest = {}, soles = {} },
+		Rig
+	)
 end
 
 function Rig.Set(self: Rig, joint: string, rotation: CFrame)
@@ -192,6 +205,128 @@ function Rig.Reach(self: Rig, limb: string, target: Vector3, pole: Vector3)
 	local restAngle = signedAngle(restUpper.Unit, restLower.Unit, rest.XVector)
 	local wantedAngle = signedAngle(up, lower, wanted.XVector)
 	self.pose[middle] = CFrame.Angles(wantedAngle - restAngle, 0, 0)
+
+	-- Correction (D86) : les articulations d'un avatar ne sont pas tout à fait alignées sur ses os, la solution
+	-- ci-dessus tombe à 0,1-0,3 stud de la cible. On mesure la vraie position et on corrige : ouverture du coude (genou)
+	-- pour la bonne distance, puis rotation de l'os du haut vers la cible.
+	local origin = frame.Position
+	local wantedDistance = distance
+	for _ = 1, 3 do
+		local joint = self:JointFrame(middle)
+		local elbow = joint.Position
+		local tipNow = self:JointFrame(tip).Position
+		if (tipNow - target).Magnitude < 0.005 then
+			break
+		end
+		local toUpper, toTip = origin - elbow, tipNow - elbow
+		local bendAxis = toUpper:Cross(toTip)
+		if bendAxis.Magnitude > 1e-4 then
+			local ua, ub = toUpper.Magnitude, toTip.Magnitude
+			local current = math.acos(math.clamp(toUpper.Unit:Dot(toTip.Unit), -1, 1))
+			local goal = math.acos(math.clamp((ua * ua + ub * ub - wantedDistance ^ 2) / (2 * ua * ub), -1, 1))
+			local turn = CFrame.fromAxisAngle(joint.Rotation:VectorToObjectSpace(bendAxis.Unit), goal - current)
+			self.pose[middle] = turn * self.pose[middle]
+		end
+		local reached = self:JointFrame(tip).Position - origin
+		local aim = target - origin
+		local swing = reached:Cross(aim)
+		if swing.Magnitude > 1e-5 then
+			local swingAngle = math.acos(math.clamp(reached.Unit:Dot(aim.Unit), -1, 1))
+			local turn = CFrame.fromAxisAngle(frame.Rotation:VectorToObjectSpace(swing.Unit), swingAngle)
+			self.pose[upper] = turn * self.pose[upper]
+		end
+	end
+end
+
+-- Repère de repos d'une pièce par rapport à la racine (aucune articulation tournée), mis en cache
+function Rig.RestFrame(self: Rig, partName: string): CFrame
+	local cached = self.rest[partName]
+	if cached then
+		return cached
+	end
+	local saved = self.pose
+	self.pose = {}
+	local frame = self.root.CFrame:ToObjectSpace(self:PartCFrame(partName))
+	self.pose = saved
+	self.rest[partName] = frame
+	return frame
+end
+
+-- La main va chercher `target` avec le creux de la paume (le centre de la pièce de la main), pas avec le poignet :
+-- la barre, la corde ou la poignée est vraiment dans la main. Si le point est hors de portée, le bras est tendu vers
+-- lui ; les objets tenus se placent alors d'après rig:Palm.
+function Rig.Grip(self: Rig, limb: string, target: Vector3, pole: Vector3)
+	local hand = if limb == "LeftArm" then "LeftHand" else "RightHand"
+	local wristJoint = if limb == "LeftArm" then "LeftWrist" else "RightWrist"
+	local aim = target
+	for _ = 1, 3 do
+		self:Reach(limb, aim, pole)
+		local miss = target - self:PartCFrame(hand).Position
+		if miss.Magnitude < 0.01 then
+			break
+		end
+		aim = self:JointFrame(wristJoint).Position + miss
+	end
+end
+
+-- Centre de la paume (monde), pose en cours comprise
+function Rig.Palm(self: Rig, side: string): Vector3
+	return self:PartCFrame(side .. "Hand").Position
+end
+
+-- Oriente une pièce (rotation monde) en tournant seulement l'articulation qui la porte : elle reste attachée
+function Rig.Orient(self: Rig, partName: string, rotation: CFrame)
+	local joint = self.byPart[partName]
+	local c0, c1 = frames(joint)
+	local frame = self:PartCFrame(joint.part0.Name) * c0
+	self.pose[joint.name] = frame.Rotation:Inverse() * rotation.Rotation * c1.Rotation
+end
+
+-- Un pied posé exactement au repère `foot` (monde) : la jambe se plie pour que la cheville y arrive, genou vers `pole`
+-- (hors de portée, la jambe se tend vers lui et le pied reste attaché)
+function Rig.Plant(self: Rig, side: string, foot: CFrame, pole: Vector3)
+	local _, c1 = frames(self.joints[side .. "Ankle"])
+	self:Reach(side .. "Leg", (foot * c1).Position, pole)
+	self:Orient(side .. "Foot", foot)
+end
+
+-- Hauteur du centre du pied au-dessus de sa semelle (point le plus bas), au repos
+function Rig.Sole(self: Rig, side: string): number
+	local cached = self.soles[side]
+	if cached then
+		return cached
+	end
+	local rest = self:RestFrame(side .. "Foot")
+	local part = self.character:FindFirstChild(side .. "Foot") :: BasePart
+	local low = math.huge
+	for _, x in { -1, 1 } do
+		for _, y in { -1, 1 } do
+			for _, z in { -1, 1 } do
+				low = math.min(low, rest.Rotation:VectorToWorldSpace(part.Size * Vector3.new(x, y, z) / 2).Y)
+			end
+		end
+	end
+	self.soles[side] = -low
+	return -low
+end
+
+-- Les deux pieds à plat sur le vrai sol (Ground), à leur place de repos : le bassin peut descendre, se pencher ou
+-- avancer, les jambes se plient d'elles-mêmes et les pieds ne s'enfoncent ni ne flottent.
+-- offsets : décalage de chaque pied dans le repère du joueur (X à sa droite, Z vers l'arrière ; ex. une fente).
+-- pole : direction des genoux (devant le joueur par défaut). groundY : hauteur du sol imposée (sinon mesurée).
+function Rig.PlantFeet(self: Rig, offsets: { Left: Vector3?, Right: Vector3? }?, pole: Vector3?, groundY: number?)
+	local root = self.root.CFrame
+	for _, side in { "Left", "Right" } do
+		local rest = self:RestFrame(side .. "Foot")
+		local offset = (offsets and offsets[side]) or Vector3.zero
+		local foot = root * CFrame.new(offset) * rest
+		local y = groundY or Ground.Height(foot.Position)
+		if y then
+			foot = CFrame.new(foot.X, y + self:Sole(side), foot.Z) * foot.Rotation
+		end
+		local sx = if side == "Left" then -1 else 1
+		self:Plant(side, foot, pole or (root.LookVector + root.RightVector * sx * 0.25))
+	end
 end
 
 -- Mesures du corps au repos (pour adapter les poses à toutes les tailles de personnage)

@@ -1,6 +1,8 @@
 -- Aide « Indiquer le chemin » (le touriste perdu) : à chaque répétition, le joueur montre vraiment une direction
 -- du bras (gauche, droite, tout droit, derrière…), le corps tourné vers elle ; une ratée hésite et montre le ciel. D37.
 
+local HelperStand = require(script.Parent.HelperStand)
+
 local Directions = {}
 Directions.__index = Directions
 
@@ -15,7 +17,7 @@ local POINTS = {
 }
 
 function Directions.Stand(top: CFrame): CFrame
-	return top * CFrame.new(0, 0, -3.6) * CFrame.Angles(0, math.pi, 0)
+	return HelperStand.Around(top)
 end
 
 function Directions.new(ctx)

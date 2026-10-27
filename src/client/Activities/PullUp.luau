@@ -5,7 +5,7 @@ local PullUp = {}
 PullUp.__index = PullUp
 
 -- Caméra : suspendu, le corps et les mains montent au-dessus de la tête au repos : on cadre plus haut et un peu plus loin
-PullUp.CloseUp = { focus = 1.6, scale = 1.1 }
+PullUp.CloseUp = { focus = 1.6, scale = 1.1, room = 1.4 }
 
 local BAR = 7.9 -- hauteur de la barre au-dessus de la dalle (props_gym.py : pullup_bar)
 
@@ -44,8 +44,9 @@ function PullUp:Pose(p: number, shake: number, _u: number, time: number)
 	rig:Set("RightKnee", CFrame.Angles(-1.0, 0, 0))
 	rig:Set("Neck", CFrame.Angles(0.25 * (1 - p), 0, 0))
 	for _, side in { -1, 1 } do
-		local grip = bar + top.RightVector * side * m.handSpread - top.UpVector * 0.15
-		rig:Reach(if side < 0 then "LeftArm" else "RightArm", grip, top.RightVector * side - top.UpVector * 0.6)
+		-- Le creux de la main contre la barre (la main l'entoure)
+		local grip = bar + top.RightVector * side * m.handSpread - top.UpVector * 0.05
+		rig:Grip(if side < 0 then "LeftArm" else "RightArm", grip, top.RightVector * side - top.UpVector * 0.6)
 	end
 end
 

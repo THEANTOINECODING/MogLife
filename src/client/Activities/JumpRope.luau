@@ -6,6 +6,8 @@ local JumpRope = {}
 JumpRope.__index = JumpRope
 -- Le geste du joueur (toucher pour sauter) tombe sur l'impulsion du saut : le personnage décolle à ce moment
 JumpRope.ActionPhase = 0.5
+-- Caméra : de la place au-dessus de la tête pour le saut
+JumpRope.CloseUp = { room = 1.8 }
 
 local CURVE = 3.6 -- taille de la boucle de corde
 local HANDLE_COLOR = Color3.fromRGB(205, 45, 45)
@@ -90,11 +92,17 @@ function JumpRope:Pose(p: number, shake: number, u: number, time: number)
 		local circle = direction * 0.18
 		local wrist = hips + up * 0.2 + root.RightVector * side * (m.handSpread * 1.05) - back * 0.35 + circle
 		rig:Reach(if side < 0 then "LeftArm" else "RightArm", wrist, back + root.RightVector * side * 0.5)
+		-- La poignée est serrée dans la main : elle passe par le creux de la paume, dans l'axe de la main, et
+		-- dépasse vers le bas ; la corde part de son bout
+		local palm = rig:PartCFrame(if side < 0 then "LeftHand" else "RightHand")
+		local along = palm.UpVector
 		local hand = if side < 0 then self.left else self.right
 		local tip = if side < 0 then self.leftTip else self.rightTip
-		hand.CFrame = CFrame.fromMatrix(wrist - up * 0.45, up, root.RightVector)
+		local center = palm.Position - along * (hand.Size.X * 0.5 - 0.25)
+		hand.CFrame = CFrame.fromMatrix(center, along, palm.RightVector)
 		-- L'axe X de l'attache donne la direction de la boucle
-		tip.WorldCFrame = CFrame.fromMatrix(wrist - up * 0.95, direction, root.RightVector:Cross(direction))
+		local bottom = center - along * hand.Size.X * 0.5
+		tip.WorldCFrame = CFrame.fromMatrix(bottom, direction, root.RightVector:Cross(direction))
 	end
 	self.rope.CurveSize0 = CURVE
 	self.rope.CurveSize1 = -CURVE

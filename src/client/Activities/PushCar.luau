@@ -1,6 +1,9 @@
 -- Aide « Pousser la voiture du voisin » : le joueur se met derrière la voiture en panne et la pousse vraiment ;
 -- elle avance un peu à chaque répétition (une ratée patine sur place) et revient à sa place à la fin. D37.
 
+local Ground = require(script.Parent.Parent.Ground)
+local HelperStand = require(script.Parent.HelperStand)
+
 local PushCar = {}
 PushCar.__index = PushCar
 
@@ -8,7 +11,7 @@ local SEARCH_RADIUS = 30 -- la voiture est garée sur la route, à quelques mèt
 local STEP = 0.6 -- distance parcourue par répétition réussie
 
 function PushCar.Stand(top: CFrame): CFrame
-	return top * CFrame.new(0, 0, -3.6) * CFrame.Angles(0, math.pi, 0)
+	return HelperStand.Around(top)
 end
 
 -- La voiture : le modèle de voiture (Car…) le plus proche du voisin
@@ -80,16 +83,24 @@ function PushCar:Pose(p: number, shake: number, _u: number, time: number, count:
 		Vector3.new(self.car.Position.X, root.Position.Y, self.car.Position.Z)
 	)
 	local lean = 0.55 + 0.15 * p
-	local stride = math.sin(time * 6) * 0.35 * (0.3 + p)
-	rig:Place("LowerTorso", stand * self.lower * CFrame.Angles(-lean, 0, 0))
-	rig:Set("LeftHip", CFrame.Angles(0.3 + stride, 0, 0))
-	rig:Set("RightHip", CFrame.Angles(0.3 - stride, 0, 0))
-	rig:Set("LeftKnee", CFrame.Angles(-0.4 - math.max(stride, 0), 0, 0))
-	rig:Set("RightKnee", CFrame.Angles(-0.4 - math.max(-stride, 0), 0, 0))
-	local contact = self.car.Position - self.forward * (self.halfLength + 0.1) + Vector3.new(0, self.height * 0.15, 0)
+	-- Il marche avec la voiture : un pied après l'autre, posés au sol derrière lui (le pied qui avance se lève)
+	local phase = time * 6
+	local stride = math.sin(phase) * 0.35 * (0.3 + p)
+	rig:Place("LowerTorso", stand * CFrame.new(0, -m.legLength * 0.08, 0) * self.lower * CFrame.Angles(-lean, 0, 0))
+	for _, side in { "Left", "Right" } do
+		local sx = if side == "Left" then -1 else 1
+		local swing = stride * -sx
+		local foot = stand * CFrame.new(0, 0, m.legLength * 0.35 - swing) * rig:RestFrame(side .. "Foot")
+		local ground = Ground.Height(foot.Position) or m.ground
+		local lift = math.max(math.cos(phase) * -sx, 0) * 0.25 * (0.3 + p)
+		foot = CFrame.new(foot.X, ground + rig:Sole(side) + lift, foot.Z) * foot.Rotation
+		rig:Plant(side, foot, stand.LookVector + stand.RightVector * sx * 0.2)
+	end
+	-- Les paumes à plat contre l'arrière de la voiture
+	local contact = self.car.Position - self.forward * (self.halfLength + 0.15) + Vector3.new(0, self.height * 0.15, 0)
 	for _, sx in { -1, 1 } do
 		local grip = contact + stand.RightVector * sx * m.handSpread
-		rig:Reach(if sx < 0 then "LeftArm" else "RightArm", grip, -Vector3.yAxis + stand.RightVector * sx * 0.5)
+		rig:Grip(if sx < 0 then "LeftArm" else "RightArm", grip, -Vector3.yAxis + stand.RightVector * sx * 0.5)
 	end
 end
 

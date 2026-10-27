@@ -17,6 +17,7 @@ BenchPress.CloseUp = {
 local SEAT = 1.975 -- dessus du banc au-dessus de la dalle (props_gym.py : bench_press)
 local PELVIS_Z = 0.9 -- bassin vers le bout du banc, la tête sous les crochets
 local UNRACK_TIME = 0.6
+local FOOT_SIDE = 1.3 -- pieds de part et d'autre du banc
 
 function BenchPress.Stand(top: CFrame): CFrame
 	return top * CFrame.new(2.6, 0, 0.6)
@@ -39,12 +40,20 @@ function BenchPress:Pose(p: number, shake: number, _u: number, time: number)
 	rig:Place("LowerTorso", self.body)
 	local up = top.UpVector
 
-	-- Jambes : pieds au sol de chaque côté du banc, genoux vers le haut
-	local hips = rig:JointFrame("LeftHip").Position
-	local local_hips = top:PointToObjectSpace(hips)
+	-- Jambes : pieds à plat au sol de chaque côté du banc, genoux vers le haut. Les pieds se posent aussi loin vers le
+	-- bout du banc que la jambe le permet (banc haut, grand corps : ils se rapprochent) : jamais en l'air.
 	for _, side in { -1, 1 } do
-		local foot = top * Vector3.new(side * 1.3, m.ankleHeight, local_hips.Z + m.legLength * 0.62)
-		rig:Reach(if side < 0 then "LeftLeg" else "RightLeg", foot, up - top.LookVector * 0.4)
+		local name = if side < 0 then "Left" else "Right"
+		local hip = rig:JointFrame(name .. "Hip").Position
+		local flatHip = top:PointToObjectSpace(hip)
+		local drop = hip.Y - (top.Y + m.ankleHeight)
+		local spread = math.abs(side * FOOT_SIDE - flatHip.X)
+		local reach = m.legLength * 0.96
+		local along = math.sqrt(math.max(reach * reach - drop * drop - spread * spread, 0))
+		local spot = top * Vector3.new(side * FOOT_SIDE, 0, flatHip.Z + math.min(along, m.legLength * 0.62))
+		-- Orteils vers le bout du banc (à l'opposé de la tête) ; le sol de la station (un rayon toucherait le coussin)
+		local foot = CFrame.new(spot.X, top.Y + rig:Sole(name), spot.Z) * top.Rotation * CFrame.Angles(0, math.pi, 0)
+		rig:Plant(name, foot, up - top.LookVector * 0.4)
 	end
 
 	-- Barre : décrochée au début, puis entre bras tendus et poitrine
@@ -58,12 +67,12 @@ function BenchPress:Pose(p: number, shake: number, _u: number, time: number)
 
 	for _, side in { -1, 1 } do
 		local grip = center + top.RightVector * side * m.handSpread
-		rig:Reach(if side < 0 then "LeftArm" else "RightArm", grip, -up + top.RightVector * side * 0.7)
+		rig:Grip(if side < 0 then "LeftArm" else "RightArm", grip, -up + top.RightVector * side * 0.7)
 	end
 	-- La barre est toujours dans les mains (même si un bras court n'atteint pas tout à fait la cible)
 	if self.bar then
-		local hands = (rig:JointFrame("LeftWrist").Position + rig:JointFrame("RightWrist").Position) / 2
-		local held = if unrack < 1 then center else hands + up * 0.2
+		local hands = (rig:Palm("Left") + rig:Palm("Right")) / 2
+		local held = if unrack < 1 then center else hands
 		self.bar.CFrame = CFrame.new(held) * top.Rotation
 	end
 end

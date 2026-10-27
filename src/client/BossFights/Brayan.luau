@@ -83,21 +83,26 @@ function def.PlayerPose(scene, rig, m, p, shake, now)
 	local push = if scene.playerQuality ~= "Miss" then p else 0
 	local blinded = scene:Pulse(now - (scene.data.glareAt or -math.huge), 0.9)
 	Poses.Pelvis(rig, Vector3.new(0, -m.legLength * 0.06, -push * 0.3), -0.12 * push + 0.1 * blinded)
-	Poses.Lunge(rig, 0.7)
+	Poses.Lunge(rig, m, 0.7)
 	local stand = rig.root.CFrame
 	local chest = (rig:JointFrame("LeftShoulder").Position + rig:JointFrame("RightShoulder").Position) / 2
 	local center = chest + stand.LookVector * (m.armLength * (0.7 + 0.25 * push)) - stand.UpVector * 0.2
 	local jitter = if shake > 0 then stand.RightVector * math.sin(now * 40) * 0.08 * shake else Vector3.zero
+	local half = SETTINGS.MirrorSize.X * 0.5
+	-- Mains sur les bords du cadre ; ébloui, la main gauche protège les yeux
+	local covering = blinded > 0.2
 	for _, sx in { -1, 1 } do
-		local hand = center + stand.RightVector * sx * (SETTINGS.MirrorSize.X * 0.45) + jitter
-		-- Ébloui : la main gauche protège les yeux
-		if sx < 0 and blinded > 0.2 then
+		local hand = center + stand.RightVector * sx * half + jitter
+		if sx < 0 and covering then
 			hand = rig:PartCFrame("Head").Position + stand.LookVector * 0.6 + stand.UpVector * 0.2
 		end
-		rig:Reach(if sx < 0 then "LeftArm" else "RightArm", hand, -stand.UpVector + stand.RightVector * sx)
+		rig:Grip(if sx < 0 then "LeftArm" else "RightArm", hand, -stand.UpVector + stand.RightVector * sx)
 	end
 	rig:Set("Neck", CFrame.Angles(-0.1 - 0.3 * blinded, 0, 0))
-	scene.data.playerMirror.CFrame = CFrame.lookAt(center, center + stand.LookVector)
+	-- Le miroir est entre les vraies mains (d'une seule main quand l'autre protège les yeux)
+	local right = rig:Palm("Right")
+	local held = if covering then right - stand.RightVector * half else (rig:Palm("Left") + right) / 2
+	scene.data.playerMirror.CFrame = CFrame.lookAt(held, held + stand.LookVector)
 	scene.data.playerFrame.CFrame = scene.data.playerMirror.CFrame * CFrame.new(0, 0, 0.08)
 end
 
@@ -115,11 +120,13 @@ function def.Boss(scene, _dt, now)
 		local chest = (rig:Joint("LeftUpperArm") + rig:Joint("RightUpperArm")) / 2
 		center = chest + toward * (2.2 + push * 0.4) - Vector3.new(0, 0.4, 0)
 		local side = rig:Side()
+		rig:Turn("UpperTorso", CFrame.Angles(0.12 * struck - 0.1 * push, 0, 0))
 		for _, name in { "Left", "Right" } do
 			local sx = if name == "Right" then 1 else -1
-			rig:Reach(name, center + side * sx * SETTINGS.MirrorSize.X * 0.55, -Vector3.yAxis + side * sx)
+			rig:Reach(name, center + side * sx * SETTINGS.MirrorSize.X * 0.6, -Vector3.yAxis + side * sx)
 		end
-		rig:Turn("UpperTorso", CFrame.Angles(0.12 * struck - 0.1 * push, 0, 0))
+		-- Le miroir est entre ses vraies mains
+		center = (rig:Palm("Left") + rig:Palm("Right")) / 2
 	elseif part then
 		center = part.Position + toward * 2.2
 	else

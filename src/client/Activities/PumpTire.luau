@@ -2,6 +2,7 @@
 -- tout en bas à chaque répétition (à moitié et en tremblant si elle est ratée). Un tuyau relie la pompe au vélo. D37.
 
 local Props = require(script.Parent.Props)
+local HelperStand = require(script.Parent.HelperStand)
 
 local PumpTire = {}
 PumpTire.__index = PumpTire
@@ -12,7 +13,7 @@ local HANDLE_DOWN = 0.8
 
 -- Devant le livreur, un peu sur le côté du vélo
 function PumpTire.Stand(top: CFrame): CFrame
-	return top * CFrame.new(1.5, 0, -3.8) * CFrame.Angles(0, math.pi, 0)
+	return HelperStand.Around(top, HelperStand.Distance + 0.2, 1.5)
 end
 
 function PumpTire.new(ctx)
@@ -25,16 +26,11 @@ function PumpTire.new(ctx)
 	self.hose = props:Part(Vector3.new(0.08, 0.08, 1), Color3.fromRGB(30, 30, 34))
 	-- Le vélo du livreur, s'il est là, reçoit le tuyau
 	self.bike = ctx.borrow("Bicycle")
-	-- Repos (par rapport au HumanoidRootPart) : bassin et chevilles, pour plier les jambes pieds au sol
+	-- Bassin au repos (par rapport au HumanoidRootPart) : il descend, les pieds restent au sol (PlantFeet)
 	local rig = ctx.rig
 	local saved = table.clone(rig.pose)
 	rig:Clear()
-	local root = rig.root.CFrame
-	self.lower = root:ToObjectSpace(rig:PartCFrame("LowerTorso"))
-	self.ankles = {
-		Left = root:PointToObjectSpace(rig:JointFrame("LeftAnkle").Position),
-		Right = root:PointToObjectSpace(rig:JointFrame("RightAnkle").Position),
-	}
+	self.lower = rig.root.CFrame:ToObjectSpace(rig:PartCFrame("LowerTorso"))
 	rig.pose = saved
 	return self
 end
@@ -53,12 +49,11 @@ function PumpTire:Pose(p: number, shake: number, _u: number, time: number)
 	-- Le joueur appuie de tout son poids : bassin qui descend, buste penché, pieds au sol
 	rig:Place("LowerTorso", root * self.lower * CFrame.new(0, -0.4 * p, 0))
 	rig:Set("Waist", CFrame.Angles(-0.45 * p, 0, 0))
-	for side, ankle in self.ankles do
-		rig:Reach(side .. "Leg", root * ankle, root.LookVector)
-	end
+	rig:PlantFeet()
+	-- Les deux mains serrent la poignée, de part et d'autre de la tige
 	for _, sx in { -1, 1 } do
-		local grip = (self.handle.CFrame * CFrame.new(sx * 0.45, 0, 0)).Position + Vector3.new(0, 0.1, 0)
-		rig:Reach(if sx < 0 then "LeftArm" else "RightArm", grip, root.RightVector * sx - root.LookVector * 0.3)
+		local grip = (self.handle.CFrame * CFrame.new(sx * 0.4, 0, 0)).Position
+		rig:Grip(if sx < 0 then "LeftArm" else "RightArm", grip, root.RightVector * sx - root.LookVector * 0.3)
 	end
 	-- Tuyau jusqu'à la roue du vélo (ou posé au sol)
 	local from = (pump * CFrame.new(0, 0.3, 0)).Position

@@ -2,6 +2,7 @@
 -- envoie les répétitions au serveur, affiche le feedback et l'écran de fin de série.
 -- Le client ne calcule aucun gain : il affiche ce que le serveur confirme.
 
+local GuiService = game:GetService("GuiService")
 local Players = game:GetService("Players")
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -711,6 +712,67 @@ function MinigameController.CurrentRoot(): Frame?
 	return current and current.root
 end
 
+-- Partie de l'écran que le mini-jeu laisse libre (D86), pour que la caméra y place la scène (CameraFraming) : entre
+-- la colonne d'infos (téléphone en paysage) et le panneau du jeu, ou au-dessus d'un panneau large (portrait, Beats).
+-- En pixels de l'écran (l'interface est décalée de la barre du haut de Roblox).
+local RAIL_ITEMS = { "Title", "Counter", "Feedback", "Combo", "Gain", "Hint", "Stop" }
+local function freeArea(): (Vector2?, Vector2?)
+	local session = current
+	local camera = workspace.CurrentCamera
+	if not session or not session.root.Parent or not camera then
+		return nil
+	end
+	local view = camera.ViewportSize
+	local inset = GuiService:GetGuiInset()
+	local low, high = Vector2.new(0, inset.Y), view
+	-- Colonne d'infos collée au bord gauche
+	local railRight = 0
+	for _, name in RAIL_ITEMS do
+		local item = session.root:FindFirstChild(name)
+		if item and item:IsA("GuiObject") and item.Visible then
+			local left = item.AbsolutePosition.X + inset.X
+			local right = left + item.AbsoluteSize.X
+			if left < view.X * 0.1 and right < view.X * 0.45 then
+				railRight = math.max(railRight, right)
+			end
+		end
+	end
+	if railRight > 0 then
+		low = Vector2.new(railRight + 8, low.Y)
+	else
+		-- Ordinateur, portrait : titre et compteur en haut, consigne en bas, au milieu de l'écran
+		for _, name in { "Title", "Counter", "Combo", "Hint" } do
+			local item = session.root:FindFirstChild(name)
+			if item and item:IsA("GuiObject") and item.Visible then
+				local top = item.AbsolutePosition.Y + inset.Y
+				local bottom = top + item.AbsoluteSize.Y
+				if bottom < view.Y * 0.45 then
+					low = Vector2.new(low.X, math.max(low.Y, bottom + 4))
+				elseif top > view.Y * 0.7 then
+					high = Vector2.new(high.X, math.min(high.Y, top - 4))
+				end
+			end
+		end
+	end
+	local labelTop = low.Y
+	-- Panneau du mini-jeu : à droite, ou large en bas
+	local panel = session.minigame and session.minigame.root
+	if panel and panel:IsA("GuiObject") and panel.Parent then
+		local position = panel.AbsolutePosition + inset
+		local size = panel.AbsoluteSize
+		if size.X > view.X * 0.5 then
+			high = Vector2.new(high.X, math.min(high.Y, position.Y - 8))
+		elseif position.X > view.X * 0.4 then
+			high = Vector2.new(math.min(high.X, position.X - 8), high.Y)
+		end
+	end
+	-- Trop peu de place sous le titre (portrait) : la scène passe derrière le titre plutôt que de rapetisser
+	if high.Y - low.Y < view.Y * 0.3 and labelTop > inset.Y then
+		low = Vector2.new(low.X, inset.Y)
+	end
+	return low, high
+end
+
 function MinigameController.Init(controllers)
 	SettingsController = controllers.SettingsController
 	MinigameKit.SetSettingsGetter(SettingsController.Get)
@@ -721,6 +783,7 @@ function MinigameController.Init(controllers)
 end
 
 function MinigameController.Start()
+	CameraFraming.SetFreeArea(freeArea)
 	buildGui()
 
 	-- Un nouveau personnage (mort, respawn) repart avec ses valeurs par défaut

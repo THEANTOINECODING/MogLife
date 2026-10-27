@@ -11,6 +11,7 @@ local CameraFraming = {}
 local MIN_DISTANCE = 5 -- studs : la caméra ne vient jamais plus près que ça du sujet
 local MARGIN = 0.8 -- studs gardés devant l'obstacle
 local SOLID_SIZE = 30 -- studs : en dessous, un obstacle est « petit » (estompé plutôt qu'évité)
+local FOV = 70 -- champ de vision pendant une activité ou un duel
 
 local function ignoreList(extra: { Instance }?): { Instance }
 	local list = {}
@@ -243,6 +244,127 @@ function CameraFraming.ClearFade(fader: Fader)
 	fader.parts = {}
 end
 
+-- ------------------------------------------------------------------ zone libre de l'écran (D86)
+-- Pendant un mini-jeu, l'interface couvre une partie de l'écran (panneau du jeu, colonne d'infos à gauche sur
+-- téléphone) : la scène filmée doit tenir dans ce qui reste. MinigameController fournit cette zone.
+local freeAreaGetter: (() -> (Vector2?, Vector2?))? = nil
+
+-- getter() renvoie le coin haut-gauche et le coin bas-droit de la zone libre (pixels de l'écran), ou rien
+function CameraFraming.SetFreeArea(getter: () -> (Vector2?, Vector2?))
+	freeAreaGetter = getter
+end
+
+-- Zone libre de l'écran (pixels) : tout l'écran sans interface
+function CameraFraming.FreeArea(): (Vector2, Vector2)
+	local camera = workspace.CurrentCamera
+	local size = if camera then camera.ViewportSize else Vector2.new(1280, 720)
+	if freeAreaGetter then
+		local low, high = freeAreaGetter()
+		if low and high and high.X - low.X > 40 and high.Y - low.Y > 40 then
+			return low, high
+		end
+	end
+	return Vector2.zero, size
+end
+
+local FIT_MARGIN = 0.12 -- part de la zone libre gardée vide autour du sujet (mouvements, effets)
+
+-- Place la caméra pour que tous les `points` tiennent dans la zone libre de l'écran, le plus près possible : la
+-- caméra regarde dans la direction choisie (de `eye` vers `focus`), recule juste ce qu'il faut et se décale pour
+-- centrer le sujet dans la zone libre. Renvoie (œil, point visé). minDistance : recul minimal.
+function CameraFraming.Fit(focus: Vector3, eye: Vector3, points: { Vector3 }, minDistance: number?): (Vector3, Vector3)
+	local camera = workspace.CurrentCamera
+	local viewport = if camera then camera.ViewportSize else Vector2.new(1280, 720)
+	local low, high = CameraFraming.FreeArea()
+	local look = focus - eye
+	look = if look.Magnitude > 0.01 then look.Unit else Vector3.new(0, 0, -1)
+	local right = look:Cross(Vector3.new(0, 1, 0))
+	right = if right.Magnitude > 0.01 then right.Unit else Vector3.xAxis
+	local up = right:Cross(look)
+	local tanY = math.tan(math.rad(FOV / 2))
+	local tanX = tanY * viewport.X / math.max(viewport.Y, 1)
+	-- Zone libre en coordonnées normalisées de l'écran (-1 à 1, Y vers le haut)
+	local cx = ((low.X + high.X) / viewport.X) - 1
+	local cy = 1 - ((low.Y + high.Y) / viewport.Y)
+	local hx = (high.X - low.X) / viewport.X * (1 - FIT_MARGIN)
+	local hy = (high.Y - low.Y) / viewport.Y * (1 - FIT_MARGIN)
+	-- Le sujet : boîte des points autour de son centre, dans le repère de la caméra
+	local minX, maxX, minY, maxY = 0, 0, 0, 0
+	local center = Vector3.zero
+	for _, point in points do
+		center += point
+	end
+	center = if #points > 0 then center / #points else focus
+	for _, point in points do
+		local offset = point - center
+		minX, maxX = math.min(minX, offset:Dot(right)), math.max(maxX, offset:Dot(right))
+		minY, maxY = math.min(minY, offset:Dot(up)), math.max(maxY, offset:Dot(up))
+	end
+	local midX, midY = (minX + maxX) / 2, (minY + maxY) / 2
+	local subject = center + right * midX + up * midY
+	-- Recul : la largeur et la hauteur du sujet tiennent dans la zone libre
+	local halfW, halfH = (maxX - minX) / 2, (maxY - minY) / 2
+	local distance = math.max(halfW / (hx * tanX), halfH / (hy * tanY), minDistance or MIN_DISTANCE)
+	-- La caméra se décale (sans tourner) pour que le sujet tombe au centre de la zone libre
+	local shift = right * (-cx * distance * tanX) + up * (-cy * distance * tanY)
+	local newEye = subject - look * distance + shift
+	return newEye, newEye + look * distance
+end
+
+-- Points du sujet à faire tenir à l'écran : le corps (du sommet de la tête, plus `room` studs de marge, à la semelle
+-- des pieds) et les coins des objets donnés (barre, voiture, transats… proches du personnage)
+function CameraFraming.SubjectPoints(character: Model, parts: { Instance }?, room: number?): { Vector3 }
+	local points = CameraFraming.BodyPoints(character)
+	local origin = character:GetPivot().Position
+	local head = character:FindFirstChild("Head")
+	if head and head:IsA("BasePart") then
+		table.insert(points, head.Position + Vector3.new(0, head.Size.Y / 2 + (room or 0.4), 0))
+	end
+	for _, name in { "LeftFoot", "RightFoot" } do
+		local foot = character:FindFirstChild(name)
+		if foot and foot:IsA("BasePart") then
+			table.insert(points, foot.Position - Vector3.new(0, foot.Size.Y / 2 + (room or 0.4) * 0.3, 0))
+		end
+	end
+	for _, instance in parts or {} do
+		local list = if instance:IsA("BasePart") then { instance } else instance:GetDescendants()
+		for _, part in list do
+			if part:IsA("BasePart") and part.Transparency < 0.95 and (part.Position - origin).Magnitude < 14 then
+				local half = part.Size / 2
+				for _, x in { -1, 1 } do
+					for _, y in { -1, 1 } do
+						for _, z in { -1, 1 } do
+							table.insert(points, part.CFrame * Vector3.new(half.X * x, half.Y * y, half.Z * z))
+						end
+					end
+				end
+			end
+		end
+	end
+	return points
+end
+
+-- Cadrage complet : l'angle d'où l'on voit le mieux (Best), puis le recul et le décalage pour que tout le sujet tienne
+-- dans la zone libre de l'écran (Fit) ; si un grand décor est alors entre lui et la caméra, elle se rapproche.
+-- Renvoie (œil, point visé).
+function CameraFraming.Frame(
+	focus: Vector3,
+	directions: { Vector3 },
+	extraIgnore: { Instance }?,
+	points: { Vector3 },
+	minDistance: number?
+): (Vector3, Vector3)
+	local chosen = CameraFraming.Best(focus, directions, extraIgnore, points)
+	local eye, aim = CameraFraming.Fit(focus, chosen, points, minDistance)
+	local back = eye - focus
+	local clear = CameraFraming.ClearDistance(focus, back, back.Magnitude + MARGIN, ignoreList(extraIgnore), true)
+	if clear < back.Magnitude then
+		local closer = focus + back.Unit * math.max(clear - MARGIN, MIN_DISTANCE)
+		return closer, closer + (aim - eye)
+	end
+	return eye, aim
+end
+
 -- ------------------------------------------------------------------ caméra stable (activités, duels)
 -- La caméra choisit son angle UNE fois, d'après le corps au repos, puis reste fixe par rapport au sujet : elle ne
 -- suit pas chaque répétition (le torse qui monte et descend), seulement un vrai déplacement (pousser la voiture),
@@ -256,7 +378,6 @@ export type FollowOptions = {
 	enterTime: number?, -- secondes pour arriver depuis la caméra du joueur
 }
 
-local FOV = 70
 local REPLAN_MOVE = 4 -- studs : le sujet s'est vraiment déplacé, l'angle est recalculé
 local BLOCK_CHECK = 1.2 -- secondes entre deux contrôles de visibilité
 local BLOCK_TIME = 1.5 -- secondes de corps caché (par un grand décor) avant de changer d'angle
@@ -282,6 +403,7 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 	local fromEye, fromAim, glideStart = eyeOffset, aimOffset, -math.huge
 	local smoothAnchor = start
 	local viewport = camera.ViewportSize
+	local areaLow, areaHigh = CameraFraming.FreeArea()
 	local fader = CameraFraming.NewFader()
 	local nextFade, nextCheck, hiddenSince = 0, 0, nil :: number?
 
@@ -302,8 +424,16 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 		local now = os.clock()
 		-- Suit les vrais déplacements, en douceur (pas les mouvements des répétitions : la racine bouge peu)
 		smoothAnchor = smoothAnchor:Lerp(anchor, math.min(dt * 3, 1))
-		if camera.ViewportSize ~= viewport or (anchor - planned).Magnitude > REPLAN_MOVE then
+		-- Écran tourné, interface du mini-jeu apparue ou déplacée, vrai déplacement : nouvel angle
+		local low, high = CameraFraming.FreeArea()
+		if
+			camera.ViewportSize ~= viewport
+			or (low - areaLow).Magnitude > 8
+			or (high - areaHigh).Magnitude > 8
+			or (anchor - planned).Magnitude > REPLAN_MOVE
+		then
 			viewport = camera.ViewportSize
+			areaLow, areaHigh = low, high
 			replan(anchor)
 		end
 		-- Contrôle de visibilité : si un grand décor cache le corps trop longtemps, nouvel angle

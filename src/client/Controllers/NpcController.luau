@@ -1,5 +1,7 @@
--- Les habitants et les boss prennent vie (D83) : leurs modèles sont une seule pièce 3D, sans squelette ; on anime donc
--- le corps entier, chez chaque joueur (fluide, rien sur le réseau). Réglages dans Config/NpcAnims.luau.
+-- Les habitants et les boss prennent vie (D83) : on anime le corps entier (une seule pièce 3D), chez chaque joueur
+-- (fluide, rien sur le réseau). Réglages dans Config/NpcAnims.luau.
+-- Le corps bascule autour de ses pieds et se soulève juste ce qu'il faut pour que le bord d'un pied ne passe jamais
+-- sous le sol (D86). Les boss à squelette (D85) respirent du buste, suivent le joueur de la tête et bougent les bras.
 -- - Attitude propre à chacun : respiration, balancement, regards, sautillements (Coach Turbo), affaissement (Kevin
 --   dans son canapé), particules (reflets de Brayan, vent du ventilateur du Roi, halo du Dieu du Pump).
 -- - Il se tourne vers le joueur proche ; un habitant dont l'aide est disponible sautille pour attirer l'attention.
@@ -15,9 +17,11 @@ local RunService = game:GetService("RunService")
 
 local NpcAnims = require(ReplicatedStorage.Shared.Config.NpcAnims)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local BossRig = require(script.Parent.Parent.BossFights.BossRig)
 
 local player = Players.LocalPlayer
 local REACTIONS = NpcAnims.Reactions
+local BONES = NpcAnims.Bones
 local CONFETTI = ColorSequence.new({
 	ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 90, 90)),
 	ColorSequenceKeypoint.new(0.25, Color3.fromRGB(255, 210, 60)),
@@ -37,6 +41,10 @@ type Entry = {
 	impulses: { Impulse },
 	focus: Player?, -- joueur qui l'aide ou le combat : il le regarde
 	confetti: ParticleEmitter?,
+	feet: CFrame, -- du centre du corps au milieu de ses pieds (pivot des bascules)
+	footX: number, -- demi-largeur et demi-profondeur de l'appui des pieds
+	footZ: number,
+	rig: any?, -- squelette (BossRig) des boss modélisés
 }
 
 local HelpController
@@ -166,6 +174,14 @@ local function track(model: Instance)
 	end
 	local look = model:GetAttribute("NpcLook")
 	local style = (typeof(look) == "string" and NpcAnims.Styles[look]) or NpcAnims.Default
+	-- Appui des pieds : d'après les os des pieds s'il y en a, sinon une part de la largeur du corps
+	local rig = BossRig.new(model)
+	local footX, footZ = part.Size.X * 0.22, part.Size.Z * 0.4
+	if rig then
+		local left, right = rig.restPos.LeftFoot, rig.restPos.RightFoot
+		footX = math.max(math.abs(left.X), math.abs(right.X)) + part.Size.X * 0.05
+		footZ = math.min(part.Size.Z * 0.4, 0.6)
+	end
 	local entry: Entry = {
 		model = model,
 		part = part,
@@ -175,6 +191,10 @@ local function track(model: Instance)
 		phase = math.random() * 10,
 		lookYaw = 0,
 		impulses = {},
+		feet = CFrame.new(0, -part.Size.Y / 2, 0),
+		footX = footX,
+		footZ = footZ,
+		rig = rig,
 	}
 	entries[model] = entry
 	addParticles(entry)
@@ -264,17 +284,18 @@ local function step(dt: number)
 		end
 		local style = entry.style
 		local t = now + entry.phase
-		local y = wave(style.bob, style.bobSpeed, t)
+		local y = 0
 		if style.float then
 			y += style.float * (1 + math.sin(2 * math.pi * (style.bobSpeed or 0.25) * t))
 		end
 		if style.hopEvery then
 			y += hop(style.hopEvery, style.hopHeight or 0.4, t)
 		end
-		if style.sink and style.sinkEvery then
-			-- S'affaisse doucement, puis se redresse d'un coup
-			local u = (t % style.sinkEvery) / style.sinkEvery
-			y -= style.sink * (if u < 0.85 then u / 0.85 else 1 - (u - 0.85) / 0.15)
+		local slump = 0
+		if style.slump and style.slumpEvery then
+			-- Pique du nez doucement, puis se redresse d'un coup
+			local u = (t % style.slumpEvery) / style.slumpEvery
+			slump = style.slump * (if u < 0.85 then u / 0.85 else 1 - (u - 0.85) / 0.15)
 		end
 		local helpId = model:GetAttribute("HelpId")
 		local near = myRoot and (myRoot.Position - base.Position).Magnitude < NpcAnims.LookDistance * 2
@@ -282,7 +303,9 @@ local function step(dt: number)
 			y += hop(NpcAnims.AvailableHopEvery, NpcAnims.AvailableHopHeight, t)
 		end
 		local roll = wave(style.sway, style.swaySpeed, t)
-		local pitch = wave(style.lean, style.leanSpeed, t)
+		-- Respiration : le buste se gonfle (léger tangage) ; penché ; il pique du nez
+		local breath = wave(style.bob, style.bobSpeed, t)
+		local pitch = wave(style.lean, style.leanSpeed, t) - slump + breath * NpcAnims.BreathAngle
 		local yaw = wave(style.turn, style.turnSpeed, t)
 
 		-- Regard : vers le joueur qui l'aide / le combat, sinon vers le joueur proche
@@ -307,11 +330,39 @@ local function step(dt: number)
 		end
 
 		local iy, iz, iyaw, ipitch, iroll = impulseOffset(entry, now)
+		-- Bascule autour des pieds ; le corps se soulève juste assez pour que le bord le plus bas de l'appui reste au
+		-- niveau du sol (il roule sur le bord de ses pieds au lieu de s'enfoncer)
+		local tilt = CFrame.Angles(math.rad(pitch + ipitch), 0, math.rad(roll + iroll))
+		local lowest = 0
+		for _, corner in
+			{
+				Vector3.new(entry.footX, 0, entry.footZ),
+				Vector3.new(-entry.footX, 0, entry.footZ),
+				Vector3.new(entry.footX, 0, -entry.footZ),
+				Vector3.new(-entry.footX, 0, -entry.footZ),
+			}
+		do
+			lowest = math.min(lowest, tilt:VectorToWorldSpace(corner).Y)
+		end
 		local cframe = base
-			* CFrame.new(0, y + iy, iz)
-			* CFrame.Angles(0, math.rad(yaw + entry.lookYaw + iyaw), 0)
-			* CFrame.Angles(math.rad(pitch + ipitch), 0, math.rad(roll + iroll))
+			* CFrame.new(0, y + iy - lowest, iz)
+			* CFrame.Angles(0, math.rad(yaw + entry.lookYaw * (if entry.rig then 1 - BONES.HeadLook else 1) + iyaw), 0)
+			* entry.feet
+			* tilt
+			* entry.feet:Inverse()
 		entry.part.CFrame = cframe
+		if entry.rig then
+			-- Squelette : la tête prend une part du regard, le buste respire, les bras bougent un peu
+			local rig = entry.rig
+			rig:Clear()
+			local chest = math.rad(BONES.Breath) * math.sin(2 * math.pi * (style.bobSpeed or 0.3) * t)
+			rig:Turn("UpperTorso", CFrame.Angles(chest * 0.5 - math.rad(slump) * 0.6, 0, 0))
+			rig:Turn("Head", CFrame.Angles(-math.rad(slump) * 0.8, math.rad(entry.lookYaw * BONES.HeadLook), 0))
+			local swing = math.rad(BONES.ArmSwing) * math.sin(2 * math.pi * (style.bobSpeed or 0.3) * t + 1)
+			rig:Turn("LeftUpperArm", CFrame.Angles(swing, 0, -chest))
+			rig:Turn("RightUpperArm", CFrame.Angles(-swing, 0, chest))
+			rig:Apply()
+		end
 	end
 end
 

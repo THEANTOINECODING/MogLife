@@ -27,22 +27,21 @@ function Curl:Pose(p: number, shake: number, _u: number, time: number)
 	-- Le poignet décrit un arc autour du coude, qui reste le long du corps
 	local angle = math.rad(12 + 135 * p)
 	local half = m.armLength * 0.5
-	local wrists = {}
 	for _, side in { -1, 1 } do
 		local shoulder =
 			root:PointToObjectSpace(rig:JointFrame(if side < 0 then "LeftShoulder" else "RightShoulder").Position)
 		local elbow = shoulder + Vector3.new(0, -half, -0.25)
 		local wrist = elbow + Vector3.new(0, -math.cos(angle), -math.sin(angle)) * half
 		local target = root * Vector3.new(side * GRIP, wrist.Y + tremble, wrist.Z)
-		rig:Reach(
+		rig:Grip(
 			if side < 0 then "LeftArm" else "RightArm",
 			target,
 			root.LookVector * -1 + root.RightVector * side * 0.6
 		)
-		wrists[side] = target
 	end
+	-- La barre est dans les vraies mains
 	if self.bar then
-		self.bar.CFrame = CFrame.new((wrists[-1] + wrists[1]) / 2) * ctx.top.Rotation
+		self.bar.CFrame = CFrame.new((rig:Palm("Left") + rig:Palm("Right")) / 2) * ctx.top.Rotation
 	end
 end
 

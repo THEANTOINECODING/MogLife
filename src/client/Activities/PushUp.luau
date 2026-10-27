@@ -13,7 +13,8 @@ PushUp.CloseUp = {
 }
 
 local MAT = 0.16 -- épaisseur du tapis
-local WRIST_HEIGHT = 0.35 -- poignet au-dessus du sol (la main est à plat)
+local TOE_LIFT = 0.8 -- hauteur des chevilles, en longueur de pied (pied tendu vers la pointe)
+local TOE_POINT = -0.6 -- pied tendu (radians) : les orteils dans l'axe du tibia, posés sur le tapis
 
 function PushUp.Stand(top: CFrame): CFrame
 	return top * CFrame.new(0, 0, 1.2)
@@ -31,11 +32,19 @@ function PushUp.new(ctx)
 	end
 	self.ankles = (rest("LeftAnkle") + rest("RightAnkle")) / 2
 	self.shoulders = (rest("LeftShoulder") + rest("RightShoulder")) / 2
+	-- Longueur du pied : de la cheville au bout des orteils (le pied tient le corps sur sa pointe)
+	local foot = ctx.character:FindFirstChild("LeftFoot") :: BasePart
+	local toe = rig:PartCFrame("LeftFoot") * Vector3.new(0, -foot.Size.Y / 2, -foot.Size.Z / 2)
+	self.footLength = (toe - rig:JointFrame("LeftAnkle").Position).Magnitude
+	-- Poignet au-dessus du tapis : une demi-épaisseur de main (la main est à plat)
+	local hand = ctx.character:FindFirstChild("LeftHand") :: BasePart
+	self.wristHeight = math.min(hand.Size.X, hand.Size.Z) / 2 + 0.05
 	rig.pose = saved
 
 	self.floor = ctx.top * CFrame.new(0, MAT, 0)
 	local length = (self.shoulders - self.ankles).Magnitude
-	self.feet = self.floor * Vector3.new(0, ctx.measures.ankleHeight * 0.6, 0.4 + length * 0.55)
+	-- Chevilles relevées d'une longueur de pied (presque) : le corps repose sur la pointe des pieds, sans les enfoncer
+	self.feet = self.floor * Vector3.new(0, self.footLength * TOE_LIFT, 0.4 + length * 0.55)
 	self.wrists = nil
 	return self
 end
@@ -64,8 +73,8 @@ end
 function PushUp:Pose(p: number, shake: number, _u: number, time: number)
 	local ctx = self.ctx
 	local rig, m = ctx.rig, ctx.measures
-	local high = m.armLength * 0.96 + WRIST_HEIGHT
-	local low = m.armLength * 0.42 + WRIST_HEIGHT
+	local high = m.armLength * 0.96 + self.wristHeight
+	local low = m.armLength * 0.42 + self.wristHeight
 	local tremble = shake * math.sin(time * 40) * 0.05
 	local tilt = self:TiltFor(high + (low - high) * p + tremble)
 	local body = self:Body(tilt)
@@ -73,6 +82,8 @@ function PushUp:Pose(p: number, shake: number, _u: number, time: number)
 	-- Ratée : le bassin s'affaisse et la tête tombe
 	rig:Set("Waist", CFrame.Angles(-shake * p * 0.25, 0, 0))
 	rig:Set("Neck", CFrame.Angles(0.35 - shake * p * 0.5, 0, 0))
+	rig:Set("LeftAnkle", CFrame.Angles(TOE_POINT, 0, 0))
+	rig:Set("RightAnkle", CFrame.Angles(TOE_POINT, 0, 0))
 
 	-- Mains posées une fois pour toutes sous les épaules, bras tendus
 	if not self.wrists then
@@ -81,13 +92,18 @@ function PushUp:Pose(p: number, shake: number, _u: number, time: number)
 		for _, side in { -1, 1 } do
 			local shoulder = top * (self.shoulders + Vector3.new(side * m.shoulderWidth * 0.62, 0, 0))
 			local onFloor = self.floor:PointToObjectSpace(shoulder)
-			self.wrists[side] = self.floor * Vector3.new(onFloor.X, WRIST_HEIGHT, onFloor.Z)
+			self.wrists[side] = self.floor * Vector3.new(onFloor.X, self.wristHeight, onFloor.Z)
 		end
 	end
 	local feetward = -self.floor.LookVector
 	for _, side in { -1, 1 } do
 		local limb = if side < 0 then "LeftArm" else "RightArm"
 		rig:Reach(limb, self.wrists[side], feetward + self.floor.RightVector * side * 0.8)
+		-- Main à plat sur le tapis, doigts vers l'avant (vers la tête), paume contre le tapis
+		rig:Orient(
+			if side < 0 then "LeftHand" else "RightHand",
+			CFrame.fromMatrix(Vector3.zero, self.floor.RightVector, feetward)
+		)
 	end
 end
 

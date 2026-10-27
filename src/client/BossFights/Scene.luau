@@ -14,6 +14,10 @@
 --   Boss(scene, dt, now)             le boss, à chaque image (scene.bossRig peut être nil : ancien modèle sans os)
 --   PlayerRep(scene, quality)        coup du joueur ; BossRep(scene, quality) : coup du boss
 --   Finish(scene, won, t, rig, m)    fin du combat, t de 0 à 1 (le joueur est animé par la scène)
+--   BossFeet                         (facultatif) écart des pieds du boss { Left = Vector3, Right = Vector3 },
+--                                    dans son repère (X à sa droite, Z derrière lui) : une fente, des pieds écartés
+-- Pendant les manches, les pieds du boss restent posés à plat sur le sol (D86) : ses déplacements (scene:MoveBoss)
+-- penchent et abaissent le corps, les jambes se plient ; seul un saut (décalage vers le haut) les décolle.
 -- Réglages communs dans Config/BossFights.luau.
 
 local Players = game:GetService("Players")
@@ -31,6 +35,7 @@ local QUALITY_POINTS = Balance.Boss.QualityScore
 export type Def = {
 	Distance: number,
 	BossShift: number?,
+	BossFeet: { Left: Vector3?, Right: Vector3? }?,
 	Setup: ((any) -> ())?,
 	PlayerPose: (any, any, any, number, number, number) -> (),
 	Boss: (any, number, number) -> (),
@@ -134,17 +139,36 @@ function Scene.Step(self, dt: number)
 		end
 		return
 	end
+	self.bossOffset = CFrame.identity
 	self.def.Boss(self, dt, now)
 	if self.bossRig then
+		self:PlantBoss()
 		self.bossRig:Apply()
 	end
 end
 
--- Corps entier du boss : décalage par rapport à sa place (repère du boss)
+-- Corps entier du boss : décalage par rapport à sa place (repère du boss). Pendant les manches, autour de ses pieds
+-- (et non du centre du corps : il se penche et vacille sans passer sous le sol) ; pendant la fin, autour du centre
+-- (chutes et envols réglés ainsi).
 function Scene.MoveBoss(self, offset: CFrame)
 	if self.bossPart and self.base then
-		self.bossPart.CFrame = self.base * offset
+		local feet = if self.finishing then CFrame.identity else CFrame.new(0, -self.bossPart.Size.Y / 2, 0)
+		self.bossPart.CFrame = self.base * feet * offset * feet:Inverse()
+		self.bossOffset = offset
 	end
+end
+
+-- Pieds du boss posés au sol, là où le décalage du corps l'a emmené (glissade, demi-tour) ; un décalage vers le haut
+-- est un saut : les pieds décollent
+function Scene.PlantBoss(self)
+	local rig = self.bossRig
+	if not rig or not self.base then
+		return
+	end
+	local offset = self.bossOffset or CFrame.identity
+	local _, yaw = offset:ToEulerAnglesYXZ()
+	local stance = self.base * CFrame.new(offset.X, 0, offset.Z) * CFrame.Angles(0, yaw, 0)
+	rig:PlantFeet(stance, self.def.BossFeet, math.max(offset.Y, 0))
 end
 
 -- Repère « du duel » : centré au milieu, X vers la droite du joueur, Z vers le joueur

@@ -37,7 +37,8 @@ function def.PlayerPose(scene, rig, m, p, shake, now)
 	-- Repoussé vers le bord quand il perd ; élan en avant à chaque choc, recul quand il encaisse
 	local back = math.max(-scene.lead, 0) * SETTINGS.Push + hit * 0.7 - bump * SETTINGS.Lunge
 	Poses.Pelvis(rig, Vector3.new(0, -m.legLength * 0.12, back), 0.25 * bump - 0.15 * hit + 0.1)
-	Poses.Lunge(rig, 0.8)
+	-- Les pieds suivent l'élan et le recul (à moitié : la fente s'ouvre)
+	Poses.Lunge(rig, m, 0.8, back * 0.5)
 	local stand = rig.root.CFrame
 	local jitter = if shake > 0 then math.sin(now * 40) * 0.1 * shake else 0
 	for _, sx in { -1, 1 } do

@@ -2,6 +2,7 @@
 -- rattrape vraiment dans son panier, qui se remplit (une ratée rebondit sur sa tête et file au loin). D37.
 
 local Props = require(script.Parent.Props)
+local HelperStand = require(script.Parent.HelperStand)
 
 local Groceries = {}
 Groceries.__index = Groceries
@@ -15,7 +16,7 @@ local FRUITS = {
 local DROP_HEIGHT = 9
 
 function Groceries.Stand(top: CFrame): CFrame
-	return top * CFrame.new(0, 0, -3.6) * CFrame.Angles(0, math.pi, 0)
+	return HelperStand.Around(top)
 end
 
 function Groceries.new(ctx)
@@ -33,9 +34,9 @@ function Groceries:Pose(_p: number, shake: number, u: number, time: number, coun
 	local basket = root * CFrame.new(sway, -0.2, -1.4)
 	self.basket.CFrame = basket
 	for _, sx in { -1, 1 } do
-		rig:Reach(
+		rig:Grip(
 			if sx < 0 then "LeftArm" else "RightArm",
-			(basket * CFrame.new(sx * 0.9, 0.35, 0)).Position,
+			(basket * CFrame.new(sx * (self.basket.Size.X / 2 + 0.1), 0.15, 0)).Position,
 			-root.LookVector + root.RightVector * sx * 0.5
 		)
 	end

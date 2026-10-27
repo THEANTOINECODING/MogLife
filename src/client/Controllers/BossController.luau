@@ -16,7 +16,6 @@ local UserInputService = game:GetService("UserInputService")
 local CollectionService = game:GetService("CollectionService")
 
 local BossFights = require(ReplicatedStorage.Shared.Config.BossFights)
-local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local BossSpecials = require(script.Parent.Parent.BossSpecials)
@@ -176,15 +175,12 @@ local function bossSays(bossId: string, key: string)
 	end)
 end
 
--- Caméra de duel : le joueur et le boss de profil, dans la moitié gauche de l'écran (le mini-jeu est à droite).
+-- Caméra de duel : le joueur et le boss de profil, dans la partie de l'écran que le mini-jeu laisse libre (D86).
 -- Caméra stable (CameraFraming.Follow) : le boss est mesuré UNE fois au début (il se gonfle à chaque pose : la
 -- caméra ne doit pas zoomer et dézoomer avec lui) et l'angle ne change que si un mur cache durablement la scène.
 local stopFollow: (() -> ())? = nil
 local function startDuelCamera(bossId: string)
 	local model = bossModel(bossId)
-	-- Mini-jeu à panneau large en bas (Beats) : cadrage différent
-	local stage = Stages.FindBoss(bossId)
-	local wide = stage ~= nil and stage.minigame == "Beats"
 	local character = player.Character
 	local root = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
 	if not model or not character or not root then
@@ -193,11 +189,34 @@ local function startDuelCamera(bossId: string)
 	local base, height = CutsceneController.Measure(model)
 	local bossTop = base + Vector3.new(0, height, 0)
 	local bossMid = base + Vector3.new(0, height * 0.5, 0)
-	local function points(): { Vector3 }
+	local bossHalf = 0
+	if model.PrimaryPart then
+		bossHalf = math.max(model.PrimaryPart.Size.X, model.PrimaryPart.Size.Z) / 2
+	end
+	-- Ce qui doit être visible : le joueur en entier, le boss en entier (sommet, milieu, pieds, côtés), les accessoires
+	-- du duel (corde, miroirs, oreillers…)
+	-- Contrôle de visibilité et estompage (plusieurs fois par seconde) : quelques points seulement
+	local function bodyPoints(): { Vector3 }
 		local list = CameraFraming.BodyPoints(character :: Model)
 		table.insert(list, bossTop)
 		table.insert(list, bossMid)
 		table.insert(list, base + Vector3.new(0, 0.6, 0))
+		return list
+	end
+	local function points(): { Vector3 }
+		local props = {}
+		local folder = workspace:FindFirstChild("BossFight_" .. player.UserId)
+		if folder then
+			table.insert(props, folder)
+		end
+		local list = CameraFraming.SubjectPoints(character :: Model, props, 0.6)
+		table.insert(list, bossTop + Vector3.new(0, 0.5, 0))
+		table.insert(list, bossMid)
+		table.insert(list, base + Vector3.new(0, 0.2, 0))
+		local flat = (bossMid - (character :: Model):GetPivot().Position) * Vector3.new(1, 0, 1)
+		local across = if flat.Magnitude > 0.1 then Vector3.new(0, 1, 0):Cross(flat.Unit) else Vector3.xAxis
+		table.insert(list, bossMid + across * bossHalf)
+		table.insert(list, bossMid - across * bossHalf)
 		return list
 	end
 	stopFollow = CameraFraming.Follow({
@@ -220,19 +239,9 @@ local function startDuelCamera(bossId: string)
 			for _, direction in CameraFraming.Around(-side, distance, 1.5, 1, steps) do
 				table.insert(directions, direction)
 			end
-			local eye = CameraFraming.Best(center, directions, { model }, points())
-			local look = (center - eye).Unit
-			local right = look:Cross(Vector3.new(0, 1, 0))
-			local halfHeight = (center - eye).Magnitude * math.tan(math.rad(workspace.CurrentCamera.FieldOfView / 2))
-			if wide then
-				-- Panneau large en bas (Coach Turbo, D82) : les combattants au centre, dans la moitié haute de l'écran
-				return eye, center - Vector3.new(0, halfHeight * 0.38, 0)
-			end
-			-- Panneau à droite : les combattants dans la moitié gauche de l'écran
-			local aspect = workspace.CurrentCamera.ViewportSize.X / math.max(1, workspace.CurrentCamera.ViewportSize.Y)
-			return eye, center + right * (halfHeight * aspect * 0.50)
+			return CameraFraming.Frame(center, directions, { model }, points(), 8)
 		end,
-		points = points,
+		points = bodyPoints,
 		ignore = function()
 			return { model }
 		end,

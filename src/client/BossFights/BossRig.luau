@@ -7,10 +7,14 @@
 --   rig:Clear()                        tout au repos
 --   rig:Turn(bone, rotation)           rotation absolue d'un os (repère du personnage)
 --   rig:Reach(side, target, bend?)     le bras ("Left"/"Right") va chercher un point du monde
+--   rig:PlantFeet(stance, offsets?)    pieds à plat sur le vrai sol, jambes pliées d'elles-mêmes (D86)
+--   rig:Palm(side)                     centre de sa main (monde) : là où se tient un objet
 --   rig:Apply()                        écrit les os (à chaque image)
 --   rig:Joint(bone)                    position actuelle (monde) de l'articulation d'un os
 --   rig:Side()                         sa droite (monde), d'après ses épaules
 -- Un boss sans os (ancien modèle) : BossRig.new renvoie nil, les scènes animent alors le corps entier.
+
+local Ground = require(script.Parent.Parent.Ground)
 
 local BossRig = {}
 BossRig.__index = BossRig
@@ -172,13 +176,21 @@ function BossRig.ArmLength(self: BossRig, side: string): number
 		+ (r[side .. "Hand"] - r[side .. "LowerArm"]).Magnitude
 end
 
--- Le bras va chercher `target` (monde) : épaule -> coude -> poignet, coude plié vers `bend` (monde, facultatif)
-function BossRig.Reach(self: BossRig, side: string, target: Vector3, bend: Vector3?)
-	local upper, lower, hand = side .. "UpperArm", side .. "LowerArm", side .. "Hand"
+-- Os d'un membre : bras ou jambe
+local LIMBS = {
+	Arm = { "UpperArm", "LowerArm", "Hand" },
+	Leg = { "UpperLeg", "LowerLeg", "Foot" },
+}
+
+-- Le membre va chercher `target` (monde) avec son articulation du bout (poignet, cheville) : articulation du haut ->
+-- milieu -> bout, le milieu (coude, genou) plié vers `bend` (monde, facultatif). kind : "Arm" (défaut) ou "Leg".
+function BossRig.Reach(self: BossRig, side: string, target: Vector3, bend: Vector3?, kind: string?)
+	local names = LIMBS[kind or "Arm"]
+	local upper, lower, tip = side .. names[1], side .. names[2], side .. names[3]
 	local shoulder = self:LocalJoint(upper)
 	local goal = self.part.CFrame:PointToObjectSpace(target)
 	local a = (self.restPos[lower] - self.restPos[upper]).Magnitude
-	local b = (self.restPos[hand] - self.restPos[lower]).Magnitude
+	local b = (self.restPos[tip] - self.restPos[lower]).Magnitude
 	local toGoal = goal - shoulder
 	local distance = math.clamp(toGoal.Magnitude, math.abs(a - b) + 0.01, a + b - 0.01)
 	local dir = toGoal.Unit
@@ -189,10 +201,47 @@ function BossRig.Reach(self: BossRig, side: string, target: Vector3, bend: Vecto
 	local elbow = shoulder + (dir * math.cos(angle) + side2 * math.sin(angle)) * a
 	local wrist = shoulder + dir * distance
 	local restUpper = self.restPos[lower] - self.restPos[upper]
-	local restLower = self.restPos[hand] - self.restPos[lower]
+	local restLower = self.restPos[tip] - self.restPos[lower]
 	self.wanted[upper] = arc(restUpper, elbow - shoulder)
 	self.wanted[lower] = arc(restLower, wrist - elbow)
-	self.wanted[hand] = self.wanted[lower]
+	self.wanted[tip] = self.wanted[lower]
+end
+
+-- Centre de la main (monde) : un peu au-delà du poignet, dans le prolongement de l'avant-bras
+function BossRig.Palm(self: BossRig, side: string): Vector3
+	local wrist = self:Joint(side .. "Hand")
+	local forearm = wrist - self:Joint(side .. "LowerArm")
+	if forearm.Magnitude < 1e-3 then
+		return wrist
+	end
+	return wrist + forearm.Unit * forearm.Magnitude * 0.3
+end
+
+-- Pieds posés à plat sur le vrai sol (Ground) : `stance` est le repère du corps debout au repos là où il doit se tenir
+-- (droit, au-dessus de ses pieds) ; offsets : décalage de chaque pied dans son repère (X à sa droite, Z derrière lui).
+-- raise : hauteur des pieds au-dessus du sol (saut). Les jambes se plient d'elles-mêmes, genoux vers l'avant.
+function BossRig.PlantFeet(
+	self: BossRig,
+	stance: CFrame,
+	offsets: { Left: Vector3?, Right: Vector3? }?,
+	raise: number?,
+	ignore: { Instance }?
+)
+	local part = self.part
+	local bottom = -part.Size.Y / 2
+	local toStance = part.CFrame.Rotation:Inverse() * stance.Rotation
+	for _, side in { "Left", "Right" } do
+		local name = side .. "Foot"
+		local rest = self.restPos[name]
+		local offset = (offsets and offsets[side]) or Vector3.zero
+		local ankle = stance * (rest + self.toChar:VectorToWorldSpace(offset))
+		local sole = stance * Vector3.new(rest.X, bottom, rest.Z)
+		local ground = Ground.Height(ankle, ignore) or sole.Y
+		ankle = Vector3.new(ankle.X, ground + (rest.Y - bottom) + (raise or 0), ankle.Z)
+		self:Reach(side, ankle, stance.LookVector, "Leg")
+		-- Pied à plat, dans l'orientation du repère debout
+		self.wanted[name] = toStance
+	end
 end
 
 -- Écrit les os : la part de chaque os = sa rotation totale moins celle de son parent, dans son propre repère

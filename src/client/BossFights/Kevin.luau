@@ -34,7 +34,7 @@ function def.PlayerPose(scene, rig, m, p, shake, now)
 		if scene.playerQuality == "Miss" then p else 0
 	)
 	Poses.Pelvis(rig, Vector3.new(0, -m.legLength * 0.08, taken * 0.4), -0.1 * hit + 0.15 * taken, 0.3 * hit)
-	Poses.Lunge(rig, 0.6)
+	Poses.Lunge(rig, m, 0.6)
 	local stand = rig.root.CFrame
 	local shoulder = rig:JointFrame("RightShoulder").Position
 	local raised = shoulder + stand.UpVector * m.armLength * 0.7 + stand.RightVector * 0.4 + stand.LookVector * 0.2
@@ -86,8 +86,9 @@ function def.Boss(scene, _dt, now)
 	local strike = shoulder + toward * 2.2 + up * 0.3
 	rig:Reach("Right", raised:Lerp(strike, swing), up)
 	rig:Reach("Left", rig:Joint("LeftUpperArm") + toward * 1.2 - up * 0.6, -up)
-	local hand = rig:Joint("RightHand")
-	scene.data.bossPillow.CFrame = CFrame.lookAt(hand, hand + toward) * CFrame.new(0, 0.5, -0.3)
+	-- L'oreiller est tenu par un coin, dans le creux de la main
+	local hand = rig:Palm("Right")
+	scene.data.bossPillow.CFrame = CFrame.lookAt(hand, hand + toward) * CFrame.new(0, PILLOW.Y * 0.5, -PILLOW.Z * 0.4)
 	scene.data.bossHead = rig:Joint("Head") + up * 0.8
 
 	-- Étoiles au-dessus de celui qui est en retard
@@ -154,8 +155,8 @@ function def.Finish(scene, won, t, rig, m)
 		local bossRig = scene.bossRig
 		if bossRig then
 			bossRig:Reach("Right", bossRig:Joint("RightUpperArm") + Vector3.new(0, 2.2, 0), Vector3.yAxis)
-			local hand = bossRig:Joint("RightHand")
-			scene.data.bossPillow.CFrame = CFrame.new(hand + Vector3.new(0, 0.6, 0))
+			local hand = bossRig:Palm("Right")
+			scene.data.bossPillow.CFrame = CFrame.new(hand + Vector3.new(0, PILLOW.Y * 0.5, 0))
 		end
 		if rig and m then
 			Poses.Slump(rig, m, t, 0)

@@ -2,13 +2,14 @@
 -- couvercle, un quart de tour par répétition (une répétition ratée glisse et tremble). D37.
 
 local Props = require(script.Parent.Props)
+local HelperStand = require(script.Parent.HelperStand)
 
 local OpenJar = {}
 OpenJar.__index = OpenJar
 
--- Face à Maman, à 3,6 studs devant elle
+-- Face à Maman, devant sa dalle
 function OpenJar.Stand(top: CFrame): CFrame
-	return top * CFrame.new(0, 0, -3.6) * CFrame.Angles(0, math.pi, 0)
+	return HelperStand.Around(top)
 end
 
 function OpenJar.new(ctx)
@@ -39,13 +40,14 @@ function OpenJar:Pose(p: number, shake: number, _u: number, time: number, count:
 	-- Main gauche sur le bocal, main droite sur le couvercle (qui tourne avec lui)
 	local up = root.UpVector
 	local side = root.RightVector
-	local grip = jar.Position - up * 0.1
-	rig:Reach("LeftArm", grip - side * 0.45, -root.LookVector - side * 0.5)
+	-- (la paume contre le verre, et posée sur le couvercle)
+	local radius = self.jar.Size.Y / 2
+	rig:Grip("LeftArm", jar.Position - up * 0.1 - side * (radius + 0.12), -root.LookVector - side * 0.5)
 	local lidGrip = self.lid.Position
-		+ up * 0.25
-		+ side * (0.35 * math.cos(turned))
+		+ up * (self.lid.Size.X / 2 + 0.14)
+		+ side * (0.2 * math.cos(turned))
 		- root.LookVector * (0.1 * math.sin(turned))
-	rig:Reach("RightArm", lidGrip, -root.LookVector + side * 0.5)
+	rig:Grip("RightArm", lidGrip, -root.LookVector + side * 0.5)
 end
 
 function OpenJar:Destroy()

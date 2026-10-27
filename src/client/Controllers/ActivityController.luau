@@ -17,6 +17,7 @@ local TweenService = game:GetService("TweenService")
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local CameraFraming = require(script.Parent.Parent.CameraFraming)
+local Ground = require(script.Parent.Parent.Ground)
 local MogOff = require(script.Parent.Parent.Activities.MogOff)
 local BossScene = require(script.Parent.Parent.BossFights.Scene)
 local Rig = require(script.Parent.Parent.Activities.Rig)
@@ -50,6 +51,7 @@ type Animator = {
 	localDriven: boolean, -- son propre personnage, animé par les gestes du mini-jeu plutôt que par le serveur
 	sweat: ParticleEmitter?, -- sueur qui coule de plus en plus fort avec le combo (exercices et aides)
 	borrowed: { [BasePart]: { cframe: CFrame, transparency: number } },
+	anchored: boolean?, -- son propre personnage, tenu en place pendant l'activité
 }
 
 local localPlayer = Players.LocalPlayer
@@ -132,12 +134,15 @@ addSweat = function(character: Model): ParticleEmitter?
 end
 
 -- Gros plan pendant sa propre série : caméra stable (CameraFraming.Follow) qui choisit une fois l'angle d'où l'on
--- voit tout le corps, place le personnage dans la moitié gauche de l'écran (le mini-jeu est à droite) et ne bouge
--- plus, sauf vrai déplacement (voiture poussée) ou mur qui cache durablement le corps.
+-- voit tout le corps, place le personnage (et ce qu'il manipule) dans la partie de l'écran que l'interface du
+-- mini-jeu laisse libre (D86) et ne bouge plus, sauf vrai déplacement (voiture poussée), interface déplacée (écran
+-- tourné) ou mur qui cache durablement le corps.
 local stopFollow: (() -> ())? = nil
 local closeUpToken: any = nil
 local SETTLE_TIME = 0.35 -- secondes avant de choisir l'angle
--- preset : réglage de caméra propre à l'activité (module Activities : CloseUp = { steps, height, scale, focus }), facultatif
+local MIN_DISTANCE = 6 -- studs : la caméra ne vient pas plus près (le personnage reste lisible en entier)
+-- preset : réglage de caméra propre à l'activité (module Activities : CloseUp = { steps, height, scale, focus, room }),
+-- facultatif ; room : marge au-dessus de la tête (saut, traction)
 -- animator : pour ignorer les objets que le personnage tient ou utilise (piano, barre, bocal…)
 startCloseUp = function(character: Model, preset: any, anchor: BasePart?, animator: any)
 	stopCloseUp()
@@ -168,6 +173,7 @@ startCloseUp = function(character: Model, preset: any, anchor: BasePart?, animat
 	-- Centre du corps au repos, par rapport à la racine (les répétitions ne le déplacent pas)
 	-- (focus : décalage vertical propre à l'activité, ex. suspendu à la barre de traction, le corps monte)
 	local focusUp = (preset and preset.focus) or 0
+	local room = (preset and preset.room) or 0.6
 	local centerOffset = Vector3.new(0, height * 0.5 - humanoid.HipHeight - root.Size.Y / 2 + focusUp, 0)
 	-- L'activité place et tourne le personnage dans ses premières images : on attend qu'il soit en position
 	local token = {}
@@ -182,23 +188,22 @@ startCloseUp = function(character: Model, preset: any, anchor: BasePart?, animat
 		end,
 		plan = function()
 			local focus = root.Position + centerOffset
-			local eye = CameraFraming.Best(
+			-- Le personnage et ce qu'il manipule tiennent dans la partie de l'écran que le mini-jeu laisse libre
+			-- (entre la colonne d'infos et le panneau du jeu sur téléphone, D86)
+			local props = activityParts()
+			for _, child in workspace:GetChildren() do
+				if child:GetAttribute("ActivityProps") then
+					table.insert(props, child)
+				end
+			end
+			return CameraFraming.Frame(
 				focus,
 				-- Orientation réelle au moment du choix (certaines activités tournent le personnage au départ)
 				CameraFraming.Around(root.CFrame.LookVector, distance, camHeight, 1, steps),
 				activityParts(),
-				CameraFraming.BodyPoints(character)
+				CameraFraming.SubjectPoints(character, props, room),
+				MIN_DISTANCE
 			)
-			-- Le personnage dans la moitié gauche : on vise un point à sa droite (vu de la caméra)
-			local look = (focus - eye).Unit
-			local right = look:Cross(Vector3.new(0, 1, 0))
-			return eye,
-				focus
-					+ right
-						* ((focus - eye).Magnitude * (math.tan(math.rad(workspace.CurrentCamera.FieldOfView / 2)) * workspace.CurrentCamera.ViewportSize.X / math.max(
-							1,
-							workspace.CurrentCamera.ViewportSize.Y
-						) * 0.50))
 		end,
 		points = function()
 			return CameraFraming.BodyPoints(character)
@@ -237,6 +242,9 @@ local function stop(player: Player)
 		local humanoid = animator.character:FindFirstChildOfClass("Humanoid")
 		if humanoid then
 			humanoid.AutoRotate = true
+		end
+		if animator.anchored and animator.rig.root.Parent then
+			animator.rig.root.Anchored = false
 		end
 		setBodyGroup(animator.character, "Default")
 	end
@@ -292,12 +300,23 @@ local function start(update)
 	local Activity = require(module)
 	local top = anchor.CFrame * CFrame.new(0, anchor.Size.Y / 2, 0)
 
-	-- Son propre personnage : placé au bon endroit de la station, sans se tourner tout seul
+	-- Son propre personnage : placé au bon endroit de la station, les pieds sur le vrai sol (D86), sans se tourner
+	-- tout seul. Il est tenu en place pendant l'activité : la physique ne le fait plus flotter au-dessus d'un rebord
+	-- de dalle ni glisser pendant les mouvements.
+	local anchored = false
 	if player == localPlayer then
 		humanoid.AutoRotate = false
-		rig.root.CFrame = Activity.Stand(top) * CFrame.new(0, humanoid.HipHeight + rig.root.Size.Y / 2, 0)
+		local stand = Activity.Stand(top)
+		local ground = Ground.Height(stand.Position) or stand.Y
+		rig.root.CFrame = CFrame.new(stand.X, ground, stand.Z)
+			* stand.Rotation
+			* CFrame.new(0, humanoid.HipHeight + rig.root.Size.Y / 2, 0)
 		rig.root.AssemblyLinearVelocity = Vector3.zero
 		setBodyGroup(character, BODY_GROUP)
+		if update.kind ~= "Duel" then
+			rig.root.Anchored = true
+			anchored = true
+		end
 	end
 
 	local animator: Animator = {
@@ -312,6 +331,7 @@ local function start(update)
 		kind = update.kind,
 		localDriven = false,
 		borrowed = {},
+		anchored = anchored,
 	}
 	animator.activity = Activity.new({
 		minigame = update.minigame,

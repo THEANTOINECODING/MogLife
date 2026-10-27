@@ -41,6 +41,32 @@ local function addNameTag(part: BasePart, displayName: string)
 	billboard.Parent = part
 end
 
+-- Hauteur du sol visible au centre de la dalle `spot` : un plancher, un tapis ou une estrade posés dessus comptent
+-- (les vendeurs dans leur boutique), les zones invisibles ou sans collision et les autres PNJ non
+local function groundAt(spot: BasePart): number
+	local top = spot.Position.Y + spot.Size.Y / 2
+	local params = RaycastParams.new()
+	params.FilterType = Enum.RaycastFilterType.Exclude
+	local ignore: { Instance } = { getFolder() }
+	params.FilterDescendantsInstances = ignore
+	local origin = Vector3.new(spot.Position.X, top + 3, spot.Position.Z)
+	for _ = 1, 6 do
+		local hit = workspace:Raycast(origin, Vector3.new(0, -6, 0), params)
+		if not hit then
+			break
+		end
+		local part = hit.Instance
+		if part:IsA("BasePart") and part.CanCollide and part.Transparency < 0.95 then
+			-- Seulement un sol proche de la dalle (pas un toit au-dessus, ni le terrain en dessous)
+			return if math.abs(hit.Position.Y - top) <= 1.5 then hit.Position.Y else top
+		end
+		table.insert(ignore, part)
+		params.FilterDescendantsInstances = ignore
+		origin = hit.Position
+	end
+	return top
+end
+
 -- PNJ modélisé (Blender) : ServerStorage.NpcModels.<lookId>, un modèle dont la PrimaryPart est le corps.
 -- Le modèle regarde vers -Z ; il est posé sur `spot` et tourné vers `facing`.
 local function spawnModel(template: Model, lookId: string, displayName: string, spot: BasePart, facing: Vector3)
@@ -55,8 +81,9 @@ local function spawnModel(template: Model, lookId: string, displayName: string, 
 	-- On oriente le corps (droit dans le modèle d'origine), pas le pivot importé, qui peut contenir une rotation
 	local pivotFromBody = body.CFrame:ToObjectSpace(model:GetPivot())
 	model:PivotTo(CFrame.lookAt(spot.Position, Vector3.new(facing.X, spot.Position.Y, facing.Z)) * pivotFromBody)
-	-- Recalage d'après le corps (droit) : centré sur la dalle, pieds posés dessus
-	local spotTop = spot.Position.Y + spot.Size.Y / 2
+	-- Recalage d'après le corps (droit) : centré sur la dalle, pieds posés sur ce qu'on voit à cet endroit (la dalle,
+	-- ou le plancher posé dessus, D86)
+	local spotTop = groundAt(spot)
 	local delta = Vector3.new(
 		spot.Position.X - body.Position.X,
 		spotTop + body.Size.Y / 2 - body.Position.Y,
@@ -104,7 +131,8 @@ function Npc.Spawn(lookId: string, displayName: string, spot: BasePart, facing: 
 	local root = model:FindFirstChild("HumanoidRootPart") :: BasePart
 	root.Anchored = true
 
-	local position = spot.Position + Vector3.new(0, humanoid.HipHeight + root.Size.Y / 2 + spot.Size.Y / 2, 0)
+	local position =
+		Vector3.new(spot.Position.X, groundAt(spot) + humanoid.HipHeight + root.Size.Y / 2, spot.Position.Z)
 	local lookAt = Vector3.new(facing.X, position.Y, facing.Z)
 	model:PivotTo(CFrame.lookAt(position, lookAt))
 	-- Apparence (lookId) : les clients choisissent son attitude animée (Config/NpcAnims.luau, D83)

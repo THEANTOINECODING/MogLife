@@ -22,10 +22,6 @@ function Squat.new(ctx)
 	-- Repos mesuré par rapport au HumanoidRootPart (sa position peut encore changer : réplication, placement)
 	local root = rig.root.CFrame
 	self.lower = root:ToObjectSpace(rig:PartCFrame("LowerTorso"))
-	self.ankles = {
-		[-1] = root:PointToObjectSpace(rig:JointFrame("LeftAnkle").Position),
-		[1] = root:PointToObjectSpace(rig:JointFrame("RightAnkle").Position),
-	}
 	rig.pose = saved
 	return self
 end
@@ -46,13 +42,8 @@ function Squat:Pose(p: number, shake: number, _u: number, time: number)
 	)
 	rig:Set("Waist", CFrame.Angles(-0.3 * p, 0, 0))
 	rig:Set("Neck", CFrame.Angles(0.45 * p, 0, 0))
-	for _, side in { -1, 1 } do
-		rig:Reach(
-			if side < 0 then "LeftLeg" else "RightLeg",
-			root * self.ankles[side],
-			root.LookVector + root.RightVector * side * 0.3
-		)
-	end
+	-- Pieds à plat au sol, genoux vers l'avant et un peu en dehors
+	rig:PlantFeet(nil, nil)
 
 	-- Barre sur le haut du dos (suit le buste), décrochée au début
 	local upper = rig:PartCFrame("UpperTorso")
@@ -62,10 +53,12 @@ function Squat:Pose(p: number, shake: number, _u: number, time: number)
 	local center = self.rack:Lerp(onBack, unrack)
 	for _, side in { -1, 1 } do
 		local grip = center + root.RightVector * side * (m.handSpread * 1.1)
-		rig:Reach(if side < 0 then "LeftArm" else "RightArm", grip, -root.UpVector + root.LookVector * -0.6)
+		rig:Grip(if side < 0 then "LeftArm" else "RightArm", grip, -root.UpVector + root.LookVector * -0.6)
 	end
 	if self.bar then
-		self.bar.CFrame = CFrame.new(center) * ctx.top.Rotation
+		-- Une fois décrochée, la barre est entre les vraies mains
+		local held = if unrack >= 1 then (rig:Palm("Left") + rig:Palm("Right")) / 2 else center
+		self.bar.CFrame = CFrame.new(held) * ctx.top.Rotation
 	end
 end
 
