@@ -30,7 +30,7 @@ function def.PlayerPose(scene, rig, m, p, shake, now)
 	local hit = if scene.playerQuality ~= "Miss" then p else 0
 	-- Il encaisse : un coup de Kevin, ou son propre raté (Kevin le devance)
 	local taken = math.max(
-		scene:Pulse(now - scene.bossHitAt, Fights.HitTime) * (if scene.bossQuality == "Miss" then 0 else 1),
+		math.max(scene:Recoil(scene:SinceBossImpact(now)), 0) * (if scene.bossQuality == "Miss" then 0 else 1),
 		if scene.playerQuality == "Miss" then p else 0
 	)
 	Poses.Pelvis(rig, Vector3.new(0, -m.legLength * 0.08, taken * 0.4), -0.1 * hit + 0.15 * taken, 0.3 * hit)
@@ -56,11 +56,9 @@ function def.Boss(scene, _dt, now)
 	if not part then
 		return
 	end
-	local swing = scene:Pulse(now - scene.bossHitAt, SETTINGS.SwingTime)
-		* (if scene.bossQuality == "Miss" then 0.6 else 1)
+	local swing = scene:Strike(now - scene.bossHitAt) * (if scene.bossQuality == "Miss" then 0.6 else 1)
 	-- Il prend un coup : il tourne sur lui-même et recule
-	local struck = scene:Pulse(now - scene.playerHitAt, Fights.HitTime)
-		* (if scene.playerQuality == "Miss" then 0 else 1)
+	local struck = scene:Recoil(now - scene.playerHitAt) * (if scene.playerQuality == "Miss" then 0 else 1)
 	-- Dernière manche : il bâille et pique du nez
 	local nap = 0
 	if scene:Special() then

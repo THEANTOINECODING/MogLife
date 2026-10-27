@@ -2,6 +2,18 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-27 (retours d'Antoine après test)
+
+- **D87 — Mini-jeux plus clairs, caméra calme, combats plus naturels.** Retours d'Antoine : curl difficile à comprendre ; zooms pendant les exercices désagréables et trop forts ; animations des combats pas assez naturelles ; bocal de maman long et peu intuitif (« change-le ») ; dernier boss trop dur ; jauge « toi contre le boss » trop envahissante. Il aime les boss vaincus éjectés (inchangé).
+  - Curl (`Swipe`) : la pastèque retombe vers les mains, on la relance d'un glissé vers le haut au bon moment (comme jongler).
+  - Bocal (`Twist`) refait : tourner le doigt autour du couvercle, un quart de tour par répétition ; 8 répétitions au lieu de 12 (récompense totale inchangée).
+  - Caméra : plus aucun « coup de zoom » (Perfect, combo, record, célébration) ; la caméra attend l'interface du mini-jeu avant de se placer, garde son cadrage entre deux manches et ignore les petits changements d'interface.
+  - Combats : élan avant chaque coup du boss (`Scene:Strike`), réactions élastiques aux coups (`Scene:Recoil`), les deux combattants rebondissent sur leurs appuis et respirent entre les coups, tête du boss qui bouge.
+  - Roi du Quartier : précision 20 % / 52 % (au lieu de 32 / 50), 2,8 s par combinaison (au lieu de 2,6), Combo Perfect à 60 % du temps et Good jusqu'à 100 %.
+  - Jauge toi / boss : fine (24 px), manches dedans, placée en haut de la zone libre de l'écran ; la caméra garde la place des combattants en dessous.
+  - Corrigé au passage : sur ordinateur, le bouton Stop était pris pour la colonne d'infos du téléphone (cadrage faux).
+  Vérifié dans Studio : bocal (5 Perfect en tournant bien, rien à l'envers), curl (6 Perfect au bon moment), rendu des deux panneaux, cinq duels sans erreur. Non vérifié : téléphone, ressenti des mouvements en jeu réel.
+
 ## 2026-10-27 (qualité des animations)
 
 - **D86 — Pieds au sol, objets dans les mains, scène visible pendant les jeux.** Demande d'Antoine : « des pieds des boss et des PNJ se confondent avec la surface, on ne voit pas bien les animations pendant les jeux, la corde n'est pas dans les mains du joueur pour Coach Turbo… fais une analyse complète et corrige tout ». Analyse mesurée dans Studio par une sonde (`tests/pose_probe.luau` : écart pieds/sol et mains/objet pour chaque activité et chaque duel). Causes trouvées et corrections :

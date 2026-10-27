@@ -479,20 +479,6 @@ local function openRun(update)
 	)
 end
 
--- Petit coup de zoom de la caméra (répétition parfaite, palier de combo)
-local function punch(strength: number)
-	local camera = workspace.CurrentCamera
-	if not camera or (SettingsController and not SettingsController.Get("ScreenFx")) then
-		return
-	end
-	-- Toujours depuis le même zoom de référence : plusieurs Perfect rapprochés ne zooment pas de plus en plus
-	local base = CameraFraming.Fov
-	camera.FieldOfView = base - math.min(strength, 4)
-	TweenService:Create(camera, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-		FieldOfView = base,
-	}):Play()
-end
-
 local function showCombo(session: Current, streak: number, combo: number)
 	local label = session.comboLabel
 	local previous = session.streak
@@ -522,9 +508,6 @@ local function showCombo(session: Current, streak: number, combo: number)
 	TweenService:Create(label, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
 		Size = UDim2.fromOffset(320, 34),
 	}):Play()
-	if tierUp then
-		punch(6)
-	end
 end
 
 local function onRepConfirmed(update)
@@ -535,9 +518,6 @@ local function onRepConfirmed(update)
 	if update.streak then
 		showCombo(current, update.streak, update.combo or 1)
 		MinigameController.LastCombo = if update.streak == 0 then 1 else update.combo or 1
-	end
-	if update.quality == "Perfect" then
-		punch(2.5)
 	end
 	if update.gain then
 		current.gained += update.gain
@@ -601,9 +581,6 @@ local function onEnded(update)
 		TweenService:Create(gradeLabel, TweenInfo.new(0.45, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out), {
 			Size = UDim2.fromOffset(110, 110),
 		}):Play()
-		if update.newRecord then
-			punch(5)
-		end
 		return
 	end
 	if update.reason == "TooFar" then
@@ -725,9 +702,10 @@ local function freeArea(): (Vector2?, Vector2?)
 	local view = camera.ViewportSize
 	local inset = GuiService:GetGuiInset()
 	local low, high = Vector2.new(0, inset.Y), view
-	-- Colonne d'infos collée au bord gauche
+	-- Colonne d'infos collée au bord gauche (téléphone en paysage seulement)
 	local railRight = 0
-	for _, name in RAIL_ITEMS do
+	local rail = UserInputService.TouchEnabled and not Ui.isPhonePortrait()
+	for _, name in if rail then RAIL_ITEMS else {} do
 		local item = session.root:FindFirstChild(name)
 		if item and item:IsA("GuiObject") and item.Visible then
 			local left = item.AbsolutePosition.X + inset.X

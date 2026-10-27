@@ -17,7 +17,7 @@ export type Help = {
 }
 
 local Helps: { [string]: Help } = {
-	OpenJar = { npc = "Mom", minigame = "Twist", interval = 1.6, requiredStage = 1, cash = 5, firstCash = 25 },
+	OpenJar = { npc = "Mom", minigame = "Twist", interval = 1.6, requiredStage = 1, cash = 5, firstCash = 25, reps = 8 },
 	PumpTire = { npc = "Courier", minigame = "Pressure", interval = 1.2, requiredStage = 1, cash = 8 },
 	Nails = { npc = "Kid", minigame = "Hammer", interval = 1.4, requiredStage = 2, cash = 15 },
 	PushCar = { npc = "Neighbor", minigame = "Steer", interval = 1.0, requiredStage = 3, cash = 30 },

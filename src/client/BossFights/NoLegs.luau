@@ -31,7 +31,7 @@ end
 function def.PlayerPose(scene, rig, m, p, shake, now)
 	local bump = if scene.playerQuality ~= "Miss" then p else 0
 	local hit = math.max(
-		scene:Pulse(now - scene.bossHitAt, Fights.HitTime) * (if scene.bossQuality == "Miss" then 0 else 1),
+		math.max(scene:Recoil(scene:SinceBossImpact(now)), 0) * (if scene.bossQuality == "Miss" then 0 else 1),
 		if scene.playerQuality == "Miss" then p else 0
 	)
 	-- Repoussé vers le bord quand il perd ; élan en avant à chaque choc, recul quand il encaisse
@@ -57,9 +57,8 @@ function def.Boss(scene, _dt, now)
 	if not part then
 		return
 	end
-	local charge = scene:Pulse(now - scene.bossHitAt, Fights.HitTime) * (if scene.bossQuality == "Miss" then 0.3 else 1)
-	local struck = scene:Pulse(now - scene.playerHitAt, Fights.HitTime)
-		* (if scene.playerQuality == "Miss" then 0 else 1)
+	local charge = scene:Strike(now - scene.bossHitAt) * (if scene.bossQuality == "Miss" then 0.3 else 1)
+	local struck = scene:Recoil(now - scene.playerHitAt) * (if scene.playerQuality == "Miss" then 0 else 1)
 	-- Repoussé vers le bord quand il perd ; il charge à chacun de ses coups ; il vacille sans arrêt
 	local back = math.max(scene.lead, 0) * SETTINGS.Push + struck * 0.8 - charge * SETTINGS.Lunge
 	local wobble = math.rad(SETTINGS.Wobble) * (math.sin(now * 5.5) * (0.4 + struck) + math.sin(now * 13) * 0.15)

@@ -10,9 +10,9 @@
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GuiService = game:GetService("GuiService")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
 local CollectionService = game:GetService("CollectionService")
 
 local BossFights = require(ReplicatedStorage.Shared.Config.BossFights)
@@ -25,6 +25,8 @@ local Ui = require(script.Parent.Parent.Ui)
 local GOLD = Color3.fromRGB(255, 210, 60)
 local RED = Color3.fromRGB(230, 60, 60)
 local GREEN = Color3.fromRGB(90, 220, 90)
+local METER_WIDTH = 420 -- jauge toi / boss : largeur maximale et hauteur (pixels)
+local METER_HEIGHT = 24
 local BOSS_SPOT_TAG = "BossSpot"
 
 local player = Players.LocalPlayer
@@ -275,14 +277,15 @@ local function renderPips()
 	for round = 1, fight.rounds do
 		local result = fight.results[round]
 		local pip = Ui.create("Frame", {
-			Size = UDim2.fromOffset(18, 18),
+			Size = UDim2.fromOffset(METER_HEIGHT - 10, METER_HEIGHT - 10),
+			ZIndex = 3,
 			BackgroundColor3 = if result == true
 				then GREEN
 				elseif result == false then RED
 				else Color3.fromRGB(70, 70, 80),
 			LayoutOrder = round,
 			Parent = pipsFrame,
-		}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 2, 0.2) })
+		}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 1.5, 0.2) })
 		table.insert(pips, pip)
 	end
 end
@@ -665,52 +668,54 @@ local function buildGui()
 	})
 
 	-- Jauge de Mog : toi (or, à gauche) contre le boss (rouge, à droite), et les manches
+	-- Fine et en haut de la partie de l'écran que le mini-jeu laisse libre (D87) : elle ne couvre ni le panneau du
+	-- jeu ni les combattants (la caméra leur garde la place en dessous). Placée à chaque image (placeMeter).
 	meter = Ui.create("Frame", {
 		Name = "Meter",
-		-- En haut de l'écran (D85) : en bas, elle chevauchait le panneau large des mini-jeux à deux pouces.
-		-- Sur écran tactile, décalée à droite de la colonne d'infos du mini-jeu.
 		AnchorPoint = Vector2.new(0.5, 0),
-		Position = if UserInputService.TouchEnabled then UDim2.new(0.6, 0, 0, 10) else UDim2.new(0.5, 0, 0, 8),
-		Size = UDim2.new(if UserInputService.TouchEnabled then 0.42 else 0.44, 0, 0, 30),
+		Position = UDim2.new(0.5, 0, 0, 8),
+		Size = UDim2.fromOffset(METER_WIDTH, METER_HEIGHT),
 		BackgroundColor3 = RED,
 		Visible = false,
 		Parent = gui,
 	}, {
-		Ui.corner(UDim.new(0, 8)),
-		Ui.stroke(Color3.new(1, 1, 1), 3, 0),
-		Ui.create("UISizeConstraint", { MaxSize = Vector2.new(560, 30) }),
+		Ui.corner(UDim.new(1, 0)),
+		Ui.stroke(Color3.new(1, 1, 1), 2, 0),
 	})
 	meterFill = Ui.create("Frame", {
 		Size = UDim2.fromScale(0.5, 1),
 		BackgroundColor3 = GOLD,
 		Parent = meter,
-	}, { Ui.corner(UDim.new(0, 8)) })
+	}, { Ui.corner(UDim.new(1, 0)) })
 	meterYou = Ui.label({
-		Position = UDim2.fromOffset(8, 0),
-		Size = UDim2.new(0.5, -8, 1, 0),
+		Position = UDim2.fromOffset(10, 2),
+		Size = UDim2.new(0.33, -10, 1, -4),
 		TextXAlignment = Enum.TextXAlignment.Left,
 		ZIndex = 2,
 		Parent = meter,
 	})
 	meterBoss = Ui.label({
 		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, -8, 0, 0),
-		Size = UDim2.new(0.5, -8, 1, 0),
+		Position = UDim2.new(1, -10, 0, 2),
+		Size = UDim2.new(0.33, -10, 1, -4),
 		TextXAlignment = Enum.TextXAlignment.Right,
 		ZIndex = 2,
 		Parent = meter,
 	})
+	-- Manches : petites pastilles au milieu de la jauge
 	pipsFrame = Ui.create("Frame", {
-		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 1, 6),
-		Size = UDim2.new(1, 0, 0, 18),
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.5),
+		Size = UDim2.new(0.3, 0, 1, -8),
 		BackgroundTransparency = 1,
+		ZIndex = 3,
 		Parent = meter,
 	}, {
 		Ui.create("UIListLayout", {
 			FillDirection = Enum.FillDirection.Horizontal,
 			HorizontalAlignment = Enum.HorizontalAlignment.Center,
-			Padding = UDim.new(0, 8),
+			VerticalAlignment = Enum.VerticalAlignment.Center,
+			Padding = UDim.new(0, 5),
 			SortOrder = Enum.SortOrder.LayoutOrder,
 		}),
 	})
@@ -795,6 +800,18 @@ function BossController.Start()
 		elseif update.state == "Ended" then
 			meter.Visible = false
 		end
+		CameraFraming.SetTopReserve(if meter.Visible then METER_HEIGHT + 14 else 0)
+	end)
+	-- La jauge suit la zone libre de l'écran (téléphone tourné, panneau large…)
+	RunService.RenderStepped:Connect(function()
+		if not meter.Visible then
+			return
+		end
+		local low, high = CameraFraming.InterfaceArea()
+		local inset = GuiService:GetGuiInset()
+		local width = math.clamp(high.X - low.X - 24, 160, METER_WIDTH)
+		meter.Position = UDim2.fromOffset((low.X + high.X) / 2 - inset.X, low.Y - inset.Y + 6)
+		meter.Size = UDim2.fromOffset(width, METER_HEIGHT)
 	end)
 	player.CharacterAdded:Connect(function()
 		if fight then

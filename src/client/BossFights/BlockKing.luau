@@ -116,8 +116,7 @@ function def.Boss(scene, _dt, now)
 		return
 	end
 	local pose = scene:Pulse(now - scene.bossHitAt, 0.8) * (if scene.bossQuality == "Miss" then 0.4 else 1)
-	local struck = scene:Pulse(now - scene.playerHitAt, Fights.HitTime)
-		* (if scene.playerQuality == "Miss" then 0 else 1)
+	local struck = scene:Recoil(now - scene.playerHitAt) * (if scene.playerQuality == "Miss" then 0 else 1)
 	scene:MoveBoss(CFrame.new(0, 0, struck * 0.3) * CFrame.Angles(math.rad(6) * struck, 0, 0))
 	local rig = scene.bossRig
 	if rig then

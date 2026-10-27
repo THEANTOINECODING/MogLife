@@ -3,6 +3,9 @@
 -- Les jambes ne sont jamais tournées à la main : les pieds sont posés à plat sur le vrai sol (rig:PlantFeet, D86) et
 -- les genoux se plient d'eux-mêmes ; à appeler APRÈS avoir placé le bassin.
 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Fights = require(ReplicatedStorage.Shared.Config.BossFights)
 local Ground = require(script.Parent.Parent.Ground)
 
 local Poses = {}
@@ -18,10 +21,18 @@ local function ease(t: number): number
 end
 Poses.Ease = ease
 
--- Bassin placé : `offset` dans le repère du joueur (avance = -Z), penché de `lean` radians (positif = en arrière)
-function Poses.Pelvis(rig, offset: Vector3, lean: number, twist: number?)
+-- Bassin placé : `offset` dans le repère du joueur (avance = -Z), penché de `lean` radians (positif = en arrière).
+-- En garde, il rebondit sur ses appuis et se balance un peu (D87) ; still : immobile (à genoux)
+function Poses.Pelvis(rig, offset: Vector3, lean: number, twist: number?, still: boolean?)
 	local stand = rig.root.CFrame
 	local lower = Poses.Lower(rig)
+	if not still then
+		local now = os.clock()
+		local bounce = Fights.IdleBounce * (0.5 + 0.5 * math.sin(2 * math.pi * Fights.IdleBounceSpeed * now + 1.3))
+		offset -= Vector3.new(0, bounce, 0)
+		lean += 0.03 * math.sin(now * 1.7)
+		twist = (twist or 0) + 0.05 * math.sin(now * 0.8)
+	end
 	rig:Place("LowerTorso", stand * CFrame.new(offset) * lower * CFrame.Angles(lean, twist or 0, 0))
 end
 
@@ -69,7 +80,7 @@ function Poses.Slump(rig, m, t: number, forward: number?)
 	local below = Ground.Height(stand.Position + stand.LookVector * -ahead)
 	local step = if below then math.min(below - m.ground, 0) * k else 0
 	local drop = math.max(m.hipHeight - (thigh + 0.3), 0) * k - step
-	Poses.Pelvis(rig, Vector3.new(0, -drop, ahead), -0.25 * k)
+	Poses.Pelvis(rig, Vector3.new(0, -drop, ahead), -0.25 * k, nil, true)
 	for _, side in { "Left", "Right" } do
 		local sx = if side == "Left" then -1 else 1
 		local rest = stand * CFrame.new(0, 0, ahead) * rig:RestFrame(side .. "Foot")

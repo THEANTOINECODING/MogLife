@@ -8,6 +8,12 @@ return {
 	Linger = 6, -- secondes pendant lesquelles la scène attend la manche suivante
 	FinishTime = 3.2, -- durée de la fin du combat (le perdant tombe, le vainqueur exulte)
 	HitTime = 0.45, -- durée d'une réaction à un coup
+	-- Mouvements naturels (D87) : élan avant un coup, coup encaissé qui fait vaciller, vie entre les coups
+	StrikeTime = 0.7, -- durée d'un coup : élan en arrière, frappe rapide, retour
+	ImpactAt = 0.4, -- moment (part de StrikeTime) où le coup porte : l'adversaire réagit à cet instant
+	RecoilTime = 0.8, -- durée d'une réaction élastique (il part, revient en oscillant)
+	IdleBounce = 0.08, -- studs : les combattants rebondissent sur leurs appuis entre les coups
+	IdleBounceSpeed = 1.3, -- rebonds par seconde
 
 	-- Kevin : bataille de polochons
 	-- Distance : du centre de l'estrade du boss (8 × 8) au joueur ; BossShift : le boss recule vers le fond.

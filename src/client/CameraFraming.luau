@@ -254,17 +254,47 @@ function CameraFraming.SetFreeArea(getter: () -> (Vector2?, Vector2?))
 	freeAreaGetter = getter
 end
 
--- Zone libre de l'écran (pixels) : tout l'écran sans interface
+-- Dernière zone libre connue : entre deux manches d'un combat, l'interface du jeu disparaît un instant ; la caméra
+-- garde le même cadrage au lieu de zoomer puis dézoomer (D87). Oubliée quand la caméra stable s'arrête.
+local knownLow: Vector2? = nil
+local knownHigh: Vector2? = nil
+
+-- Bande gardée en haut de la zone libre (pixels) : la jauge « toi contre le boss » s'y place (BossController)
+local topReserve = 0
+function CameraFraming.SetTopReserve(pixels: number)
+	topReserve = pixels
+end
+
+-- Zone libre de l'écran (pixels), sans la bande du haut gardée pour la jauge
 function CameraFraming.FreeArea(): (Vector2, Vector2)
+	local low, high = CameraFraming.InterfaceArea()
+	return low + Vector2.new(0, math.min(topReserve, (high.Y - low.Y) * 0.25)), high
+end
+
+-- Zone que l'interface du mini-jeu laisse libre (pixels) : tout l'écran sans interface
+function CameraFraming.InterfaceArea(): (Vector2, Vector2)
 	local camera = workspace.CurrentCamera
 	local size = if camera then camera.ViewportSize else Vector2.new(1280, 720)
 	if freeAreaGetter then
 		local low, high = freeAreaGetter()
 		if low and high and high.X - low.X > 40 and high.Y - low.Y > 40 then
+			knownLow, knownHigh = low, high
 			return low, high
 		end
 	end
+	if knownLow and knownHigh then
+		return knownLow, knownHigh
+	end
 	return Vector2.zero, size
+end
+
+-- Vrai si l'interface d'un mini-jeu a déjà donné sa zone libre
+function CameraFraming.HasFreeArea(): boolean
+	if freeAreaGetter then
+		local low = freeAreaGetter()
+		return low ~= nil
+	end
+	return false
 end
 
 local FIT_MARGIN = 0.12 -- part de la zone libre gardée vide autour du sujet (mouvements, effets)
@@ -379,6 +409,7 @@ export type FollowOptions = {
 }
 
 local REPLAN_MOVE = 4 -- studs : le sujet s'est vraiment déplacé, l'angle est recalculé
+local AREA_TOLERANCE = 0.1 -- part de la diagonale de l'écran : en dessous, un changement d'interface est ignoré
 local BLOCK_CHECK = 1.2 -- secondes entre deux contrôles de visibilité
 local BLOCK_TIME = 1.5 -- secondes de corps caché (par un grand décor) avant de changer d'angle
 local GLIDE = 0.9 -- secondes pour glisser vers un nouvel angle
@@ -424,12 +455,14 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 		local now = os.clock()
 		-- Suit les vrais déplacements, en douceur (pas les mouvements des répétitions : la racine bouge peu)
 		smoothAnchor = smoothAnchor:Lerp(anchor, math.min(dt * 3, 1))
-		-- Écran tourné, interface du mini-jeu apparue ou déplacée, vrai déplacement : nouvel angle
+		-- Écran tourné, interface du mini-jeu vraiment déplacée, vrai déplacement : nouvel angle. Les petits
+		-- changements de l'interface (texte qui change de taille) ne bougent pas la caméra (D87)
 		local low, high = CameraFraming.FreeArea()
+		local tolerance = camera.ViewportSize.Magnitude * AREA_TOLERANCE
 		if
 			camera.ViewportSize ~= viewport
-			or (low - areaLow).Magnitude > 8
-			or (high - areaHigh).Magnitude > 8
+			or (low - areaLow).Magnitude > tolerance
+			or (high - areaHigh).Magnitude > tolerance
 			or (anchor - planned).Magnitude > REPLAN_MOVE
 		then
 			viewport = camera.ViewportSize
@@ -467,6 +500,7 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 
 	return function()
 		connection:Disconnect()
+		knownLow, knownHigh = nil, nil
 		CameraFraming.ClearFade(fader)
 		camera.FieldOfView = savedFov
 		camera.CameraType = Enum.CameraType.Custom

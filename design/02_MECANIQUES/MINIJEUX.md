@@ -50,7 +50,7 @@ Dieu du Pump en attendant son vrai combat (voir `IDEES.md`). Tous sont construit
 
 | Exercice | Module | Geste | Surprises (niveau) | Mog/rép ❓ |
 |---|---|---|---|---:|
-| Curl de pastèque | `Swipe` | Glisser vers le haut quand l'anneau touche la ligne dorée | Répétitions lentes « tortue » (1) | 1 |
+| Curl de pastèque | `Swipe` | La pastèque retombe vers les mains dorées : glisser vers le haut quand elle arrive dans les mains pour la relancer (comme jongler ; D87, l'ancien anneau était difficile à comprendre). Ratée : elle s'écrase et ne fait qu'un petit rebond | Lancers lents « tortue », plus hauts (1) | 1 |
 | Pompes | `Ring` | Toucher quand l'anneau touche le cercle | Anneau double : deux appuis (1) ; anneau rouge : ne pas toucher (2) | 2 |
 | Développé couché | `HoldRelease` | Maintenir pour pousser, relâcher dans la zone verte (qui change de place) | La zone bouge pendant qu'on pousse (2) | 4 |
 | Squat | `Tilt` | Glisser vers le bas jusqu'à la ligne, lever le doigt pour remonter | Squat avec pause en bas (1) | 8 |
@@ -64,7 +64,7 @@ exactement la zone notée.
 
 | Aide | Module | Geste | Surprises (niveau) |
 |---|---|---|---|
-| Bocal de maman | `Twist` | Taper vite pour dévisser un cran (clic de plus en plus aigu) ; s'arrêter quand le couvercle devient orange puis rouge. 4 crans par bocal, puis POP : le couvercle s'envole, les cornichons jaillissent, maman applaudit (D82) | L'alerte orange raccourcit à chaque niveau |
+| Bocal de maman | `Twist` | Refait en D87 (l'ancien était long et peu intuitif) : le couvercle vu de dessus ; tourner le doigt autour de lui dans le sens des flèches pour le dévisser, il tourne sous le doigt avec des clics. Un quart de tour = une répétition (vite = Perfect). 4 quarts par bocal, puis POP : le couvercle s'envole, les cornichons jaillissent, maman fait la fête. Une main fantôme montre le geste. 8 répétitions (au lieu de 12) | Couvercle dur : il faut tourner plus loin (2) |
 | Pneu du coursier | `Pressure` | **Pompe à vélo** (D82) : glisser vers le bas pour pomper (grand coup = beaucoup d'air), s'arrêter dans la zone verte (tirée au sort à chaque pneu) ; trop d'air, il éclate. Dans le vert sans pomper un instant : le coursier repart | Chaque pneu prend l'air différemment (1) ; fuite plus forte et zone plus étroite (2) |
 | Clous du petit voisin | `Hammer` | Toucher quand le marteau est au-dessus du clou | Clou tordu : deux coups (1) ; pouce du petit voisin à ne pas taper (2) |
 | Voiture du voisin | `Steer` | Glisser pour rester sur la route et éviter poubelle, chat, flaque. D82 : route plus large, virages plus doux, bordures, décor, fumée, mains qui poussent ; esquiver n'est pas une faute | Virages plus serrés et obstacles plus fréquents à chaque niveau |

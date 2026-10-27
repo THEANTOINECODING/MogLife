@@ -63,7 +63,7 @@ end
 
 function def.PlayerPose(scene, rig, m, p, shake, now)
 	local data = scene.data
-	local yank = scene:Pulse(now - scene.bossHitAt, Fights.HitTime) * (if scene.bossQuality == "Miss" then 0.2 else 1)
+	local yank = scene:Recoil(scene:SinceBossImpact(now)) * (if scene.bossQuality == "Miss" then 0.2 else 1)
 	local lean = math.rad(SETTINGS.Lean) * (0.75 + 0.35 * p) - yank * 0.35
 	-- Genoux pliés, penché en arrière, en fente ; un coup du Coach le tire vers l'avant
 	Poses.Pelvis(rig, Vector3.new(0, -m.legLength * 0.18, -yank * 0.4), lean)
@@ -89,9 +89,8 @@ end
 
 function def.Boss(scene, _dt, now)
 	local data = scene.data
-	local pull = scene:Pulse(now - scene.bossHitAt, Fights.HitTime) * (if scene.bossQuality == "Miss" then 0.3 else 1)
-	local yanked = scene:Pulse(now - scene.playerHitAt, Fights.HitTime)
-		* (if scene.playerQuality == "Miss" then 0 else 1)
+	local pull = scene:Strike(now - scene.bossHitAt) * (if scene.bossQuality == "Miss" then 0.3 else 1)
+	local yanked = scene:Recoil(now - scene.playerHitAt) * (if scene.playerQuality == "Miss" then 0 else 1)
 	-- Il avance vers la ligne quand il perd, recule quand il gagne
 	local slide = -scene.lead * SETTINGS.RopeShift * 0.7 - yanked * 0.35 + pull * 0.25
 	local lean = math.rad(SETTINGS.Lean) * (0.8 + 0.3 * pull - 0.4 * yanked)

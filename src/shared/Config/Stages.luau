@@ -78,8 +78,8 @@ local List: { Stage } = {
 			id = "BlockKing",
 			mogRequired = 20_000,
 			minigame = "Combo",
-			interval = 2.6,
-			skill = { perfect = 0.32, good = 0.5 }, -- ~71 points par répétition (D82 : un peu plus facile)
+			interval = 2.8,
+			skill = { perfect = 0.2, good = 0.52 }, -- ~63 points par répétition (D87 : encore plus facile à battre)
 			firstWinCash = 400,
 			styleReward = "RoyalFan",
 		},

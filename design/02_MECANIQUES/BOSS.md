@@ -73,8 +73,9 @@ bougent. Sans squelette (ancien modèle), le duel anime leur corps entier.
 
 Placement : les deux combattants restent sur l'estrade du boss (8 × 8 ; au-delà, on tombe en contrebas). Le boss recule
 de `BossShift` vers le fond pendant le duel et reprend sa place à la fin. Le ring de Monsieur Pas-Les-Jambes est celui
-de la carte (rien n'est ajouté). Pendant les manches, la barre « toi contre le boss » est en haut de l'écran pour
-laisser voir le duel ; la caméra du combat vise plus haut quand le mini-jeu occupe le bas de l'écran (Beats).
+de la carte (rien n'est ajouté). Pendant les manches, la barre « toi contre le boss » est fine (manches dedans) et placée en haut de la
+partie de l'écran que le mini-jeu laisse libre ; la caméra cadre les combattants en dessous (D87). Chaque coup du
+boss a un élan, les coups encaissés font vaciller, les combattants rebondissent sur leurs appuis entre les coups.
 
 Modèles : les boss à squelette (`assets/export/Boss_<Id>_Rig.fbx`) remplacent les anciens dans
 `ServerStorage.NpcModels` (place Studio, pas Rojo) ; les anciens sont gardés dans `ServerStorage.NpcModelsBackup`.

@@ -92,7 +92,6 @@ return {
 		Count = 5, -- nombre de poses (doit suivre MogOff.PoseCount)
 		CelebratePose = 1, -- pose de victoire (double biceps) après un boss battu ou une série notée S (D83)
 		CelebrateDelay = 0.8, -- secondes après la fin (le personnage quitte d'abord son activité)
-		CelebrateZoom = 12, -- la caméra se rapproche (degrés de champ de vision en moins)
 	},
 
 	-- Pareur : un joueur en pare un autre pendant sa série d'exercice
@@ -225,17 +224,21 @@ return {
 		},
 
 		-- Bocal : taper vite pour dévisser, s'arrêter quand le couvercle devient rouge
+		-- Bocal de maman (refait en D87) : tourner le doigt autour du couvercle, un quart de tour par répétition
 		Twist = {
-			TapFill = 0.2, -- un appui = 20 % d'un cran
-			NotchesPerJar = 4, -- crans pour ouvrir un bocal (POP !), puis un nouveau bocal arrive
-			PopTime = 1.0, -- secondes de la scène d'ouverture avant le cran suivant
-			PerfectTime = 0.75, -- cran fini en moins de 0,75 intervalle = Perfect
-			MissTime = 1.5, -- au-delà de 1,5 intervalle = raté (taper lentement ne suffit pas)
-			RedChance = 0.55, -- chances qu'un cran ait un moment rouge
-			WarnTime = 0.45, -- le couvercle tremble (orange) avant de devenir rouge
-			WarnShrinkPerLevel = 0.08,
-			RedTime = 0.7,
+			TurnAngle = 90, -- degrés à tourner pour une répétition
+			NotchesPerJar = 4, -- quarts de tour pour ouvrir un bocal (POP !), puis un nouveau bocal arrive
+			PopTime = 0.9, -- secondes de la scène d'ouverture avant le quart suivant
+			PerfectTime = 0.7, -- quart fini en moins de 0,7 intervalle = Perfect
+			MissTime = 1.5, -- au-delà de 1,5 intervalle = raté
+			StiffLevel = 2, -- couvercle dur à partir de ce niveau
+			StiffChance = 0.3,
+			StiffAngle = 150, -- degrés pour un couvercle dur (le temps est compté en proportion)
+			WrongWay = 0.5, -- tourner à l'envers revisse de la moitié de l'angle
+			MaxStep = 45, -- degrés comptés au plus par mouvement (un saut du doigt ne compte pas)
+			KeyStep = 30, -- degrés par appui (clavier, manette)
 		},
+
 		-- Pneu du coursier (refait en D82) : pomper en glissant vers le bas, s'arrêter dans la zone verte
 		Pressure = {
 			AirPerStroke = 0.25, -- un coup de pompe complet envoie 25 % de la jauge
@@ -362,8 +365,8 @@ return {
 		Combo = {
 			Length = 4,
 			LongLevel = 2, -- 5 flèches à la dernière manche
-			PerfectFraction = 0.5, -- fini en moins de 50 % du temps = Perfect
-			GoodFraction = 0.9,
+			PerfectFraction = 0.6, -- fini en moins de 60 % du temps = Perfect (D87, plus facile)
+			GoodFraction = 1.0,
 		},
 	},
 

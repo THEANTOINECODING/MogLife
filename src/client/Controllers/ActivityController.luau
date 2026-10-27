@@ -12,7 +12,6 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local TweenService = game:GetService("TweenService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
@@ -179,6 +178,12 @@ startCloseUp = function(character: Model, preset: any, anchor: BasePart?, animat
 	local token = {}
 	closeUpToken = token
 	task.wait(SETTLE_TIME)
+	-- On attend aussi que l'interface du mini-jeu soit là : sinon la caméra se placerait pour tout l'écran puis
+	-- reculerait d'un coup à son arrivée (D87)
+	local waited = 0
+	while not CameraFraming.HasFreeArea() and waited < 1 do
+		waited += task.wait(0.05)
+	end
 	if closeUpToken ~= token or not root.Parent then
 		return
 	end
@@ -490,21 +495,10 @@ function ActivityController.Start()
 			BossScene.Finish(update.player, update.won == true)
 		end
 	end)
-	Remotes.EmotePlay.OnClientEvent:Connect(function(who, index, celebration)
+	Remotes.EmotePlay.OnClientEvent:Connect(function(who, index)
 		if typeof(who) == "Instance" and who:IsA("Player") and typeof(index) == "number" then
+			-- Célébration : la caméra ne zoome plus (D87, zooms jugés désagréables), la pose suffit
 			playEmote(who, index)
-			-- Célébration (D83) : sa propre caméra se rapproche le temps de la pose
-			local camera = workspace.CurrentCamera
-			if celebration == true and who == localPlayer and camera and SettingsController.Get("ScreenFx") then
-				local base = CameraFraming.Fov
-				local hold = Balance.Emotes.Duration - 0.8
-				TweenService:Create(camera, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-					FieldOfView = base - Balance.Emotes.CelebrateZoom,
-				}):Play()
-				task.delay(0.4 + hold, function()
-					TweenService:Create(camera, TweenInfo.new(0.4), { FieldOfView = base }):Play()
-				end)
-			end
 		end
 	end)
 	Players.PlayerRemoving:Connect(function(player)

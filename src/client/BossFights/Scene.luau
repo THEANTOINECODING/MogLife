@@ -143,6 +143,10 @@ function Scene.Step(self, dt: number)
 	self.def.Boss(self, dt, now)
 	if self.bossRig then
 		self:PlantBoss()
+		-- Tête : elle hoche doucement si le duel ne la tourne pas
+		if not self.bossRig.wanted.Head then
+			self.bossRig:Turn("Head", CFrame.Angles(0.05 * math.sin(now * 2.1), 0.06 * math.sin(now * 0.9), 0))
+		end
 		self.bossRig:Apply()
 	end
 end
@@ -153,6 +157,11 @@ end
 function Scene.MoveBoss(self, offset: CFrame)
 	if self.bossPart and self.base then
 		local feet = if self.finishing then CFrame.identity else CFrame.new(0, -self.bossPart.Size.Y / 2, 0)
+		if not self.finishing then
+			-- Vie entre les coups : il rebondit sur ses appuis (les jambes plantées se plient)
+			local bounce = Fights.IdleBounce * (0.5 + 0.5 * math.sin(2 * math.pi * Fights.IdleBounceSpeed * os.clock()))
+			offset = CFrame.new(0, -bounce, 0) * offset
+		end
 		self.bossPart.CFrame = self.base * feet * offset * feet:Inverse()
 		self.bossOffset = offset
 	end
@@ -182,6 +191,40 @@ function Scene.Pulse(_self, since: number, duration: number): number
 		return 0
 	end
 	return math.sin(math.pi * since / duration)
+end
+
+-- Coup avec élan (D87) : 0 avant, recule un peu (élan, négatif), frappe vite jusqu'à 1, tient, puis revient en douceur
+function Scene.Strike(_self, since: number, duration: number?): number
+	local length = duration or Fights.StrikeTime
+	if since < 0 or since > length then
+		return 0
+	end
+	local t = since / length
+	if t < 0.3 then
+		return -0.3 * math.sin(math.pi * 0.5 * t / 0.3)
+	elseif t < 0.45 then
+		local k = (t - 0.3) / 0.15
+		return -0.3 + 1.3 * (1 - (1 - k) ^ 3)
+	elseif t < 0.55 then
+		return 1
+	end
+	local k = (t - 0.55) / 0.45
+	return 1 - k * k * (3 - 2 * k)
+end
+
+-- Réaction élastique à un coup (D87) : part fort, revient en dépassant un peu, oscille et se calme
+function Scene.Recoil(_self, since: number, duration: number?): number
+	local length = duration or Fights.RecoilTime
+	if since < 0 or since > length then
+		return 0
+	end
+	local t = since / length
+	return 1.45 * math.sin(3 * math.pi * t) * (1 - t) ^ 2
+end
+
+-- Temps écoulé depuis que le coup du boss a porté (pour la réaction du joueur)
+function Scene.SinceBossImpact(self, now: number): number
+	return now - self.bossHitAt - Fights.StrikeTime * Fights.ImpactAt
 end
 
 -- Dernière manche : le coup spécial du boss est en cours
