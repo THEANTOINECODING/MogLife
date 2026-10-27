@@ -342,6 +342,9 @@ local function showResult(update)
 	end
 	if update.counted then
 		table.insert(lines, Texts.Get("Duel.RewardCash", { cash = Format.Short(update.cash) }))
+		if (update.mog or 0) > 0 then
+			table.insert(lines, Texts.Get("Duel.RewardMog", { mog = Format.Short(update.mog) }))
+		end
 	elseif update.capped then
 		table.insert(lines, Texts.Get("Duel.Capped", { count = Duels.RewardsPerPairPerDay }))
 	elseif update.result ~= "Cancelled" and update.result ~= "Forfeit" and not update.valid then

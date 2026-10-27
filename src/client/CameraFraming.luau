@@ -298,6 +298,9 @@ function CameraFraming.HasFreeArea(): boolean
 end
 
 local FIT_MARGIN = 0.12 -- part de la zone libre gardée vide autour du sujet (mouvements, effets)
+-- Zoom très léger (D88) : la caméra d'une activité ne vient pas beaucoup plus près que la caméra du joueur
+local KEEP_DISTANCE = 0.85 -- part de la distance d'origine (caméra du joueur -> personnage) gardée au minimum
+local distanceFloor = 0 -- fixé par Follow pendant une activité
 
 -- Place la caméra pour que tous les `points` tiennent dans la zone libre de l'écran, le plus près possible : la
 -- caméra regarde dans la direction choisie (de `eye` vers `focus`), recule juste ce qu'il faut et se décale pour
@@ -334,7 +337,7 @@ function CameraFraming.Fit(focus: Vector3, eye: Vector3, points: { Vector3 }, mi
 	local subject = center + right * midX + up * midY
 	-- Recul : la largeur et la hauteur du sujet tiennent dans la zone libre
 	local halfW, halfH = (maxX - minX) / 2, (maxY - minY) / 2
-	local distance = math.max(halfW / (hx * tanX), halfH / (hy * tanY), minDistance or MIN_DISTANCE)
+	local distance = math.max(halfW / (hx * tanX), halfH / (hy * tanY), minDistance or MIN_DISTANCE, distanceFloor)
 	-- La caméra se décale (sans tourner) pour que le sujet tombe au centre de la zone libre
 	local shift = right * (-cx * distance * tanX) + up * (-cy * distance * tanY)
 	local newEye = subject - look * distance + shift
@@ -413,6 +416,11 @@ local AREA_TOLERANCE = 0.1 -- part de la diagonale de l'écran : en dessous, un 
 local BLOCK_CHECK = 1.2 -- secondes entre deux contrôles de visibilité
 local BLOCK_TIME = 1.5 -- secondes de corps caché (par un grand décor) avant de changer d'angle
 local GLIDE = 0.9 -- secondes pour glisser vers un nouvel angle
+local ENTER_TIME = 1 -- secondes pour aller de la caméra du joueur au gros plan (en douceur)
+local RETURN_TIME = 0.7 -- secondes pour revenir à la caméra du joueur à la fin
+local returning: RBXScriptConnection? = nil -- retour en cours vers la caméra du joueur
+local returnCF: CFrame? = nil
+local returnFov: number? = nil
 
 function CameraFraming.Follow(options: FollowOptions): () -> ()
 	local camera = workspace.CurrentCamera
@@ -420,12 +428,19 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 	if not camera or not start then
 		return function() end
 	end
-	local savedFov = camera.FieldOfView
+	-- Une caméra qui revenait encore à sa place : elle s'arrête là, la nouvelle part de la vraie caméra du joueur
+	if returning then
+		returning:Disconnect()
+		returning = nil
+	end
+	local savedFov = if returnFov then returnFov else camera.FieldOfView
+	local startCF = if returnCF then returnCF else camera.CFrame
+	returnCF, returnFov = nil, nil
 	camera.CameraType = Enum.CameraType.Scriptable
 	camera.FieldOfView = FOV
-	local startCF = camera.CFrame
 	local t0 = os.clock()
-	local enter = options.enterTime or 0.7
+	local enter = options.enterTime or ENTER_TIME
+	distanceFloor = (startCF.Position - start).Magnitude * KEEP_DISTANCE
 
 	-- Angle choisi : décalages de l'œil et du point visé par rapport au sujet
 	local planned = start
@@ -498,13 +513,37 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 		end
 	end)
 
+	-- Fin : la caméra revient en douceur exactement là où était celle du joueur, puis il la reprend en main (D88)
 	return function()
 		connection:Disconnect()
 		knownLow, knownHigh = nil, nil
+		distanceFloor = 0
 		CameraFraming.ClearFade(fader)
-		camera.FieldOfView = savedFov
-		camera.CameraType = Enum.CameraType.Custom
+		local from, fromFov = camera.CFrame, camera.FieldOfView
+		local began = os.clock()
+		returnCF, returnFov = startCF, savedFov
+		returning = RunService.RenderStepped:Connect(function()
+			local k = math.clamp((os.clock() - began) / RETURN_TIME, 0, 1)
+			k = k * k * (3 - 2 * k)
+			camera.CFrame = from:Lerp(startCF, k)
+			camera.FieldOfView = fromFov + (savedFov - fromFov) * k
+			if k >= 1 and returning then
+				returning:Disconnect()
+				returning = nil
+				returnCF, returnFov = nil, nil
+				camera.CameraType = Enum.CameraType.Custom
+			end
+		end)
 	end
+end
+
+-- Une autre séquence prend la caméra (boss qui s'envole, cinématique) : le retour vers la caméra du joueur s'arrête
+function CameraFraming.CancelReturn()
+	if returning then
+		returning:Disconnect()
+		returning = nil
+	end
+	returnCF, returnFov = nil, nil
 end
 
 CameraFraming.Fov = FOV

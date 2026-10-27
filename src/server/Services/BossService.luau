@@ -165,7 +165,9 @@ local function resolveRound(player: Player, fight: Fight)
 	-- Répétitions manquantes du joueur = 0 point ; le boss a toujours joué toutes les siennes
 	local score = averageScore(fight.score, BOSS.RepsPerRound)
 	local opponent = averageScore(fight.bossScore, BOSS.RepsPerRound)
-	local won = score > opponent
+	-- Les vrais totaux décident (les scores affichés sont arrondis) ; à égalité parfaite, le joueur l'emporte (D88 :
+	-- des scores affichés égaux donnaient la manche au boss, Antoine trouvait la victoire « refusée »)
+	local won = fight.score >= fight.bossScore
 	if won then
 		fight.wins += 1
 	else

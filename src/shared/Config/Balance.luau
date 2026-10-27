@@ -224,19 +224,18 @@ return {
 		},
 
 		-- Bocal : taper vite pour dévisser, s'arrêter quand le couvercle devient rouge
-		-- Bocal de maman (refait en D87) : tourner le doigt autour du couvercle, un quart de tour par répétition
+		-- Bocal de maman (refait en D88) : une main tient le bocal, l'autre dévisse d'un glissé vers la gauche
 		Twist = {
-			TurnAngle = 90, -- degrés à tourner pour une répétition
 			NotchesPerJar = 4, -- quarts de tour pour ouvrir un bocal (POP !), puis un nouveau bocal arrive
 			PopTime = 0.9, -- secondes de la scène d'ouverture avant le quart suivant
-			PerfectTime = 0.7, -- quart fini en moins de 0,7 intervalle = Perfect
-			MissTime = 1.5, -- au-delà de 1,5 intervalle = raté
-			StiffLevel = 2, -- couvercle dur à partir de ce niveau
-			StiffChance = 0.3,
-			StiffAngle = 150, -- degrés pour un couvercle dur (le temps est compté en proportion)
-			WrongWay = 0.5, -- tourner à l'envers revisse de la moitié de l'angle
-			MaxStep = 45, -- degrés comptés au plus par mouvement (un saut du doigt ne compte pas)
-			KeyStep = 30, -- degrés par appui (clavier, manette)
+			PerfectTime = 0.55, -- quart fait en moins de 0,55 intervalle = Perfect
+			MissTime = 1.3, -- au-delà de 1,3 intervalle = raté
+			SwipeFraction = 0.07, -- longueur du glissé (part de la hauteur de l'écran)
+			WetLevel = 1, -- bocal mouillé à partir de ce niveau : lâcher et reprendre
+			WetChance = 0.3,
+			WetDelay = 0.15, -- il devient glissant peu après le début du quart (intervalles)
+			TightLevel = 2, -- couvercle dur : deux coups pour ce quart
+			TightChance = 0.3,
 		},
 
 		-- Pneu du coursier (refait en D82) : pomper en glissant vers le bas, s'arrêter dans la zone verte
@@ -436,7 +435,7 @@ return {
 		TimingScaleByRound = { 0.95, 0.85, 0.75 }, -- multiplie les fenêtres Perfect / Good
 		BossSkillBonusPerRound = 0.03, -- le boss gagne +3 % de chances de Perfect à chaque manche
 		QualityScore = { Perfect = 100, Good = 70, Miss = 20 },
-		-- Le boss joue en direct : il gagne la manche en cas d'égalité
+		-- Le boss joue en direct ; à égalité parfaite de points, la manche va au joueur (D88)
 		-- Défaite automatique (Mog insuffisant) : perte de Cash, annoncée avant le combat
 		DefeatCashLossPercent = 0.10,
 		DefeatCashLossCap = { 50, 120, 300, 600, 1_200, 2_500 }, -- par stade du joueur ❓

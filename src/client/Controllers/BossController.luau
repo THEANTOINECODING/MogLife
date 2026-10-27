@@ -19,6 +19,7 @@ local BossFights = require(ReplicatedStorage.Shared.Config.BossFights)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local BossSpecials = require(script.Parent.Parent.BossSpecials)
+local BossScene = require(script.Parent.Parent.BossFights.Scene)
 local CameraFraming = require(script.Parent.Parent.CameraFraming)
 local Ui = require(script.Parent.Parent.Ui)
 
@@ -258,6 +259,23 @@ local function stopDuelCamera()
 	end
 end
 
+-- Jauge retournée : le joueur (or) à droite, le boss (rouge) à gauche
+local meterFlipped = false
+local function setMeterSide(flipped: boolean)
+	if flipped == meterFlipped then
+		return
+	end
+	meterFlipped = flipped
+	meterFill.AnchorPoint = if flipped then Vector2.new(1, 0) else Vector2.zero
+	meterFill.Position = if flipped then UDim2.fromScale(1, 0) else UDim2.fromScale(0, 0)
+	meterYou.AnchorPoint = if flipped then Vector2.new(1, 0) else Vector2.zero
+	meterYou.Position = if flipped then UDim2.new(1, -10, 0, 2) else UDim2.fromOffset(10, 2)
+	meterYou.TextXAlignment = if flipped then Enum.TextXAlignment.Right else Enum.TextXAlignment.Left
+	meterBoss.AnchorPoint = if flipped then Vector2.zero else Vector2.new(1, 0)
+	meterBoss.Position = if flipped then UDim2.fromOffset(10, 2) else UDim2.new(1, -10, 0, 2)
+	meterBoss.TextXAlignment = if flipped then Enum.TextXAlignment.Left else Enum.TextXAlignment.Right
+end
+
 local function setMeter(score: number, opponent: number)
 	local total = score + opponent
 	local share = if total > 0 then score / total else 0.5
@@ -343,6 +361,7 @@ local function filmBoss(bossId: string, duration: number, onDone: (() -> ())?)
 	end
 	local base, size = CutsceneController.Measure(model)
 	local eye = camera.CFrame.Position
+	CameraFraming.CancelReturn()
 	camera.CameraType = Enum.CameraType.Scriptable
 	local t0 = os.clock()
 	local connection
@@ -507,6 +526,7 @@ local function onBossUpdate(update)
 		end
 	elseif update.state == "Live" then
 		setMeter(update.score, update.opponent)
+		BossScene.SetScores(player, update.score, update.opponent)
 	elseif update.state == "RoundResult" then
 		endSpecial()
 		if fight then
@@ -514,10 +534,15 @@ local function onBossUpdate(update)
 			renderPips()
 		end
 		setMeter(update.score, update.opponent)
+		BossScene.SetScores(player, update.score, update.opponent, update.won)
+		-- Le score dit clairement qui est qui (D88)
 		shout(
 			Texts.Get(if update.won then "Boss.RoundWonShort" else "Boss.RoundLostShort"),
 			if update.won then GREEN else RED,
-			`{update.score} - {update.opponent}`,
+			Texts.Get(
+				"Boss.Scoreboard",
+				{ score = update.score, opponent = update.opponent, boss = bossName(update.bossId) }
+			),
 			1
 		)
 		bossSays(update.bossId, `BossTaunt.{update.bossId}.{if update.won then "Behind" else "Ahead"}`)
@@ -805,6 +830,8 @@ function BossController.Start()
 	-- La jauge suit la zone libre de l'écran (téléphone tourné, panneau large…)
 	RunService.RenderStepped:Connect(function()
 		if not meter.Visible then
+			-- Jauge cachée (fin du combat) : la caméra récupère toute la zone libre
+			CameraFraming.SetTopReserve(0)
 			return
 		end
 		local low, high = CameraFraming.InterfaceArea()
@@ -812,6 +839,17 @@ function BossController.Start()
 		local width = math.clamp(high.X - low.X - 24, 160, METER_WIDTH)
 		meter.Position = UDim2.fromOffset((low.X + high.X) / 2 - inset.X, low.Y - inset.Y + 6)
 		meter.Size = UDim2.fromOffset(width, METER_HEIGHT)
+		-- Côtés : le joueur est-il à droite du boss à l'écran ? La jauge se retourne pour coller à la scène (D88)
+		local camera = workspace.CurrentCamera
+		local character = player.Character
+		local root = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
+		local model = fight and bossModel(fight.bossId)
+		local bossPart = model and model.PrimaryPart
+		if camera and root and bossPart then
+			local you = camera:WorldToViewportPoint(root.Position)
+			local them = camera:WorldToViewportPoint(bossPart.Position)
+			setMeterSide(you.X > them.X)
+		end
 	end)
 	player.CharacterAdded:Connect(function()
 		if fight then

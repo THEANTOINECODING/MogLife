@@ -56,9 +56,11 @@ function Scene.Connect(setBusy: (Player, boolean) -> (), npcBase: (Model) -> CFr
 	hooks.npcBase = npcBase
 end
 
+-- Son modèle, même loin de son estrade (éjecté en l'air après une victoire, il revient quelques secondes plus tard :
+-- le duel le reprend et le remet à sa place)
 local function findBoss(anchor: BasePart, bossId: string): Model?
 	local folder = workspace:FindFirstChild("Npcs")
-	local best, bestDistance = nil, 30
+	local best, bestDistance = nil, 150
 	for _, model in if folder then folder:GetChildren() else {} do
 		if model:IsA("Model") and model:GetAttribute("BossId") == bossId and model.PrimaryPart then
 			local distance = (model.PrimaryPart.Position - anchor.Position).Magnitude
@@ -125,8 +127,17 @@ function Scene.Step(self, dt: number)
 		return
 	end
 	local now = os.clock()
-	local wanted =
-		math.clamp((self.points - self.bossPoints) / (Balance.Boss.RepsPerRound * 100) * Fights.LeadGain, -1, 1)
+	-- Qui mène : le résultat de la manche s'il est connu, sinon les scores du serveur (pour son propre combat), sinon
+	-- une estimation à partir des coups vus (combat d'un autre joueur)
+	local wanted
+	if self.roundResult ~= nil then
+		wanted = if self.roundResult then 1 else -1
+	elseif self.serverScore then
+		wanted = math.clamp((self.serverScore - self.serverOpponent) / 100 * Fights.LeadGain, -1, 1)
+	else
+		wanted =
+			math.clamp((self.points - self.bossPoints) / (Balance.Boss.RepsPerRound * 100) * Fights.LeadGain, -1, 1)
+	end
 	self.lead += (wanted - self.lead) * math.min(dt * Fights.LeadSpeed, 1)
 	if self.bossRig then
 		self.bossRig:Clear()
@@ -306,6 +317,7 @@ function Scene.Activity(bossId: string, def: Def)
 		end
 		scene.round += 1
 		scene.points, scene.bossPoints = 0, 0
+		scene.serverScore, scene.serverOpponent, scene.roundResult = nil, nil, nil
 		scene.expireToken = (scene.expireToken or 0) + 1
 		return setmetatable({ scene = scene, ctx = ctx }, Round)
 	end
@@ -362,6 +374,17 @@ function Scene.Finish(player: Player, won: boolean)
 	scene.finishAt = os.clock()
 	if hooks.setBusy then
 		hooks.setBusy(player, true)
+	end
+end
+
+-- Scores officiels de la manche (BossController, son propre combat) ; won : résultat de la manche une fois finie
+function Scene.SetScores(player: Player, score: number, opponent: number, won: boolean?)
+	local scene = scenes[player]
+	if scene then
+		scene.serverScore, scene.serverOpponent = score, opponent
+		if won ~= nil then
+			scene.roundResult = won
+		end
 	end
 end
 

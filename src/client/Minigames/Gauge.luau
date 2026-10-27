@@ -1,7 +1,7 @@
 -- Mini-jeu « Gauge » (duel entre joueurs, bras de fer, D68, D81) : une aiguille balaie la jauge de force d'un bout à
 -- l'autre, puis revient. À chaque balayage, une zone verte (au cœur doré) apparaît à un autre endroit : toucher
 -- l'écran (n'importe où) quand l'aiguille est dedans pour pousser. Un appui par balayage ; un balayage sans appui
--- est raté. Dernier effort (D81) : le dernier balayage de la manche a 3 petites zones à toucher à la suite.
+-- est raté. (Le « dernier effort » à 3 zones de D81 est retiré en D88 : Antoine ne l'aimait pas.)
 -- Clavier : Espace ; manette : bouton A.
 -- Les deux joueurs reçoivent la même graine (options.seed) : mêmes zones au même moment, mêmes fenêtres.
 -- L'inclinaison des bras (qui gagne) est affichée par DuelController ; ici, seulement le geste.
@@ -14,7 +14,6 @@ local Ui = require(script.Parent.Parent.Ui)
 
 local GREEN = Color3.fromRGB(80, 210, 100)
 local GOLD = Color3.fromRGB(255, 210, 60)
-local ORANGE = Color3.fromRGB(255, 140, 50)
 local BAR = Color3.fromRGB(30, 25, 45)
 
 local Gauge = {}
@@ -28,8 +27,6 @@ function Gauge.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 	local lead = interval * Duels.Lead
 	local zoneHalf = Duels.ZoneHalf * self.timingScale
 	local perfectHalf = Duels.PerfectHalf * self.timingScale
-	local effortHalf = Duels.LastEffort.Half * self.timingScale
-	local lastSweep = self.total
 
 	local bar = Ui.create("Frame", {
 		Name = "Gauge",
@@ -55,19 +52,6 @@ function Gauge.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		ZIndex = 3,
 		Parent = zone,
 	}, { Ui.corner(UDim.new(0, 6)) })
-	-- Les 3 zones du dernier effort
-	local effortZones = {}
-	for index, x in Duels.LastEffort.Zones do
-		effortZones[index] = Ui.create("Frame", {
-			AnchorPoint = Vector2.new(0.5, 0.5),
-			Position = UDim2.fromScale(x, 0.5),
-			Size = UDim2.new(effortHalf * 2, 0, 1, -10),
-			BackgroundColor3 = ORANGE,
-			ZIndex = 2,
-			Visible = false,
-			Parent = bar,
-		}, { Ui.corner(UDim.new(0, 8)) })
-	end
 	local needle = Ui.create("Frame", {
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0, 0.5),
@@ -82,7 +66,6 @@ function Gauge.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 
 	local zones: { number } = {}
 	local resolved: { [number]: boolean } = {}
-	local effortHits: { [number]: number } = {} -- zones touchées pendant le dernier effort
 	local current = 1
 	local pushAt = -math.huge
 
@@ -102,21 +85,6 @@ function Gauge.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		local u = (t - lead) / interval - (k - 1)
 		-- Aller, puis retour
 		return k, if k % 2 == 1 then u else 1 - u
-	end
-
-	local function isEffort(k: number): boolean
-		return lastSweep ~= nil and k % lastSweep == 0
-	end
-
-	-- Zones du dernier effort dans l'ordre où l'aiguille les traverse
-	local function effortOrder(k: number): { number }
-		local ordered = table.clone(Duels.LastEffort.Zones)
-		if k % 2 == 0 then
-			table.sort(ordered, function(a, b)
-				return a > b
-			end)
-		end
-		return ordered
 	end
 
 	local function push(quality: string)
@@ -139,23 +107,6 @@ function Gauge.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		if resolved[k] then
 			return
 		end
-		if isEffort(k) then
-			local hits = effortHits[k] or 0
-			local target = effortOrder(k)[hits + 1]
-			if target and math.abs(position - target) <= effortHalf then
-				effortHits[k] = hits + 1
-				self:Burst("Good", needle)
-				if hits + 1 == #Duels.LastEffort.Zones then
-					resolved[k] = true
-					push("Perfect")
-				end
-			else
-				-- Raté pendant le dernier effort : il compte ce qui a été touché
-				resolved[k] = true
-				push(if hits >= 2 then "Good" else "Miss")
-			end
-			return
-		end
 		resolved[k] = true
 		local quality = self:GradeError(math.abs(position - zoneOf(k)), Duels.PerfectHalf, Duels.ZoneHalf)
 		zone.BackgroundTransparency = 0.6
@@ -167,36 +118,22 @@ function Gauge.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 	self:OnStep(function(_, t)
 		local k, position = needleAt(t)
 		if k > current then
-			-- Balayage terminé sans appui (ou dernier effort inachevé)
+			-- Balayage terminé sans appui
 			for missed = current, k - 1 do
 				if not resolved[missed] then
 					resolved[missed] = true
-					local hits = effortHits[missed] or 0
-					push(if isEffort(missed) and hits >= 2 then "Good" else "Miss")
+					push("Miss")
 				end
 			end
 			current = k
 			zone.BackgroundTransparency = 0
 			cued = false
 		end
-		local effort = isEffort(k)
-		if effort then
-			self:Announce("Minigame.Twist.Gauge.Last")
-		end
-		zone.Visible = not effort
-		local hits = effortHits[k] or 0
-		local order = effortOrder(k)
-		for index, frame in effortZones do
-			frame.Visible = effort
-			local rank = table.find(order, Duels.LastEffort.Zones[index])
-			local done = rank ~= nil and rank <= hits
-			frame.BackgroundColor3 = if done then GOLD else ORANGE
-		end
 		zone.Position = UDim2.fromScale(zoneOf(k), 0.5)
 		needle.Position = UDim2.fromScale(position, 0.5)
 		-- Le bras se crispe et tremble quand l'aiguille entre dans la zone
-		local inside = not resolved[k] and not effort and math.abs(position - zoneOf(k)) <= zoneHalf
-		local shaking = inside or (effort and not resolved[k])
+		local inside = not resolved[k] and math.abs(position - zoneOf(k)) <= zoneHalf
+		local shaking = inside
 		local pushed = os.clock() - pushAt < 0.15
 		arm.Size = if pushed
 			then UDim2.fromOffset(112, 112)
@@ -216,11 +153,8 @@ function Gauge.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 			k = k,
 			position = position,
 			zone = zoneOf(k),
-			effort = isEffort(k),
-			targets = effortOrder(k),
-			hits = effortHits[k] or 0,
+			effort = false,
 			resolved = resolved[k] == true,
-			half = effortHalf,
 			perfectHalf = perfectHalf,
 		}
 	end

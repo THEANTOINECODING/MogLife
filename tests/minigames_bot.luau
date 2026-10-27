@@ -192,9 +192,20 @@ function BOTS.Rope(p, now, c, m)
 	end
 end
 function BOTS.Twist(p, now, c, m)
-	if not p.resting and p.phase == "Free" and now - (m.t or 0) > 0.08 then
+	-- Tient le bocal (Espace) ; mouillé : lâche et reprend ; puis dévisse (flèche gauche)
+	if not p.holding then
+		if m.gripped then
+			c.keyUp(Enum.KeyCode.Space)
+			m.gripped = false
+			return
+		end
+		c.keyDown(Enum.KeyCode.Space)
+		m.gripped = true
+		return
+	end
+	if not p.resting and now - (m.t or 0) > 0.12 then
 		m.t = now
-		c.key(Enum.KeyCode.Space)
+		c.key(Enum.KeyCode.Left)
 	end
 end
 function BOTS.Pressure(p, _, c)
@@ -313,7 +324,7 @@ function BOTS.Gauge(p, now, c, m)
 	if p.resolved or now - (m.t or 0) < 0.06 then
 		return
 	end
-	local target = if p.effort then p.targets[p.hits + 1] else p.zone
+	local target = p.zone
 	if target and math.abs(p.position - target) < 0.02 then
 		m.t = now
 		c.key(Enum.KeyCode.Space)

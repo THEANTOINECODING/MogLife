@@ -23,7 +23,7 @@ contre les boss sans le remplacer.
 - Une aiguille balaie la jauge de force ; à chaque balayage, une zone verte (au cœur doré) apparaît à un autre endroit.
   Toucher l'écran (n'importe où), Espace ou A quand l'aiguille est dedans. Un appui par balayage ; un balayage sans
   appui est raté. Le bras se crispe et tremble quand l'aiguille entre dans la zone ; vibration à chaque poussée.
-- **Dernier effort** (D81) : le dernier balayage de chaque manche a 3 petites zones orange à toucher à la suite
+- ~~Dernier effort~~ (D81, retiré en D88 : Antoine ne l'aimait pas) : le dernier balayage de chaque manche avait 3 petites zones orange à toucher à la suite
   (3 = Perfect, 2 = Good, sinon raté).
 - Chaque répétition pousse le bras : Perfect 3 crans, Good 2, raté 0. Les bras vont de -12 à +12 : l'atteindre, c'est
   **plaquer le bras de l'adversaire** et gagner la manche tout de suite. Sinon, après 8 balayages, la manche va au côté
@@ -35,6 +35,8 @@ contre les boss sans le remplacer.
 
 ## Récompenses
 
+- Le vainqueur gagne aussi du Mog (D88) : 0,6 % de son propre Mog, entre 5 et 1 500, mêmes conditions que le Cash
+  (participation valide, limite par paire et par jour) ; rien pour une victoire par abandon.
 - Cash selon le stade de chaque joueur : victoire > égalité > défaite (Config/Duels.luau). **Rien n'est jamais
   perdu.**
 - Participation valide : au moins 4 poussées réussies (Good ou Perfect) pendant le duel. Un joueur inactif ne gagne

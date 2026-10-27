@@ -51,6 +51,7 @@ type Animator = {
 	sweat: ParticleEmitter?, -- sueur qui coule de plus en plus fort avec le combo (exercices et aides)
 	borrowed: { [BasePart]: { cframe: CFrame, transparency: number } },
 	anchored: boolean?, -- son propre personnage, tenu en place pendant l'activité
+	startedAt: number,
 }
 
 local localPlayer = Players.LocalPlayer
@@ -337,6 +338,7 @@ local function start(update)
 		localDriven = false,
 		borrowed = {},
 		anchored = anchored,
+		startedAt = os.clock(),
 	}
 	animator.activity = Activity.new({
 		minigame = update.minigame,
@@ -475,6 +477,19 @@ function ActivityController.Init(controllers)
 end
 
 function ActivityController.Start()
+	-- Filet de sécurité (D88) : sa propre série est finie (mini-jeu fermé) mais l'animation n'a pas reçu sa fin :
+	-- on la termine, sinon le personnage resterait tenu en place (« plus rien ne marche »)
+	Remotes.SeriesUpdate.OnClientEvent:Connect(function(update)
+		if typeof(update) == "table" and update.state == "Ended" then
+			local animator = animators[localPlayer]
+			local endedAt = os.clock()
+			task.delay(0.6, function()
+				if animators[localPlayer] == animator and animator and animator.startedAt < endedAt then
+					stop(localPlayer)
+				end
+			end)
+		end
+	end)
 	Remotes.Activity.OnClientEvent:Connect(function(update)
 		if typeof(update) ~= "table" or typeof(update.player) ~= "Instance" then
 			return

@@ -733,6 +733,34 @@ function Kit:Rep(quality: string, at: GuiObject?)
 	end
 end
 
+-- Geste reçu mais pas au bon moment (outil qui revient, pause après une réussite) : petit « pas encore » visible,
+-- pour que le joueur comprenne que son geste a bien été vu (D88 : sans ça, « l'action ne marche pas »)
+function Kit:Nope(at: GuiObject?)
+	local host = at or self.root
+	local now = os.clock()
+	if not host or not host.Parent or now - (self.nopeAt or 0) < 0.25 then
+		return
+	end
+	self.nopeAt = now
+	local mark = Ui.label({
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.5),
+		Size = UDim2.fromOffset(44, 44),
+		Text = "⏳",
+		TextStrokeTransparency = 1,
+		ZIndex = 40,
+		Parent = host,
+	})
+	TweenService:Create(mark, TweenInfo.new(0.45, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		Position = UDim2.new(0.5, 0, 0.5, -30),
+		TextTransparency = 1,
+	}):Play()
+	task.delay(0.5, function()
+		mark:Destroy()
+	end)
+	Kit.Haptic("Light")
+end
+
 -- ------------------------------------------------------------------ main fantôme (première répétition guidée)
 
 -- Montre le geste avec une main au-dessus de `target` : "Tap" (appuyer), "Hold" (maintenir), "SwipeUp",

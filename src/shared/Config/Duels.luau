@@ -20,12 +20,6 @@ return {
 	PerfectHalf = 0.045, -- demi-largeur du cœur doré (Perfect), × l'échelle de la manche
 	ZoneMin = 0.2, -- la zone reste entre ces deux bornes de la jauge
 	ZoneMax = 0.8,
-	-- Dernier effort (D81) : le dernier balayage de chaque manche a 3 petites zones à toucher à la suite.
-	-- 3 touchées = Perfect, 2 = Good, sinon raté. Mêmes zones pour les deux joueurs.
-	LastEffort = {
-		Zones = { 0.22, 0.5, 0.78 },
-		Half = 0.09, -- demi-largeur de chaque zone, × l'échelle de la manche
-	},
 
 	-- Poussée de chaque répétition (en « crans »). Le bras va de -LeanLimit à +LeanLimit : l'atteindre, c'est plaquer
 	-- le bras de l'adversaire sur la table (manche gagnée tout de suite) ; sinon, la manche va au côté vers lequel
@@ -61,6 +55,12 @@ return {
 	WinCash = { 10, 20, 35, 60, 90, 130 }, -- ❓
 	DrawCash = { 6, 12, 20, 35, 55, 80 }, -- ❓
 	LossCash = { 3, 6, 10, 18, 28, 40 }, -- ❓
+	-- Le vainqueur gagne aussi du Mog (D88) : une petite part de son propre Mog (il ne vaut pas une série d'exercices
+	-- pour les gros joueurs, mais compte pour les petits), bornée. Mêmes conditions que le Cash (participation valide,
+	-- limite par paire et par jour).
+	WinMogShare = 0.006, -- 0,6 % du Mog du vainqueur
+	WinMogMin = 5,
+	WinMogMax = 1500,
 
 	-- Duel d'entraînement contre un mannequin (Studio uniquement, DevCommands « DuelBot ») : sa précision
 	Bot = { perfect = 0.3, good = 0.45 },

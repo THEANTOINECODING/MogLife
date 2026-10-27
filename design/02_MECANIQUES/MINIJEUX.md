@@ -64,7 +64,7 @@ exactement la zone notée.
 
 | Aide | Module | Geste | Surprises (niveau) |
 |---|---|---|---|
-| Bocal de maman | `Twist` | Refait en D87 (l'ancien était long et peu intuitif) : le couvercle vu de dessus ; tourner le doigt autour de lui dans le sens des flèches pour le dévisser, il tourne sous le doigt avec des clics. Un quart de tour = une répétition (vite = Perfect). 4 quarts par bocal, puis POP : le couvercle s'envole, les cornichons jaillissent, maman fait la fête. Une main fantôme montre le geste. 8 répétitions (au lieu de 12) | Couvercle dur : il faut tourner plus loin (2) |
+| Bocal de maman | `Twist` | Refait en D88 (version D87 « trop simple et peu cool ») : comme pour de vrai, deux mains. Un pouce TIENT le bocal (rester appuyé à gauche), l'autre DÉVISSE le couvercle d'un glissé vers la gauche. Sans tenir le bocal, il tourne avec le couvercle : rien ne se dévisse. Un coup = un quart de tour = une répétition (vite = Perfect). 4 quarts par bocal, puis POP. 8 répétitions | Bocal mouillé : lâcher et reprendre (1) ; couvercle dur : deux coups (2) |
 | Pneu du coursier | `Pressure` | **Pompe à vélo** (D82) : glisser vers le bas pour pomper (grand coup = beaucoup d'air), s'arrêter dans la zone verte (tirée au sort à chaque pneu) ; trop d'air, il éclate. Dans le vert sans pomper un instant : le coursier repart | Chaque pneu prend l'air différemment (1) ; fuite plus forte et zone plus étroite (2) |
 | Clous du petit voisin | `Hammer` | Toucher quand le marteau est au-dessus du clou | Clou tordu : deux coups (1) ; pouce du petit voisin à ne pas taper (2) |
 | Voiture du voisin | `Steer` | Glisser pour rester sur la route et éviter poubelle, chat, flaque. D82 : route plus large, virages plus doux, bordures, décor, fumée, mains qui poussent ; esquiver n'est pas une faute | Virages plus serrés et obstacles plus fréquents à chaque niveau |
@@ -90,7 +90,7 @@ Chaque manche est aussi plus rapide et plus serrée (`Balance.Boss.SpeedByRound`
 
 | Activité | Module | Geste |
 |---|---|---|
-| Bras de fer | `Gauge` | Toucher quand l'aiguille est dans la zone verte (doré = pleine puissance). **Dernier effort** (D81) : le dernier balayage de chaque manche a 3 petites zones à toucher à la suite (3 = Perfect, 2 = Good). Même motif pour les deux joueurs. |
+| Bras de fer | `Gauge` | Toucher quand l'aiguille est dans la zone verte (doré = pleine puissance). Même motif pour les deux joueurs. (Le « dernier effort » à 3 zones de D81 est retiré en D88.) |
 
 ## Réglages
 

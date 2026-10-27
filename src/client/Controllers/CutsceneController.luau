@@ -16,6 +16,7 @@ local TweenService = game:GetService("TweenService")
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local CameraFraming = require(script.Parent.Parent.CameraFraming)
 local Ui = require(script.Parent.Parent.Ui)
 
 local GOLD = Color3.fromRGB(255, 210, 60)
@@ -119,6 +120,7 @@ function CutsceneController.Play(shots: { any }, onDone: (() -> ())?, keepCamera
 	token += 1
 	local myToken = token
 	MinigameController.SetGameplayLocked(true, "Cutscene")
+	CameraFraming.CancelReturn()
 	camera.CameraType = Enum.CameraType.Scriptable
 	setBars(true)
 	setInterfaceHidden(true)

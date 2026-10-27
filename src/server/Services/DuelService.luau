@@ -257,11 +257,17 @@ end
 local finish
 
 -- Récompense d'un joueur selon son résultat : (cash, compté dans le bilan, participation valide)
-local function reward(side: Side, other: Side, result: string): (number, boolean, boolean)
+-- Mog du vainqueur (D88) : une petite part de son Mog, bornée
+local function winMog(data): number
+	local share = math.floor((data.Mog or 0) * Duels.WinMogShare + 0.5)
+	return math.clamp(share, Duels.WinMogMin, Duels.WinMogMax)
+end
+
+local function reward(side: Side, other: Side, result: string, forfeit: boolean?): (number, boolean, boolean, number)
 	local player = side.player
 	local data = player and DataService.Get(player)
 	if not player or not data or result == "Cancelled" or result == "Forfeit" then
-		return 0, false, false
+		return 0, false, false, 0
 	end
 	local valid = side.hits >= Duels.MinHits
 	local record = data.Duels
@@ -273,7 +279,7 @@ local function reward(side: Side, other: Side, result: string): (number, boolean
 	local key = if other.player then tostring(other.player.UserId) else "Bot"
 	local count = record.Pairs[key] or 0
 	if not valid or count >= Duels.RewardsPerPairPerDay then
-		return 0, false, valid
+		return 0, false, valid, 0
 	end
 	record.Pairs[key] = count + 1
 	local cash
@@ -288,6 +294,12 @@ local function reward(side: Side, other: Side, result: string): (number, boolean
 		cash = byStage(Duels.DrawCash, player)
 	end
 	StatsService.Add(player, "Cash", cash)
+	local mog = 0
+	-- Pas de Mog pour une victoire par abandon (sinon un second compte pourrait en offrir)
+	if result == "Won" and not forfeit then
+		mog = winMog(data)
+		StatsService.Add(player, "Mog", mog)
+	end
 	WeeklyService.Track(player, "DuelsPlayed")
 	if result == "Won" then
 		WeeklyService.Track(player, "DuelsWon")
@@ -296,7 +308,7 @@ local function reward(side: Side, other: Side, result: string): (number, boolean
 		LookService.CheckTitles(player)
 	end
 	WeeklyService.Refresh(player)
-	return cash, true, true
+	return cash, true, true, mog
 end
 
 local function release(duel: Duel)
@@ -342,12 +354,13 @@ function finish(duel: Duel, forfeiter: Side?)
 		else
 			result = if side.wins > other.wins then "Won" else "Lost"
 		end
-		local cash, counted, valid = reward(side, other, result)
+		local cash, counted, valid, mog = reward(side, other, result, forfeiter ~= nil)
 		local data = side.player and DataService.Get(side.player)
 		sendTo(side, {
 			state = "Result",
 			result = result,
 			cash = cash,
+			mog = mog,
 			counted = counted,
 			valid = valid,
 			-- Participation valide mais plus de récompense avec ce joueur aujourd'hui

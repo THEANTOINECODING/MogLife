@@ -108,15 +108,17 @@ function Hammer.new(parent: GuiObject, interval: number, onRep: (string) -> (), 
 
 	self:OnPress(function()
 		local now = os.clock()
-		if now - strikeAt < 0.3 or not self:RepReady() then
+		if now - strikeAt < 0.3 then
+			return
+		end
+		local t = now - self.startTime
+		local _, forward = positionAt(t)
+		-- Marteau qui revient (ou pause après un coup) : le geste est vu, mais ce n'est pas le moment
+		if not self:RepReady() or not forward then
+			self:Nope(hammer)
 			return
 		end
 		strikeAt = now
-		local t = now - self.startTime
-		local _, forward = positionAt(t)
-		if not forward then
-			return
-		end
 		local toNail = timeTo(nailX, t)
 		-- Le marteau est passé plus près (dans le temps) du pouce que du clou : aïe !
 		if thumbX and timeTo(thumbX, t) < toNail then

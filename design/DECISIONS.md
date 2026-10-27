@@ -2,6 +2,19 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-28 (bugs des combats, bocal, duels)
+
+- **D88 — Bugs des combats corrigés, caméra douce, bocal à deux mains, duels sans « dernier effort », Mog au vainqueur.** Retours d'Antoine : actions qui ne marchent pas, couronne au perdant d'une manche, mini-jeu sans duel du boss, victoire refusée malgré de bons scores, scores du joueur du côté du boss, zooms encore désagréables, bocal « trop simple et peu cool », trois zones du bras de fer pas aimées, du Mog pour le vainqueur d'un duel.
+  - Couronne et position du duel : d'après les scores du serveur (et le résultat de la manche une fois connu), plus d'après une estimation locale.
+  - Duel sans boss : le boss était cherché à moins de 30 studs, or il vole encore quelques secondes après une victoire ; cherché maintenant jusqu'à 150 studs (le duel le remet à sa place).
+  - Victoire : la manche se décide sur les vrais totaux (les scores affichés sont arrondis) et une égalité parfaite va au joueur (avant : au boss). Contre un boss déjà battu, la victoire ne rapporte rien (règle inchangée, message « You mogged … again »).
+  - Scores : la jauge se retourne pour que la part du joueur soit du côté où il se tient à l'écran ; le score de fin de manche dit « You … vs … boss ».
+  - Caméra : la caméra des activités et des duels ne vient pas à moins de 85 % de la distance de la caméra du joueur (zoom très léger), arrive en douceur (1 s) et, à la fin, revient exactement à la caméra du joueur (0,7 s) avant de lui rendre la main.
+  - Bocal (`Twist`) refait : un pouce tient le bocal, l'autre dévisse d'un glissé vers la gauche ; sans tenir, le bocal tourne avec le couvercle. Bocal mouillé (lâcher et reprendre), couvercle dur (deux coups).
+  - Bras de fer : le « dernier effort » à 3 zones est retiré. Le vainqueur gagne 0,6 % de son Mog (5 à 1 500), avec les mêmes limites que le Cash (participation valide, 3 duels récompensés par paire et par jour) ; rien pour une victoire par abandon.
+  - Gestes ignorés : un geste vu mais pas au bon moment (marteau qui revient, pause après un transat ou un coup de couvercle) affiche « ⏳ » au lieu de ne rien faire. Filet de sécurité : si une série est finie sans que l'animation reçoive sa fin, le personnage est libéré.
+  Vérifié dans Studio : robot sur les 20 mini-jeux (le robot réussit tout, le hasard rate presque tout, aucune erreur), bocal (Perfect en tenant, rien sans tenir, bocal mouillé et couvercle dur), combat réel contre Kevin (revanche sans risque : duel présent à chaque manche, jauge pendant les manches, résultats et fin dans l'ordre, données inchangées). Non vérifié : téléphone, duel entre deux vrais joueurs, retour de la caméra à l'œil (l'outil de Studio remet la caméra à zéro après chaque commande).
+
 ## 2026-10-27 (retours d'Antoine après test)
 
 - **D87 — Mini-jeux plus clairs, caméra calme, combats plus naturels.** Retours d'Antoine : curl difficile à comprendre ; zooms pendant les exercices désagréables et trop forts ; animations des combats pas assez naturelles ; bocal de maman long et peu intuitif (« change-le ») ; dernier boss trop dur ; jauge « toi contre le boss » trop envahissante. Il aime les boss vaincus éjectés (inchangé).

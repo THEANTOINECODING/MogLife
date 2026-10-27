@@ -100,6 +100,7 @@ function Stack.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 	self:OnPress(function()
 		local now = os.clock()
 		if now < lockedUntil or not self:RepReady() then
+			self:Nope()
 			return
 		end
 		lockedUntil = now + 0.25
