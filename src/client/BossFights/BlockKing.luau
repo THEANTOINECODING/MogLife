@@ -17,6 +17,7 @@ local GOLD = Color3.fromRGB(230, 185, 60)
 
 local def = {
 	Distance = SETTINGS.Distance,
+	BossShift = SETTINGS.BossShift,
 }
 
 function def.Setup(scene)
@@ -28,7 +29,7 @@ function def.Setup(scene)
 		trim.CFrame = frame * CFrame.new(sx * 1.6, 0.05, 0)
 	end
 	-- Le ventilateur royal, à côté du Roi : un pied, une tête, des pales qui tournent
-	local base = frame * CFrame.new(-4, 0, -SETTINGS.Distance * 0.5)
+	local base = frame * CFrame.new(-3.2, 0, -(SETTINGS.Distance + SETTINGS.BossShift) * 0.5)
 	local pole = scene.props:Part(Vector3.new(0.3, 4, 0.3), GOLD, Enum.Material.Metal)
 	pole.CFrame = base * CFrame.new(0, 2, 0)
 	local hub = scene.props:Part(Vector3.new(0.8, 0.8, 0.8), GOLD, Enum.Material.Metal, "Ball")
@@ -166,6 +167,14 @@ function def.Finish(scene, won, t, rig, m)
 			bossRig:Turn("RightUpperLeg", CFrame.Angles(math.rad(-20) * k, 0, 0))
 			bossRig:Turn("RightLowerLeg", CFrame.Angles(math.rad(-100) * k, 0, 0))
 			bossRig:Turn("Head", CFrame.Angles(-0.5 * k, 0, 0))
+			-- Bras qui retombent, mains vers le sol
+			local side = bossRig:Side()
+			for _, name in { "Left", "Right" } do
+				local sx = if name == "Right" then 1 else -1
+				local shoulder = bossRig:Joint(name .. "UpperArm")
+				local down = shoulder + side * sx * 0.8 - Vector3.yAxis * bossRig:ArmLength(name) * 0.95
+				bossRig:Reach(name, bossRig:Joint(name .. "Hand"):Lerp(down, k), side * sx)
+			end
 		end
 		-- La couronne passe sur la tête du joueur
 		local character = scene.player.Character

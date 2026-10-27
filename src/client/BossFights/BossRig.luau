@@ -165,6 +165,13 @@ function BossRig.Side(self: BossRig): Vector3
 	return if side.Magnitude > 1e-3 then side.Unit else self.part.CFrame.RightVector
 end
 
+-- Longueur d'un bras (épaule -> poignet)
+function BossRig.ArmLength(self: BossRig, side: string): number
+	local r = self.restPos
+	return (r[side .. "LowerArm"] - r[side .. "UpperArm"]).Magnitude
+		+ (r[side .. "Hand"] - r[side .. "LowerArm"]).Magnitude
+end
+
 -- Le bras va chercher `target` (monde) : épaule -> coude -> poignet, coude plié vers `bend` (monde, facultatif)
 function BossRig.Reach(self: BossRig, side: string, target: Vector3, bend: Vector3?)
 	local upper, lower, hand = side .. "UpperArm", side .. "LowerArm", side .. "Hand"

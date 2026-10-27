@@ -22,6 +22,7 @@ end
 
 local def = {
 	Distance = SETTINGS.Distance,
+	BossShift = SETTINGS.BossShift,
 }
 
 function def.Setup(scene)
@@ -87,9 +88,11 @@ function def.Boss(scene, _dt, now)
 	rig:Turn("LeftLowerLeg", CFrame.Angles(math.rad(10), 0, 0))
 	rig:Turn("RightUpperLeg", CFrame.Angles(math.rad(-5), 0, 0))
 	-- Main droite sur la corde, devant lui à hauteur de hanche ; main gauche : le mégaphone à la bouche
-	local hip = rig:Joint("LowerTorso")
+	-- Prise à bout de bras (presque tendu), devant lui un peu sous l'épaule ; il tire en ramenant la main
 	local toward = scene.toPlayer
-	local grip = hip + toward * (2.4 - pull * 0.5) + Vector3.new(0, 0.4, 0)
+	local shoulder = rig:Joint("RightUpperArm")
+	local reach = rig:ArmLength("Right") * (0.9 - pull * 0.2)
+	local grip = shoulder + (toward - Vector3.yAxis * 0.55).Unit * reach
 	rig:Reach("Right", grip, -Vector3.yAxis)
 	local head = rig:Joint("Head")
 	local side = rig:Side()
@@ -122,7 +125,12 @@ function def.Finish(scene, won, t, rig, m)
 	local fall = Poses.Ease((t - 0.25) / 0.5)
 	if won then
 		-- Le Coach passe la ligne et s'étale face contre terre ; la corde tombe
-		scene:MoveBoss(CFrame.new(0, -fall * 1.2, -Poses.Ease(t * 2) * 3) * CFrame.Angles(-math.rad(85) * fall, 0, 0))
+		-- Il tourne en tombant : il s'étale en travers du ring, à côté du joueur
+		scene:MoveBoss(
+			CFrame.new(0, -fall * 1.2, -Poses.Ease(t * 2) * 1.6)
+				* CFrame.Angles(0, math.rad(75) * fall, 0)
+				* CFrame.Angles(-math.rad(85) * fall, 0, 0)
+		)
 		if rig and m then
 			Poses.Victory(rig, m, t)
 		end

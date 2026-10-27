@@ -71,6 +71,14 @@ du joueur et du boss devient une action, et une position visible montre qui mèn
 Les boss ont un squelette (os aux noms des pièces R15, `tools/blender/rig_bosses.py`) : leurs bras et leurs jambes
 bougent. Sans squelette (ancien modèle), le duel anime leur corps entier.
 
+Placement : les deux combattants restent sur l'estrade du boss (8 × 8 ; au-delà, on tombe en contrebas). Le boss recule
+de `BossShift` vers le fond pendant le duel et reprend sa place à la fin. Le ring de Monsieur Pas-Les-Jambes est celui
+de la carte (rien n'est ajouté). Pendant les manches, la barre « toi contre le boss » est en haut de l'écran pour
+laisser voir le duel ; la caméra du combat vise plus haut quand le mini-jeu occupe le bas de l'écran (Beats).
+
+Modèles : les boss à squelette (`assets/export/Boss_<Id>_Rig.fbx`) remplacent les anciens dans
+`ServerStorage.NpcModels` (place Studio, pas Rojo) ; les anciens sont gardés dans `ServerStorage.NpcModelsBackup`.
+
 ### Victoire
 - Montée officielle de stade ; le corps passe au modèle du nouveau stade.
 - Scène absurde de 2–3 s, quittable (le boss traverse le toit, s'envole dans l'espace, se transforme en flaque…).

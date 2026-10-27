@@ -11,7 +11,8 @@ local Poses = require(script.Parent.Poses)
 local Scene = require(script.Parent.Scene)
 
 local SETTINGS = Fights.Brayan
-local MIRROR = Color3.fromRGB(205, 230, 245)
+local MIRROR = Color3.fromRGB(185, 220, 245)
+local FRAME = Color3.fromRGB(230, 185, 60)
 local PLAYER_BEAM = Color3.fromRGB(255, 225, 110)
 local BOSS_BEAM = Color3.fromRGB(255, 140, 50)
 
@@ -33,14 +34,20 @@ end
 
 local def = {
 	Distance = SETTINGS.Distance,
+	BossShift = SETTINGS.BossShift,
 }
 
 function def.Setup(scene)
 	local data = scene.data
-	data.playerMirror = scene.props:Part(SETTINGS.MirrorSize, MIRROR, Enum.Material.Glass)
-	data.playerMirror.Reflectance = 0.5
-	data.bossMirror = scene.props:Part(SETTINGS.MirrorSize * 1.2, MIRROR, Enum.Material.Glass)
-	data.bossMirror.Reflectance = 0.5
+	-- Miroirs : une surface qui reflète, dans un cadre doré (un peu plus grand derrière)
+	local function mirror(size: Vector3): (Part, Part)
+		local glass = scene.props:Part(size, MIRROR, Enum.Material.SmoothPlastic)
+		glass.Reflectance = 0.65
+		local frame = scene.props:Part(size + Vector3.new(0.3, 0.3, -0.05), FRAME, Enum.Material.Metal)
+		return glass, frame
+	end
+	data.playerMirror, data.playerFrame = mirror(SETTINGS.MirrorSize)
+	data.bossMirror, data.bossFrame = mirror(SETTINGS.MirrorSize * 1.2)
 	data.clash = scene.props:Part(Vector3.new(1.4, 1.4, 1.4), Color3.fromRGB(255, 250, 220), Enum.Material.Neon, "Ball")
 	data.clash.CastShadow = false
 	local light = Instance.new("PointLight")
@@ -91,6 +98,7 @@ function def.PlayerPose(scene, rig, m, p, shake, now)
 	end
 	rig:Set("Neck", CFrame.Angles(-0.1 - 0.3 * blinded, 0, 0))
 	scene.data.playerMirror.CFrame = CFrame.lookAt(center, center + stand.LookVector)
+	scene.data.playerFrame.CFrame = scene.data.playerMirror.CFrame * CFrame.new(0, 0, 0.08)
 end
 
 function def.Boss(scene, _dt, now)
@@ -118,6 +126,8 @@ function def.Boss(scene, _dt, now)
 		center = scene.bossSpot + toward * 2.2 + Vector3.new(0, 4, 0)
 	end
 	data.bossMirror.CFrame = CFrame.lookAt(center, center + toward)
+	data.bossFrame.CFrame = data.bossMirror.CFrame * CFrame.new(0, 0, 0.08)
+	data.bossMirrorOffset = if part then part.CFrame:ToObjectSpace(data.bossMirror.CFrame) else nil
 	-- Point de choc : au milieu, poussé vers celui qui perd ; il grossit à chaque coup
 	local from = data.playerMirror.Position
 	local to = center
@@ -156,6 +166,11 @@ function def.Finish(scene, won, t, rig, m)
 		scene:MoveBoss(
 			CFrame.new(0, blast * 1.5, blast * 4) * CFrame.Angles(math.rad(30) * blast, math.rad(540) * blast, 0)
 		)
+		-- Son miroir part avec lui
+		if scene.bossPart and data.bossMirrorOffset then
+			data.bossMirror.CFrame = scene.bossPart.CFrame * data.bossMirrorOffset
+			data.bossFrame.CFrame = data.bossMirror.CFrame * CFrame.new(0, 0, 0.08)
+		end
 		if rig and m then
 			Poses.Victory(rig, m, t)
 		end

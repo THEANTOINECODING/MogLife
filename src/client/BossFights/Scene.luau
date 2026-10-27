@@ -7,7 +7,8 @@
 -- ActivityController la traite comme une activité : Stand(top), new(ctx), Pose(...), PlayerRep, OpponentRep, Destroy.
 --
 -- Une définition de duel (BossFights/<BossId>.luau) fournit :
---   Distance                         studs entre le joueur et le boss
+--   Distance                         studs entre le centre de l'estrade du boss et le joueur
+--   BossShift                        le boss recule d'autant vers le fond de son estrade pendant le duel
 --   Setup(scene)                     accessoires du duel
 --   PlayerPose(scene, rig, m, p, shake, now)   le joueur pendant une manche (Rig de ActivityController)
 --   Boss(scene, dt, now)             le boss, à chaque image (scene.bossRig peut être nil : ancien modèle sans os)
@@ -29,6 +30,7 @@ local QUALITY_POINTS = Balance.Boss.QualityScore
 
 export type Def = {
 	Distance: number,
+	BossShift: number?,
 	Setup: ((any) -> ())?,
 	PlayerPose: (any, any, any, number, number, number) -> (),
 	Boss: (any, number, number) -> (),
@@ -90,7 +92,9 @@ local function create(player: Player, bossId: string, def: Def, ctx): any
 	if boss then
 		boss:SetAttribute("FightScene", true)
 		self.bossScale = boss:GetScale()
-		self.base = (hooks.npcBase and hooks.npcBase(boss)) or (self.bossPart :: BasePart).CFrame
+		-- Sa place de repos (rendue à la fin), et sa place pendant le duel : un peu plus au fond de l'estrade
+		self.home = (hooks.npcBase and hooks.npcBase(boss)) or (self.bossPart :: BasePart).CFrame
+		self.base = self.home * CFrame.new(0, 0, def.BossShift or 0)
 	end
 	-- Axe du duel : du boss vers l'endroit où se tient le joueur
 	local stand = ctx.top * CFrame.new(0, 0, -def.Distance)
@@ -197,8 +201,8 @@ function Scene.Cleanup(self)
 		if self.bossScale and math.abs(self.boss:GetScale() - self.bossScale) > 1e-3 then
 			self.boss:ScaleTo(self.bossScale)
 		end
-		if self.bossPart and self.base and not self.boss:GetAttribute("Scripted") then
-			self.bossPart.CFrame = self.base
+		if self.bossPart and self.home and not self.boss:GetAttribute("Scripted") then
+			self.bossPart.CFrame = self.home
 		end
 		self.boss:SetAttribute("FightScene", nil)
 	end

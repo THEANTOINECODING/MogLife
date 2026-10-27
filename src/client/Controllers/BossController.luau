@@ -12,9 +12,11 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 local CollectionService = game:GetService("CollectionService")
 
 local BossFights = require(ReplicatedStorage.Shared.Config.BossFights)
+local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local BossSpecials = require(script.Parent.Parent.BossSpecials)
@@ -180,6 +182,9 @@ end
 local stopFollow: (() -> ())? = nil
 local function startDuelCamera(bossId: string)
 	local model = bossModel(bossId)
+	-- Mini-jeu à panneau large en bas (Beats) : cadrage différent
+	local stage = Stages.FindBoss(bossId)
+	local wide = stage ~= nil and stage.minigame == "Beats"
 	local character = player.Character
 	local root = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
 	if not model or not character or not root then
@@ -218,10 +223,14 @@ local function startDuelCamera(bossId: string)
 			local eye = CameraFraming.Best(center, directions, { model }, points())
 			local look = (center - eye).Unit
 			local right = look:Cross(Vector3.new(0, 1, 0))
-			return eye,
-				center + right * ((center - eye).Magnitude * (math.tan(
-					math.rad(workspace.CurrentCamera.FieldOfView / 2)
-				) * workspace.CurrentCamera.ViewportSize.X / math.max(1, workspace.CurrentCamera.ViewportSize.Y) * 0.50))
+			local halfHeight = (center - eye).Magnitude * math.tan(math.rad(workspace.CurrentCamera.FieldOfView / 2))
+			if wide then
+				-- Panneau large en bas (Coach Turbo, D82) : les combattants au centre, dans la moitié haute de l'écran
+				return eye, center - Vector3.new(0, halfHeight * 0.38, 0)
+			end
+			-- Panneau à droite : les combattants dans la moitié gauche de l'écran
+			local aspect = workspace.CurrentCamera.ViewportSize.X / math.max(1, workspace.CurrentCamera.ViewportSize.Y)
+			return eye, center + right * (halfHeight * aspect * 0.50)
 		end,
 		points = points,
 		ignore = function()
@@ -649,9 +658,11 @@ local function buildGui()
 	-- Jauge de Mog : toi (or, à gauche) contre le boss (rouge, à droite), et les manches
 	meter = Ui.create("Frame", {
 		Name = "Meter",
-		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.26, 0, 1, -100),
-		Size = UDim2.new(0.44, 0, 0, 30),
+		-- En haut de l'écran (D85) : en bas, elle chevauchait le panneau large des mini-jeux à deux pouces.
+		-- Sur écran tactile, décalée à droite de la colonne d'infos du mini-jeu.
+		AnchorPoint = Vector2.new(0.5, 0),
+		Position = if UserInputService.TouchEnabled then UDim2.new(0.6, 0, 0, 10) else UDim2.new(0.5, 0, 0, 8),
+		Size = UDim2.new(if UserInputService.TouchEnabled then 0.42 else 0.44, 0, 0, 30),
 		BackgroundColor3 = RED,
 		Visible = false,
 		Parent = gui,
@@ -681,8 +692,8 @@ local function buildGui()
 		Parent = meter,
 	})
 	pipsFrame = Ui.create("Frame", {
-		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.5, 0, 0, -6),
+		AnchorPoint = Vector2.new(0.5, 0),
+		Position = UDim2.new(0.5, 0, 1, 6),
 		Size = UDim2.new(1, 0, 0, 18),
 		BackgroundTransparency = 1,
 		Parent = meter,

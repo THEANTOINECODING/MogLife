@@ -11,10 +11,11 @@ local Poses = require(script.Parent.Poses)
 local Scene = require(script.Parent.Scene)
 
 local SETTINGS = Fights.Kevin
-local PILLOW = Vector3.new(1.7, 0.6, 1.1)
+local PILLOW = Vector3.new(2.4, 0.8, 1.5) -- assez gros pour se lire de loin, même face à un Gigachad
 
 local def = {
 	Distance = SETTINGS.Distance,
+	BossShift = SETTINGS.BossShift,
 }
 
 function def.Setup(scene)
@@ -129,6 +130,13 @@ end
 
 function def.Finish(scene, won, t, rig, m)
 	local fall = Poses.Ease((t - 0.1) / 0.45)
+	-- Le joueur lâche son oreiller : il tombe au sol devant lui
+	local pillow = scene.data.playerPillow
+	if not scene.data.droppedFrom then
+		scene.data.droppedFrom = pillow.CFrame
+	end
+	local ground = CFrame.new(scene.playerSpot + Vector3.new(0, 0.4, 0) - scene.toPlayer * 0.8)
+	pillow.CFrame = scene.data.droppedFrom:Lerp(ground, Poses.Ease(t * 3))
 	if won then
 		-- Kevin part en arrière et s'étale ; explosion de plumes
 		scene:MoveBoss(CFrame.new(0, -fall * 1.5, fall * 1.4) * CFrame.Angles(math.rad(80) * fall, 0, 0))

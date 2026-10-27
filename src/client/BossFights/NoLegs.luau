@@ -1,4 +1,4 @@
--- Monsieur Pas-Les-Jambes : choc de pectoraux sur un ring (D85). Un petit ring rond entre eux. À chaque coup réussi,
+-- Monsieur Pas-Les-Jambes : choc de pectoraux sur un ring (D85). Son estrade est un ring (dans la carte). À chaque coup réussi,
 -- le joueur fonce torse en avant : onde de choc, le boss recule en vacillant sur ses jambes minuscules. Quand le boss
 -- charge, c'est le joueur qui recule. Celui qui perd est repoussé vers le bord. Dernière manche : le ring tremble.
 -- Fin : le perdant bascule hors du ring.
@@ -11,23 +11,15 @@ local Poses = require(script.Parent.Poses)
 local Scene = require(script.Parent.Scene)
 
 local SETTINGS = Fights.NoLegs
-local RING = Color3.fromRGB(225, 225, 232)
-local EDGE = Color3.fromRGB(220, 50, 50)
 local WAVE = Color3.fromRGB(255, 235, 150)
 
 local def = {
 	Distance = SETTINGS.Distance,
+	BossShift = SETTINGS.BossShift,
 }
 
 function def.Setup(scene)
-	local r = SETTINGS.RingRadius
-	local floor = scene.props:Part(Vector3.new(0.3, r * 2, r * 2), RING, Enum.Material.SmoothPlastic, "Cylinder")
-	floor.CFrame = CFrame.new(scene.middle + Vector3.new(0, 0.1, 0)) * CFrame.Angles(0, 0, math.pi / 2)
-	local edge =
-		scene.props:Part(Vector3.new(0.2, r * 2 + 0.6, r * 2 + 0.6), EDGE, Enum.Material.SmoothPlastic, "Cylinder")
-	edge.CFrame = CFrame.new(scene.middle + Vector3.new(0, 0.05, 0)) * CFrame.Angles(0, 0, math.pi / 2)
-	scene.data.floor = floor
-	scene.data.floorHome = floor.CFrame
+	-- Son estrade est déjà un ring dans la carte (poteaux et cordes) : rien à ajouter
 	scene.data.nextQuake = os.clock() + 2
 end
 
@@ -75,13 +67,19 @@ function def.Boss(scene, _dt, now)
 		if now >= scene.data.nextQuake then
 			scene.data.nextQuake = now + 2.4
 			scene.data.quakeAt = now
-			Fx.Burst(scene, scene.middle + Vector3.new(0, 0.3, 0), "Dust", 20)
-			Fx.Ring(scene, scene.middle + Vector3.new(0, 0.3, 0), Color3.fromRGB(210, 190, 150), SETTINGS.RingRadius)
+			Fx.Burst(scene, scene.top.Position + Vector3.new(0, 0.3, 0), "Dust", 20)
+			Fx.Ring(
+				scene,
+				scene.top.Position + Vector3.new(0, 0.3, 0),
+				Color3.fromRGB(210, 190, 150),
+				SETTINGS.RingHalf
+			)
 		end
 		quake = scene:Pulse(now - (scene.data.quakeAt or -math.huge), 0.6)
 	end
-	scene.data.floor.CFrame = scene.data.floorHome * CFrame.new(math.sin(now * 60) * 0.12 * quake, 0, 0)
-	scene:MoveBoss(CFrame.new(0, 0, back) * CFrame.Angles(math.rad(10) * struck - math.rad(8) * charge, 0, wobble))
+	-- Le ring tremble : il sautille sur place
+	local bounce = math.abs(math.sin(now * 25)) * 0.35 * quake
+	scene:MoveBoss(CFrame.new(0, bounce, back) * CFrame.Angles(math.rad(10) * struck - math.rad(8) * charge, 0, wobble))
 	local rig = scene.bossRig
 	if not rig then
 		return
@@ -118,7 +116,7 @@ function def.Finish(scene, won, t, rig, m)
 	if won then
 		-- Il bascule en arrière hors du ring
 		scene:MoveBoss(
-			CFrame.new(0, -fall * 2.5, SETTINGS.Push + fall * (SETTINGS.RingRadius - SETTINGS.Push))
+			CFrame.new(0, -fall * 2.5, SETTINGS.Push + fall * (SETTINGS.RingHalf + 1 - SETTINGS.Push))
 				* CFrame.Angles(math.rad(100) * fall, 0, 0)
 		)
 		if rig and m then
