@@ -188,7 +188,7 @@ def rig_and_export(name, joints, zones, overrides=None):
     return obj, arm
 
 
-ONLY = globals().get("ONLY") or ["Kevin", "Brayan", "CoachTurbo", "NoLegs", "BlockKing"]
+ONLY = globals().get("ONLY") or ["Kevin", "Brayan", "CoachTurbo", "NoLegs", "BlockKing", "PumpGod"]
 lib = run(os.path.join(ROOT, "build_bosses.py"), {"BOSSES_LIBRARY": True})
 offset = 0.0
 for name in ONLY:
@@ -197,6 +197,9 @@ for name in ONLY:
         joints, zones, overrides = kevin_joints()
     else:
         cfg = lib["BOSSES"][name]
+        if name == "PumpGod":
+            # Squelette au repos bras en A (le combat du Colisée l'anime ; il pose en double biceps quand il veut)
+            cfg = dict(cfg, pose="a")
         b = lib["build_bro"](name, cfg)
         joints, zones = bro_joints(b.geo, cfg.get("scale", 1.0))
         overrides = None

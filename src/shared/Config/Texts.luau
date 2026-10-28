@@ -389,6 +389,15 @@ local STRINGS: { [string]: string } = {
 	["Colosseum.PortalTo"] = "Rise to the Colosseum",
 	["Colosseum.PortalBack"] = "Back to town",
 	["Colosseum.PortalName"] = "Pillar of light",
+	["PumpGod.Name"] = "THE PUMP GOD",
+	["PumpGod.Roll"] = "ROLL",
+	["PumpGod.Health"] = "{hp} / {max}",
+	["PumpGod.HealthIcon"] = "❤️",
+	["PumpGod.Damage"] = "-{damage}",
+	["PumpGod.Intro"] = "Dodge the red zones! Jump over the waves!",
+	["PumpGod.Defeat"] = "The Pump God was too strong... Train and come back!",
+	["PumpGod.Stopped"] = "The fight is over.",
+	["PumpGod.Watching"] = "{name} is fighting the Pump God!",
 
 	-- Repères (icônes au-dessus des bâtiments) et guide vers le prochain boss
 	["Icon.Gym"] = "🏋️",

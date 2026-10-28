@@ -18,6 +18,7 @@ local FurnitureService
 local EventService
 local DuelService
 local WeeklyService
+local PumpGodService
 
 local DevService = {}
 
@@ -51,6 +52,14 @@ local commands = {
 	Pump = function(player: Player, exerciseId: string, quality: string)
 		BodyService.Pump(player, exerciseId, quality)
 		return true
+	end,
+	-- Combat du Dieu du Pump au Colisée (tranche 2, D90) : action "Start" ou "Stop"
+	PumpGod = function(player: Player, action: string)
+		if action == "Stop" then
+			PumpGodService.Stop(player)
+			return true
+		end
+		return PumpGodService.Begin(player)
 	end,
 	-- Simule le déclenchement du prompt d'un habitant (les prompts ne marchent pas si Studio est réduit)
 	StartHelp = function(player: Player, helpId: string)
@@ -90,6 +99,7 @@ function DevService.Init(services)
 	EventService = services.EventService
 	DuelService = services.DuelService
 	WeeklyService = services.WeeklyService
+	PumpGodService = services.PumpGodService
 end
 
 function DevService.Start()

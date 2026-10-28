@@ -2,6 +2,14 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-28 (Colisée du Pump, tranche 2)
+
+- **D90 — Combat du Dieu du Pump, tranche 2 : esquive (zones, 3 attaques, vie, roulade).** Le dieu ne se frappe pas encore (tranche 3) ; pour l'instant le combat se lance seulement dans Studio (`DevCommands:Invoke("PumpGod", userId, "Start")`).
+  - **Serveur** (`PumpGodService`, réglages dans `Config/PumpGod.luau`) : il tire les attaques au hasard pondéré (jamais deux fois la même d'affilée), fixe l'heure de chaque impact (heure du serveur), juge les coups d'après la position, le saut et la roulade, et tient la vie (100). Attaques : **foudre** (3 cercles posés sur le joueur), **haltère géant** (tombe au bout d'une bande qui passe par le joueur, puis roule : sortir ou sauter), **onde de flexion** (anneau qui part du dieu : sauter). Pauses qui raccourcissent au fil du combat. **Tolérance au ping** : un coup détecté attend 0,25 s et s'annule si le joueur a sauté ou roulé entre-temps (sans ça, un saut à temps arrivait trop tard au serveur). Défaite à 0 PV ou à la mort ; le joueur remonte dans les gradins. Aucune perte de Mog pour l'instant (tranche 3).
+  - **Client** (`PumpGodController`, `PumpGod/Zones`, `PumpGod/God`) : zones au sol (contour clair, remplissage rouge qui grandit jusqu'à l'impact, clignotement juste avant), éclair en zigzag, haltère qui tombe et roule, onde ; dieu animé (flotte, respire, suit le combattant ; pose et frappe propres à chaque attaque) ; barre de vie en bas au centre (le haut de l'écran est pris), flash rouge, petite secousse sans zoom, clignotement pendant l'invincibilité ; bouton ROLL au tactile (à gauche du bouton de course), Q / Ctrl gauche / X à la manette ; caméra replacée derrière le joueur au début. Les spectateurs voient le même combat.
+  - **Modèle** : `Boss_PumpGod_Rig.fbx` (16 os, bras en A) exporté ; tant qu'il n'est pas importé, le dieu s'anime en corps entier.
+  Vérifié dans Studio : lancement, zones et dégâts, défaite et retour aux gradins, aucune erreur ; bot d'esquive : 4 ondes sur 4 et 3 haltères sur 3 évités en sautant, 9 éclairs sur 12 (puis 9 sur 9) évités en sortant du cercle. Non vérifié : téléphone, bouton ROLL au toucher, animation du modèle à os (pas encore importé), rendu de l'onde à l'œil (Studio en arrière-plan).
+
 ## 2026-10-28 (Colisée du Pump, tranche 1)
 
 - **D89 — Le Colisée du Pump : choix d'Antoine et tranche 1 (l'arène et son accès).** Choix : combat solo de 5 minutes, arène gréco-romaine dans le style de ses images, perte de 3 % du Mog en cas de défaite, bouton ROULADE, pas d'anciens boss en manche 2, une défaite oblige à refaire tout le combat, spectateurs qui aident sans que le combattant voie leur jauge (proposition v2 de `IDEES.md` pour le reste). Tranche 1 livrée :
