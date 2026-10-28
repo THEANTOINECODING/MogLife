@@ -359,8 +359,20 @@ local function step(dt: number)
 			rig:Turn("UpperTorso", CFrame.Angles(chest * 0.5 - math.rad(slump) * 0.6, 0, 0))
 			rig:Turn("Head", CFrame.Angles(-math.rad(slump) * 0.8, math.rad(entry.lookYaw * BONES.HeadLook), 0))
 			local swing = math.rad(BONES.ArmSwing) * math.sin(2 * math.pi * (style.bobSpeed or 0.3) * t + 1)
-			rig:Turn("LeftUpperArm", CFrame.Angles(swing, 0, -chest))
-			rig:Turn("RightUpperArm", CFrame.Angles(-swing, 0, chest))
+			if style.flex then
+				-- Double biceps tenu (le Dieu du Pump, modélisé bras en A) : coudes à hauteur d'épaules, poings en haut
+				local right = rig:Side()
+				local forward = Vector3.new(0, 1, 0):Cross(right)
+				for _, side in { "Left", "Right" } do
+					local out = if side == "Left" then -right else right
+					local dir = (out * 0.75 + Vector3.yAxis * (0.55 + swing) + forward * 0.15).Unit
+					local hand = rig:Joint(side .. "UpperArm") + dir * rig:ArmLength(side) * 0.62
+					rig:Reach(side, hand, out - Vector3.yAxis + forward * 0.2)
+				end
+			else
+				rig:Turn("LeftUpperArm", CFrame.Angles(swing, 0, -chest))
+				rig:Turn("RightUpperArm", CFrame.Angles(-swing, 0, chest))
+			end
 			rig:Apply()
 		end
 	end

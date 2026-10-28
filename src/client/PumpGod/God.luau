@@ -32,7 +32,8 @@ function God.new(model: Model)
 		rig = BossRig.new(model),
 		base = pivot,
 		offset = CFrame.Angles(0, yaw, 0):Inverse() * pivot.Rotation, -- pivot du modèle dans le repère du devant
-		height = model:GetExtentsSize().Y,
+		-- Taille debout : celle du corps (le pivot des modèles importés est couché, ses mesures ne disent pas le haut)
+		height = if body then body.Size.Y else model:GetExtentsSize().Y,
 		yaw = yaw,
 		action = nil :: { kind: string, start: number, impact: number }?,
 		bornAt = os.clock(),

@@ -58,7 +58,8 @@ return {
 		CoachTurbo = { bob = 0.04, bobSpeed = 0.5, hopEvery = 0.75, hopHeight = 0.45, sway = 2, swaySpeed = 1.3 },
 		NoLegs = { bob = 0.04, bobSpeed = 0.4, sway = 7, swaySpeed = 0.9, lean = 3, leanSpeed = 0.55 },
 		BlockKing = { bob = 0.08, bobSpeed = 0.2, turn = 8, turnSpeed = 0.1, sparkle = "Wind" },
-		PumpGod = { float = 0.8, bobSpeed = 0.25, turn = 10, turnSpeed = 0.08, sparkle = "Glow" },
+		-- flex : tient le double biceps avec ses os (son modèle est en bras en A, D90)
+		PumpGod = { float = 0.8, bobSpeed = 0.25, turn = 10, turnSpeed = 0.08, sparkle = "Glow", flex = true },
 		-- Habitants
 		Mom = { bob = 0.05, bobSpeed = 0.5, sway = 3, swaySpeed = 0.8 }, -- elle s'agite avec son bocal
 		Courier = { bob = 0.05, bobSpeed = 0.9, turn = 25, turnSpeed = 0.6 }, -- stressé, il regarde partout
