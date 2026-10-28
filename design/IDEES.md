@@ -9,52 +9,77 @@ Pour le dernier boss, Antoine veut **un vrai combat** et non un mini-jeu : se ba
 esquiver ses attaques (éclairs, etc.). À concevoir avec lui au moment de la mise à jour de l'Olympe. **Rien n'est fait
 pour l'instant.** Le mini-jeu Gravity Gauntlet préparé par Codex a été supprimé avec son système (D80).
 
-### Proposition du 28/10/2026 : l'arène gréco-romaine (demande d'Antoine, à valider ❓)
+### Proposition v2 du 28/10/2026 : le Colisée du Pump (choix d'Antoine intégrés, reste à valider ❓)
 
-**Le lieu : le Mogisée.** Un colisée de marbre blanc et or posé sur les nuages, au-dessus de la ville (même serveur :
-pas de chargement, les autres joueurs peuvent venir regarder). Colonnes, braseros dorés, drapeaux à l'effigie du
-Dieu du Pump, gradins pleins de PNJ en toge qui scandent « MOG ! MOG ! ». Autour de la piste : les statues de marbre
-des 5 boss déjà battus, chacune dans sa pose (Kevin endormi, Coach au mégaphone…), et le « Panthéon » des joueurs qui
-ont battu le dieu (leur avatar en statue dorée, pour toujours).
+**Choix d'Antoine** : combat solo ; arène dans le style des images envoyées (amphithéâtre de grès, arches à bordure
+de marbre blanc, auvents rouges, étendards, piste de sable entourée d'un haut mur) ; 5 minutes ; une défaite fait
+perdre du Mog ; les spectateurs aident sans que le combattant voie leur jauge ; le joueur a d'autres attaques que le
+renvoi des éclairs ; zones au sol pour esquiver ; boss excessivement bien animé ; arène à côté de la carte et
+rejoignable par les joueurs.
 
-**L'arrivée.** Le joueur accepte le défi au temple : un pilier de lumière l'aspire, plan sur la ville qui rapetisse,
-il atterrit dans le sable de l'arène, la foule rugit, trompettes. Coach Turbo est l'annonceur, au mégaphone dans la
-tribune d'honneur. Le Dieu du Pump descend de son nuage et pose : la piste tremble.
+**Où mettre l'arène (recommandé)** : sur un plateau juste au-delà du coin sud-ouest de la ville, derrière le temple
+du Dieu du Pump, relié à lui par un grand escalier de marbre (et un arrêt de bus « Colisée »). Toujours visible depuis
+la ville (repère qui donne envie), même serveur (pas de chargement, spectateurs faciles). Le combattant y est
+téléporté par le pilier de lumière du temple et entre par la porte des gladiateurs ; les spectateurs montent à pied
+dans les gradins ; un mur haut et une barrière invisible empêchent d'entrer sur la piste. Écartés : île dans le ciel
+(moins visible, accès seulement par téléporteur) et lieu séparé (chargement, spectateurs presque impossibles).
 
-**Le combat : un vrai combat en mouvement (plus un panneau de mini-jeu).** Le joueur se déplace librement dans
-l'arène ronde (joystick du téléphone) et n'a que deux boutons : SAUTER et FLEX. Trois « protéines » (vies). Le dieu
-annonce chaque attaque par une zone au sol bien visible (cercle ou bande rouge qui se remplit) : on a le temps de
-lire et d'esquiver.
-- Manche 1 — **La colère du biceps** : éclairs qui tombent sur des cercles marqués ; haltère géant qui roule à
-  travers l'arène (sauter par-dessus) ; onde de flexion qui s'élargit en anneau (sauter au bon moment).
-- Contre-attaque — **Renvoyer la foudre** : il lance un javelot d'éclair vers le joueur ; FLEX au moment où il
-  arrive le renvoie (cercle de timing autour du personnage). Un renvoi parfait le frappe : sa jauge d'Aura baisse.
-- Manche 2 — **Les travaux du Pump** : l'arène change. Les dalles en mosaïque s'effondrent une à une, un char de shake
-  protéiné traverse la piste, et les **statues des boss battus s'animent** pour l'aider (Kevin lance des oreillers,
-  Coach envoie des ondes de mégaphone, Brayan éblouit avec son miroir) : un rappel de tout le jeu.
-- Manche 3 — **L'apothéose** : le dieu devient géant, le ciel s'assombrit, l'arène monte dans les nuages. Coup final :
-  un choc de rayons Mog contre foudre (comme Brayan, en beaucoup plus grand) ; le joueur tape FLEX en rythme, la foule
-  scande avec lui et remplit une jauge de « hype ».
-- **Fin** : le dieu est éjecté dans le ciel et devient une constellation qui pose (Antoine aime les boss éjectés).
-  Couronne de laurier, titre GOD MOGGER, statue dorée au Panthéon, toge dorée et aura en récompense.
+**Contrôles (téléphone d'abord)** : joystick + 3 boutons : SAUTER (Roblox), ROULADE (esquive rapide, invincible un
+court instant) et FLEX (bouton d'action selon la situation : frapper, renvoyer, ramasser, lancer, charger).
+Vie : une jauge de 100 ; les coups enlèvent 15 à 30 ; des amphores de shake rendent de la vie.
 
-**Les spectateurs participent.** Les autres joueurs peuvent monter dans les gradins (téléporteur au temple). En
-tapant « Encourager », ils remplissent la jauge de hype du combattant, qui lui donne un petit bonus (une protéine de
-plus, un renvoi plus facile). Tout le serveur vit le combat.
+**Attaquer le boss (4 façons)** :
+1. **Punir** : après ses grosses attaques, il est essoufflé 2 à 3 s (étoiles, genou à terre) ; courir à lui et FLEX
+   en rythme : combo de 3 coups (le 3e au bon moment = coup de Mog puissant).
+2. **Renvoyer la foudre** : son javelot d'éclair, FLEX au bon moment le renvoie (parade).
+3. **Lancer des disques** : ses attaques font tomber des disques d'haltère dorés ; FLEX pour ramasser, FLEX pour
+   lancer (visée automatique vers lui).
+4. **Pose sacrée** : des cercles dorés apparaissent ; rester dedans en maintenant FLEX charge un rayon de Mog. Gros
+   dégâts, mais on reste immobile pendant que les attaques continuent (risque choisi).
 
-**Variante à décider : en équipe (raid).** Jusqu'à 4 joueurs ensemble contre le dieu, qui a plus d'Aura. Une
-protéine perdue peut être rendue par un coéquipier (FLEX à côté de lui).
+**Lisibilité des zones** : cercles, bandes, cônes et anneaux au sol qui se remplissent jusqu'à l'impact ; contour épais,
+couleur franche, son d'alerte ; au moins 0,8 s pour lire (moins vers la fin) ; jamais d'attaque sans zone.
 
-**Pour tous les âges.** Pas de sang ni de coups violents : éclairs, ondes, oreillers, chutes cartoon, « MOGGED! ».
+**Déroulé (environ 5 minutes)** :
+- **Entrée** (30 s, passable après la 1re fois) : pilier de lumière, la foule rugit, Coach Turbo annonce au mégaphone,
+  le dieu descend de son nuage et pose, la piste tremble.
+- **Manche 1 — L'échauffement divin** (~1 min 15) : éclairs sur cercles, haltère qui roule (sauter ou rouler), coup de
+  poing au sol en cône (puis il est essoufflé : punir), javelot à renvoyer. Le joueur apprend chaque façon d'attaquer.
+- **Manche 2 — Les douze travaux** (~1 min 30) : l'arène change : des colonnes tombent (bandes), les dalles de
+  mosaïque s'allument par motifs (cases sûres), un char de shake traverse la piste, il saute et retombe sur le joueur
+  (grand cercle qui le suit). Option : les statues des boss battus s'animent pour l'aider.
+- **Manche 3 — L'Olympe en colère** (~1 min 15) : il devient géant au bord de l'arène ; attaques qui couvrent toute la
+  piste avec des zones sûres, anneaux à sauter, regard brûlant qui balaie (se cacher derrière les colonnes).
+- **Finale — Le dernier pose-off** (~30 s) : choc de rayons Mog contre foudre, FLEX en rythme pendant que la foule
+  scande. Victoire : il est éjecté dans le ciel et devient une constellation qui pose ; laurier, titre GOD MOGGER,
+  statue dorée au Panthéon du colisée. Défaite : il nargue, le joueur est renvoyé au temple et perd du Mog.
 
-**Faisabilité.** Le serveur décide de tout : il tire les attaques (graine), vérifie les touches d'après la position
-du personnage, et valide les renvois avec une marge pour la latence. Il faudra une arène modulaire (Blender), un
-nouveau service de combat en temps réel, et des tests sur téléphone (lisibilité des zones, joystick). C'est le plus
-gros chantier depuis le début : à découper en tranches (arène et arrivée → manche 1 → manches 2 et 3 → spectateurs).
+**Spectateurs** : bouton « Encourager » dans les gradins ; la jauge de la foule est cachée au combattant. À chaque
+palier, la foule agit dans l'arène et le combattant le voit sans interface : une amphore de shake lancée sur la piste,
+des pétales qui ralentissent le dieu une seconde, un chant qui rend le prochain renvoi plus facile. Limité par
+spectateur (pas d'abus), et bien plus utile qu'indispensable.
 
-**Questions pour Antoine (❓)** : solo, ou en équipe jusqu'à 4 ? Spectateurs qui aident, oui ou non ? Arène dans le
-ciel du même serveur (recommandé) ou lieu à part ? Durée visée (3 à 5 minutes ?) ? Que perd-on en cas de défaite ?
-Faut-il garder une partie « Mog-off » (mini-jeu) ou tout en action ?
+**Animation du boss** : modèle refait et articulé dans Blender (comme les autres boss) avec de vraies animations
+images clés pour chaque attaque (préparation lisible, frappe, retombée, essoufflement) et des couches calculées en
+jeu : il regarde le joueur, respire, sa cape et ses cheveux suivent avec un ressort, réactions aux coups, tremblements
+de la piste à chaque pas. Les animations images clés doivent être publiées sur Roblox par le compte d'Antoine.
+
+**Mise en place (serveur maître)** : `PumpGodService` (serveur) déroule le combat comme une suite d'attaques tirées
+d'une graine, avec l'heure exacte de chaque impact ; il vérifie les touches d'après la position du joueur à l'impact
+(petite marge pour la latence), l'invincibilité de la roulade, les parades et les coups. `PumpGodController` (client)
+dessine les zones à l'heure du serveur, anime le dieu, gère la caméra et les boutons. Toutes les valeurs dans
+`Config/PumpGod.luau`. Arène modulaire en Blender (grès, marbre, auvents rouges, étendards), découpée en pièces de
+moins de 10 000 triangles.
+
+**Tranches jouables** :
+1. Arène, accès (escalier, bus, pilier de lumière) et gradins.
+2. Boss articulé, système de zones, 3 attaques, vie du joueur, roulade.
+3. Les 4 façons d'attaquer ; manche 1 complète, victoire et défaite (perte de Mog).
+4. Manches 2 et 3, finale, spectateurs.
+5. Sons, effets, caméra, essais sur téléphone, réglages.
+
+**Questions restantes (❓)** : combien de Mog perdu (proposition : 3 % du Mog, plafonné) ? Bouton ROULADE d'accord ?
+Les statues des boss battus en manche 2 ? Une reprise au début de la manche atteinte (une fois par combat) ?
 
 ## (Archivé) Proposition de recherche du 20/10/2026 — adoptée en D76, abandonnée en D80
 
