@@ -2,6 +2,15 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-28 (Colisée du Pump, tranche 3)
+
+- **D91 — Combat du Dieu du Pump, tranche 3 : les 4 façons de le frapper, manche 1 complète, victoire et défaite.** Toujours lancé seulement depuis Studio (`DevCommands:Invoke("PumpGod", userId, "Start")`).
+  - **Bouton FLEX** (F, Y à la manette, gros bouton à l'écran ; Q / ROLL reste la roulade). Le serveur décide ce qu'il fait, dans cet ordre : **renvoyer le javelot** qui arrive (12 dégâts), **frapper le dieu essoufflé** (combo de 3 : 4 + 4, puis 12 si le 3e est « en rythme », le bouton brille pendant la bonne fenêtre), **lancer le disque porté** (9, visée automatique) ou **ramasser un disque**, **charger la pose sacrée** dans le cercle doré en maintenant (2 s, rayon de Mog de 18). Le bouton affiche ce qu'il va faire (PUNCH!, PARRY!, GRAB, THROW!, HOLD!) et brille quand c'est le moment ; un conseil s'affiche la première fois que chaque façon apparaît.
+  - **Deux attaques de la manche 1 du design ajoutées** : coup de poing au sol en cône (il fonce près du joueur, puis il est essoufflé 3,2 s : à genoux, étoiles), javelot d'éclair (à renvoyer ou à éviter). Les disques tombent après la foudre et l'haltère ; le cercle sacré apparaît à 14 s puis toutes les 18 s. Les 5 premières attaques suivent un ordre fixe pour tout apprendre, puis c'est au hasard. Le dieu change de place dans la piste entre ses attaques.
+  - **Vie du dieu** : 100 (barre au-dessus de celle du joueur). **Victoire** : il est éjecté vers le ciel en tournoyant, le joueur remonte dans les gradins (pas encore de récompense : elle viendra avec la finale, tranche 4). **Défaite** (0 PV, mort, ou départ en plein combat) : il nargue en double biceps, le joueur **perd 3 % de son Mog** et revient au temple par la colonne de lumière ; il devra refaire tout le combat.
+  - Le combattant démarre 8 studs à l'intérieur de la piste (la caméra n'est plus dans le tunnel de la porte).
+  Vérifié dans Studio : un bot qui joue parfaitement gagne en 42 s en utilisant les 4 façons (disque, renvoi, rayon, deux combos avec coup de Mog) ; défaites : 3 % exacts retirés (1 680 sur 56 016), retour au temple ; arrêt sans perte ; poses et effets regardés à l'écran (cône, poing armé, disques, cercle, dieu à genoux). Mog du compte de test restauré (+4 891 perdus pendant les tests). Non vérifié : téléphone, appui long sur FLEX au toucher, durée réelle pour un joueur humain (❓ 100 PV pour le dieu suffisent-ils ?).
+
 ## 2026-10-28 (Colisée du Pump, tranche 2)
 
 - **D90 — Combat du Dieu du Pump, tranche 2 : esquive (zones, 3 attaques, vie, roulade).** Le dieu ne se frappe pas encore (tranche 3) ; pour l'instant le combat se lance seulement dans Studio (`DevCommands:Invoke("PumpGod", userId, "Start")`).

@@ -54,8 +54,9 @@ local NAMES = {
 	"WeeklyState", -- serveur -> client : (état des défis, du coffre et des trophées de la semaine)
 	"WeeklyClaim", -- client -> serveur : (what: "Challenge" | "Bonus" | "Chest", index: number?) réclamer
 	"ColosseumTravel", -- serveur -> clients : ({ player, from: Vector3 }) un joueur monte dans un pilier de lumière
-	"PumpGodUpdate", -- serveur -> clients : combat du Dieu du Pump ({ state: "Start" | "Attack" | "Hit" | "Roll" | "End", player, ... })
+	"PumpGodUpdate", -- serveur -> clients : combat du Dieu du Pump ({ state: "Start" | "Attack" | "Hit" | "BossHit" | ..., player, ... })
 	"PumpGodRoll", -- client -> serveur : roulade pendant le combat du Dieu du Pump
+	"PumpGodFlex", -- client -> serveur : bouton FLEX appuyé (true) ou relâché (false) pendant ce combat
 }
 
 local isServer = RunService:IsServer()
@@ -135,4 +136,5 @@ return remotes :: {
 	ColosseumTravel: RemoteEvent,
 	PumpGodUpdate: RemoteEvent,
 	PumpGodRoll: RemoteEvent,
+	PumpGodFlex: RemoteEvent,
 }

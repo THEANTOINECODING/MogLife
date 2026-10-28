@@ -114,9 +114,27 @@ local function setupPortal(portal: Instance)
 	end)
 end
 
--- Le combattant du dernier boss (prochaine tranche) : il a le droit d'être sur la piste
+-- Le combattant du Dieu du Pump (PumpGodService) : il a le droit d'être sur la piste
 function ColosseumService.SetFighter(player: Player, fighting: boolean)
 	fighters[player] = if fighting then true else nil
+end
+
+-- Renvoie un joueur au temple, avec la colonne de lumière (défaite contre le Dieu du Pump)
+function ColosseumService.SendToTemple(player: Player)
+	local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart") :: BasePart?
+	local arrive = destination("Temple")
+	if not root or not arrive or traveling[player] then
+		return
+	end
+	traveling[player] = true
+	Remotes.ColosseumTravel:FireAllClients({ player = player, from = root.Position })
+	task.delay(SETTINGS.TravelDelay, function()
+		traveling[player] = nil
+		local character = player.Character
+		if player.Parent and character and character:FindFirstChild("HumanoidRootPart") then
+			character:PivotTo(arrive)
+		end
+	end)
 end
 
 -- Personne d'autre que le combattant sur la piste : un joueur qui s'y retrouve remonte dans les gradins

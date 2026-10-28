@@ -113,6 +113,48 @@ function Zones.Band(a: Vector3, b: Vector3, width: number, start: number, impact
 	}
 end
 
+-- Cône devant le dieu (coup de poing au sol) : éventail de lames fines qui se remplissent depuis lui
+function Zones.Cone(at: Vector3, dir: Vector3, angle: number, length: number, start: number, impact: number)
+	local f = folder("ZoneCone")
+	local base = CFrame.lookAt(at + Vector3.new(0, 0.06, 0), at + Vector3.new(dir.X, 0.06, dir.Z))
+	local count = math.max(math.ceil(angle / 6), 3)
+	local step = math.rad(angle) / count
+	local width = 2 * length * math.tan(step / 2) + 0.3
+	local slices = {}
+	for k = 1, count do
+		local a = -math.rad(angle) / 2 + step * (k - 0.5)
+		local frame = base * CFrame.Angles(0, -a, 0)
+		local area = part(f, Vector3.new(width, 0.1, length), RED, 0.6)
+		area.CFrame = frame * CFrame.new(0, 0, -length / 2)
+		local fill = part(f, Vector3.new(width, 0.12, 0.1), RED, 0.2)
+		slices[k] = { frame = frame, fill = fill }
+	end
+	-- Bords du cône, bien visibles
+	local edges = {}
+	for k, a in { -math.rad(angle) / 2, math.rad(angle) / 2 } do
+		local edge = part(f, Vector3.new(0.5, 0.14, length), EDGE, 0.2)
+		edge.CFrame = base * CFrame.Angles(0, -a, 0) * CFrame.new(0, 0.03, -length / 2)
+		edges[k] = edge
+	end
+	local connection = RunService.RenderStepped:Connect(function()
+		local k = progress(start, impact)
+		local l = math.max(length * k, 0.1)
+		for _, slice in slices do
+			slice.fill.Size = Vector3.new(width, 0.12, l)
+			slice.fill.CFrame = slice.frame * CFrame.new(0, 0.04, -l / 2)
+		end
+		for _, edge in edges do
+			edge.Color = if blink(k) then Color3.new(1, 1, 1) else EDGE
+		end
+	end)
+	return {
+		Destroy = function()
+			connection:Disconnect()
+			f:Destroy()
+		end,
+	}
+end
+
 -- Onde : avant le départ, un cercle doré qui palpite autour du dieu ; ensuite un anneau d'énergie (un mur bas, à
 -- sauter) qui s'élargit jusqu'au mur de la piste
 function Zones.Ring(at: Vector3, start: number, go: number, speed: number, thickness: number, maxRadius: number)
