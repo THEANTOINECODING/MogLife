@@ -2,6 +2,17 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-29 (Colisée du Pump, tranche 5 et audit)
+
+- **D93 — Récompense du Dieu du Pump, tranche 5 (sons, caméra, téléphone, réglages) et audit.** Récompense validée par Antoine. Le combat reste lancé seulement depuis Studio.
+  - **Victoire** : nouveau champ `PumpGodWins` (nombre de victoires). La première victoire au stade du Dieu du Pump fait passer au stade **GOD MOGGER** et donne **800 Cash** (`firstWinCash`, comme les autres boss) ; chaque victoire compte. Débloque le **titre GOD MOGGER** (`Look.RewardTitles`, `godWins = 1`), une **couronne de laurier dorée** sur la tête (remise à chaque apparition) et une **statue dorée** (son avatar, en double biceps, ×1,8) sur l'un des 4 piédestaux du **Panthéon** devant le Colisée (secteurs impairs ; classement : victoires, puis Mog). Carte de récompense à l'écran.
+  - **Sons** (`Config/Sounds.luau`, volumes ❓ à régler à l'oreille) : alerte de zone, foudre, orage, impacts, souffle (javelot, saut), roulade, coups donnés et reçus, foule, battement de la finale. Musique de boss pendant tout le combat (combattant et spectateurs proches).
+  - **Caméra** : finale vue de côté (le joueur à gauche, le dieu à droite) ; à la victoire, elle suit le dieu vers le ciel (constellation) puis rend la main.
+  - **Téléphone en portrait** : barres de vie remontées au-dessus des boutons, bouton ENCOURAGER replacé.
+  - **Réglage de la finale** : un joueur parfait gagne en ~12 s, un joueur juste à 70 % en ~25 s ; le dieu pousse de plus en plus fort (au-delà de ~2 min, elle n'est plus gagnable).
+  - **Audit** : un joueur qui arrive sur le serveur pendant un combat le voit maintenant (et a la jauge de la foule) ; l'amphore de shake disparaît au changement de manche (elle pouvait soigner sans être visible) ; plus de message après la fin du combat ; retour de la caméra après la victoire fiabilisé ; `tools/check_colosseum.py` mesurait l'escalier droit comme un arc (4 faux « trous », 0 maintenant) ; carte de récompense agrandie (traductions plus longues).
+  Vérifié dans Studio : victoire de la finale par un bot (~13 s) : stade 6 → 7, +800 Cash, 1 victoire, statue dorée (10 studs, tournée vers la place, sans texture) sur le piédestal 1 avec « 👑 nom: GOD MOGGER », laurier de 16 feuilles autour de la tête, carte de récompense remplie ; seconde victoire sans nouvelle récompense de stade ; manche 2 + encouragements + arrêt sans perte de Mog ; aucune erreur. Données du compte de test restaurées (stade, Cash, victoires, boss battus, Mog). Non vérifié (Studio en arrière-plan) : rendu à l'écran de la statue, du laurier, de la carte, des caméras ; sons à l'oreille ; téléphone réel.
+
 ## 2026-10-28 (Colisée du Pump, tranche 3)
 
 - **D92 — Combat du Dieu du Pump, tranche 4 : manches 2 et 3, finale, spectateurs.** Toujours lancé seulement depuis Studio ; nouvelles commandes de test : `DevCommands:Invoke("PumpGod", userId, "Round", n)` (n = 2, 3, ou 4 pour la finale) et `("PumpGod", userId, "Cheer", nombre)` (encouragements simulés).

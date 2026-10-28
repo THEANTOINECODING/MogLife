@@ -9,6 +9,7 @@ return {
 		Cash = 0,
 		Stage = 1, -- index dans Stages.List
 		BossesBeaten = {},
+		PumpGodWins = 0, -- victoires contre le Dieu du Pump au Colisée (titre, laurier, statue dorée, D93)
 		HelpsDone = {}, -- aides déjà réussies au moins une fois (réplique unique la première fois)
 		StyleOwned = {},
 		StyleEquipped = {},
@@ -436,6 +437,8 @@ return {
 	Statues = {
 		RefreshSeconds = 20,
 		Scale = { 2.2, 1.8, 1.6 }, -- taille de la statue selon le rang
+		ChampionScale = 1.8, -- statues dorées du Panthéon du Colisée (vainqueurs du Dieu du Pump)
+		Gold = Color3.fromRGB(255, 196, 64),
 	},
 
 	-- Boss et Mog-off (voir design/02_MECANIQUES/BOSS.md)

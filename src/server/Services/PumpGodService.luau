@@ -26,6 +26,7 @@ local TweenService = game:GetService("TweenService")
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local PumpGod = require(ReplicatedStorage.Shared.Config.PumpGod)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 
 local SPOT_TAG = "ColosseumSpot"
 local ATTACKS = PumpGod.Attacks
@@ -38,6 +39,8 @@ local ColosseumService
 local DataService
 local MinigameService
 local StatsService
+local StatueService
+local TutorialService
 
 type Javelin = { from: Vector3, dir: Vector3, start: number, length: number, parried: boolean }
 type Disc = { at: Vector3, born: number }
@@ -858,7 +861,7 @@ local function sacredLoop(fight: Fight, token: number)
 		fight.sacred = { id = id, at = at, ends = ends }
 		broadcast({ state = "Sacred", player = fight.player, id = id, at = at, radius = spec.Radius, ends = ends })
 		task.wait(spec.Life)
-		if fight.sacred and fight.sacred.id == id then
+		if fight.sacred and fight.sacred.id == id and not fight.ended then
 			fight.sacred = nil
 			fight.chargeEnds = nil
 			broadcast({ state = "SacredGone", player = fight.player, id = id })
@@ -1273,6 +1276,7 @@ local function clearField(fight: Fight)
 	fight.chargeEnds = nil
 	fight.windedUntil = 0
 	fight.combo = 0
+	fight.amphora = nil
 end
 
 -- Finale : il ne bouge plus ; son rayon de Mog contre l'éclair du dieu
@@ -1370,6 +1374,105 @@ function nextRound(fight: Fight, index: number)
 	end)
 end
 
+-- ------------------------------------------------------------------ récompense (D93)
+-- Couronne de laurier dorée des vainqueurs : des feuilles soudées autour de la tête (la coque visible du corps de
+-- stade si elle existe, sinon la tête Roblox)
+local function visibleHead(character: Model): BasePart?
+	local best: BasePart? = nil
+	for _, part in character:GetDescendants() do
+		if part:IsA("BasePart") and part.Name == "Head" and part.Transparency < 1 then
+			if not best or part.Size.Magnitude > best.Size.Magnitude then
+				best = part
+			end
+		end
+	end
+	local fallback = character:FindFirstChild("Head")
+	return best or (if fallback and fallback:IsA("BasePart") then fallback else nil)
+end
+
+local function crown(player: Player)
+	local data = DataService.Get(player)
+	local character = player.Character
+	if not data or (data.PumpGodWins or 0) <= 0 or not character then
+		return
+	end
+	-- Mesurée sur la tête visible, soudée à la tête Roblox (la coque du corps est refaite au changement de stade)
+	local head = visibleHead(character)
+	local anchor = character:FindFirstChild("Head")
+	if not head or not anchor or not anchor:IsA("BasePart") then
+		return
+	end
+	local old = character:FindFirstChild("GodLaurel")
+	if old then
+		old:Destroy()
+	end
+	local spec = PumpGod.Laurel
+	local laurel = Instance.new("Model")
+	laurel.Name = "GodLaurel"
+	local size = head.Size
+	local radius = math.max(size.X, size.Z) * spec.Radius
+	local leaf = Vector3.new(size.X * spec.LeafWidth, size.Y * spec.LeafHeight, size.X * spec.LeafWidth * 0.35)
+	local center = head.CFrame * CFrame.new(0, size.Y * spec.Height, 0)
+	for k = 1, spec.Leaves do
+		-- Deux branches qui partent de l'arrière et se rejoignent presque devant le front
+		local side = if k % 2 == 0 then 1 else -1
+		local step = math.ceil(k / 2) - 1
+		local angle = math.pi - side * (math.rad(spec.Gap) + step * math.rad(360 - 2 * spec.Gap) / spec.Leaves)
+		local part = Instance.new("Part")
+		part.Name = "Leaf"
+		part.Size = leaf
+		part.Shape = Enum.PartType.Ball
+		part.Material = Enum.Material.Foil
+		part.Color = spec.Color
+		part.CanCollide = false
+		part.CanQuery = false
+		part.CanTouch = false
+		part.Massless = true
+		part.CastShadow = false
+		local around = CFrame.Angles(0, angle, 0) * CFrame.new(0, 0, -radius)
+		part.CFrame = center * around * CFrame.Angles(0, 0, side * math.rad(spec.Tilt))
+		local weld = Instance.new("WeldConstraint")
+		weld.Part0 = anchor
+		weld.Part1 = part
+		weld.Parent = part
+		part.Parent = laurel
+	end
+	laurel.Parent = character
+end
+
+-- Victoire : chaque victoire compte (titre GOD MOGGER, laurier, statue dorée au Panthéon) ; la première, quand il
+-- est bien au stade du Dieu du Pump, le fait passer au stade GOD MOGGER avec le Cash du boss (comme BossService)
+local function reward(player: Player): { [string]: any }
+	local data = DataService.Get(player)
+	if not data then
+		return {}
+	end
+	data.PumpGodWins = (data.PumpGodWins or 0) + 1
+	local result: { [string]: any } = { wins = data.PumpGodWins }
+	local stageIndex, boss = nil, nil
+	for index, stage in Stages.List do
+		if stage.boss and stage.boss.id == "PumpGod" then
+			stageIndex, boss = index, stage.boss
+		end
+	end
+	if boss and stageIndex and data.BossesBeaten.PumpGod ~= true and data.Stage == stageIndex then
+		data.BossesBeaten.PumpGod = true
+		data.Stage = stageIndex + 1
+		data.Cash += boss.firstWinCash
+		result.firstWin = true
+		result.cash = boss.firstWinCash
+		result.stageId = Stages.List[data.Stage].id
+	end
+	StatsService.Refresh(player)
+	StatueService.Refresh()
+	task.delay(PumpGod.EndDelay + 1, crown, player)
+	if result.firstWin then
+		TutorialService.OnEvent(player, "BossBeaten", "PumpGod")
+		TutorialService.OnEvent(player, "StageUp", data.Stage)
+	end
+	return result
+end
+
 function finish(fight: Fight, reason: string)
 	if fight.ended then
 		return
@@ -1398,7 +1501,8 @@ function finish(fight: Fight, reason: string)
 			end
 		end
 	end
-	broadcast({ state = "End", player = fight.player, reason = reason, mogLost = mogLost })
+	local prize = if reason == "Victory" then reward(fight.player) else nil
+	broadcast({ state = "End", player = fight.player, reason = reason, mogLost = mogLost, reward = prize })
 	task.delay(PumpGod.EndDelay, function()
 		if fight.boss then
 			fight.boss:Destroy()
@@ -1420,6 +1524,30 @@ function finish(fight: Fight, reason: string)
 			character:PivotTo(CFrame.lookAt(stands.Position + Vector3.new(0, 3, 0), look))
 		end
 	end)
+end
+
+local function startMessage(fight: Fight)
+	return {
+		state = "Start",
+		player = fight.player,
+		boss = fight.boss,
+		hp = fight.hp,
+		maxHp = PumpGod.Health,
+		bossHp = fight.bossHp,
+		bossMaxHp = ROUNDS[math.min(fight.round, #ROUNDS)].BossHealth,
+		center = fight.center,
+		bossAt = bossAt(fight, now()),
+	}
+end
+
+-- Arrivé sur le serveur pendant un combat : il le voit comme spectateur (et peut encourager)
+local function syncTo(player: Player)
+	for _, fight in fights do
+		if not fight.ended then
+			Remotes.PumpGodUpdate:FireClient(player, startMessage(fight))
+			sendCrowd(fight)
+		end
+	end
 end
 
 -- Lance le combat (pour l'instant seulement depuis Studio)
@@ -1485,17 +1613,7 @@ function PumpGodService.Begin(player: Player): boolean
 	local inward = flat(center.Position - fighterSpot.Position).Unit * PumpGod.FighterInset
 	character:PivotTo(CFrame.lookAt(fighterSpot.Position + inward + Vector3.new(0, 3, 0), look))
 	fight.boss = spawnBoss(bossStart, middle, 1)
-	broadcast({
-		state = "Start",
-		player = player,
-		boss = fight.boss,
-		hp = fight.hp,
-		maxHp = PumpGod.Health,
-		bossHp = fight.bossHp,
-		bossMaxHp = first.BossHealth,
-		center = middle,
-		bossAt = bossStart,
-	})
+	broadcast(startMessage(fight))
 	task.spawn(loop, fight, fight.token, 2.5)
 	task.spawn(sacredLoop, fight, fight.token)
 	sendCrowd(fight)
@@ -1559,6 +1677,8 @@ function PumpGodService.Init(services)
 	DataService = services.DataService
 	MinigameService = services.MinigameService
 	StatsService = services.StatsService
+	StatueService = services.StatueService
+	TutorialService = services.TutorialService
 end
 
 function PumpGodService.Start()
@@ -1577,6 +1697,22 @@ function PumpGodService.Start()
 			stepAmphora(fight)
 		end
 	end)
+	-- Laurier des vainqueurs, à chaque apparition (une fois le corps de stade posé)
+	local function watchCharacter(player: Player)
+		player.CharacterAdded:Connect(function()
+			task.delay(PumpGod.Laurel.SpawnDelay, crown, player)
+		end)
+		if player.Character then
+			task.delay(PumpGod.Laurel.SpawnDelay, crown, player)
+		end
+	end
+	Players.PlayerAdded:Connect(function(player)
+		watchCharacter(player)
+		syncTo(player)
+	end)
+	for _, player in Players:GetPlayers() do
+		watchCharacter(player)
+	end
 	Players.PlayerRemoving:Connect(function(player)
 		local fight = fights[player]
 		if fight then

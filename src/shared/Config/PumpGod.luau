@@ -111,10 +111,10 @@ return {
 		Intro = 2.5,
 		Beat = 0.6,
 		Window = 0.16,
-		Push = 0.035,
-		Miss = 0.02,
-		Drift = 0.025,
-		DriftGrow = 0.0008,
+		Push = 0.04,
+		Miss = 0.015,
+		Drift = 0.02,
+		DriftGrow = 0.0004,
 		Burn = 30,
 		Reset = 0.4,
 	},
@@ -135,6 +135,24 @@ return {
 		Slow = 1.0,
 		ChantRange = 1.8,
 	},
+
+	-- Couronne de laurier des vainqueurs (D93), en fractions de la taille de la tête : rayon, hauteur au-dessus de son
+	-- centre, taille des feuilles ; Gap = degrés laissés libres devant le front ; Tilt = inclinaison des feuilles
+	Laurel = {
+		Leaves = 16,
+		Radius = 0.56,
+		Height = 0.22,
+		LeafWidth = 0.22,
+		LeafHeight = 0.13,
+		Gap = 22,
+		Tilt = 25,
+		Color = Color3.fromRGB(255, 200, 70),
+		SpawnDelay = 3, -- secondes après l'apparition (le corps de stade est posé)
+	},
+
+	-- Caméra du combattant : de côté pendant la finale (recul et hauteur en fractions de la distance joueur-dieu) ;
+	-- vers le ciel (la constellation) pendant VictoryLook secondes après la victoire
+	Camera = { FinaleBack = 0.75, FinaleUp = 0.18, VictoryLook = 5.5 },
 
 	-- Le dieu dans l'arène
 	BossScale = 1.0, -- taille du modèle (le Dieu du Pump fait déjà 13 studs de haut)

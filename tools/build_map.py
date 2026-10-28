@@ -1209,6 +1209,13 @@ def colosseum():
     for k in (2, 4, 6, 8, 10):
         c.append(decor(colo_frame(k), f"ColosseumPlazaStatue{k}", (0, 0, -(L["facade_outer"] + 8.0)),
                        "Colosseum_Statue"))
+    # Panthéon des champions (D93) : entre les statues de marbre, un socle par vainqueur du Dieu du Pump présent sur
+    # le serveur (statue dorée mise par StatueService, tag ChampionStatue)
+    for rank, k in enumerate((5, 7, 3, 9), start=1):
+        c.append(P(colo_frame(k), f"ColosseumChampion{rank}", (0, 1.5, -(L["facade_outer"] + 8.0)), (6, 3, 6),
+                   (236, 230, 218), "Marble", tags=["ChampionStatue"], attributes={"Rank": rank}))
+        c.append(P(colo_frame(k), f"ColosseumChampionTrim{rank}", (0, 3.1, -(L["facade_outer"] + 8.0)),
+                   (6.6, 0.4, 6.6), (255, 200, 70), "SmoothPlastic", collide=False))
     # Entrée : statues, étendards et braseros de part et d'autre du grand escalier, sur le parvis
     for sx in (-1, 1):
         c.append(decor(F0, f"ColosseumEntryStatue{sx}", (sx * 13.0, 0, -(L["facade_outer"] + 6.0)), "Colosseum_Statue"))

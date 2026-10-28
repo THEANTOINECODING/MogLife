@@ -1,5 +1,7 @@
 -- Statues des 3 plus gros moggers du serveur, sur les socles de la place (tag "MogStatue" + attribut Rank).
 -- Chaque statue reprend l'avatar Roblox du joueur, en pose de double biceps, avec son nom et son Mog.
+-- Panthéon du Colisée (D93) : statues dorées des vainqueurs du Dieu du Pump présents sur le serveur, sur les socles
+-- du parvis (tag "ChampionStatue" + attribut Rank), le plus de victoires d'abord.
 
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
@@ -10,18 +12,19 @@ local Format = require(ReplicatedStorage.Shared.Format)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 
 local PEDESTAL_TAG = "MogStatue"
+local CHAMPION_TAG = "ChampionStatue"
 local STATUES = Balance.Statues
 
 local DataService
 
-local shown: { [number]: number? } = {} -- rang -> UserId de la statue affichée
+local shown: { [BasePart]: number? } = {} -- socle -> UserId de la statue affichée
 local descriptions: { [number]: HumanoidDescription } = {}
 
 local StatueService = {}
 
-local function pedestals(): { [number]: BasePart }
+local function pedestals(tag: string): { [number]: BasePart }
 	local byRank = {}
-	for _, part in CollectionService:GetTagged(PEDESTAL_TAG) do
+	for _, part in CollectionService:GetTagged(tag) do
 		local rank = part:GetAttribute("Rank")
 		if part:IsA("BasePart") and typeof(rank) == "number" then
 			byRank[rank] = part
@@ -31,6 +34,13 @@ local function pedestals(): { [number]: BasePart }
 end
 
 local function setLabel(pedestal: BasePart, text: string)
+	if text == "" then
+		local old = pedestal:FindFirstChild("StatueLabel")
+		if old then
+			old:Destroy()
+		end
+		return
+	end
 	local billboard = pedestal:FindFirstChild("StatueLabel") :: BillboardGui?
 	if not billboard then
 		local created = Instance.new("BillboardGui")
@@ -83,7 +93,29 @@ local function clearStatue(pedestal: BasePart)
 	end
 end
 
-local function buildStatue(pedestal: BasePart, rank: number, userId: number)
+-- Statue dorée (Panthéon) : ni textures, ni vêtements, ni visage ; tout en or
+local function gild(model: Model)
+	for _, item in model:GetDescendants() do
+		if item:IsA("BasePart") then
+			item.Color = STATUES.Gold
+			item.Material = Enum.Material.Foil
+			if item:IsA("MeshPart") then
+				item.TextureID = ""
+			end
+		elseif item:IsA("SpecialMesh") then
+			item.TextureId = ""
+		elseif
+			item:IsA("Clothing")
+			or item:IsA("ShirtGraphic")
+			or item:IsA("Decal")
+			or item:IsA("SurfaceAppearance")
+		then
+			item:Destroy()
+		end
+	end
+end
+
+local function buildStatue(pedestal: BasePart, scale: number, gold: boolean, userId: number)
 	local description = descriptions[userId]
 	if not description then
 		local ok, result = pcall(Players.GetHumanoidDescriptionFromUserId, Players, userId)
@@ -93,7 +125,7 @@ local function buildStatue(pedestal: BasePart, rank: number, userId: number)
 		descriptions[userId] = result
 		description = result
 	end
-	if shown[rank] ~= userId or not pedestal.Parent then
+	if shown[pedestal] ~= userId or not pedestal.Parent then
 		return
 	end
 	local model = Players:CreateHumanoidModelFromDescription(description, Enum.HumanoidRigType.R15)
@@ -116,7 +148,10 @@ local function buildStatue(pedestal: BasePart, rank: number, userId: number)
 	if animator then
 		animator:Destroy()
 	end
-	model:ScaleTo(STATUES.Scale[rank] or 1)
+	model:ScaleTo(scale)
+	if gold then
+		gild(model)
+	end
 	-- Les membres d'un avatar créé hors du monde ne sont pas encore tous à leur position finale.
 	-- On l'assemble invisible, puis on pose sa boîte réelle sur le dessus du socle.
 	local transparencies: { [Instance]: number } = {}
@@ -131,7 +166,7 @@ local function buildStatue(pedestal: BasePart, rank: number, userId: number)
 	clearStatue(pedestal)
 	model.Parent = pedestal
 	task.wait()
-	if shown[rank] ~= userId or not pedestal.Parent or model.Parent ~= pedestal then
+	if shown[pedestal] ~= userId or not pedestal.Parent or model.Parent ~= pedestal then
 		model:Destroy()
 		return
 	end
@@ -146,35 +181,53 @@ local function buildStatue(pedestal: BasePart, rank: number, userId: number)
 	end
 end
 
+local function place(pedestal: BasePart, player: Player?, label: string, scale: number, gold: boolean)
+	setLabel(pedestal, label)
+	if not player then
+		shown[pedestal] = nil
+		clearStatue(pedestal)
+	elseif shown[pedestal] ~= player.UserId then
+		shown[pedestal] = player.UserId
+		task.spawn(buildStatue, pedestal, scale, gold, player.UserId)
+	end
+end
+
 local function refresh()
 	local ranking = {}
+	local champions = {}
 	for _, player in Players:GetPlayers() do
 		local data = DataService.Get(player)
 		if data then
 			table.insert(ranking, { player = player, mog = data.Mog })
+			if (data.PumpGodWins or 0) > 0 then
+				table.insert(champions, { player = player, wins = data.PumpGodWins, mog = data.Mog })
+			end
 		end
 	end
 	table.sort(ranking, function(a, b)
 		return a.mog > b.mog
 	end)
+	table.sort(champions, function(a, b)
+		return if a.wins ~= b.wins then a.wins > b.wins else a.mog > b.mog
+	end)
 
-	for rank, pedestal in pedestals() do
+	for rank, pedestal in pedestals(PEDESTAL_TAG) do
 		local entry = ranking[rank]
-		if not entry then
-			shown[rank] = nil
-			clearStatue(pedestal)
-			setLabel(pedestal, Texts.Get("Statue.Empty"))
-			continue
-		end
-		setLabel(
-			pedestal,
-			Texts.Get("Statue.Label", { name = entry.player.DisplayName, mog = Format.Short(entry.mog) })
-		)
-		if shown[rank] ~= entry.player.UserId then
-			shown[rank] = entry.player.UserId
-			task.spawn(buildStatue, pedestal, rank, entry.player.UserId)
-		end
+		local label = if entry
+			then Texts.Get("Statue.Label", { name = entry.player.DisplayName, mog = Format.Short(entry.mog) })
+			else Texts.Get("Statue.Empty")
+		place(pedestal, entry and entry.player, label, STATUES.Scale[rank] or 1, false)
 	end
+	for rank, pedestal in pedestals(CHAMPION_TAG) do
+		local entry = champions[rank]
+		local label = if entry then Texts.Get("Statue.Champion", { name = entry.player.DisplayName }) else ""
+		place(pedestal, entry and entry.player, label, STATUES.ChampionScale, true)
+	end
+end
+
+-- Un nouveau champion : sa statue dorée tout de suite
+function StatueService.Refresh()
+	task.defer(refresh)
 end
 
 function StatueService.Init(services)

@@ -419,6 +419,10 @@ local STRINGS: { [string]: string } = {
 	["PumpGod.Round2"] = "ROUND 2: THE TWELVE LABORS",
 	["PumpGod.Round3"] = "ROUND 3: OLYMPUS IS ANGRY",
 	["PumpGod.Finale"] = "FINAL: THE LAST POSE-OFF!",
+	["PumpGod.RewardTitle"] = "👑 YOU MOGGED A GOD! 👑",
+	["PumpGod.RewardName"] = "New title: GOD MOGGER",
+	["PumpGod.RewardLaurel"] = "Golden laurel crown!",
+	["PumpGod.RewardStatue"] = "Your golden statue stands at the Colosseum!",
 	["PumpGod.Tip.Leap"] = "He jumps on you! Keep moving and roll out of the circle!",
 	["PumpGod.Tip.Tiles"] = "Get off the glowing tiles!",
 	["PumpGod.Tip.Gaze"] = "Burning gaze! Hide behind a pillar!",
@@ -448,6 +452,7 @@ local STRINGS: { [string]: string } = {
 	-- Statues des meilleurs moggers
 	["Statue.Label"] = "{name}: 🗿 {mog}",
 	["Statue.Empty"] = "Your statue here?",
+	["Statue.Champion"] = "👑 {name}: GOD MOGGER",
 
 	-- Maisons
 	["Plot.Free"] = "Free house",
@@ -676,6 +681,7 @@ local STRINGS: { [string]: string } = {
 	["Nick.First.Lola"] = "Lola",
 	["Nick.First.Gina"] = "Gina",
 	["Nick.Title.TheWall"] = "The Wall",
+	["Nick.Title.GodMogger"] = "GOD MOGGER",
 	["Nick.Title.ProteinShake"] = "Protein Shake",
 	["Nick.Title.NoDaysOff"] = "No Days Off",
 	["Nick.Title.Spaghetti"] = "Spaghetti",
@@ -702,6 +708,7 @@ local STRINGS: { [string]: string } = {
 	["Creator.RewardTitles"] = "Exclusive titles",
 	["Creator.TitleNeedsTrophies"] = "🔒 {title} (🏆 x{count} weekly trophies)",
 	["Creator.TitleNeedsWins"] = "🔒 {title} ({count} duel wins)",
+	["Creator.TitleNeedsGod"] = "🔒 {title} (defeat the Pump God)",
 	["Title.Unlocked"] = "New title unlocked: {title}! Pick it at your home mirror.",
 
 	-- Duels entre joueurs : bras de fer (D68)

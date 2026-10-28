@@ -8,6 +8,8 @@
 --   secousse quand il est touché (jamais de zoom) ;
 -- - manches (titre, vie rendue, dieu géant en manche 3), finale (choc de rayons : FLEX sur le temps, le bouton bat la
 --   mesure, la barre du dieu devient celle du choc), victoire en constellation ;
+-- - sons (Config/Sounds.luau, PumpGod*) et musique de boss pendant le combat (SoundController.SetArena) ; caméra de
+--   côté pendant la finale, puis vers le ciel (la constellation) à la victoire ; carte de récompense (D93) ;
 -- - pour les spectateurs proches : le même combat, un bandeau avec le nom du combattant, et le bouton ENCOURAGER avec
 --   la jauge de la foule (jamais montrée au combattant) ; ce que fait la foule (amphore, pétales, chant) se voit sur la
 --   piste.
@@ -35,8 +37,13 @@ local FLEX_KEYS = { Enum.KeyCode.F, Enum.KeyCode.ButtonY }
 local GOLD = Fx.Gold
 local RED = Color3.fromRGB(255, 80, 60)
 -- Barres de vie en bas au centre : le haut de l'écran est pris par le Mog, le Cash et l'objectif ; au téléphone, le
--- joystick est à gauche et les boutons à droite
-local HUD_HOME = UDim2.new(0.5, 0, 1, -18)
+-- joystick est à gauche et les boutons à droite. Téléphone en portrait : les barres montent au-dessus des boutons
+-- (l'écran est trop étroit pour les mettre entre le joystick et FLEX)
+local HUD_LOW = UDim2.new(0.5, 0, 1, -18)
+local BOSS_LOW = UDim2.new(0.5, 0, 1, -60)
+local HUD_HIGH = UDim2.new(0.5, 0, 1, -212)
+local BOSS_HIGH = UDim2.new(0.5, 0, 1, -250)
+local hudHome = HUD_LOW
 
 type Fight = {
 	fighter: Player,
@@ -89,6 +96,12 @@ local cheerButton: TextButton
 local cheerFill: Frame
 local cheerLeft: TextLabel
 local cheerPop = 0
+local rewardCard: Frame
+local rewardLines: TextLabel
+local SoundController
+-- Caméra posée par le combat (finale, victoire) : on rend la main à Roblox à la fin
+local cinematicUntil = 0
+local lastBeat = -1
 
 local PumpGodController = {}
 
@@ -160,6 +173,27 @@ local function shakeIfNear(at: Vector3, distance: number, strength: number)
 	end
 end
 
+-- Effet sonore du combat (Config/Sounds.luau) pour le combattant et les spectateurs proches
+local function sfx(name: string, pitch: number?)
+	local current = fight
+	if SoundController and current and (current.fighter == player or near(current.center)) then
+		SoundController.Play(name, pitch)
+	end
+end
+
+local function sfxAt(time: number, name: string, pitch: number?)
+	task.delay(math.max(time - Zones.ServerNow(), 0), sfx, name, pitch)
+end
+
+-- Caméra du combat : posée par le jeu (finale, victoire) ou rendue au joueur
+local function releaseCamera()
+	cinematicUntil = 0
+	local camera = workspace.CurrentCamera
+	if camera and camera.CameraType == Enum.CameraType.Scriptable then
+		camera.CameraType = Enum.CameraType.Custom
+	end
+end
+
 -- Poitrine du dieu, ou un point au-dessus de sa position au sol
 local function godChest(current: Fight, fallback: Vector3): Vector3
 	if current.god and current.god.model.Parent then
@@ -205,6 +239,7 @@ local function roll()
 	rollReadyAt = os.clock() + ROLL.Cooldown
 	rolling = true
 	Remotes.PumpGodRoll:FireServer()
+	sfx("PumpGodRoll")
 	local dir = humanoid.MoveDirection * Vector3.new(1, 0, 1)
 	if dir.Magnitude < 0.1 then
 		dir = root.CFrame.LookVector * Vector3.new(1, 0, 1)
@@ -295,10 +330,10 @@ local function hurt()
 	TweenService:Create(flash, TweenInfo.new(0.45), { BackgroundTransparency = 1 }):Play()
 	task.spawn(function()
 		for k = 1, 6 do
-			hud.Position = HUD_HOME + UDim2.fromOffset((if k % 2 == 0 then 1 else -1) * (7 - k), 0)
+			hud.Position = hudHome + UDim2.fromOffset((if k % 2 == 0 then 1 else -1) * (7 - k), 0)
 			task.wait(0.03)
 		end
-		hud.Position = HUD_HOME
+		hud.Position = hudHome
 	end)
 	shake(0.5, 0.3)
 	-- Clignote pendant son invincibilité
@@ -333,6 +368,10 @@ local function layout()
 	bossBar.Size = UDim2.fromOffset(width, if phone then 24 else 26)
 	-- ROULADE au-dessus de FLEX, à gauche du bouton de saut de Roblox et de celui de course (SprintController)
 	local tall = not phone and size.X > size.Y and size.Y > 600
+	hudHome = if phone then HUD_HIGH else HUD_LOW
+	hud.Position = hudHome
+	bossBar.Position = if phone then BOSS_HIGH else BOSS_LOW
+	cheerButton.Position = if tall then UDim2.new(1, -190, 1, -70) else UDim2.new(1, -110, 1, -40)
 	rollButton.Position = if tall then UDim2.new(1, -112, 1, -230) else UDim2.new(1, -112, 1, -120)
 	flexButton.Position = if tall then UDim2.new(1, -182, 1, -56) else UDim2.new(1, -110, 1, -22)
 end
@@ -383,7 +422,7 @@ local function buildGui()
 	})
 	hud = Ui.create("Frame", {
 		AnchorPoint = Vector2.new(0.5, 1),
-		Position = HUD_HOME,
+		Position = hudHome,
 		BackgroundColor3 = Color3.fromRGB(25, 20, 35),
 		BackgroundTransparency = 0.2,
 		Visible = false,
@@ -495,6 +534,39 @@ local function buildGui()
 			flex(false)
 		end
 	end)
+	-- Carte de récompense de la victoire (D93) : au centre, se ferme seule ou d'un appui
+	rewardCard = Ui.panel({
+		Name = "Reward",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.45),
+		Size = UDim2.new(0.8, 0, 0, 240),
+		Visible = false,
+		Parent = gui,
+	})
+	Ui.create("UISizeConstraint", { MaxSize = Vector2.new(440, 240), Parent = rewardCard })
+	Ui.label({
+		Position = UDim2.fromScale(0.05, 0.06),
+		Size = UDim2.fromScale(0.9, 0.22),
+		Text = Texts.Get("PumpGod.RewardTitle"),
+		TextColor3 = GOLD,
+		Parent = rewardCard,
+	})
+	rewardLines = Ui.label({
+		Position = UDim2.fromScale(0.07, 0.32),
+		Size = UDim2.fromScale(0.86, 0.6),
+		Text = "",
+		TextWrapped = true,
+		Parent = rewardCard,
+	})
+	Ui.create("UITextSizeConstraint", { MaxTextSize = 22, Parent = rewardLines })
+	rewardCard.InputBegan:Connect(function(input)
+		if
+			input.UserInputType == Enum.UserInputType.Touch
+			or input.UserInputType == Enum.UserInputType.MouseButton1
+		then
+			rewardCard.Visible = false
+		end
+	end)
 	-- Spectateurs : ENCOURAGER, avec la jauge de la foule dessous
 	cheerButton = Ui.button({
 		Name = "Cheer",
@@ -595,6 +667,12 @@ local function clear()
 	fight = nil
 	showControls(false)
 	cheerButton.Visible = false
+	if SoundController then
+		SoundController.SetArena(false)
+	end
+	if os.clock() > cinematicUntil then
+		releaseCamera()
+	end
 end
 
 local function findGod(message)
@@ -641,6 +719,9 @@ function handlers.Start(message)
 		cheersLeft = PumpGod.Crowd.Max,
 	}
 	task.spawn(findGod, message)
+	if SoundController and (mine() or near(message.center)) then
+		SoundController.SetArena(true)
+	end
 	if mine() then
 		showControls(true)
 		rollReadyAt = 0
@@ -688,6 +769,21 @@ local function atImpact(current: Fight, impact: number, callback: () -> ())
 	end)
 end
 
+-- Son à l'impact de chaque attaque : { nom, hauteur }
+local IMPACT_SOUNDS = {
+	Bolt = { "PumpGodBolt", 1 },
+	Wave = { "PumpGodSlam", 0.7 },
+	Slam = { "PumpGodSlam", 1 },
+	Javelin = { "PumpGodWhoosh", 1.2 },
+	Column = { "PumpGodSlam", 0.8 },
+	Tiles = { "PumpGodSlam", 1.25 },
+	Dumbbell = { "PumpGodSlam", 0.9 },
+	Chariot = { "PumpGodSlam", 0.75 },
+	Leap = { "PumpGodSlam", 0.65 },
+	Storm = { "PumpGodStorm", 1 },
+	Gaze = { "PumpGodWhoosh", 0.6 },
+}
+
 function handlers.Attack(message)
 	local current = fight
 	if not current or current.ended then
@@ -701,6 +797,17 @@ function handlers.Attack(message)
 	end
 	local id = message.id
 	local kind = message.kind
+	-- Petit signal à chaque nouvelle zone (pour le combattant : lisibilité, D89)
+	if current.fighter == player then
+		sfx("PumpGodWarn", if kind == "Storm" or kind == "Gaze" then 0.8 else 1)
+	end
+	local sound = IMPACT_SOUNDS[kind]
+	if sound then
+		sfxAt(message.impact, sound[1], sound[2])
+	end
+	if kind == "Leap" then
+		sfx("PumpGodWhoosh", 0.8)
+	end
 	if kind == "Bolt" then
 		current.zones[id] = Zones.Circle(message.at, message.radius, message.start, message.impact)
 		removeZone(current, id, message.impact)
@@ -876,6 +983,7 @@ function handlers.Round(message)
 		showBanner(Texts.Get(message.title), 3.5)
 		shakeIfNear(current.center, 200, 0.3)
 	end
+	sfx("PumpGodCrowd")
 	if current.fighter == player then
 		setHp(message.hp, message.maxHp)
 		setBar(bossFill, 1)
@@ -916,6 +1024,8 @@ function handlers.Finale(message)
 	if near(current.center) then
 		showBanner(Texts.Get("PumpGod.Finale"), 2.5)
 	end
+	sfx("PumpGodCrowd")
+	lastBeat = -1
 	if current.fighter == player then
 		rollButton.Visible = false
 		bossFill.Size = UDim2.fromScale(message.k, 1)
@@ -965,6 +1075,7 @@ function handlers.Pulse(message)
 		if message.good then
 			shake(0.15, 0.1)
 		end
+		sfx(if message.good then "RepPerfect" else "RepMiss")
 	end
 end
 
@@ -974,6 +1085,7 @@ local function crowdBanner(key: string)
 	if current and near(current.center) then
 		showBanner(Texts.Get(key), 2.5)
 	end
+	sfx("PumpGodCrowd")
 end
 
 function handlers.Crowd(message)
@@ -1031,6 +1143,7 @@ function handlers.Heal(message)
 	if current.fighter == player then
 		setHp(message.hp, current.maxHp)
 	end
+	sfx("RepPerfect", 1.3)
 end
 
 function handlers.Petals(message)
@@ -1092,6 +1205,7 @@ function handlers.Hit(message)
 	if mine() then
 		setHp(message.hp, current.maxHp)
 		hurt()
+		sfx("PumpGodHurt")
 	end
 end
 
@@ -1103,9 +1217,11 @@ function handlers.BossHit(message)
 	if current.fighter == player then
 		setBar(bossFill, math.clamp(message.hp / math.max(message.maxHp, 1), 0, 1))
 	end
+	local power = message.kind == "PowerPunch" or message.kind == "Beam"
+	sfx("PumpGodPunch", if power then 0.75 else 1 + math.random() * 0.15)
 	local god = current.god
 	if god then
-		god:Hurt(if message.kind == "PowerPunch" or message.kind == "Beam" then 1.5 else 1)
+		god:Hurt(if power then 1.5 else 1)
 		if near(current.center) then
 			local chest = god:Chest()
 			Fx.Impact(chest, if message.kind == "PowerPunch" or message.kind == "Beam" then 2 else 1)
@@ -1190,6 +1306,7 @@ function handlers.Parry(message)
 	if current.fighter == player then
 		shake(0.2, 0.15)
 	end
+	sfx("PumpGodPunch", 1.35)
 end
 
 function handlers.Disc(message)
@@ -1226,6 +1343,7 @@ function handlers.DiscPick(message)
 	current.discAt[message.id] = nil
 	if current.fighter == player then
 		current.carrying = message.id
+		sfx("RepGood")
 	end
 	local disc = current.discs[message.id]
 	if disc then
@@ -1346,14 +1464,56 @@ function handlers.End(message)
 				Fx.Impact(god:Chest(), 3)
 			end
 		end
+		sfx("BossVictory")
+		sfx("PumpGodCrowd")
 		if wasMine then
 			showBanner(Texts.Get("PumpGod.Victory"), 5)
+			-- La caméra suit le dieu vers le ciel, où il devient une constellation
+			cinematicUntil = os.clock() + PumpGod.Camera.VictoryLook
+			local camera = workspace.CurrentCamera
+			local root = rootOf(player)
+			if camera and root then
+				local sky = current.center + Vector3.new(0, 110, 0)
+				local from = root.Position + Vector3.new(0, 4, 0) - flat(sky - root.Position).Unit * 14
+				camera.CameraType = Enum.CameraType.Scriptable
+				camera.CFrame = CFrame.lookAt(from, current.center + Vector3.new(0, 20, 0))
+				TweenService:Create(camera, TweenInfo.new(2.5, Enum.EasingStyle.Sine), {
+					CFrame = CFrame.lookAt(from, sky),
+				}):Play()
+				-- (pas de comparaison d'horloge : le délai peut finir une fraction avant cinematicUntil)
+				local mineUntil = cinematicUntil
+				task.delay(PumpGod.Camera.VictoryLook, function()
+					if cinematicUntil == mineUntil then
+						releaseCamera()
+					end
+				end)
+			end
+			local reward = message.reward or {}
+			local lines = {}
+			if reward.firstWin then
+				table.insert(lines, Texts.Get("Boss.NewStage", { stage = Texts.Get(`Stage.{reward.stageId}`) }))
+				table.insert(lines, Texts.Get("Boss.RewardCash", { cash = reward.cash }))
+			end
+			table.insert(lines, Texts.Get("PumpGod.RewardName"))
+			table.insert(lines, Texts.Get("PumpGod.RewardLaurel"))
+			table.insert(lines, Texts.Get("PumpGod.RewardStatue"))
+			task.delay(PumpGod.Camera.VictoryLook - 0.5, function()
+				rewardLines.Text = table.concat(lines, "\n")
+				rewardCard.Visible = true
+				task.delay(8, function()
+					rewardCard.Visible = false
+				end)
+			end)
 		elseif near(current.center) then
 			showBanner(Texts.Get("PumpGod.VictoryWatch", { name = message.player.DisplayName }), 4)
 		end
 	elseif message.reason == "Defeat" then
 		if god then
 			god:Taunt()
+		end
+		sfx("BossDefeat")
+		if wasMine then
+			releaseCamera()
 		end
 		if wasMine then
 			local text = if (message.mogLost or 0) > 0
@@ -1363,6 +1523,7 @@ function handlers.End(message)
 		end
 	elseif wasMine then
 		showBanner(Texts.Get("PumpGod.Stopped"), 3)
+		releaseCamera()
 	end
 	-- Le dieu reste animé jusqu'à ce que le serveur le retire
 	task.delay(PumpGod.EndDelay + 0.5, function()
@@ -1370,6 +1531,10 @@ function handlers.End(message)
 			clear()
 		end
 	end)
+end
+
+function PumpGodController.Init(controllers)
+	SoundController = controllers.SoundController
 end
 
 function PumpGodController.Start()
@@ -1413,6 +1578,29 @@ function PumpGodController.Start()
 				god:Step(Zones.ServerNow(), if root then root.Position else nil)
 			end
 		end
+		-- Finale : caméra de côté (le combattant à gauche, le dieu à droite, le choc au milieu) et tic à chaque temps
+		local finale = current.finale
+		if finale and current.fighter == player and not current.ended then
+			local root = rootOf(player)
+			local camera = workspace.CurrentCamera
+			if root and camera and current.god then
+				local godAt = current.god:Chest()
+				local line = flat(godAt - root.Position)
+				local length = math.max(line.Magnitude, 10)
+				local side = Vector3.new(0, 1, 0):Cross(line.Unit)
+				local middle = root.Position:Lerp(godAt, 0.5)
+				local eye = middle
+					- side * length * PumpGod.Camera.FinaleBack
+					+ Vector3.new(0, length * PumpGod.Camera.FinaleUp + 4, 0)
+				camera.CameraType = Enum.CameraType.Scriptable
+				camera.CFrame = camera.CFrame:Lerp(CFrame.lookAt(eye, middle), 0.08)
+			end
+			local beat = math.floor((Zones.ServerNow() - finale.beatStart) / finale.beat)
+			if beat >= 0 and beat ~= lastBeat then
+				lastBeat = beat
+				sfx("PumpGodBeat")
+			end
+		end
 		-- Spectateur : bouton ENCOURAGER (il gonfle un instant à chaque appui ; gris quand il n'en reste plus)
 		local cheering = canCheer(current)
 		cheerButton.Visible = cheering
@@ -1434,7 +1622,7 @@ function PumpGodController.Start()
 			flexButton.Text = Texts.Get(key)
 			local now = os.clock()
 			local beat = now >= current.beatFrom and now <= current.beatTo
-			local finale = current.finale
+			finale = current.finale
 			if finale then
 				-- Finale : le bouton bat la mesure (il brille pendant la fenêtre de chaque temps)
 				local t = Zones.ServerNow()

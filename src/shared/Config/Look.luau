@@ -134,6 +134,7 @@ local Look = {
 		{ id = "WristWrecker", duelWins = 5 },
 		{ id = "IronGrip", duelWins = 25 },
 		{ id = "Unmoggable", duelWins = 100 },
+		{ id = "GodMogger", godWins = 1 }, -- vaincre le Dieu du Pump au Colisée (D93)
 	},
 
 	Defaults = {

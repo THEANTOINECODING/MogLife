@@ -78,6 +78,15 @@ moins de 10 000 triangles.
 4. Manches 2 et 3, finale, spectateurs.
 5. Sons, effets, caméra, essais sur téléphone, réglages.
 
+**Améliorations proposées après l'audit du 29/10/2026 (Claude, à valider ❓)** :
+- **Reprise** : après une défaite en manche 3 ou en finale, une seule reprise au début de la manche atteinte (moins frustrant sur 5 min de combat).
+- **Ralenti de victoire** : 1 s au ralenti quand le choc touche le dieu, avant l'éjection.
+- **Indicateur hors écran** : une flèche au bord de l'écran quand une zone ou le javelot arrive hors du champ de la caméra (utile sur téléphone, écran étroit).
+- **Vibration** au toucher (réglage existant `Vibration`) sur les coups reçus et chaque battement réussi de la finale.
+- **Spectateurs** : petit écran « qui combat » à l'entrée du Colisée (manche, vie) et téléport direct aux gradins.
+- **Classement** du temps de victoire (le plus rapide), affiché au Panthéon.
+- **Laurier** : option pour le cacher dans le créateur de personnage.
+
 **Questions restantes (❓)** : combien de Mog perdu (proposition : 3 % du Mog, plafonné) ? Bouton ROULADE d'accord ?
 Les statues des boss battus en manche 2 ? Une reprise au début de la manche atteinte (une fois par combat) ?
 

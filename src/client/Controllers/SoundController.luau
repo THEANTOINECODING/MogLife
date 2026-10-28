@@ -46,7 +46,7 @@ function SoundController.Play(name: string, pitch: number?)
 		sound.Parent = SoundService
 		cache[name] = sound
 	end
-	sound.PlaybackSpeed = pitch or 1
+	sound.PlaybackSpeed = pitch or entry.pitch or 1 -- un effet peut avoir sa propre hauteur (Config/Sounds.luau)
 	SoundService:PlayLocalSound(sound)
 end
 
@@ -59,6 +59,7 @@ type Track = { id: string, volume: number }
 local tracks: { [string]: { sound: Sound, index: number, started: boolean, list: { Track } } } = {}
 local currentMood: string? = nil
 local fightActive = false
+local arenaActive = false -- combat du Dieu du Pump (D93)
 local runActive = false
 local workoutUntil = 0
 local bossIntroUntil = 0
@@ -127,7 +128,7 @@ end
 
 local function wantedMood(): Mood
 	local now = os.clock()
-	if fightActive or now < bossIntroUntil then
+	if fightActive or arenaActive or now < bossIntroUntil then
 		return "Boss"
 	elseif runActive or now < workoutUntil then
 		return "Workout"
@@ -219,6 +220,14 @@ local function startMusic()
 			updateMusic()
 		end
 	end)
+end
+
+-- Combat du Dieu du Pump (combattant et spectateurs proches) : musique de boss (PumpGodController)
+function SoundController.SetArena(on: boolean)
+	arenaActive = on
+	if musicGroup then
+		updateMusic()
+	end
 end
 
 -- Réglages du joueur : couper / remettre la musique ou les effets (en fondu pour la musique)

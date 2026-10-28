@@ -326,6 +326,7 @@ local function fillContent()
 					"Creator.TitleNeedsTrophies",
 					{ title = name, count = entry.trophies }
 				)
+				elseif entry.godWins then Texts.Get("Creator.TitleNeedsGod", { title = name })
 				else Texts.Get("Creator.TitleNeedsWins", { title = name, count = entry.duelWins })
 			local button = Ui.button({
 				Name = entry.id,

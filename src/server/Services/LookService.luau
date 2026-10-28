@@ -38,7 +38,7 @@ end
 
 -- Titres exclusifs débloqués (trophées de la semaine, victoires en duel)
 local function unlockedTitles(data: any): { [string]: boolean }
-	return Look.UnlockedTitles(data.Weekly.Trophies, data.Duels.Wins)
+	return Look.UnlockedTitles(data.Weekly.Trophies, data.Duels.Wins, data.PumpGodWins)
 end
 
 -- Surnom au-dessus de la tête, avec le nombre de victoires en duel s'il y en a (D67)

@@ -6707,6 +6707,414 @@
    ]
   },
   {
+   "name": "ColosseumChampion1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     3,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -352.388,
+       4.6,
+       -413.553
+      ],
+      "orientation": [
+       [
+        0.965926,
+        0.0,
+        0.258819
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.258819,
+        0.0,
+        0.965926
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      236,
+      230,
+      218
+     ]
+    },
+    "Material": "Marble",
+    "CanCollide": true,
+    "Tags": {
+     "Tags": [
+      "ChampionStatue"
+     ]
+    }
+   },
+   "attributes": {
+    "Rank": 1
+   }
+  },
+  {
+   "name": "ColosseumChampionTrim1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6.6,
+     0.4,
+     6.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -352.388,
+       6.2,
+       -413.553
+      ],
+      "orientation": [
+       [
+        0.965926,
+        0.0,
+        0.258819
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.258819,
+        0.0,
+        0.965926
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      200,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "ColosseumChampion2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     3,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -413.553,
+       4.6,
+       -352.388
+      ],
+      "orientation": [
+       [
+        0.258819,
+        0.0,
+        0.965926
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.965926,
+        0.0,
+        0.258819
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      236,
+      230,
+      218
+     ]
+    },
+    "Material": "Marble",
+    "CanCollide": true,
+    "Tags": {
+     "Tags": [
+      "ChampionStatue"
+     ]
+    }
+   },
+   "attributes": {
+    "Rank": 2
+   }
+  },
+  {
+   "name": "ColosseumChampionTrim2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6.6,
+     0.4,
+     6.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -413.553,
+       6.2,
+       -352.388
+      ],
+      "orientation": [
+       [
+        0.258819,
+        0.0,
+        0.965926
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.965926,
+        0.0,
+        0.258819
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      200,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "ColosseumChampion3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     3,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -268.835,
+       4.6,
+       -391.165
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        -0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      236,
+      230,
+      218
+     ]
+    },
+    "Material": "Marble",
+    "CanCollide": true,
+    "Tags": {
+     "Tags": [
+      "ChampionStatue"
+     ]
+    }
+   },
+   "attributes": {
+    "Rank": 3
+   }
+  },
+  {
+   "name": "ColosseumChampionTrim3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6.6,
+     0.4,
+     6.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -268.835,
+       6.2,
+       -391.165
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        -0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      200,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "ColosseumChampion4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6,
+     3,
+     6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -391.165,
+       4.6,
+       -268.835
+      ],
+      "orientation": [
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        -0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      236,
+      230,
+      218
+     ]
+    },
+    "Material": "Marble",
+    "CanCollide": true,
+    "Tags": {
+     "Tags": [
+      "ChampionStatue"
+     ]
+    }
+   },
+   "attributes": {
+    "Rank": 4
+   }
+  },
+  {
+   "name": "ColosseumChampionTrim4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6.6,
+     0.4,
+     6.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -391.165,
+       6.2,
+       -268.835
+      ],
+      "orientation": [
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        -0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      200,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
    "name": "ColosseumEntryStatue-1",
    "className": "Model",
    "properties": {

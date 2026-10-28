@@ -42,6 +42,18 @@ return {
 		StageUp = { id = "rbxassetid://9042409054", volume = 0.2 }, -- transformation (fanfare), crête 218
 		BossVictory = { id = "rbxassetid://1836860398", volume = 0.078 }, -- Mog-off gagné, crête 542
 		BossDefeat = { id = "rbxassetid://190705984", volume = 0.1 }, -- Mog-off perdu (trombone triste), crête 402
+		-- Combat du Dieu du Pump au Colisée (D93). Sons de la boutique Roblox (gratuits, vérifiés dans Studio : ils se
+		-- chargent). Volumes de départ à régler à l'oreille (❓) : pas encore mesurés avec PlaybackLoudness.
+		PumpGodWarn = { id = "rbxassetid://9117060349", volume = 0.12 }, -- nouvelle zone (bip court, Pro Sound Effects)
+		PumpGodBolt = { id = "rbxassetid://72827145254925", volume = 0.25 }, -- éclair (« thunder crack »)
+		PumpGodStorm = { id = "rbxassetid://9126099928", volume = 0.3 }, -- orage de la manche 3 (Pro Sound Effects)
+		PumpGodSlam = { id = "rbxassetid://9118628772", volume = 0.5 }, -- coup au sol, chute (Pro Sound Effects)
+		PumpGodWhoosh = { id = "rbxassetid://9120718279", volume = 0.3 }, -- javelot, saut, regard (Pro Sound Effects)
+		PumpGodRoll = { id = "rbxassetid://9126283592", volume = 0.25 }, -- roulade (Pro Sound Effects)
+		PumpGodPunch = { id = "rbxassetid://9113573976", volume = 0.4 }, -- coup porté au dieu (Pro Sound Effects)
+		PumpGodHurt = { id = "rbxassetid://9113573976", volume = 0.35, pitch = 0.7 }, -- le combattant est touché
+		PumpGodCrowd = { id = "rbxassetid://7755719721", volume = 0.25 }, -- la foule acclame
+		PumpGodBeat = { id = "rbxassetid://140323850218372", volume = 0.18 }, -- finale : chaque temps (aide au rythme)
 	},
 	Volume = {
 		Music = 1, -- volume général de la musique (multiplie celui de chaque morceau)

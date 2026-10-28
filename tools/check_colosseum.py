@@ -70,7 +70,8 @@ def expected(r, along_deg, lateral, k):
     if k == 0 and abs(lateral) < L["entrance_width"] / 2:
         steps = 14
         depth = (L["facade_outer"] - L["walk_outer"]) / steps
-        n = min(int((L["facade_outer"] - r) / depth), steps - 1)
+        # marches droites (pas en arc) : on mesure la profondeur sur l'axe de l'escalier
+        n = min(int((L["facade_outer"] - r * math.cos(math.radians(along_deg))) / depth), steps - 1)
         return L["walk_top"] * (n + 1) / steps
     if r >= L["stand_outer"]:
         return None  # façade
