@@ -1257,12 +1257,29 @@ def colosseum():
             rm = (r0 + r1) / 2
             a_gap = math.degrees(math.asin(min(lateral / rm, 0.99)))
             span = half_sector - a_gap
+            # Deux cordes par demi-secteur : elles collent à l'arc à moins de 0,1 stud près
             for sx in (-1, 1):
-                mid = sx * (a_gap + span / 2)
-                G = F.child((0, 0, 0), mid)
-                width = 2 * r1 * math.sin(math.radians(span / 2)) + 0.25
-                c.append(P(G, f"ColosseumTier{k}_{i}_{sx}", (0, z1 / 2, -rm), (width, z1, r1 - r0 + 0.02), WHITE,
-                           transparency=1, extra=INVISIBLE))
+                for part_i in range(2):
+                    mid = sx * (a_gap + span * (part_i + 0.5) / 2)
+                    G = F.child((0, 0, 0), mid)
+                    width = 2 * r1 * math.sin(math.radians(span / 4)) + 0.3
+                    c.append(P(G, f"ColosseumTier{k}_{i}_{sx}_{part_i}", (0, z1 / 2, -rm),
+                               (width, z1, r1 - r0 + 0.04), WHITE, transparency=1, extra=INVISIBLE))
+    # Tribune d'honneur : sous elle, les 5 premières rangées laissent un renfoncement au niveau de la coursive (il
+    # n'avait pas de sol : on tombait sous le stade) ; la tribune elle-même, ses colonnes et le trône sont solides
+    Ft = colo_frame(tribune)
+    r_back = L["walk_outer"] + L["tier_depth"] * 5
+    c.append(P(Ft, "ColosseumTribuneFloor", (0, L["walk_top"] / 2, -(L["walk_outer"] + r_back) / 2),
+               (14.6, L["walk_top"], r_back - L["walk_outer"] + 0.1), WHITE, transparency=1, extra=INVISIBLE))
+    r0t = L["walk_outer"] - 1.5
+    zt = L["walk_top"] + 5.0
+    c.append(P(Ft, "ColosseumTribunePlatform", (0, zt - 0.5, -(r0t + 5.5)), (13, 1.0, 11), WHITE, transparency=1,
+               extra=INVISIBLE))
+    c.append(P(Ft, "ColosseumTribuneThrone", (0, zt + 1.5, -(r0t + 7.9)), (3.0, 3.0, 3.4), WHITE, transparency=1,
+               extra=INVISIBLE))
+    for k_col, sx in enumerate((-5.5, -2, 2, 5.5)):
+        c.append(P(Ft, f"ColosseumTribuneColumn{k_col}", (sx, zt + 3.5, -(r0t + 1.0)), (1.1, 7.0, 1.1), WHITE,
+                   transparency=1, extra=INVISIBLE))
     # Escaliers de marbre (2 marches par rangée) au milieu de chaque secteur, sauf entrée et bas de la tribune
     for k in range(1, 12):
         F = colo_frame(k)
@@ -1284,8 +1301,9 @@ def colosseum():
         c.append(P(F0, f"ColosseumEntryStep{k}", (0, z / 2, -(r + depth / 2)), (L["entrance_width"], z, depth + 0.05),
                    WHITE, transparency=1, extra=INVISIBLE))
     for sx in (-1, 1):
-        c.append(P(F0, f"ColosseumEntryWall{sx}", (sx * (L["entrance_width"] / 2 + 1.2), 15, -(r_in + r_out) / 2),
-                   (1.4, 30, r_out - r_in), WHITE, transparency=1, extra=INVISIBLE))
+        # Mur d'échiffre : du bord des marches (aucune fente) jusqu'au début des gradins
+        c.append(P(F0, f"ColosseumEntryWall{sx}", (sx * (L["entrance_width"] / 2 + 0.95), 15, -(r_in + r_out) / 2),
+                   (1.9, 30, r_out - r_in), WHITE, transparency=1, extra=INVISIBLE))
     # Façade : un mur plein tout autour (l'arche d'entrée reste ouverte jusqu'à 11 studs de haut)
     c += ring_boxes(F0, "ColosseumFacadeCol", L["stand_outer"], L["facade_outer"], 0, L["facade_height"] + 1, 48,
                     offset=3.75, skip=in_entry)
