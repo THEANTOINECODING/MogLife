@@ -505,6 +505,11 @@ function ActivityController.Start()
 			end
 		elseif update.state == "Ended" then
 			stop(update.player)
+		elseif update.state == "Score" then
+			-- Scores officiels d'un combat de boss (le sien ou celui d'un autre joueur) : couronne, position du duel
+			if typeof(update.score) == "number" and typeof(update.opponent) == "number" then
+				BossScene.SetScores(update.player, update.score, update.opponent, update.won)
+			end
 		elseif update.state == "FightEnd" then
 			-- Fin d'un combat de boss (vue par tous) : le duel joue sa fin
 			BossScene.Finish(update.player, update.won == true)

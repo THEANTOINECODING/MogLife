@@ -152,6 +152,20 @@ local function averageScore(total: number, reps: number): number
 	return math.floor(total / math.max(reps, 1) + 0.5)
 end
 
+-- Scores officiels de la manche, envoyés à tous (D88) : la couronne et la position du duel (BossFights/Scene) sont les
+-- mêmes chez le combattant et chez les spectateurs. won : résultat de la manche, une fois finie.
+local function broadcastScores(player: Player, fight: Fight, won: boolean?)
+	Remotes.Activity:FireAllClients({
+		player = player,
+		state = "Score",
+		kind = "Boss",
+		id = fight.bossId,
+		score = averageScore(fight.score, BOSS.RepsPerRound),
+		opponent = averageScore(fight.bossScore, BOSS.RepsPerRound),
+		won = won,
+	})
+end
+
 local startRound
 
 -- Résultat de la manche, une fois que le joueur ET le boss ont fini
@@ -173,6 +187,7 @@ local function resolveRound(player: Player, fight: Fight)
 	else
 		fight.losses += 1
 	end
+	broadcastScores(player, fight, won)
 	Remotes.BossUpdate:FireClient(player, {
 		state = "RoundResult",
 		bossId = fight.bossId,
@@ -245,6 +260,7 @@ local function playBoss(player: Player, fight: Fight, interval: number, token: n
 			score = averageScore(fight.score, BOSS.RepsPerRound),
 			opponent = averageScore(fight.bossScore, BOSS.RepsPerRound),
 		})
+		broadcastScores(player, fight)
 	end
 	fight.bossDone = true
 	resolveRound(player, fight)
@@ -293,6 +309,7 @@ function startRound(player: Player, fight: Fight)
 				score = averageScore(fight.score, BOSS.RepsPerRound),
 				opponent = averageScore(fight.bossScore, BOSS.RepsPerRound),
 			})
+			broadcastScores(p, fight)
 			return nil
 		end,
 		onEnd = function(p, reason)
