@@ -9,6 +9,53 @@ Pour le dernier boss, Antoine veut **un vrai combat** et non un mini-jeu : se ba
 esquiver ses attaques (éclairs, etc.). À concevoir avec lui au moment de la mise à jour de l'Olympe. **Rien n'est fait
 pour l'instant.** Le mini-jeu Gravity Gauntlet préparé par Codex a été supprimé avec son système (D80).
 
+### Proposition du 28/10/2026 : l'arène gréco-romaine (demande d'Antoine, à valider ❓)
+
+**Le lieu : le Mogisée.** Un colisée de marbre blanc et or posé sur les nuages, au-dessus de la ville (même serveur :
+pas de chargement, les autres joueurs peuvent venir regarder). Colonnes, braseros dorés, drapeaux à l'effigie du
+Dieu du Pump, gradins pleins de PNJ en toge qui scandent « MOG ! MOG ! ». Autour de la piste : les statues de marbre
+des 5 boss déjà battus, chacune dans sa pose (Kevin endormi, Coach au mégaphone…), et le « Panthéon » des joueurs qui
+ont battu le dieu (leur avatar en statue dorée, pour toujours).
+
+**L'arrivée.** Le joueur accepte le défi au temple : un pilier de lumière l'aspire, plan sur la ville qui rapetisse,
+il atterrit dans le sable de l'arène, la foule rugit, trompettes. Coach Turbo est l'annonceur, au mégaphone dans la
+tribune d'honneur. Le Dieu du Pump descend de son nuage et pose : la piste tremble.
+
+**Le combat : un vrai combat en mouvement (plus un panneau de mini-jeu).** Le joueur se déplace librement dans
+l'arène ronde (joystick du téléphone) et n'a que deux boutons : SAUTER et FLEX. Trois « protéines » (vies). Le dieu
+annonce chaque attaque par une zone au sol bien visible (cercle ou bande rouge qui se remplit) : on a le temps de
+lire et d'esquiver.
+- Manche 1 — **La colère du biceps** : éclairs qui tombent sur des cercles marqués ; haltère géant qui roule à
+  travers l'arène (sauter par-dessus) ; onde de flexion qui s'élargit en anneau (sauter au bon moment).
+- Contre-attaque — **Renvoyer la foudre** : il lance un javelot d'éclair vers le joueur ; FLEX au moment où il
+  arrive le renvoie (cercle de timing autour du personnage). Un renvoi parfait le frappe : sa jauge d'Aura baisse.
+- Manche 2 — **Les travaux du Pump** : l'arène change. Les dalles en mosaïque s'effondrent une à une, un char de shake
+  protéiné traverse la piste, et les **statues des boss battus s'animent** pour l'aider (Kevin lance des oreillers,
+  Coach envoie des ondes de mégaphone, Brayan éblouit avec son miroir) : un rappel de tout le jeu.
+- Manche 3 — **L'apothéose** : le dieu devient géant, le ciel s'assombrit, l'arène monte dans les nuages. Coup final :
+  un choc de rayons Mog contre foudre (comme Brayan, en beaucoup plus grand) ; le joueur tape FLEX en rythme, la foule
+  scande avec lui et remplit une jauge de « hype ».
+- **Fin** : le dieu est éjecté dans le ciel et devient une constellation qui pose (Antoine aime les boss éjectés).
+  Couronne de laurier, titre GOD MOGGER, statue dorée au Panthéon, toge dorée et aura en récompense.
+
+**Les spectateurs participent.** Les autres joueurs peuvent monter dans les gradins (téléporteur au temple). En
+tapant « Encourager », ils remplissent la jauge de hype du combattant, qui lui donne un petit bonus (une protéine de
+plus, un renvoi plus facile). Tout le serveur vit le combat.
+
+**Variante à décider : en équipe (raid).** Jusqu'à 4 joueurs ensemble contre le dieu, qui a plus d'Aura. Une
+protéine perdue peut être rendue par un coéquipier (FLEX à côté de lui).
+
+**Pour tous les âges.** Pas de sang ni de coups violents : éclairs, ondes, oreillers, chutes cartoon, « MOGGED! ».
+
+**Faisabilité.** Le serveur décide de tout : il tire les attaques (graine), vérifie les touches d'après la position
+du personnage, et valide les renvois avec une marge pour la latence. Il faudra une arène modulaire (Blender), un
+nouveau service de combat en temps réel, et des tests sur téléphone (lisibilité des zones, joystick). C'est le plus
+gros chantier depuis le début : à découper en tranches (arène et arrivée → manche 1 → manches 2 et 3 → spectateurs).
+
+**Questions pour Antoine (❓)** : solo, ou en équipe jusqu'à 4 ? Spectateurs qui aident, oui ou non ? Arène dans le
+ciel du même serveur (recommandé) ou lieu à part ? Durée visée (3 à 5 minutes ?) ? Que perd-on en cas de défaite ?
+Faut-il garder une partie « Mog-off » (mini-jeu) ou tout en action ?
+
 ## (Archivé) Proposition de recherche du 20/10/2026 — adoptée en D76, abandonnée en D80
 
 À la demande du créateur : étudier les mini-jeux Roblox et d'autres plateformes, la motivation et le ressenti
