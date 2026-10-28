@@ -16,7 +16,7 @@ Convention : Y vers le haut ; yaw 0 = regarde vers -Z, 180 = vers +Z, 90 = vers 
 Repère local d'un bâtiment : origine au milieu de la façade, au sol ; l'intérieur est vers +Z local,
 la façade regarde vers -Z local.
 """
-import json, math, os
+import json, math, os, random
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 WORLD = os.path.join(ROOT, "world")
@@ -1349,6 +1349,42 @@ def colosseum():
                                collide=False))
                 c.append(P(Fv, f"ColosseumViaFire{k}{sx}", (sx * 8.5, 4.0, -z - 7), (1, 1, 1), WHITE,
                            transparency=1, collide=False, tags=["ColosseumFire"], extra=INVISIBLE))
+    # --- paysage autour : cyprès, rochers, buissons ; la vue depuis la voie reste dégagée
+    rnd = random.Random(89)
+    for i in range(30):
+        a = i * 12 + rnd.uniform(-3, 3)
+        d = (a + 180) % 360 - 180
+        if abs(d) < 26:
+            continue
+        G = F0.child((0, 0, 0), a)
+        r = rnd.uniform(108, 126)
+        c.append(decor(G, f"ColosseumCypress{i}", (rnd.uniform(-3, 3), -h, -r), "Pine",
+                       yaw=rnd.uniform(0, 360), height=rnd.uniform(17, 25)))
+    for i in range(22):
+        a = rnd.uniform(0, 360)
+        d = (a + 180) % 360 - 180
+        if abs(d) < 20:
+            continue
+        G = F0.child((0, 0, 0), a)
+        big = i % 3 == 0
+        c.append(decor(G, f"ColosseumRock{i}", (0, -h, -rnd.uniform(104, 140)), "RockBig" if big else "Rock",
+                       yaw=rnd.uniform(0, 360), height=rnd.uniform(3, 6) if big else rnd.uniform(1.5, 3)))
+    for i in range(36):
+        a = i * 10 + 5
+        d = (a + 180) % 360 - 180
+        if abs(d) < 12:
+            continue
+        G = F0.child((0, 0, 0), a)
+        c.append(decor(G, f"ColosseumBush{i}", (0, -h, -(R + 6.5)), "Bush", yaw=a * 7, height=2.6, collide=False))
+    # Amphores de part et d'autre de l'entrée
+    for k, (x, z) in enumerate(((-11, 2), (-12.5, 4), (11, 2), (12.5, 4))):
+        c.append(decor(F0, f"ColosseumAmphora{k}", (x, 0, -(L["facade_outer"] + z)), "Amphora", yaw=k * 50,
+                       height=2.4))
+    # Buissons et touffes d'herbe le long de la voie
+    for k in range(1, int(via // 14) + 1):
+        for sx in (-1, 1):
+            c.append(decor(Fv, f"ColosseumViaBush{k}{sx}", (sx * 10.5, 0, -k * 14 + 7), "Bush", yaw=k * 40,
+                           height=2.2, collide=False))
     return model("Colosseum", c)
 
 # ------------------------------------------------------------------ écriture

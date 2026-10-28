@@ -52,15 +52,15 @@ local function addFire(anchor: Instance)
 		return
 	end
 	local fire = Instance.new("Fire")
-	fire.Size = 5
-	fire.Heat = 9
+	fire.Size = 3
+	fire.Heat = 7
 	fire.Color = FLAME
 	fire.SecondaryColor = Color3.fromRGB(200, 50, 20)
 	fire.Parent = anchor
 	local light = Instance.new("PointLight")
 	light.Color = FLAME
-	light.Range = 18
-	light.Brightness = 2.2
+	light.Range = 14
+	light.Brightness = 1
 	light.Shadows = false
 	light.Parent = anchor
 	local embers = Instance.new("ParticleEmitter")
@@ -95,10 +95,10 @@ local function addPortal(anchor: Instance)
 	folder.Parent = anchor
 	local foot = anchor.Position - Vector3.new(0, anchor.Size.Y / 2, 0)
 	local upright = CFrame.Angles(0, 0, math.pi / 2)
-	local core = effectPart("Core", Vector3.new(24, 2.2, 2.2), GOLD, 0.35, folder)
+	local core = effectPart("Core", Vector3.new(24, 1.6, 1.6), GOLD, 0.6, folder)
 	core.Shape = Enum.PartType.Cylinder
 	core.CFrame = CFrame.new(foot + Vector3.new(0, 12, 0)) * upright
-	local halo = effectPart("Halo", Vector3.new(24, 4.6, 4.6), GOLD, 0.82, folder)
+	local halo = effectPart("Halo", Vector3.new(24, 4.6, 4.6), GOLD, 0.9, folder)
 	halo.Shape = Enum.PartType.Cylinder
 	halo.CFrame = core.CFrame
 	local ring = effectPart("Ring", Vector3.new(0.2, 7, 7), GOLD, 0.25, folder)
@@ -106,8 +106,8 @@ local function addPortal(anchor: Instance)
 	ring.CFrame = CFrame.new(foot + Vector3.new(0, 0.12, 0)) * upright
 	local light = Instance.new("PointLight")
 	light.Color = GOLD
-	light.Range = 20
-	light.Brightness = 3
+	light.Range = 12
+	light.Brightness = 1.2
 	light.Parent = core
 	local motes = Instance.new("ParticleEmitter")
 	motes.Color = ColorSequence.new(GOLD)
@@ -255,7 +255,7 @@ function ColosseumController.Start()
 		for anchor, fx in portals do
 			if (anchor.Position - here).Magnitude < 200 then
 				fx.spin.CFrame = fx.spin.CFrame * CFrame.Angles(0.02, 0, 0)
-				fx.ring.Transparency = 0.25 + 0.2 * math.sin(now * 3)
+				fx.ring.Transparency = 0.45 + 0.2 * math.sin(now * 3)
 			end
 		end
 	end)

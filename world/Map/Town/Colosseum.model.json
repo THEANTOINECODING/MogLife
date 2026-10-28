@@ -42252,6 +42252,6348 @@
      }
     }
    ]
+  },
+  {
+   "name": "ColosseumCypress2",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 20.33
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -225.541,
+         0.1,
+         -293.809
+        ],
+        "orientation": [
+         [
+          0.585418,
+          0.0,
+          -0.810731
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.810731,
+          0.0,
+          0.585418
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress3",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 23.88
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -217.488,
+         0.1,
+         -315.838
+        ],
+        "orientation": [
+         [
+          0.357363,
+          0.0,
+          -0.933966
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.933966,
+          0.0,
+          0.357363
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress4",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 23.29
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -222.168,
+         0.1,
+         -337.416
+        ],
+        "orientation": [
+         [
+          0.192502,
+          0.0,
+          0.981297
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.981297,
+          0.0,
+          0.192502
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress5",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 17.66
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -209.592,
+         0.1,
+         -365.599
+        ],
+        "orientation": [
+         [
+          0.278691,
+          0.0,
+          0.960381
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.960381,
+          0.0,
+          0.278691
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress6",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 24.08
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -222.512,
+         0.1,
+         -386.267
+        ],
+        "orientation": [
+         [
+          0.517285,
+          0.0,
+          -0.855813
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.855813,
+          0.0,
+          0.517285
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress7",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 23.31
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -241.828,
+         0.1,
+         -399.179
+        ],
+        "orientation": [
+         [
+          0.339382,
+          0.0,
+          0.940649
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.940649,
+          0.0,
+          0.339382
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress8",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 21.47
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -253.207,
+         0.1,
+         -419.759
+        ],
+        "orientation": [
+         [
+          -0.142808,
+          0.0,
+          -0.98975
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.98975,
+          0.0,
+          -0.142808
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress9",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 24.76
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -276.782,
+         0.1,
+         -432.148
+        ],
+        "orientation": [
+         [
+          -0.796374,
+          0.0,
+          0.604804
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.604804,
+          0.0,
+          -0.796374
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress10",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 21.47
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -302.76,
+         0.1,
+         -439.896
+        ],
+        "orientation": [
+         [
+          0.764623,
+          0.0,
+          -0.644478
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.644478,
+          0.0,
+          0.764623
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress11",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 18.91
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -328.748,
+         0.1,
+         -443.614
+        ],
+        "orientation": [
+         [
+          -0.777525,
+          0.0,
+          -0.628852
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.628852,
+          0.0,
+          -0.777525
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress12",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 23.43
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -353.691,
+         0.1,
+         -449.371
+        ],
+        "orientation": [
+         [
+          -0.281047,
+          0.0,
+          0.959694
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.959694,
+          0.0,
+          -0.281047
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress13",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 18.07
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -367.828,
+         0.1,
+         -435.799
+        ],
+        "orientation": [
+         [
+          0.806399,
+          0.0,
+          0.591372
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.591372,
+          0.0,
+          0.806399
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress14",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 24.19
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -390.62,
+         0.1,
+         -431.807
+        ],
+        "orientation": [
+         [
+          0.545268,
+          0.0,
+          0.838262
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.838262,
+          0.0,
+          0.545268
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress15",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 22.51
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -407.744,
+         0.1,
+         -409.764
+        ],
+        "orientation": [
+         [
+          0.561886,
+          0.0,
+          -0.827215
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.827215,
+          0.0,
+          0.561886
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress16",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 19.49
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -431.54,
+         0.1,
+         -400.245
+        ],
+        "orientation": [
+         [
+          -0.763177,
+          0.0,
+          0.64619
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.64619,
+          0.0,
+          -0.763177
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress17",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 18.72
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -446.601,
+         0.1,
+         -368.71
+        ],
+        "orientation": [
+         [
+          -0.067374,
+          0.0,
+          0.997728
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.997728,
+          0.0,
+          -0.067374
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress18",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 22.99
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -442.552,
+         0.1,
+         -352.978
+        ],
+        "orientation": [
+         [
+          -0.206263,
+          0.0,
+          0.978497
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.978497,
+          0.0,
+          -0.206263
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress19",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 24.56
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -439.471,
+         0.1,
+         -317.61
+        ],
+        "orientation": [
+         [
+          0.449339,
+          0.0,
+          0.893362
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.893362,
+          0.0,
+          0.449339
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress20",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 18.22
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -445.312,
+         0.1,
+         -293.227
+        ],
+        "orientation": [
+         [
+          -0.747674,
+          0.0,
+          0.664066
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.664066,
+          0.0,
+          -0.747674
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress21",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 19.03
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -438.826,
+         0.1,
+         -266.905
+        ],
+        "orientation": [
+         [
+          0.725223,
+          0.0,
+          0.688514
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.688514,
+          0.0,
+          0.725223
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress22",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 23.84
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -425.946,
+         0.1,
+         -260.349
+        ],
+        "orientation": [
+         [
+          0.919211,
+          0.0,
+          -0.393765
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.393765,
+          0.0,
+          0.919211
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress23",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 20.43
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -401.379,
+         0.1,
+         -248.512
+        ],
+        "orientation": [
+         [
+          0.266198,
+          0.0,
+          -0.963918
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.963918,
+          0.0,
+          0.266198
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress24",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 19.61
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -386.06,
+         0.1,
+         -218.348
+        ],
+        "orientation": [
+         [
+          -0.974952,
+          0.0,
+          0.222414
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.222414,
+          0.0,
+          -0.974952
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress25",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 20.63
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -353.702,
+         0.1,
+         -208.515
+        ],
+        "orientation": [
+         [
+          0.750281,
+          0.0,
+          -0.661119
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.661119,
+          0.0,
+          0.750281
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress26",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 22.05
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -340.072,
+         0.1,
+         -218.536
+        ],
+        "orientation": [
+         [
+          -0.029783,
+          0.0,
+          0.999556
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.999556,
+          0.0,
+          -0.029783
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumCypress27",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Pine",
+    "PropHeight": 21.74
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -306.28,
+         0.1,
+         -215.23
+        ],
+        "orientation": [
+         [
+          0.94698,
+          0.0,
+          -0.321292
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.321292,
+          0.0,
+          0.94698
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock0",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "RockBig",
+    "PropHeight": 5.55
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -291.167,
+         0.1,
+         -220.843
+        ],
+        "orientation": [
+         [
+          0.239633,
+          0.0,
+          -0.970864
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.970864,
+          0.0,
+          0.239633
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock1",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Rock",
+    "PropHeight": 2.1
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -248.929,
+         0.1,
+         -437.835
+        ],
+        "orientation": [
+         [
+          0.949914,
+          0.0,
+          -0.312511
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.312511,
+          0.0,
+          0.949914
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock2",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Rock",
+    "PropHeight": 2.79
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -288.592,
+         0.1,
+         -452.728
+        ],
+        "orientation": [
+         [
+          -0.92366,
+          0.0,
+          0.383213
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.383213,
+          0.0,
+          -0.92366
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock3",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "RockBig",
+    "PropHeight": 3.59
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -422.224,
+         0.1,
+         -278.187
+        ],
+        "orientation": [
+         [
+          -0.967076,
+          0.0,
+          -0.254488
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.254488,
+          0.0,
+          -0.967076
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock4",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Rock",
+    "PropHeight": 2.53
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -192.98,
+         0.1,
+         -315.717
+        ],
+        "orientation": [
+         [
+          -0.682506,
+          0.0,
+          0.73088
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.73088,
+          0.0,
+          -0.682506
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock5",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Rock",
+    "PropHeight": 2.31
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -224.162,
+         0.1,
+         -391.057
+        ],
+        "orientation": [
+         [
+          0.889718,
+          0.0,
+          0.45651
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.45651,
+          0.0,
+          0.889718
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock6",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "RockBig",
+    "PropHeight": 4.97
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -197.571,
+         0.1,
+         -350.771
+        ],
+        "orientation": [
+         [
+          -0.506332,
+          0.0,
+          0.862339
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.862339,
+          0.0,
+          -0.506332
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock7",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Rock",
+    "PropHeight": 2.31
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -220.006,
+         0.1,
+         -390.682
+        ],
+        "orientation": [
+         [
+          -0.532154,
+          0.0,
+          -0.846647
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.846647,
+          0.0,
+          -0.532154
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock8",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Rock",
+    "PropHeight": 2.42
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -434.687,
+         0.1,
+         -251.977
+        ],
+        "orientation": [
+         [
+          0.512671,
+          0.0,
+          0.858585
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.858585,
+          0.0,
+          0.512671
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock9",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "RockBig",
+    "PropHeight": 4.91
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -261.562,
+         0.1,
+         -416.122
+        ],
+        "orientation": [
+         [
+          0.552542,
+          0.0,
+          0.833485
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.833485,
+          0.0,
+          0.552542
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock10",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Rock",
+    "PropHeight": 1.57
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -395.102,
+         0.1,
+         -239.765
+        ],
+        "orientation": [
+         [
+          -0.864642,
+          0.0,
+          -0.502389
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.502389,
+          0.0,
+          -0.864642
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock11",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Rock",
+    "PropHeight": 2.57
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -454.988,
+         0.1,
+         -324.694
+        ],
+        "orientation": [
+         [
+          0.999898,
+          0.0,
+          -0.014304
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.014304,
+          0.0,
+          0.999898
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock12",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "RockBig",
+    "PropHeight": 5.05
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -364.711,
+         0.1,
+         -448.73
+        ],
+        "orientation": [
+         [
+          -0.641371,
+          0.0,
+          -0.767231
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.767231,
+          0.0,
+          -0.641371
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock13",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Rock",
+    "PropHeight": 1.81
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -435.375,
+         0.1,
+         -289.286
+        ],
+        "orientation": [
+         [
+          -0.996642,
+          0.0,
+          -0.081881
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.081881,
+          0.0,
+          -0.996642
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock14",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Rock",
+    "PropHeight": 2.84
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -437.556,
+         0.1,
+         -326.091
+        ],
+        "orientation": [
+         [
+          0.058646,
+          0.0,
+          -0.998279
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.998279,
+          0.0,
+          0.058646
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock15",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "RockBig",
+    "PropHeight": 4.05
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -409.835,
+         0.1,
+         -417.025
+        ],
+        "orientation": [
+         [
+          -0.310613,
+          0.0,
+          -0.950536
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.950536,
+          0.0,
+          -0.310613
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock17",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Rock",
+    "PropHeight": 2.46
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -356.724,
+         0.1,
+         -460.074
+        ],
+        "orientation": [
+         [
+          0.878095,
+          0.0,
+          -0.478487
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.478487,
+          0.0,
+          0.878095
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock18",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "RockBig",
+    "PropHeight": 5.73
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -318.664,
+         0.1,
+         -195.299
+        ],
+        "orientation": [
+         [
+          -0.650554,
+          0.0,
+          0.75946
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.75946,
+          0.0,
+          -0.650554
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock19",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Rock",
+    "PropHeight": 2.37
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -430.857,
+         0.1,
+         -394.909
+        ],
+        "orientation": [
+         [
+          0.367356,
+          0.0,
+          0.93008
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.93008,
+          0.0,
+          0.367356
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumRock20",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Rock",
+    "PropHeight": 2.82
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -419.072,
+         0.1,
+         -227.227
+        ],
+        "orientation": [
+         [
+          0.956295,
+          0.0,
+          -0.292404
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.292404,
+          0.0,
+          0.956295
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush1",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -241.232,
+         0.1,
+         -278.75
+        ],
+        "orientation": [
+         [
+          0.965926,
+          0.0,
+          -0.258819
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.258819,
+          0.0,
+          0.965926
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush2",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -233.681,
+         0.1,
+         -294.943
+        ],
+        "orientation": [
+         [
+          0.422618,
+          0.0,
+          0.906308
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.906308,
+          0.0,
+          0.422618
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush3",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -229.057,
+         0.1,
+         -312.201
+        ],
+        "orientation": [
+         [
+          -0.819152,
+          0.0,
+          0.573576
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.573576,
+          0.0,
+          -0.819152
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush4",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -227.5,
+         0.1,
+         -330.0
+        ],
+        "orientation": [
+         [
+          -0.707107,
+          0.0,
+          -0.707107
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.707107,
+          0.0,
+          -0.707107
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush5",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -229.057,
+         0.1,
+         -347.799
+        ],
+        "orientation": [
+         [
+          0.573576,
+          0.0,
+          -0.819152
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.819152,
+          0.0,
+          0.573576
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush6",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -233.681,
+         0.1,
+         -365.057
+        ],
+        "orientation": [
+         [
+          0.906308,
+          0.0,
+          0.422618
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.422618,
+          0.0,
+          0.906308
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush7",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -241.232,
+         0.1,
+         -381.25
+        ],
+        "orientation": [
+         [
+          -0.258819,
+          0.0,
+          0.965926
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.965926,
+          0.0,
+          -0.258819
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush8",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -251.48,
+         0.1,
+         -395.886
+        ],
+        "orientation": [
+         [
+          -0.996195,
+          0.0,
+          -0.087156
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.087156,
+          0.0,
+          -0.996195
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush9",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -264.114,
+         0.1,
+         -408.52
+        ],
+        "orientation": [
+         [
+          -0.087156,
+          0.0,
+          -0.996195
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.996195,
+          0.0,
+          -0.087156
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush10",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -278.75,
+         0.1,
+         -418.768
+        ],
+        "orientation": [
+         [
+          0.965926,
+          0.0,
+          -0.258819
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.258819,
+          0.0,
+          0.965926
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush11",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -294.943,
+         0.1,
+         -426.319
+        ],
+        "orientation": [
+         [
+          0.422618,
+          0.0,
+          0.906308
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.906308,
+          0.0,
+          0.422618
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush12",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -312.201,
+         0.1,
+         -430.943
+        ],
+        "orientation": [
+         [
+          -0.819152,
+          0.0,
+          0.573576
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.573576,
+          0.0,
+          -0.819152
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush13",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -330.0,
+         0.1,
+         -432.5
+        ],
+        "orientation": [
+         [
+          -0.707107,
+          0.0,
+          -0.707107
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.707107,
+          0.0,
+          -0.707107
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush14",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -347.799,
+         0.1,
+         -430.943
+        ],
+        "orientation": [
+         [
+          0.573576,
+          0.0,
+          -0.819152
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.819152,
+          0.0,
+          0.573576
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush15",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -365.057,
+         0.1,
+         -426.319
+        ],
+        "orientation": [
+         [
+          0.906308,
+          0.0,
+          0.422618
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.422618,
+          0.0,
+          0.906308
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush16",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -381.25,
+         0.1,
+         -418.768
+        ],
+        "orientation": [
+         [
+          -0.258819,
+          0.0,
+          0.965926
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.965926,
+          0.0,
+          -0.258819
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush17",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -395.886,
+         0.1,
+         -408.52
+        ],
+        "orientation": [
+         [
+          -0.996195,
+          0.0,
+          -0.087156
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.087156,
+          0.0,
+          -0.996195
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush18",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -408.52,
+         0.1,
+         -395.886
+        ],
+        "orientation": [
+         [
+          -0.087156,
+          0.0,
+          -0.996195
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.996195,
+          0.0,
+          -0.087156
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush19",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -418.768,
+         0.1,
+         -381.25
+        ],
+        "orientation": [
+         [
+          0.965926,
+          0.0,
+          -0.258819
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.258819,
+          0.0,
+          0.965926
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush20",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -426.319,
+         0.1,
+         -365.057
+        ],
+        "orientation": [
+         [
+          0.422618,
+          0.0,
+          0.906308
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.906308,
+          0.0,
+          0.422618
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush21",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -430.943,
+         0.1,
+         -347.799
+        ],
+        "orientation": [
+         [
+          -0.819152,
+          0.0,
+          0.573576
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.573576,
+          0.0,
+          -0.819152
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush22",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -432.5,
+         0.1,
+         -330.0
+        ],
+        "orientation": [
+         [
+          -0.707107,
+          0.0,
+          -0.707107
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.707107,
+          0.0,
+          -0.707107
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush23",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -430.943,
+         0.1,
+         -312.201
+        ],
+        "orientation": [
+         [
+          0.573576,
+          0.0,
+          -0.819152
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.819152,
+          0.0,
+          0.573576
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush24",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -426.319,
+         0.1,
+         -294.943
+        ],
+        "orientation": [
+         [
+          0.906308,
+          0.0,
+          0.422618
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.422618,
+          0.0,
+          0.906308
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush25",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -418.768,
+         0.1,
+         -278.75
+        ],
+        "orientation": [
+         [
+          -0.258819,
+          0.0,
+          0.965926
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.965926,
+          0.0,
+          -0.258819
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush26",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -408.52,
+         0.1,
+         -264.114
+        ],
+        "orientation": [
+         [
+          -0.996195,
+          0.0,
+          -0.087156
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.087156,
+          0.0,
+          -0.996195
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush27",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -395.886,
+         0.1,
+         -251.48
+        ],
+        "orientation": [
+         [
+          -0.087156,
+          0.0,
+          -0.996195
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.996195,
+          0.0,
+          -0.087156
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush28",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -381.25,
+         0.1,
+         -241.232
+        ],
+        "orientation": [
+         [
+          0.965926,
+          0.0,
+          -0.258819
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.258819,
+          0.0,
+          0.965926
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush29",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -365.057,
+         0.1,
+         -233.681
+        ],
+        "orientation": [
+         [
+          0.422618,
+          0.0,
+          0.906308
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.906308,
+          0.0,
+          0.422618
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush30",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -347.799,
+         0.1,
+         -229.057
+        ],
+        "orientation": [
+         [
+          -0.819152,
+          0.0,
+          0.573576
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.573576,
+          0.0,
+          -0.819152
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush31",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -330.0,
+         0.1,
+         -227.5
+        ],
+        "orientation": [
+         [
+          -0.707107,
+          0.0,
+          -0.707107
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.707107,
+          0.0,
+          -0.707107
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush32",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -312.201,
+         0.1,
+         -229.057
+        ],
+        "orientation": [
+         [
+          0.573576,
+          0.0,
+          -0.819152
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.819152,
+          0.0,
+          0.573576
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush33",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -294.943,
+         0.1,
+         -233.681
+        ],
+        "orientation": [
+         [
+          0.906308,
+          0.0,
+          0.422618
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.422618,
+          0.0,
+          0.906308
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumBush34",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.6,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -278.75,
+         0.1,
+         -241.232
+        ],
+        "orientation": [
+         [
+          -0.258819,
+          0.0,
+          0.965926
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.965926,
+          0.0,
+          -0.258819
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumAmphora0",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Amphora",
+    "PropHeight": 2.4
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -265.3,
+         3.1,
+         -280.856
+        ],
+        "orientation": [
+         [
+          -0.707107,
+          0.0,
+          -0.707107
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.707107,
+          0.0,
+          -0.707107
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumAmphora1",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Amphora",
+    "PropHeight": 2.4
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -262.825,
+         3.1,
+         -280.503
+        ],
+        "orientation": [
+         [
+          0.087156,
+          0.0,
+          -0.996195
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.996195,
+          0.0,
+          0.087156
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumAmphora2",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Amphora",
+    "PropHeight": 2.4
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -280.856,
+         3.1,
+         -265.3
+        ],
+        "orientation": [
+         [
+          0.819152,
+          0.0,
+          -0.573576
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.573576,
+          0.0,
+          0.819152
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumAmphora3",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Amphora",
+    "PropHeight": 2.4
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -280.503,
+         3.1,
+         -262.825
+        ],
+        "orientation": [
+         [
+          0.965926,
+          0.0,
+          0.258819
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.258819,
+          0.0,
+          0.965926
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumViaBush1-1",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.2,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -215.874,
+         0.1,
+         -201.025
+        ],
+        "orientation": [
+         [
+          0.087156,
+          0.0,
+          0.996195
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.996195,
+          0.0,
+          0.087156
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumViaBush11",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.2,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -201.025,
+         0.1,
+         -215.874
+        ],
+        "orientation": [
+         [
+          0.087156,
+          0.0,
+          0.996195
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.996195,
+          0.0,
+          0.087156
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumViaBush2-1",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.2,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -225.774,
+         0.1,
+         -210.925
+        ],
+        "orientation": [
+         [
+          -0.573576,
+          0.0,
+          0.819152
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.819152,
+          0.0,
+          -0.573576
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumViaBush21",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.2,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -210.925,
+         0.1,
+         -225.774
+        ],
+        "orientation": [
+         [
+          -0.573576,
+          0.0,
+          0.819152
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.819152,
+          0.0,
+          -0.573576
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumViaBush3-1",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.2,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -235.673,
+         0.1,
+         -220.824
+        ],
+        "orientation": [
+         [
+          -0.965926,
+          0.0,
+          0.258819
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.258819,
+          0.0,
+          -0.965926
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumViaBush31",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.2,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -220.824,
+         0.1,
+         -235.673
+        ],
+        "orientation": [
+         [
+          -0.965926,
+          0.0,
+          0.258819
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.258819,
+          0.0,
+          -0.965926
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumViaBush4-1",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.2,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -245.573,
+         0.1,
+         -230.724
+        ],
+        "orientation": [
+         [
+          -0.906308,
+          0.0,
+          -0.422618
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.422618,
+          0.0,
+          -0.906308
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumViaBush41",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.2,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -230.724,
+         0.1,
+         -245.573
+        ],
+        "orientation": [
+         [
+          -0.906308,
+          0.0,
+          -0.422618
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.422618,
+          0.0,
+          -0.906308
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumViaBush5-1",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.2,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -255.472,
+         0.1,
+         -240.623
+        ],
+        "orientation": [
+         [
+          -0.422618,
+          0.0,
+          -0.906308
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.906308,
+          0.0,
+          -0.422618
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ColosseumViaBush51",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bush",
+    "PropHeight": 2.2,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -240.623,
+         0.1,
+         -255.472
+        ],
+        "orientation": [
+         [
+          -0.422618,
+          0.0,
+          -0.906308
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.906308,
+          0.0,
+          -0.422618
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   }
  ]
 }
