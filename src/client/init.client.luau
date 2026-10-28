@@ -28,6 +28,7 @@ local ORDER = {
 	"DuelController",
 	"NpcController",
 	"MotionController",
+	"ColosseumController",
 }
 
 local controllers = {}

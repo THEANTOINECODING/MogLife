@@ -12490,14 +12490,14 @@
    "properties": {
     "Anchored": true,
     "Size": [
-     430,
+     410,
      6,
      2
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       0.0,
+       10.0,
        3.1,
        -214.0
       ],
@@ -13181,73 +13181,6 @@
           -0.978148,
           0.0,
           -0.207912
-         ]
-        ]
-       }
-      },
-      "Color": {
-       "Color3uint8": [
-        240,
-        238,
-        232
-       ]
-      },
-      "Material": "SmoothPlastic",
-      "CanCollide": false,
-      "Transparency": 1,
-      "CanQuery": false,
-      "CanTouch": false
-     }
-    }
-   ]
-  },
-  {
-   "name": "BorderTreeS10",
-   "className": "Model",
-   "properties": {
-    "Tags": {
-     "Tags": [
-      "PropSlot"
-     ]
-    }
-   },
-   "attributes": {
-    "Prop": "TreeRoundBig",
-    "PropHeight": 21.0
-   },
-   "children": [
-    {
-     "name": "PropAnchor",
-     "className": "Part",
-     "properties": {
-      "Anchored": true,
-      "Size": [
-       1,
-       0.2,
-       1
-      ],
-      "CFrame": {
-       "CFrame": {
-        "position": [
-         -200.0,
-         0.1,
-         -224.0
-        ],
-        "orientation": [
-         [
-          -0.788011,
-          0.0,
-          0.615661
-         ],
-         [
-          0.0,
-          1.0,
-          0
-         ],
-         [
-          -0.615661,
-          0.0,
-          -0.788011
          ]
         ]
        }
@@ -17368,7 +17301,7 @@
    "properties": {
     "Anchored": true,
     "Size": [
-     430,
+     410,
      6,
      2
     ],
@@ -17377,7 +17310,7 @@
       "position": [
        -214.0,
        3.1,
-       0.0
+       10.0
       ],
       "orientation": [
        [
@@ -17408,73 +17341,6 @@
     "Material": "Grass",
     "CanCollide": true
    }
-  },
-  {
-   "name": "BorderTreeW0",
-   "className": "Model",
-   "properties": {
-    "Tags": {
-     "Tags": [
-      "PropSlot"
-     ]
-    }
-   },
-   "attributes": {
-    "Prop": "TreeRoundBig",
-    "PropHeight": 19.0
-   },
-   "children": [
-    {
-     "name": "PropAnchor",
-     "className": "Part",
-     "properties": {
-      "Anchored": true,
-      "Size": [
-       1,
-       0.2,
-       1
-      ],
-      "CFrame": {
-       "CFrame": {
-        "position": [
-         -224.0,
-         0.1,
-         -200.0
-        ],
-        "orientation": [
-         [
-          0.992546,
-          0.0,
-          0.121869
-         ],
-         [
-          0.0,
-          1.0,
-          0
-         ],
-         [
-          -0.121869,
-          0.0,
-          0.992546
-         ]
-        ]
-       }
-      },
-      "Color": {
-       "Color3uint8": [
-        240,
-        238,
-        232
-       ]
-      },
-      "Material": "SmoothPlastic",
-      "CanCollide": false,
-      "Transparency": 1,
-      "CanQuery": false,
-      "CanTouch": false
-     }
-    }
-   ]
   },
   {
    "name": "BorderTreeW1",

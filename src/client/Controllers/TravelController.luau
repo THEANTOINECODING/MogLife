@@ -12,7 +12,7 @@ local Ui = require(script.Parent.Parent.Ui)
 
 local STOP_TAG = "BusStop"
 -- Ordre d'affichage des destinations du bus
-local STOPS = { "Plaza", "Shops", "Gym", "Park", "Arena" }
+local STOPS = { "Plaza", "Shops", "Gym", "Park", "Arena", "Colosseum" }
 
 local player = Players.LocalPlayer
 

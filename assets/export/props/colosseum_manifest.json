@@ -1,0 +1,219 @@
+{
+ "layout": {
+  "aisle_width": 3.2,
+  "boss_gate": 9,
+  "entrance_width": 10.0,
+  "facade_height": 38.0,
+  "facade_outer": 78.5,
+  "fighter_gate": 3,
+  "gate_height": 7.0,
+  "gate_width": 9.0,
+  "pit_radius": 44.0,
+  "plaza_outer": 96.0,
+  "podium": 3.0,
+  "sector": 30.0,
+  "stand_outer": 75.0,
+  "tier_depth": 2.2,
+  "tier_rise": 1.5,
+  "tiers": 10,
+  "tribune": 6,
+  "walk_outer": 53.0,
+  "walk_top": 9.8,
+  "wall_height": 9.0,
+  "wall_outer": 46.5
+ },
+ "pieces": {
+  "Colosseum_Awning": {
+   "bottom": -0.023,
+   "center": [
+    0.0,
+    2.861
+   ],
+   "size": [
+    16.919,
+    15.834,
+    12.673
+   ]
+  },
+  "Colosseum_Banner": {
+   "bottom": 0.0,
+   "center": [
+    0.0,
+    0.0
+   ],
+   "size": [
+    3.6,
+    0.606,
+    14.0
+   ]
+  },
+  "Colosseum_Brazier": {
+   "bottom": -0.028,
+   "center": [
+    0.0,
+    0.0
+   ],
+   "size": [
+    2.84,
+    2.84,
+    3.698
+   ]
+  },
+  "Colosseum_Crowd": {
+   "bottom": 12.8,
+   "center": [
+    0.0,
+    -63.608
+   ],
+   "size": [
+    37.009,
+    19.912,
+    13.892
+   ]
+  },
+  "Colosseum_Facade": {
+   "bottom": 0.0,
+   "center": [
+    0.0,
+    -76.079
+   ],
+   "size": [
+    43.454,
+    6.746,
+    39.0
+   ]
+  },
+  "Colosseum_FacadeEntrance": {
+   "bottom": 0.0,
+   "center": [
+    0.0,
+    -76.079
+   ],
+   "size": [
+    43.454,
+    6.746,
+    39.0
+   ]
+  },
+  "Colosseum_Floor": {
+   "bottom": -0.8,
+   "center": [
+    0.0,
+    0.0
+   ],
+   "size": [
+    88.4,
+    88.4,
+    1.8
+   ]
+  },
+  "Colosseum_Gate": {
+   "bottom": 0.0,
+   "center": [
+    0.0,
+    -0.288
+   ],
+   "size": [
+    25.0,
+    5.176,
+    18.5
+   ]
+  },
+  "Colosseum_PitGate": {
+   "bottom": -0.2,
+   "center": [
+    0.0,
+    -44.305
+   ],
+   "size": [
+    24.251,
+    5.089,
+    10.0
+   ]
+  },
+  "Colosseum_PitWall": {
+   "bottom": 0.0,
+   "center": [
+    0.0,
+    -44.305
+   ],
+   "size": [
+    24.251,
+    5.089,
+    9.8
+   ]
+  },
+  "Colosseum_Plaza": {
+   "bottom": -3.0,
+   "center": [
+    0.0,
+    -87.53
+   ],
+   "size": [
+    51.867,
+    25.341,
+    2.98
+   ]
+  },
+  "Colosseum_Portcullis": {
+   "bottom": -0.4,
+   "center": [
+    0.0,
+    0.0
+   ],
+   "size": [
+    8.4,
+    0.4,
+    7.4
+   ]
+  },
+  "Colosseum_Stands": {
+   "bottom": 0.0,
+   "center": [
+    0.0,
+    -59.909
+   ],
+   "size": [
+    38.823,
+    30.181,
+    26.0
+   ]
+  },
+  "Colosseum_StandsEntrance": {
+   "bottom": 0.0,
+   "center": [
+    0.0,
+    -61.664
+   ],
+   "size": [
+    38.823,
+    33.691,
+    26.0
+   ]
+  },
+  "Colosseum_StandsTribune": {
+   "bottom": 0.0,
+   "center": [
+    0.0,
+    -59.909
+   ],
+   "size": [
+    38.823,
+    30.181,
+    26.0
+   ]
+  },
+  "Colosseum_Statue": {
+   "bottom": 0.0,
+   "center": [
+    0.0,
+    0.0
+   ],
+   "size": [
+    8.055,
+    5.0,
+    14.7
+   ]
+  }
+ }
+}

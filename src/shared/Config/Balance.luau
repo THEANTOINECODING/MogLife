@@ -402,6 +402,19 @@ return {
 		BusStopDistance = 12, -- distance max (studs) à un arrêt pour prendre le bus
 	},
 
+	-- Le Colisée du Pump (D89) : piliers de lumière entre le temple et le colisée, sécurité de la piste
+	Colosseum = {
+		PortalDistance = 12, -- distance max (studs) au pilier pour l'utiliser
+		PortalCooldown = 4, -- secondes entre deux voyages
+		TravelDelay = 1.3, -- secondes de lumière avant d'arriver (le pilier monte, l'écran blanchit)
+		PitCheckEvery = 1, -- secondes entre deux contrôles de la piste (un joueur qui n'y combat pas en ressort)
+		CrowdBounce = 0.18, -- studs : la foule sautille
+		CrowdSpeed = 3.2, -- sautillements par seconde
+		FireRange = 220, -- studs : au-delà, les braseros sont éteints (téléphone)
+		PitRadius = 44, -- rayon de la piste (= tools/blender/props_colosseum.py, LAYOUT.pit_radius)
+		PitHeight = 9, -- hauteur du mur de la piste
+	},
+
 	-- Cycle jour / nuit (heure de Lighting.ClockTime, de 0 à 24)
 	DayNight = {
 		DayMinutes = 12, -- durée réelle d'une journée (6 h -> 18 h)

@@ -53,6 +53,7 @@ local NAMES = {
 	"DuelUpdate",
 	"WeeklyState", -- serveur -> client : (état des défis, du coffre et des trophées de la semaine)
 	"WeeklyClaim", -- client -> serveur : (what: "Challenge" | "Bonus" | "Chest", index: number?) réclamer
+	"ColosseumTravel", -- serveur -> clients : ({ player, from: Vector3 }) un joueur monte dans un pilier de lumière
 }
 
 local isServer = RunService:IsServer()
@@ -129,4 +130,5 @@ return remotes :: {
 	DuelUpdate: RemoteEvent,
 	WeeklyState: RemoteEvent,
 	WeeklyClaim: RemoteEvent,
+	ColosseumTravel: RemoteEvent,
 }

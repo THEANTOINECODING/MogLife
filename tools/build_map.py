@@ -690,8 +690,13 @@ def ring():
         # Arrêt de bus au bout de l'allée
         c += bus_stop(S, f"BusStop{side}", (20, WALK_TOP, WALK_IN[0] + 4), BUS_STOPS[side], yaw=180)
         # Bordure de la ville : grande haie et rangée d'arbres derrière les maisons
-        c.append(P(S, f"BorderHedge{side}", (0, 3, BORDER), (2 * BORDER + 2, 6, 2), HEDGE, "Grass"))
+        # (coin sud-ouest : ouverture pour la porte triomphale du Colisée du Pump, D89)
+        gap_end = {"S": 1, "W": -1}.get(side, 0)
+        length = 2 * BORDER + 2 - (GATE_GAP if gap_end else 0)
+        c.append(P(S, f"BorderHedge{side}", (-gap_end * GATE_GAP / 2, 3, BORDER), (length, 6, 2), HEDGE, "Grass"))
         for i, s in enumerate(range(-200, 201, 40)):
+            if gap_end and s * gap_end > 160:
+                continue
             c += tree(S, f"BorderTree{side}{i}", (s, 0, BORDER + 10), height=10 + (i % 3) * 2, radius=6,
                       color=(70, 130, 56), prop="Pine" if i % 2 else "TreeRoundBig")
         # Coin de rue : petit square fleuri entre deux côtés de maisons
@@ -1029,6 +1034,9 @@ def boss_arena():
     c.append(spot(T, "PumpGodSpot", (0, 2.5, 0), (14, 1, 14), (230, 180, 40), "BossSpot", {"BossId": "PumpGod"},
                   material="Marble"))
     c.append(landmark(T, "ArenaIcon", (0, 32, 0), "Arena"))
+    # Pilier de lumière vers le Colisée du Pump (D89), devant le temple, côté droit des marches
+    c.append(P(T, "ColosseumPortalTemple", (12, 3, -19), (5, 6, 5), WHITE, transparency=1, collide=False,
+               tags=["ColosseumPortal"], attributes={"Target": "Colosseum"}, extra={"CanTouch": False}))
     # Ambiance de match (apparaît avec les modèles 3D) : projecteurs, gong, cordons, trophées des boss
     c.append(decor(F, "SpotlightSlot0", (-100, 0.12, -40), "Spotlight", yaw=-45))
     c.append(decor(F, "SpotlightSlot1", (-40, 0.12, -100), "Spotlight", yaw=135))
@@ -1106,6 +1114,243 @@ def downtown():
     c.append(helper(F, "NeighborSpot", (-walk, WALK_TOP + 0.5, -32), "PushCar", yaw=90))
     return folder("Downtown", c)
 
+
+# ------------------------------------------------------------------ 5. le Colisée du Pump (D89)
+# Arène du dernier boss, au-delà du coin sud-ouest de la ville : on y entre par une porte triomphale ouverte dans la
+# haie de bordure, puis une voie bordée de colonnes. Modèles 3D : tools/blender/props_colosseum.py (12 secteurs de
+# 30 degrés posés autour du centre) ; cotes et positions des pièces : assets/export/props/colosseum_manifest.json.
+# Les collisions sont des blocs invisibles simples (gradins, marches, murs) : on marche sur des marches régulières, et
+# une barrière invisible haute sépare la piste des gradins (les spectateurs ne descendent pas, le combattant ne sort pas).
+with open(os.path.join(ROOT, "assets", "export", "props", "colosseum_manifest.json"), encoding="utf-8") as _f:
+    _COLO = json.load(_f)
+COLO_PIECES, COLO = _COLO["pieces"], _COLO["layout"]
+COLO_CENTER = (-330.0, -330.0)
+COLO_YAW = -135.0  # l'entrée (secteur 0) regarde vers la ville (nord-est)
+COLO_TOP = GROUND + COLO["podium"]  # dessus du podium = sol de la piste
+GATE_GAP = 20  # longueur de haie retirée de chaque côté du coin sud-ouest pour la porte
+INVISIBLE = {"CanQuery": False, "CanTouch": False}
+
+
+def colo_piece(F, name, prop, collide=False, attributes=None):
+    """Pièce du colisée recalée dans le repère F (centre de l'arène, tourné vers le secteur voulu)."""
+    m = COLO_PIECES[prop]
+    cx, cy = m["center"]
+    slot = prop_slot(F, name, (cx, m["bottom"], cy), prop, collide=collide)
+    if attributes:
+        slot["attributes"].update(attributes)
+    return slot
+
+
+def colo_frame(k):
+    return Frame((COLO_CENTER[0], COLO_TOP, COLO_CENTER[1]), COLO_YAW + COLO["sector"] * k)
+
+
+def ring_boxes(F, name, r0, r1, z0, z1, count, offset=0.0, skip=None, **kw):
+    """Anneau de blocs invisibles (collisions) entre les rayons r0..r1 et les hauteurs z0..z1, dans le repère F."""
+    out = []
+    step = 360.0 / count
+    for i in range(count):
+        a = offset + step * i
+        if skip and skip(a):
+            continue
+        rm = (r0 + r1) / 2
+        width = 2 * r1 * math.sin(math.radians(step / 2)) + 0.3
+        G = F.child((0, 0, 0), a)
+        out.append(P(G, f"{name}{i}", (0, (z0 + z1) / 2, -rm), (width, z1 - z0, r1 - r0), WHITE, transparency=1,
+                     extra=INVISIBLE, **kw))
+    return out
+
+
+def colosseum():
+    c = []
+    L = COLO
+    F0 = colo_frame(0)
+    top = 0.0  # repère : z = 0 au dessus du podium
+    fg, bg, tribune = L["fighter_gate"], L["boss_gate"], L["tribune"]
+
+    # --- pièces 3D, secteur par secteur
+    c.append(colo_piece(F0, "ColosseumFloor", "Colosseum_Floor"))
+    for k in range(12):
+        F = colo_frame(k)
+        gate = k in (fg, bg)
+        c.append(colo_piece(F, f"ColosseumPitWall{k}", "Colosseum_PitGate" if gate else "Colosseum_PitWall"))
+        stands = "Colosseum_StandsEntrance" if k == 0 else ("Colosseum_StandsTribune" if k == tribune
+                                                            else "Colosseum_Stands")
+        c.append(colo_piece(F, f"ColosseumStands{k}", stands))
+        c.append(colo_piece(F, f"ColosseumFacade{k}", "Colosseum_FacadeEntrance" if k == 0 else "Colosseum_Facade"))
+        c.append(colo_piece(F, f"ColosseumPlaza{k}", "Colosseum_Plaza"))
+        if k not in (0, tribune):
+            c.append(colo_piece(F, f"ColosseumCrowd{k}", "Colosseum_Crowd",
+                                attributes={"ColosseumCrowd": True, "Phase": k}))
+        if gate:
+            # Herse de la porte (le jeu la lève pour faire entrer le combattant ou le boss)
+            slot = prop_slot(F, f"ColosseumPortcullis{k}", (0, 0, -(L["pit_radius"] + 0.6)), "Colosseum_Portcullis",
+                             collide=True)
+            slot["attributes"]["ColosseumGate"] = "Fighter" if k == fg else "Boss"
+            c.append(slot)
+            for sx in (-1, 1):
+                c.append(decor(F, f"ColosseumGateBanner{k}{sx}", (sx * 7.5, L["walk_top"], -(L["wall_outer"] + 1.5)),
+                               "Colosseum_Banner", collide=False))
+        # Velums rouges en haut, un secteur sur deux (pas au-dessus de l'entrée ni de la tribune)
+        if k % 2 == 1 and k != tribune:
+            c.append(decor(F, f"ColosseumAwning{k}", (0, L["walk_top"] + L["tier_rise"] * L["tiers"] + 1.2,
+                                                      -(L["stand_outer"] - 1.5)), "Colosseum_Awning", collide=False))
+        # Braseros sur la coursive, au bord des secteurs
+        G = F.child((0, 0, 0), L["sector"] / 2)
+        c.append(decor(G, f"ColosseumBrazier{k}", (0, L["walk_top"], -(L["walk_outer"] - 1.6)), "Colosseum_Brazier",
+                       collide=False))
+        c.append(P(G, f"ColosseumFire{k}", (0, L["walk_top"] + 4.0, -(L["walk_outer"] - 1.6)), (1, 1, 1), WHITE,
+                   transparency=1, collide=False, tags=["ColosseumFire"], extra=INVISIBLE))
+    # Tribune d'honneur : deux étendards ; statues de marbre autour de l'arène, sur le parvis
+    Ft = colo_frame(tribune)
+    for sx in (-1, 1):
+        c.append(decor(Ft, f"ColosseumTribuneBanner{sx}", (sx * 9.0, L["walk_top"], -(L["walk_outer"] - 1.0)),
+                       "Colosseum_Banner", collide=False))
+    for k in (2, 4, 6, 8, 10):
+        c.append(decor(colo_frame(k), f"ColosseumPlazaStatue{k}", (0, 0, -(L["facade_outer"] + 8.0)),
+                       "Colosseum_Statue"))
+    # Entrée : statues, étendards et braseros de part et d'autre du grand escalier, sur le parvis
+    for sx in (-1, 1):
+        c.append(decor(F0, f"ColosseumEntryStatue{sx}", (sx * 13.0, 0, -(L["facade_outer"] + 6.0)), "Colosseum_Statue"))
+        c.append(decor(F0, f"ColosseumEntryBanner{sx}", (sx * 7.6, 0, -(L["facade_outer"] + 1.5)), "Colosseum_Banner",
+                       collide=False))
+        c.append(decor(F0, f"ColosseumEntryBrazier{sx}", (sx * 7.6, 0, -(L["facade_outer"] + 9.0)),
+                       "Colosseum_Brazier", collide=False))
+        c.append(P(F0, f"ColosseumEntryFire{sx}", (sx * 7.6, 4.0, -(L["facade_outer"] + 9.0)), (1, 1, 1), WHITE,
+                   transparency=1, collide=False, tags=["ColosseumFire"], extra=INVISIBLE))
+
+    # --- collisions (invisibles)
+    R = L["plaza_outer"]
+    h = L["podium"]
+    # Podium et piste : un grand disque, puis les 3 marches vers l'herbe
+    c.append(P(F0, "ColosseumPodium", (0, -h / 2, 0), (h, 2 * R, 2 * R), WHITE, transparency=1, roll=90,
+               shape="Cylinder", extra=INVISIBLE))
+    for k in range(3):
+        rr = R + 1.4 * (k + 1)
+        topk = -h * (k + 1) / 4
+        c.append(P(F0, f"ColosseumStep{k}", (0, (topk - h) / 2, 0), (topk + h, 2 * rr, 2 * rr), WHITE,
+                   transparency=1, roll=90, shape="Cylinder", extra=INVISIBLE))
+    # Mur de la piste, et barrière haute au-dessus (personne ne passe entre la piste et les gradins)
+    c += ring_boxes(F0, "ColosseumPitWallCol", L["pit_radius"], L["wall_outer"], 0, L["walk_top"], 36)
+    c += ring_boxes(F0, "ColosseumBarrier", L["pit_radius"] + 0.2, L["pit_radius"] + 1.2, L["walk_top"], 60, 36)
+    # Coursive (sol) et masse sous les gradins (l'entrée laisse un passage de 13 studs)
+    half_entry = math.degrees((L["entrance_width"] / 2 + 1.0) / L["stand_outer"])
+
+    def in_entry(a):
+        d = (a + 180) % 360 - 180
+        return abs(d) < half_entry + 360 / 72 / 2
+
+    c += ring_boxes(F0, "ColosseumWalk", L["wall_outer"], L["walk_outer"], 0, L["walk_top"], 36)
+    # Rangées : deux blocs par secteur (de part et d'autre du passage du milieu), cordes de l'arc
+    half_sector = L["sector"] / 2
+    for k in range(12):
+        F = colo_frame(k)
+        for i in range(L["tiers"]):
+            r0 = L["walk_outer"] + L["tier_depth"] * i
+            r1 = r0 + L["tier_depth"]
+            z1 = L["walk_top"] + L["tier_rise"] * (i + 1)
+            lateral = L["aisle_width"] / 2
+            if k == 0:
+                lateral = L["entrance_width"] / 2 + 1.2
+            elif k == tribune and i < 5:
+                lateral = 7.0
+            rm = (r0 + r1) / 2
+            a_gap = math.degrees(math.asin(min(lateral / rm, 0.99)))
+            span = half_sector - a_gap
+            for sx in (-1, 1):
+                mid = sx * (a_gap + span / 2)
+                G = F.child((0, 0, 0), mid)
+                width = 2 * r1 * math.sin(math.radians(span / 2)) + 0.25
+                c.append(P(G, f"ColosseumTier{k}_{i}_{sx}", (0, z1 / 2, -rm), (width, z1, r1 - r0 + 0.02), WHITE,
+                           transparency=1, extra=INVISIBLE))
+    # Escaliers de marbre (2 marches par rangée) au milieu de chaque secteur, sauf entrée et bas de la tribune
+    for k in range(1, 12):
+        F = colo_frame(k)
+        for i in range(L["tiers"]):
+            if k == tribune and i < 5:
+                continue
+            for step in range(2):
+                r0 = L["walk_outer"] + L["tier_depth"] * (i + step / 2)
+                z = L["walk_top"] + L["tier_rise"] * (i + (step + 1) / 2)
+                c.append(P(F, f"ColosseumAisle{k}_{i}_{step}", (0, z / 2, -(r0 + L["tier_depth"] / 4)),
+                           (L["aisle_width"], z, L["tier_depth"] / 2), WHITE, transparency=1, extra=INVISIBLE))
+    # Grand escalier d'entrée : 14 marches du parvis à la coursive, entre deux murs
+    steps = 14
+    r_out, r_in = L["facade_outer"], L["walk_outer"]
+    depth = (r_out - r_in) / steps
+    for k in range(steps):
+        r = r_out - depth * (k + 1)
+        z = L["walk_top"] * (k + 1) / steps
+        c.append(P(F0, f"ColosseumEntryStep{k}", (0, z / 2, -(r + depth / 2)), (L["entrance_width"], z, depth + 0.05),
+                   WHITE, transparency=1, extra=INVISIBLE))
+    for sx in (-1, 1):
+        c.append(P(F0, f"ColosseumEntryWall{sx}", (sx * (L["entrance_width"] / 2 + 1.2), 15, -(r_in + r_out) / 2),
+                   (1.4, 30, r_out - r_in), WHITE, transparency=1, extra=INVISIBLE))
+    # Façade : un mur plein tout autour (l'arche d'entrée reste ouverte jusqu'à 11 studs de haut)
+    c += ring_boxes(F0, "ColosseumFacadeCol", L["stand_outer"], L["facade_outer"], 0, L["facade_height"] + 1, 48,
+                    offset=3.75, skip=in_entry)
+    for sx in (-1, 1):
+        G = F0.child((0, 0, 0), sx * (half_entry + 3.75))
+        c.append(P(G, f"ColosseumFacadeEntrySide{sx}", (0, (L["facade_height"] + 1) / 2,
+                                                         -(L["stand_outer"] + L["facade_outer"]) / 2),
+                   (8.0, L["facade_height"] + 1, L["facade_outer"] - L["stand_outer"]), WHITE, transparency=1,
+                   extra=INVISIBLE))
+    c.append(P(F0, "ColosseumFacadeEntryTop", (0, (11 + L["facade_height"] + 1) / 2,
+                                               -(L["stand_outer"] + L["facade_outer"]) / 2),
+               (L["entrance_width"] + 2.5, L["facade_height"] + 1 - 11, L["facade_outer"] - L["stand_outer"]), WHITE,
+               transparency=1, extra=INVISIBLE))
+
+    # --- points de jeu (invisibles)
+    def point(F, name, local, tag, attributes=None):
+        return P(F, name, local, (4, 1, 4), WHITE, transparency=1, collide=False, tags=[tag], attributes=attributes,
+                 extra=INVISIBLE)
+
+    c.append(point(colo_frame(fg), "ColosseumFighterSpot", (0, 0.5, -(L["pit_radius"] - 10)), "ColosseumSpot",
+                   {"Role": "Fighter"}))
+    c.append(point(colo_frame(bg), "ColosseumBossSpot", (0, 0.5, -(L["pit_radius"] - 12)), "ColosseumSpot",
+                   {"Role": "Boss"}))
+    c.append(point(F0, "ColosseumCenter", (0, 0.5, 0), "ColosseumSpot", {"Role": "Center"}))
+    c.append(point(F0, "ColosseumArrival", (0, 0.5, -(L["plaza_outer"] - 5)), "ColosseumSpot", {"Role": "Arrival"}))
+    c.append(point(F0, "ColosseumStandsSpot", (0, L["walk_top"] + 0.5, -(L["walk_outer"] - 2)), "ColosseumSpot",
+                   {"Role": "Stands"}))
+    # Portail de retour vers la ville (pilier de lumière), sur le parvis
+    c.append(P(F0, "ColosseumPortalBack", (14, 3, -(L["plaza_outer"] - 8)), (5, 6, 5), WHITE, transparency=1,
+               collide=False, tags=["ColosseumPortal"], attributes={"Target": "Temple"}, extra={"CanTouch": False}))
+    # Arrêt de bus du colisée (réseau de bus de la ville)
+    c += bus_stop(F0.child((-16, 0, -(L["plaza_outer"] - 9)), 0), "BusStopColosseum", (0, 0, 0), "Colosseum")
+    c.append(landmark(F0, "ColosseumIcon", (0, L["facade_height"] + 12, 0), "Colosseum"))
+
+    # --- porte triomphale dans la haie (coin sud-ouest) et voie bordée de colonnes
+    gate_at = (-(BORDER - GATE_GAP / 2) + 0.5, -(BORDER - GATE_GAP / 2) + 0.5)
+    Fg = Frame((gate_at[0], GROUND, gate_at[1]), COLO_YAW)
+    c.append(decor(Fg, "ColosseumTownGate", (0, 0, 0), "Colosseum_Gate"))
+    for sx in (-1, 1):
+        c.append(P(Fg, f"ColosseumTownGatePier{sx}", (sx * 10.5, 9, 0), (5, 18, 4), WHITE, transparency=1,
+                   extra=INVISIBLE))
+    start = math.hypot(COLO_CENTER[0] - gate_at[0], COLO_CENTER[1] - gate_at[1])
+    via = start - (R + 4.2)
+    Fv = Frame((gate_at[0], GROUND, gate_at[1]), COLO_YAW + 180)  # la voie part de la porte vers l'arène (+Z local -> -Z)
+    for k in range(int(via // 6)):
+        z = 3 + k * 6
+        c.append(P(Fv, f"ColosseumVia{k}", (0, 0.1, -z), (12, 0.2, 6.02), (214, 186, 140) if k % 2 else (226, 200, 154),
+                   "Sandstone"))
+        for sx in (-1, 1):
+            c.append(P(Fv, f"ColosseumViaEdge{k}{sx}", (sx * 6.4, 0.18, -z), (0.8, 0.36, 6.02), (240, 236, 226),
+                       "Marble"))
+    for k in range(1, int(via // 14) + 1):
+        z = k * 14
+        for sx in (-1, 1):
+            n0 = len(c)
+            c.append(P(Fv, f"ColosseumViaColumn{k}{sx}", (sx * 8.5, 7, -z), (14, 1.6, 1.6), (240, 238, 230), "Marble",
+                       roll=90, shape="Cylinder"))
+            wrap(c, n0, Fv, f"ColosseumViaColumnSlot{k}{sx}", (sx * 8.5, 0, -z), "GreekColumn", height=12)
+            if k % 2 == 0:
+                c.append(decor(Fv, f"ColosseumViaBrazier{k}{sx}", (sx * 8.5, 0, -z - 7), "Colosseum_Brazier",
+                               collide=False))
+                c.append(P(Fv, f"ColosseumViaFire{k}{sx}", (sx * 8.5, 4.0, -z - 7), (1, 1, 1), WHITE,
+                           transparency=1, collide=False, tags=["ColosseumFire"], extra=INVISIBLE))
+    return model("Colosseum", c)
+
 # ------------------------------------------------------------------ écriture
 if __name__ == "__main__":
     out = os.path.join(WORLD, "Map")
@@ -1114,7 +1359,7 @@ if __name__ == "__main__":
         path = os.path.join(out, "Plots", f"Plot{i:02d}.model.json")
         write(path, plot(i, side, offset))
         written.add(os.path.normpath(path))
-    for node in (ring(), downtown()):
+    for node in (ring(), downtown(), colosseum()):
         path = os.path.join(out, "Town", f"{node['name']}.model.json")
         write(path, node)
         written.add(os.path.normpath(path))

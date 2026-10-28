@@ -2,6 +2,14 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-10-28 (Colisée du Pump, tranche 1)
+
+- **D89 — Le Colisée du Pump : choix d'Antoine et tranche 1 (l'arène et son accès).** Choix : combat solo de 5 minutes, arène gréco-romaine dans le style de ses images, perte de 3 % du Mog en cas de défaite, bouton ROULADE, pas d'anciens boss en manche 2, une défaite oblige à refaire tout le combat, spectateurs qui aident sans que le combattant voie leur jauge (proposition v2 de `IDEES.md` pour le reste). Tranche 1 livrée :
+  - **Modèles** (`tools/blender/props_colosseum.py`, `export_colosseum.py` → `Props_Colosseum.fbx`, palette à part `Colosseum_Palette.png` sur Roblox) : piste de sable et médaillon doré, mur de la piste (blocs de grès, pilastres, boucliers de bronze), portes des gladiateurs et du boss avec herse, coursive et 10 rangées de gradins avec escaliers de marbre, grand escalier d'entrée et arche de marbre, tribune d'honneur au dais rouge, façade à deux étages d'arches avec colonnes et galerie ouverte, parvis sur podium, velums rouges, étendards, braseros, statues, foule en toge, porte triomphale. 12 secteurs de 30° réutilisés ; aucune pièce au-dessus de 3 000 triangles.
+  - **Carte** (`tools/build_map.py`, `colosseum()`) : centre en (-330, -330), au-delà du coin sud-ouest ; porte triomphale dans la haie de bordure ouverte au coin ; voie pavée bordée de colonnes et de braseros ; arrêt de bus « Colosseum » ; collisions invisibles simples (gradins, marches, murs) et barrière haute entre la piste et les gradins ; points de jeu (arrivée, gradins, centre, combattant, boss).
+  - **Jeu** : `ColosseumService` (piliers de lumière temple ↔ colisée, vérifiés par le serveur ; personne sur la piste hors combat) et `ColosseumController` (feux des braseros, foule qui sautille, colonnes de lumière, flash blanc du voyage).
+  Vérifié dans Studio : synchronisation de la carte, voyage par les deux piliers, joueur remonté de la piste vers les gradins, marche sur les gradins. À faire par Antoine : importer `Props_Colosseum.fbx` dans Studio et lancer `tools/install_props.luau`, puis enregistrer la place. Non vérifié avant cet import : l'aspect dans le jeu.
+
 ## 2026-10-28 (bugs des combats, bocal, duels)
 
 - **D88 — Bugs des combats corrigés, caméra douce, bocal à deux mains, duels sans « dernier effort », Mog au vainqueur.** Retours d'Antoine : actions qui ne marchent pas, couronne au perdant d'une manche, mini-jeu sans duel du boss, victoire refusée malgré de bons scores, scores du joueur du côté du boss, zooms encore désagréables, bocal « trop simple et peu cool », trois zones du bras de fer pas aimées, du Mog pour le vainqueur d'un duel.

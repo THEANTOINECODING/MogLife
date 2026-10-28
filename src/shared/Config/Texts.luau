@@ -385,6 +385,10 @@ local STRINGS: { [string]: string } = {
 	["Bus.Stop.Gym"] = "Gym",
 	["Bus.Stop.Park"] = "Park",
 	["Bus.Stop.Arena"] = "Boss Arena",
+	["Bus.Stop.Colosseum"] = "Colosseum",
+	["Colosseum.PortalTo"] = "Rise to the Colosseum",
+	["Colosseum.PortalBack"] = "Back to town",
+	["Colosseum.PortalName"] = "Pillar of light",
 
 	-- Repères (icônes au-dessus des bâtiments) et guide vers le prochain boss
 	["Icon.Gym"] = "🏋️",
@@ -394,6 +398,7 @@ local STRINGS: { [string]: string } = {
 	["Icon.Grocery"] = "🍎",
 	["Icon.Park"] = "🌳",
 	["Icon.Arena"] = "🏆",
+	["Icon.Colosseum"] = "🏛️",
 	["Guide.Marker"] = "⬇",
 
 	-- Statues des meilleurs moggers
