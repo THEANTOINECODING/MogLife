@@ -413,4 +413,390 @@ function Fx.Float(at: Vector3, text: string, color: Color3, size: number?)
 	Debris:AddItem(anchor, 0.95)
 end
 
+local MARBLE = Color3.fromRGB(236, 230, 218)
+local PINK = Color3.fromRGB(255, 140, 200)
+
+local function smooth(x: number): number
+	x = math.clamp(x, 0, 1)
+	return x * x * (3 - 2 * x)
+end
+
+-- Colonne de marbre : debout au bord de la piste pendant l'avertissement, elle bascule et s'écrase sur la bande à
+-- l'impact, puis se brise
+function Fx.Column(a: Vector3, b: Vector3, width: number, start: number, impact: number, alive: () -> boolean)
+	local length = (b - a).Magnitude
+	local dir = (b - a).Unit
+	local right = dir:Cross(Vector3.new(0, 1, 0)).Unit
+	local shaft = part(Vector3.new(length, width * 0.8, width * 0.8), MARBLE, 1, Enum.PartType.Cylinder)
+	shaft.Material = Enum.Material.Marble
+	local cap = part(Vector3.new(1.4, width * 1.05, width * 1.05), GOLD, 1)
+	cap.Material = Enum.Material.SmoothPlastic
+	local landed = false
+	local connection
+	connection = RunService.RenderStepped:Connect(function()
+		local now = Zones.ServerNow()
+		if not alive() or now > impact + 0.9 then
+			connection:Disconnect()
+			if shaft.Parent then
+				fadeOut(shaft, 0.3)
+				fadeOut(cap, 0.3)
+			end
+			return
+		end
+		-- Elle sort du sol, puis bascule dans la dernière demi-seconde
+		local show = smooth((now - start) / 0.35)
+		shaft.Transparency = 1 - show
+		cap.Transparency = 1 - show
+		local fall = smooth((now - (impact - 0.55)) / 0.55) ^ 2
+		local angle = fall * math.pi / 2
+		local axis = Vector3.new(0, math.cos(angle), 0) + dir * math.sin(angle)
+		local rise = (1 - show) * length
+		local center = a + axis * (length / 2) + Vector3.new(0, width * 0.4 * fall - rise, 0)
+		shaft.CFrame = CFrame.fromMatrix(center, axis, right)
+		cap.CFrame = CFrame.fromMatrix(center + axis * (length / 2), axis, right)
+		if now >= impact and not landed then
+			landed = true
+			local dust = Fx.GroundBurst((a + b) / 2, width, length, Color3.fromRGB(230, 200, 150), 0.6)
+			dust.Material = Enum.Material.SmoothPlastic
+		end
+	end)
+	return {
+		Destroy = function()
+			connection:Disconnect()
+			shaft:Destroy()
+			cap:Destroy()
+		end,
+	}
+end
+
+-- Char de shake : caisse dorée sur deux grandes roues, un shake géant dessus ; il tombe du ciel puis traverse la piste
+function Fx.Chariot(message, alive: () -> boolean, onLand: () -> ())
+	local a, b = message.a :: Vector3, message.b :: Vector3
+	local width = message.width :: number
+	local height = message.height :: number
+	local model = Instance.new("Model")
+	model.Name = "PumpGodChariot"
+	local pieces = {}
+	local function add(p: BasePart, offset: CFrame, wheel: boolean?)
+		p.Parent = model
+		table.insert(pieces, { part = p, offset = offset, wheel = wheel })
+	end
+	local wheel = height * 0.55
+	add(part(Vector3.new(width * 0.7, height * 0.3, height * 0.9), GOLD, 0), CFrame.new(0, wheel * 0.7, 0))
+	for _, x in { -1, 1 } do
+		local w = part(Vector3.new(0.6, wheel, wheel), Color3.fromRGB(120, 70, 40), 0, Enum.PartType.Cylinder)
+		w.Material = Enum.Material.Wood
+		add(w, CFrame.new(x * width * 0.42, wheel / 2, 0), true)
+	end
+	local cup = part(Vector3.new(height * 0.6, height * 0.45, height * 0.45), PINK, 0, Enum.PartType.Cylinder)
+	cup.Material = Enum.Material.SmoothPlastic
+	add(cup, CFrame.new(0, wheel * 0.7 + height * 0.45, 0) * CFrame.Angles(0, 0, math.pi / 2))
+	local cream = part(Vector3.new(1, 1, 1) * height * 0.42, Color3.new(1, 1, 1), 0, Enum.PartType.Ball)
+	cream.Material = Enum.Material.SmoothPlastic
+	add(cream, CFrame.new(0, wheel * 0.7 + height * 0.78, 0))
+	local straw = part(Vector3.new(0.4, height * 0.5, 0.4), Color3.fromRGB(255, 80, 80), 0)
+	straw.Material = Enum.Material.SmoothPlastic
+	add(straw, CFrame.new(0.3, wheel * 0.7 + height * 0.95, 0) * CFrame.Angles(0, 0, -0.3))
+	model.Parent = workspace
+	local frame = CFrame.lookAt(a, b)
+	local length = (b - a).Magnitude
+	local landed = false
+	local connection
+	connection = RunService.RenderStepped:Connect(function()
+		local s = (Zones.ServerNow() - message.impact) * message.speed
+		if s > length + 6 or not alive() then
+			connection:Disconnect()
+			model:Destroy()
+			return
+		end
+		local y = 0
+		if s < 0 then
+			local fall = math.clamp(-s / message.speed / 0.5, 0, 1)
+			y = fall * fall * 60
+			s = 0
+		elseif not landed then
+			landed = true
+			local dust = Fx.GroundBurst(a, width, width * 2.5, Color3.fromRGB(230, 200, 150))
+			dust.Material = Enum.Material.SmoothPlastic
+			onLand()
+		end
+		local base = frame * CFrame.new(0, y, -s)
+		local spin = -s / (wheel / 2)
+		for _, piece in pieces do
+			local cf = base * piece.offset
+			piece.part.CFrame = if piece.wheel then cf * CFrame.Angles(spin, 0, 0) else cf
+		end
+	end)
+	return model
+end
+
+-- Les dalles jaillissent : un éclat lumineux par case
+function Fx.TileBurst(cells: { Vector3 }, cell: number)
+	for _, at in cells do
+		local flare = part(Vector3.new(cell * 0.8, 0.5, cell * 0.8), Color3.fromRGB(255, 120, 60), 0.1)
+		flare.CFrame = CFrame.new(at + Vector3.new(0, 0.3, 0))
+		fadeOut(flare, 0.45, Vector3.new(cell * 0.8, 7, cell * 0.8))
+	end
+end
+
+-- Orage : des éclairs tombent partout sauf dans les cercles sûrs, et un éclat recouvre la piste
+function Fx.Storm(at: Vector3, radius: number, safes: { Vector3 }, safeRadius: number, from: Vector3)
+	local flare = Fx.GroundBurst(at, radius * 1.6, radius * 2.1, Color3.fromRGB(255, 90, 60), 0.5)
+	flare.Transparency = 0.4
+	for _ = 1, 7 do
+		local spot = at
+		for _ = 1, 8 do
+			local a = math.random() * 2 * math.pi
+			spot = at + Vector3.new(math.cos(a), 0, math.sin(a)) * math.random() * radius * 0.9
+			local clear = true
+			for _, safe in safes do
+				if (spot - safe).Magnitude < safeRadius + 2 then
+					clear = false
+				end
+			end
+			if clear then
+				break
+			end
+		end
+		Fx.Bolt(spot, 3, from)
+	end
+end
+
+-- Regard brûlant : rayon de ses yeux jusqu'au sol qui balaie la piste ; arrêté par les colonnes (raycast local)
+function Fx.Gaze(eye: () -> Vector3, at: Vector3, from: number, to: number, length: number, go: number, ends: number)
+	local beam = part(Vector3.new(1, 1.2, 1.2), Color3.fromRGB(255, 70, 50), 0.15, Enum.PartType.Cylinder)
+	local core = part(Vector3.new(1, 0.5, 0.5), Color3.fromRGB(255, 240, 200), 0, Enum.PartType.Cylinder)
+	local glow = part(Vector3.new(3, 3, 3), Color3.fromRGB(255, 120, 60), 0.3, Enum.PartType.Ball)
+	beam.Transparency = 1
+	core.Transparency = 1
+	local params = RaycastParams.new()
+	params.FilterType = Enum.RaycastFilterType.Include
+	local pillars = workspace:FindFirstChild("ColosseumPillars")
+	params.FilterDescendantsInstances = if pillars then { pillars } else {}
+	local connection
+	connection = RunService.RenderStepped:Connect(function()
+		local now = Zones.ServerNow()
+		if now > ends + 0.1 then
+			connection:Disconnect()
+			beam:Destroy()
+			core:Destroy()
+			glow:Destroy()
+			return
+		end
+		local origin = eye()
+		glow.Position = origin
+		glow.Size = Vector3.new(1, 1, 1) * (2 + math.abs(math.sin(now * 12)) * 1.5)
+		if now < go then
+			return
+		end
+		local a = from + (to - from) * math.clamp((now - go) / math.max(ends - go, 0.05), 0, 1)
+		local target = at + Vector3.new(math.cos(a), 0, math.sin(a)) * length
+		local hit = workspace:Raycast(origin, target - origin, params)
+		local stop = if hit then hit.Position else target
+		local l = (stop - origin).Magnitude
+		local cf = CFrame.lookAt((origin + stop) / 2, stop) * CFrame.Angles(0, math.pi / 2, 0)
+		beam.Size = Vector3.new(l, 1.2, 1.2)
+		beam.CFrame = cf
+		beam.Transparency = 0.15
+		core.Size = Vector3.new(l, 0.5, 0.5)
+		core.CFrame = cf
+		core.Transparency = 0
+	end)
+	return {
+		Destroy = function()
+			connection:Disconnect()
+			beam:Destroy()
+			core:Destroy()
+			glow:Destroy()
+		end,
+	}
+end
+
+-- Amphore de shake lancée par la foule : elle tombe des gradins et attend sur la piste (halo rose)
+function Fx.Amphora(at: Vector3)
+	local model = Instance.new("Model")
+	model.Name = "CrowdAmphora"
+	local body = part(Vector3.new(2.2, 2.8, 2.2), Color3.fromRGB(200, 110, 70), 0, Enum.PartType.Ball)
+	body.Material = Enum.Material.SmoothPlastic
+	body.Parent = model
+	local neck = part(Vector3.new(1.4, 0.8, 0.8), Color3.fromRGB(200, 110, 70), 0, Enum.PartType.Cylinder)
+	neck.Material = Enum.Material.SmoothPlastic
+	neck.Parent = model
+	local shake = part(Vector3.new(0.9, 0.9, 0.9), PINK, 0, Enum.PartType.Ball)
+	shake.Parent = model
+	local halo = part(Vector3.new(0.1, 5, 5), PINK, 0.5, Enum.PartType.Cylinder)
+	halo.Parent = model
+	model.Parent = workspace
+	local born = os.clock()
+	local connection
+	connection = RunService.RenderStepped:Connect(function()
+		local t = os.clock() - born
+		local drop = math.max(1 - t / 0.6, 0) ^ 2 * 30
+		local base = CFrame.new(at + Vector3.new(0, 1.5 + drop + math.sin(t * 3) * 0.2, 0))
+			* CFrame.Angles(0, t * 1.5, 0)
+		body.CFrame = base
+		neck.CFrame = base * CFrame.new(0, 1.5, 0) * CFrame.Angles(0, 0, math.pi / 2)
+		shake.CFrame = base * CFrame.new(0, 2.1, 0)
+		halo.CFrame = CFrame.new(at + Vector3.new(0, 0.1, 0)) * UPRIGHT
+		halo.Transparency = 0.4 + 0.3 * math.sin(t * 5)
+	end)
+	return {
+		Destroy = function()
+			connection:Disconnect()
+			model:Destroy()
+		end,
+	}
+end
+
+-- Pétales de la foule : ils tourbillonnent autour de la tête du dieu (il est distrait)
+function Fx.Petals(top: () -> Vector3, ends: number)
+	local petals = {}
+	for k = 1, 18 do
+		petals[k] = {
+			part = part(Vector3.new(0.7, 0.1, 0.5), if k % 3 == 0 then Color3.new(1, 1, 1) else PINK, 0),
+			a = math.random() * 2 * math.pi,
+			r = 2 + math.random() * 3,
+			h = math.random() * 6,
+		}
+	end
+	local connection
+	connection = RunService.RenderStepped:Connect(function(dt)
+		if Zones.ServerNow() > ends + 0.6 then
+			connection:Disconnect()
+			for _, p in petals do
+				fadeOut(p.part, 0.3)
+			end
+			return
+		end
+		local center = top()
+		for _, p in petals do
+			p.a += dt * 3
+			p.h = (p.h - dt * 3) % 6
+			p.part.CFrame = CFrame.new(center + Vector3.new(math.cos(p.a) * p.r, p.h - 3, math.sin(p.a) * p.r))
+				* CFrame.Angles(p.a * 2, p.a, 0)
+		end
+	end)
+end
+
+-- Chant de la foule : un anneau doré tourne aux pieds du combattant tant que le chant n'a pas servi
+function Fx.Chant(root: () -> BasePart?)
+	local ring = part(Vector3.new(0.12, 7, 7), GOLD, 0.35, Enum.PartType.Cylinder)
+	local notes = {}
+	for k = 1, 3 do
+		notes[k] = part(Vector3.new(0.6, 0.6, 0.6), GOLD, 0, Enum.PartType.Ball)
+	end
+	local connection
+	connection = RunService.RenderStepped:Connect(function()
+		local r = root()
+		if not r then
+			return
+		end
+		local t = os.clock()
+		local feet = r.Position - Vector3.new(0, 2.8, 0)
+		ring.CFrame = CFrame.new(feet) * UPRIGHT
+		for k, n in notes do
+			local a = t * 2.5 + k * 2 * math.pi / 3
+			n.Position = feet + Vector3.new(math.cos(a) * 3.2, 2 + math.sin(t * 4 + k), math.sin(a) * 3.2)
+		end
+	end)
+	return {
+		Destroy = function()
+			connection:Disconnect()
+			fadeOut(ring, 0.3, Vector3.new(0.12, 14, 14))
+			for _, n in notes do
+				n:Destroy()
+			end
+		end,
+	}
+end
+
+-- Finale : rayon de Mog (doré) du combattant contre l'éclair du dieu ; ils se rencontrent au point de choc, qui va
+-- vers le dieu (k -> 1) ou vers le combattant (k -> 0). :Set(k) ; :Pulse() (FLEX sur le temps) ; :Destroy()
+function Fx.Clash(mine: () -> Vector3?, his: () -> Vector3?)
+	local gold = part(Vector3.new(1, 1.6, 1.6), GOLD, 0.1, Enum.PartType.Cylinder)
+	local bolt = part(Vector3.new(1, 1.4, 1.4), BOLT_COLOR, 0.1, Enum.PartType.Cylinder)
+	local orb = part(Vector3.new(4, 4, 4), Color3.new(1, 1, 1), 0.1, Enum.PartType.Ball)
+	local light = Instance.new("PointLight")
+	light.Range = 30
+	light.Brightness = 5
+	light.Color = GOLD
+	light.Parent = orb
+	local target, shown, pulse = 0.5, 0.5, 0
+	local function beam(p: BasePart, a: Vector3, b: Vector3, thick: number)
+		local l = math.max((b - a).Magnitude, 0.1)
+		p.Size = Vector3.new(l, thick, thick)
+		p.CFrame = CFrame.lookAt((a + b) / 2, b) * CFrame.Angles(0, math.pi / 2, 0)
+	end
+	local connection = RunService.RenderStepped:Connect(function(dt)
+		local a, b = mine(), his()
+		if not a or not b then
+			return
+		end
+		shown += (target - shown) * math.min(dt * 8, 1)
+		pulse = math.max(pulse - dt * 3, 0)
+		local meet = a:Lerp(b, shown)
+		local jitter = Vector3.new(math.random() - 0.5, math.random() - 0.5, math.random() - 0.5) * 0.6
+		beam(gold, a, meet, 1.6 + pulse * 1.5)
+		beam(bolt, b, meet + jitter, 1.2 + math.random() * 0.6)
+		orb.Position = meet + jitter * 0.5
+		orb.Size = Vector3.new(1, 1, 1) * (4 + pulse * 3 + math.sin(os.clock() * 20) * 0.5)
+	end)
+	return {
+		Set = function(_, k: number)
+			target = k
+		end,
+		Pulse = function()
+			pulse = 1
+		end,
+		Destroy = function()
+			connection:Disconnect()
+			fadeOut(gold, 0.3)
+			fadeOut(bolt, 0.3)
+			fadeOut(orb, 0.4, Vector3.new(14, 14, 14))
+		end,
+	}
+end
+
+-- Victoire : le dieu devient une constellation qui pose dans le ciel (étoiles aux articulations, traits entre elles)
+function Fx.Constellation(points: { [string]: Vector3 }, links: { { string } }, life: number)
+	local stars = {}
+	for name, at in points do
+		local star = part(Vector3.new(1.6, 1.6, 1.6), Color3.fromRGB(255, 245, 200), 1, Enum.PartType.Ball)
+		star.Position = at
+		stars[name] = star
+	end
+	local lines = {}
+	for _, link in links do
+		local a, b = points[link[1]], points[link[2]]
+		if a and b then
+			local line = part(Vector3.new(0.35, 0.35, (b - a).Magnitude), GOLD, 1)
+			line.CFrame = CFrame.lookAt((a + b) / 2, b)
+			table.insert(lines, line)
+		end
+	end
+	local born = os.clock()
+	local connection
+	connection = RunService.RenderStepped:Connect(function()
+		local t = os.clock() - born
+		local show = math.min(smooth(t / 1.5), 1 - smooth((t - life + 1.5) / 1.5))
+		if t > life then
+			connection:Disconnect()
+			for _, s in stars do
+				s:Destroy()
+			end
+			for _, l in lines do
+				l:Destroy()
+			end
+			return
+		end
+		for name, s in stars do
+			local twinkle = 0.25 * math.sin(t * 6 + #name)
+			s.Transparency = 1 - show * (0.85 + twinkle * 0.5)
+		end
+		for _, l in lines do
+			l.Transparency = 1 - show * 0.6
+		end
+	end)
+end
+
 return Fx

@@ -54,10 +54,15 @@ local commands = {
 		return true
 	end,
 	-- Combat du Dieu du Pump au Colisée (tranche 2, D90) : action "Start" ou "Stop"
-	PumpGod = function(player: Player, action: string)
+	-- action : "Start", "Stop", "Round" (value = manche, 4 = finale), "Cheer" (value = encouragements simulés)
+	PumpGod = function(player: Player, action: string, value: number?)
 		if action == "Stop" then
 			PumpGodService.Stop(player)
 			return true
+		elseif action == "Round" then
+			return PumpGodService.DevRound(player, value or 2)
+		elseif action == "Cheer" then
+			return PumpGodService.DevCheer(value or 20)
 		end
 		return PumpGodService.Begin(player)
 	end,

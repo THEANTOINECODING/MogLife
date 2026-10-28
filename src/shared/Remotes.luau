@@ -57,6 +57,7 @@ local NAMES = {
 	"PumpGodUpdate", -- serveur -> clients : combat du Dieu du Pump ({ state: "Start" | "Attack" | "Hit" | "BossHit" | ..., player, ... })
 	"PumpGodRoll", -- client -> serveur : roulade pendant le combat du Dieu du Pump
 	"PumpGodFlex", -- client -> serveur : bouton FLEX appuyé (true) ou relâché (false) pendant ce combat
+	"PumpGodCheer", -- client -> serveur : un spectateur encourage le combattant (bouton des gradins)
 }
 
 local isServer = RunService:IsServer()
@@ -137,4 +138,5 @@ return remotes :: {
 	PumpGodUpdate: RemoteEvent,
 	PumpGodRoll: RemoteEvent,
 	PumpGodFlex: RemoteEvent,
+	PumpGodCheer: RemoteEvent,
 }

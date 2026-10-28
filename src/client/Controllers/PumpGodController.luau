@@ -1,4 +1,4 @@
--- Combat du Dieu du Pump au Colisée, côté client (D90, D91). Le serveur (PumpGodService) décide de tout ; ici on
+-- Combat du Dieu du Pump au Colisée, côté client (D90, D91, D92). Le serveur (PumpGodService) décide de tout ; ici on
 -- montre ce qu'il annonce (Remotes.PumpGodUpdate), à l'heure du serveur :
 -- - zones au sol (PumpGod/Zones) et ce qui frappe ou sert à frapper (PumpGod/Fx) : éclairs, haltère, onde, cône,
 --   javelot, disques dorés, cercle sacré, rayon de Mog ;
@@ -6,7 +6,11 @@
 -- - pour le combattant : vie du joueur et du dieu en bas de l'écran, bouton FLEX (F / Y à la manette) dont le texte
 --   dit ce qu'il va faire, bouton ROULADE (Q / Ctrl gauche / X), conseils la première fois, flash rouge et petite
 --   secousse quand il est touché (jamais de zoom) ;
--- - pour les spectateurs proches : le même combat, plus un bandeau avec le nom du combattant.
+-- - manches (titre, vie rendue, dieu géant en manche 3), finale (choc de rayons : FLEX sur le temps, le bouton bat la
+--   mesure, la barre du dieu devient celle du choc), victoire en constellation ;
+-- - pour les spectateurs proches : le même combat, un bandeau avec le nom du combattant, et le bouton ENCOURAGER avec
+--   la jauge de la foule (jamais montrée au combattant) ; ce que fait la foule (amphore, pétales, chant) se voit sur la
+--   piste.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -53,6 +57,14 @@ type Fight = {
 	beatFrom: number, -- fenêtre du 3e coup en rythme (heure locale)
 	beatTo: number,
 	tips: { [string]: boolean },
+	round: number,
+	finale: { beatStart: number, beat: number, fx: any }?,
+	chantFx: { Destroy: (any) -> () }?,
+	amphora: { id: number, fx: { Destroy: (any) -> () } }?,
+	chant: boolean,
+	crowd: number, -- jauge de la foule (spectateurs seulement)
+	crowdStep: number,
+	cheersLeft: number,
 }
 
 local fight: Fight? = nil
@@ -73,6 +85,10 @@ local flexButton: TextButton
 local flexStroke: UIStroke
 local banner: TextLabel
 local flash: Frame
+local cheerButton: TextButton
+local cheerFill: Frame
+local cheerLeft: TextLabel
+local cheerPop = 0
 
 local PumpGodController = {}
 
@@ -223,19 +239,24 @@ end
 -- Ce que fera FLEX maintenant (même ordre que le serveur) : texte du bouton, et s'il faut le faire briller
 local function flexContext(current: Fight, root: BasePart): (string, boolean)
 	local now = Zones.ServerNow()
+	if current.finale then
+		return "PumpGod.Flex", false
+	end
+	local parry = PumpGod.Parry.Range * 1.6 * (if current.chant then PumpGod.Crowd.ChantRange else 1)
 	for _, shot in current.javelins do
 		if shot.flying and now > shot.impact then
 			local s = (now - shot.impact) * shot.speed
 			local tip_ = shot.at + shot.dir * s
 			local ahead = flat(root.Position - shot.at):Dot(shot.dir) - s
-			if ahead > -2 and flat(root.Position - tip_).Magnitude < PumpGod.Parry.Range * 1.6 then
+			if ahead > -2 and flat(root.Position - tip_).Magnitude < parry then
 				return "PumpGod.ParryNow", true
 			end
 		end
 	end
 	if now < current.windedUntil and current.god then
 		local ground = current.god:Ground(now)
-		if flat(root.Position - ground).Magnitude < PumpGod.Winded.Range then
+		local reach = if current.round == 3 then PumpGod.Winded.GiantRange else PumpGod.Winded.Range
+		if flat(root.Position - ground).Magnitude < reach then
 			return "PumpGod.PunchNow", true
 		end
 	end
@@ -329,6 +350,25 @@ local function keyHint(button: TextButton, key: string)
 		ZIndex = 3,
 		Parent = button,
 	})
+end
+
+-- Spectateur : encourager le combattant (le serveur limite le rythme et le nombre)
+local function cheer()
+	local current = fight
+	if not current or current.ended or current.fighter == player or current.cheersLeft <= 0 then
+		return
+	end
+	Remotes.PumpGodCheer:FireServer()
+	cheerPop = os.clock()
+end
+
+-- Le spectateur peut-il encourager (combat en cours, assez près de la piste) ?
+local function canCheer(current: Fight): boolean
+	local root = rootOf(player)
+	return not current.ended
+		and current.fighter ~= player
+		and root ~= nil
+		and flat(root.Position - current.center).Magnitude < PumpGod.Crowd.Range
 end
 
 local function buildGui()
@@ -455,6 +495,42 @@ local function buildGui()
 			flex(false)
 		end
 	end)
+	-- Spectateurs : ENCOURAGER, avec la jauge de la foule dessous
+	cheerButton = Ui.button({
+		Name = "Cheer",
+		AnchorPoint = Vector2.new(1, 1),
+		Position = UDim2.new(1, -110, 1, -40),
+		Size = UDim2.fromOffset(120, 64),
+		BackgroundColor3 = Color3.fromRGB(255, 120, 170),
+		Text = Texts.Get("PumpGod.Cheer"),
+		Visible = false,
+		Parent = gui,
+	})
+	Ui.stroke(Color3.new(1, 1, 1), 3, 0.1).Parent = cheerButton
+	keyHint(cheerButton, "PumpGod.KeyFlex")
+	local gauge = Ui.create("Frame", {
+		AnchorPoint = Vector2.new(0.5, 0),
+		Position = UDim2.new(0.5, 0, 1, 6),
+		Size = UDim2.new(1, 0, 0, 10),
+		BackgroundColor3 = Color3.fromRGB(25, 20, 35),
+		BackgroundTransparency = 0.2,
+		Parent = cheerButton,
+	}, { Ui.corner(UDim.new(0.5, 0)) })
+	cheerFill = Ui.create("Frame", {
+		Size = UDim2.fromScale(0, 1),
+		BackgroundColor3 = GOLD,
+		BorderSizePixel = 0,
+		Parent = gauge,
+	}, { Ui.corner(UDim.new(0.5, 0)) })
+	cheerLeft = Ui.label({
+		AnchorPoint = Vector2.new(0.5, 1),
+		Position = UDim2.new(0.5, 0, 0, -4),
+		Size = UDim2.new(1.3, 0, 0, 18),
+		Text = "",
+		TextColor3 = Color3.fromRGB(255, 240, 200),
+		Parent = cheerButton,
+	})
+	cheerButton.Activated:Connect(cheer)
 	Ui.watchViewport(layout)
 	gui.Parent = player:WaitForChild("PlayerGui")
 end
@@ -462,7 +538,7 @@ end
 local function showControls(visible: boolean)
 	hud.Visible = visible
 	bossBar.Visible = visible
-	rollButton.Visible = visible
+	rollButton.Visible = visible and not (fight and fight.finale)
 	flexButton.Visible = visible
 	if not visible and flexHeld then
 		flexHeld = nil
@@ -496,6 +572,12 @@ local function clearField(current: Fight)
 		current.sacred.fx:Destroy()
 		current.sacred = nil
 	end
+	if current.amphora then
+		current.amphora.fx:Destroy()
+		current.amphora = nil
+	end
+	current.carrying = nil
+	current.windedUntil = 0
 end
 
 local function clear()
@@ -507,8 +589,12 @@ local function clear()
 	if current.god then
 		current.god:Destroy()
 	end
+	if current.chantFx then
+		current.chantFx:Destroy()
+	end
 	fight = nil
 	showControls(false)
+	cheerButton.Visible = false
 end
 
 local function findGod(message)
@@ -545,6 +631,14 @@ function handlers.Start(message)
 		beatFrom = 0,
 		beatTo = 0,
 		tips = {},
+		round = 1,
+		finale = nil,
+		chantFx = nil,
+		amphora = nil,
+		chant = false,
+		crowd = 0,
+		crowdStep = PumpGod.Crowd.Step,
+		cheersLeft = PumpGod.Crowd.Max,
 	}
 	task.spawn(findGod, message)
 	if mine() then
@@ -664,6 +758,319 @@ function handlers.Attack(message)
 			current.javelins[id] = nil
 		end)
 		tip("Javelin")
+	elseif kind == "Column" then
+		current.zones[id] = Zones.Band(message.a, message.b, message.width, message.start, message.impact)
+		removeZone(current, id, message.impact)
+		local column = Fx.Column(message.a, message.b, message.width, message.start, message.impact, function()
+			return fight == current and not current.ended
+		end)
+		table.insert(current.effects, column)
+		atImpact(current, message.impact, function()
+			shakeIfNear((message.a + message.b) / 2, 40, 0.35)
+		end)
+	elseif kind == "Tiles" then
+		current.zones[id] = Zones.Tiles(message.cells, message.cell, message.start, message.impact)
+		removeZone(current, id, message.impact)
+		atImpact(current, message.impact, function()
+			Fx.TileBurst(message.cells, message.cell)
+			shakeIfNear(current.center, 80, 0.25)
+		end)
+		tip("Tiles")
+	elseif kind == "Chariot" then
+		current.zones[id] = Zones.Band(message.a, message.b, message.width, message.start, message.impact)
+		removeZone(current, id, message.impact + (message.b - message.a).Magnitude / message.speed)
+		table.insert(
+			current.things,
+			Fx.Chariot(message, function()
+				return fight == current
+			end, function()
+				shakeIfNear(message.a, 40, 0.3)
+			end)
+		)
+	elseif kind == "Leap" then
+		local fighter = current.fighter
+		current.zones[id] = Zones.Chase(function()
+			local root = rootOf(fighter)
+			return if root then Vector3.new(root.Position.X, message.at.Y, root.Position.Z) else nil
+		end, message.radius, message.start, message.impact)
+		removeZone(current, id, message.impact)
+		if current.god then
+			current.god:Leap(message.start, message.rise, message.lock, message.impact)
+		end
+		atImpact(current, message.impact, function()
+			local god = current.god
+			local at = if god then god:Ground(Zones.ServerNow()) else message.at
+			Fx.GroundBurst(at, 6, message.radius * 3, Color3.fromRGB(230, 200, 150), 0.6)
+			Fx.GroundBurst(at, 4, message.radius * 2, GOLD, 0.4)
+			shakeIfNear(at, 90, 0.6)
+		end)
+		tip("Leap")
+	elseif kind == "Storm" then
+		current.zones[id] =
+			Zones.Storm(message.at, message.radius, message.safes, message.safeRadius, message.start, message.impact)
+		removeZone(current, id, message.impact)
+		atImpact(current, message.impact, function()
+			local hand = if current.god then current.god:Hand("Right") else message.at + Vector3.new(0, 30, 0)
+			Fx.Storm(message.at, message.radius, message.safes, message.safeRadius, hand)
+			shakeIfNear(current.center, 120, 0.45)
+		end)
+		tip("Storm")
+	elseif kind == "Gaze" then
+		current.zones[id] = Zones.Sweep(
+			message.at,
+			message.from,
+			message.to,
+			message.width,
+			message.length,
+			message.start,
+			message.impact,
+			message.ends
+		)
+		removeZone(current, id, message.ends)
+		local god = current.god
+		table.insert(
+			current.effects,
+			Fx.Gaze(function()
+				return if god and god.model.Parent then god:Eyes() else message.at + Vector3.new(0, 25, 0)
+			end, message.at, message.from, message.to, message.length, message.impact, message.ends)
+		)
+		tip("Gaze")
+	end
+end
+
+function handlers.LeapLock(message)
+	local current = fight
+	if not current or current.ended then
+		return
+	end
+	local zone = current.zones[message.id]
+	if zone and zone.Lock then
+		zone.Lock(message.at)
+	end
+	local god = current.god
+	if god then
+		god:MoveTo(god:Ground(message.lock), message.at, message.lock, message.impact)
+	end
+end
+
+-- Nouvelle manche : le terrain se vide, titre, vie rendue ; le dieu se replace (ou revient en géant)
+function handlers.Round(message)
+	local current = fight
+	if not current or current.ended then
+		return
+	end
+	clearField(current)
+	current.round = message.round
+	current.hp = message.hp
+	local god = current.god
+	if typeof(message.boss) == "Instance" and (not god or god.model ~= message.boss) then
+		if god then
+			god:Destroy()
+			current.god = nil
+		end
+		task.spawn(findGod, message)
+	elseif god then
+		god:MoveTo(god:Ground(message.start), message.bossAt, message.start, message.start + 1.2)
+	end
+	if near(current.center) then
+		showBanner(Texts.Get(message.title), 3.5)
+		shakeIfNear(current.center, 200, 0.3)
+	end
+	if current.fighter == player then
+		setHp(message.hp, message.maxHp)
+		setBar(bossFill, 1)
+	end
+end
+
+local function fighterChest(current: Fight): Vector3?
+	local root = rootOf(current.fighter)
+	return if root then root.Position + Vector3.new(0, 1.5, 0) else nil
+end
+
+-- Finale : le combattant ne bouge plus ; rayon contre éclair
+function handlers.Finale(message)
+	local current = fight
+	if not current or current.ended then
+		return
+	end
+	clearField(current)
+	local god = current.god
+	if god then
+		god:Clash(true)
+	end
+	current.finale = {
+		beatStart = message.beatStart,
+		beat = message.beat,
+		fx = if near(current.center)
+			then Fx.Clash(function()
+				return fighterChest(current)
+			end, function()
+				local g = current.god
+				return if g and g.model.Parent then g:Hand("Right") else nil
+			end)
+			else nil,
+	}
+	if current.finale.fx then
+		table.insert(current.effects, current.finale.fx)
+	end
+	if near(current.center) then
+		showBanner(Texts.Get("PumpGod.Finale"), 2.5)
+	end
+	if current.fighter == player then
+		rollButton.Visible = false
+		bossFill.Size = UDim2.fromScale(message.k, 1)
+		task.delay(2.5, function()
+			tip("Finale")
+		end)
+	end
+end
+
+function handlers.Clash(message)
+	local current = fight
+	local finale = current and current.finale
+	if not current or not finale then
+		return
+	end
+	if finale.fx then
+		finale.fx:Set(message.k)
+	end
+	if current.fighter == player then
+		setBar(bossFill, message.k)
+	end
+end
+
+function handlers.Pulse(message)
+	local current = fight
+	local finale = current and current.finale
+	if not current or not finale then
+		return
+	end
+	if finale.fx then
+		finale.fx:Set(message.k)
+		if message.good then
+			finale.fx:Pulse()
+		end
+	end
+	if current.fighter == player then
+		setBar(bossFill, message.k)
+		local root = rootOf(player)
+		if root then
+			Fx.Float(
+				root.Position + Vector3.new(0, 4, 0),
+				Texts.Get(if message.good then "PumpGod.Perfect" else "PumpGod.Miss"),
+				if message.good then GOLD else RED,
+				if message.good then 130 else 80
+			)
+		end
+		if message.good then
+			shake(0.15, 0.1)
+		end
+	end
+end
+
+-- ------------------------------------------------------------------ foule
+local function crowdBanner(key: string)
+	local current = fight
+	if current and near(current.center) then
+		showBanner(Texts.Get(key), 2.5)
+	end
+end
+
+function handlers.Crowd(message)
+	local current = fight
+	if not current or current.fighter == player then
+		return
+	end
+	current.crowd = message.gauge
+	current.crowdStep = message.step
+	current.cheersLeft = message.left
+	setBar(cheerFill, math.clamp(message.gauge / math.max(message.step, 1), 0, 1))
+	cheerLeft.Text = Texts.Get("PumpGod.CheerLeft", { left = message.left })
+end
+
+function handlers.Amphora(message)
+	local current = fight
+	if not current or current.ended then
+		return
+	end
+	if current.amphora then
+		current.amphora.fx:Destroy()
+	end
+	current.amphora = {
+		id = message.id,
+		fx = if near(current.center) then Fx.Amphora(message.at) else { Destroy = function() end },
+	}
+	crowdBanner("PumpGod.Crowd.Amphora")
+end
+
+function handlers.AmphoraGone(message)
+	local current = fight
+	if current and current.amphora and current.amphora.id == message.id then
+		current.amphora.fx:Destroy()
+		current.amphora = nil
+	end
+end
+
+function handlers.Heal(message)
+	local current = fight
+	if not current or current.ended then
+		return
+	end
+	handlers.AmphoraGone(message)
+	current.hp = message.hp
+	local root = rootOf(message.player)
+	if root and near(current.center) then
+		Fx.GroundBurst(root.Position - Vector3.new(0, 2.8, 0), 3, 12, Color3.fromRGB(255, 140, 200), 0.5)
+		Fx.Float(
+			root.Position + Vector3.new(0, 4, 0),
+			Texts.Get("PumpGod.Heal", { hp = message.amount }),
+			Color3.fromRGB(110, 230, 110),
+			110
+		)
+	end
+	if current.fighter == player then
+		setHp(message.hp, current.maxHp)
+	end
+end
+
+function handlers.Petals(message)
+	local current = fight
+	local god = current and current.god
+	if not current or current.ended then
+		return
+	end
+	if god and near(current.center) then
+		Fx.Petals(function()
+			return god:Top()
+		end, message.ends)
+	end
+	crowdBanner("PumpGod.Crowd.Petals")
+end
+
+function handlers.Chant()
+	local current = fight
+	if not current or current.ended then
+		return
+	end
+	current.chant = true
+	if not current.chantFx and near(current.center) then
+		local fighter = current.fighter
+		current.chantFx = Fx.Chant(function()
+			return rootOf(fighter)
+		end)
+	end
+	crowdBanner("PumpGod.Crowd.Chant")
+end
+
+function handlers.ChantUsed()
+	local current = fight
+	if not current then
+		return
+	end
+	current.chant = false
+	if current.chantFx then
+		current.chantFx:Destroy()
+		current.chantFx = nil
 	end
 end
 
@@ -915,7 +1322,25 @@ function handlers.End(message)
 	showControls(false)
 	local god = current.god
 	if message.reason == "Victory" then
+		if god and god.rig and near(current.center) then
+			-- Il devient une constellation qui pose (double biceps) au-dessus du Colisée
+			god:Clash(false)
+			god:Taunt()
+			god:Step(Zones.ServerNow(), nil)
+			local points = god:Skeleton()
+			god.taunting = false
+			local pivot = god.model:GetPivot().Position
+			local sky = current.center + Vector3.new(0, 110, 0)
+			local scale = 60 / math.max(god.height, 1)
+			for name, at in points do
+				points[name] = sky + (at - pivot) * scale
+			end
+			task.delay(2.2, function()
+				Fx.Constellation(points, God.Links, 14)
+			end)
+		end
 		if god then
+			god:Clash(false)
 			god:Eject()
 			if near(current.center) then
 				Fx.Impact(god:Chest(), 3)
@@ -965,8 +1390,12 @@ function PumpGodController.Start()
 		if table.find(ROLL_KEYS, input.KeyCode) then
 			roll()
 		elseif table.find(FLEX_KEYS, input.KeyCode) and not flexHeld then
-			flexHeld = input
-			flex(true)
+			if mine() then
+				flexHeld = input
+				flex(true)
+			elseif fight and cheerButton.Visible then
+				cheer()
+			end
 		end
 	end)
 	-- Le dieu s'anime avant la physique (écriture des os, D86) ; puis les boutons
@@ -984,6 +1413,16 @@ function PumpGodController.Start()
 				god:Step(Zones.ServerNow(), if root then root.Position else nil)
 			end
 		end
+		-- Spectateur : bouton ENCOURAGER (il gonfle un instant à chaque appui ; gris quand il n'en reste plus)
+		local cheering = canCheer(current)
+		cheerButton.Visible = cheering
+		if cheering then
+			local pop = math.max(1 - (os.clock() - cheerPop) / 0.2, 0)
+			cheerButton.Size = UDim2.fromOffset(120 + 12 * pop, 64 + 8 * pop)
+			cheerButton.BackgroundColor3 = if current.cheersLeft > 0
+				then Color3.fromRGB(255, 120, 170)
+				else Color3.fromRGB(120, 110, 120)
+		end
 		if not flexButton.Visible then
 			return
 		end
@@ -995,6 +1434,13 @@ function PumpGodController.Start()
 			flexButton.Text = Texts.Get(key)
 			local now = os.clock()
 			local beat = now >= current.beatFrom and now <= current.beatTo
+			local finale = current.finale
+			if finale then
+				-- Finale : le bouton bat la mesure (il brille pendant la fenêtre de chaque temps)
+				local t = Zones.ServerNow()
+				local phase = ((t - finale.beatStart) / finale.beat) % 1
+				beat = t >= finale.beatStart - 0.1 and math.min(phase, 1 - phase) * finale.beat <= PumpGod.Finale.Window
+			end
 			local glow = beat or (ready and math.floor(now * 6) % 2 == 0)
 			flexStroke.Color = if beat then GOLD elseif glow then Color3.fromRGB(255, 255, 200) else Color3.new(1, 1, 1)
 			flexStroke.Thickness = if beat then 6 elseif glow then 4 else 3

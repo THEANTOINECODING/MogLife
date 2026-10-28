@@ -4,6 +4,8 @@
 --   Zones.Circle(at, radius, start, impact)              cercle (foudre)
 --   Zones.Band(a, b, width, start, impact)               bande (haltère qui roule)
 --   Zones.Ring(at, start, impact, speed, thickness, max) anneau qui part du dieu et s'élargit (onde : sauter)
+--   Zones.Cone, Zones.Tiles (dalles), Zones.Storm (toute la piste sauf des cercles sûrs), Zones.Chase (cercle qui suit
+--   le combattant puis se fige), Zones.Sweep (rayon qui balaie la piste)
 -- Chaque fonction renvoie un objet avec :Destroy(). Tout est local (aucune collision, ni requête).
 
 local RunService = game:GetService("RunService")
@@ -189,6 +191,153 @@ function Zones.Ring(at: Vector3, start: number, go: number, speed: number, thick
 			seg.Transparency = 0.2 + 0.8 * fade
 			seg.Color = if k % 2 == 0 then RED else GOLD
 		end
+	end)
+	return {
+		Destroy = function()
+			connection:Disconnect()
+			f:Destroy()
+		end,
+	}
+end
+
+-- Dalles de mosaïque (manche 2) : chaque case du motif s'allume et se remplit depuis son centre
+function Zones.Tiles(cells: { Vector3 }, cell: number, start: number, impact: number)
+	local f = folder("ZoneTiles")
+	local fills = {}
+	local edges = {}
+	for k, at in cells do
+		local base = CFrame.new(at + Vector3.new(0, 0.06, 0))
+		local edge = part(f, Vector3.new(cell - 0.5, 0.08, cell - 0.5), EDGE, 0.35)
+		edge.CFrame = base
+		edges[k] = edge
+		local area = part(f, Vector3.new(cell - 1.3, 0.1, cell - 1.3), RED, 0.6)
+		area.CFrame = base * CFrame.new(0, 0.02, 0)
+		fills[k] = { part = part(f, Vector3.new(0.1, 0.12, 0.1), RED, 0.15), base = base }
+	end
+	local connection = RunService.RenderStepped:Connect(function()
+		local k = progress(start, impact)
+		local d = math.max((cell - 1.3) * k, 0.1)
+		for _, fill in fills do
+			fill.part.Size = Vector3.new(d, 0.12, d)
+			fill.part.CFrame = fill.base * CFrame.new(0, 0.04, 0)
+		end
+		local color = if blink(k) then Color3.new(1, 1, 1) else EDGE
+		for _, edge in edges do
+			edge.Color = color
+		end
+	end)
+	return {
+		Destroy = function()
+			connection:Disconnect()
+			f:Destroy()
+		end,
+	}
+end
+
+-- Orage (manche 3) : toute la piste se remplit de rouge depuis le centre, sauf les cercles sûrs (dorés, au-dessus)
+function Zones.Storm(at: Vector3, radius: number, safes: { Vector3 }, safeRadius: number, start: number, impact: number)
+	local f = folder("ZoneStorm")
+	local base = CFrame.new(at + Vector3.new(0, 0.06, 0)) * UPRIGHT
+	local area = part(f, Vector3.new(0.1, radius * 2, radius * 2), RED, 0.7, true)
+	area.CFrame = base
+	local fill = part(f, Vector3.new(0.12, 0.1, 0.1), RED, 0.3, true)
+	local rims = {}
+	for k, safe in safes do
+		local frame = CFrame.new(safe + Vector3.new(0, 0.1, 0)) * UPRIGHT
+		local rim = part(f, Vector3.new(0.22, safeRadius * 2 + 0.8, safeRadius * 2 + 0.8), GOLD, 0, true)
+		rim.CFrame = frame
+		rims[k] = rim
+		local inside =
+			part(f, Vector3.new(0.26, safeRadius * 2, safeRadius * 2), Color3.fromRGB(90, 220, 120), 0.1, true)
+		inside.Material = Enum.Material.SmoothPlastic
+		inside.CFrame = frame * CFrame.new(0.02, 0, 0)
+	end
+	local connection = RunService.RenderStepped:Connect(function()
+		local k = progress(start, impact)
+		local d = math.max(radius * 2 * k, 0.1)
+		fill.Size = Vector3.new(0.12, d, d)
+		fill.CFrame = base * CFrame.new(0.02, 0, 0)
+		local pulse = 0.5 + 0.5 * math.sin(serverNow() * 10)
+		for _, rim in rims do
+			rim.Color = GOLD:Lerp(Color3.new(1, 1, 1), pulse)
+		end
+	end)
+	return {
+		Destroy = function()
+			connection:Disconnect()
+			f:Destroy()
+		end,
+	}
+end
+
+-- Saut du dieu (manche 2) : un cercle suit `follow()` (le combattant), puis se fige (:Lock) là où il va retomber
+function Zones.Chase(follow: () -> Vector3?, radius: number, start: number, impact: number)
+	local f = folder("ZoneChase")
+	local edge = part(f, Vector3.new(0.08, radius * 2 + 0.6, radius * 2 + 0.6), EDGE, 0.25, true)
+	local area = part(f, Vector3.new(0.1, radius * 2, radius * 2), RED, 0.6, true)
+	local fill = part(f, Vector3.new(0.12, 0.1, 0.1), RED, 0.15, true)
+	local locked: Vector3? = nil
+	local last = follow() or Vector3.zero
+	local connection = RunService.RenderStepped:Connect(function()
+		local at = locked or follow() or last
+		last = at
+		local base = CFrame.new(at + Vector3.new(0, 0.06, 0)) * UPRIGHT
+		local k = progress(start, impact)
+		local d = math.max(radius * 2 * k, 0.1)
+		edge.CFrame = base
+		area.CFrame = base * CFrame.new(0.02, 0, 0)
+		fill.Size = Vector3.new(0.12, d, d)
+		fill.CFrame = base * CFrame.new(0.04, 0, 0)
+		edge.Color = if locked and blink(k) then Color3.new(1, 1, 1) else EDGE
+		edge.Transparency = if locked then 0 else 0.25
+	end)
+	return {
+		Lock = function(at: Vector3)
+			locked = at
+		end,
+		Destroy = function()
+			connection:Disconnect()
+			f:Destroy()
+		end,
+	}
+end
+
+-- Regard brûlant (manche 3) : avant, l'éventail balayé est marqué (deux bords et un trait qui palpite au départ) ;
+-- ensuite une bande rouge tourne au sol depuis le géant, de l'angle `from` à `to` (radians, comme cos / sin en X / Z)
+function Zones.Sweep(
+	at: Vector3,
+	from: number,
+	to: number,
+	width: number,
+	length: number,
+	start: number,
+	go: number,
+	ends: number
+)
+	local f = folder("ZoneSweep")
+	local base = at + Vector3.new(0, 0.08, 0)
+	local function frameAt(a: number, l: number): CFrame
+		local dir = Vector3.new(math.cos(a), 0, math.sin(a))
+		return CFrame.lookAt(base + dir * l / 2, base + dir * l)
+	end
+	for _, a in { from, to } do
+		local edge = part(f, Vector3.new(0.5, 0.1, length), EDGE, 0.3)
+		edge.CFrame = frameAt(a, length)
+	end
+	local beam = part(f, Vector3.new(width, 0.14, length), RED, 0.5)
+	local connection = RunService.RenderStepped:Connect(function()
+		local t = serverNow()
+		if t < go then
+			local k = progress(start, go)
+			beam.CFrame = frameAt(from, length)
+			beam.Transparency = 0.7 - 0.5 * math.abs(math.sin(t * 8)) * k
+			beam.Color = if blink(k) then Color3.new(1, 1, 1) else RED
+			return
+		end
+		local k = math.clamp((t - go) / math.max(ends - go, 0.05), 0, 1)
+		beam.CFrame = frameAt(from + (to - from) * k, length)
+		beam.Transparency = 0.15
+		beam.Color = RED
 	end)
 	return {
 		Destroy = function()

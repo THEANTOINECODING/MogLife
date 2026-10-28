@@ -6,11 +6,17 @@
 --   Wave     : double biceps en se ramassant, puis il frappe le sol des deux poings (l'onde part)
 --   Slam     : poing droit armé haut derrière lui, puis abattu au sol devant lui
 --   Javelin  : bras droit armé en arrière (le javelot en main), bras gauche qui vise, puis le lancer
+--   Column   : les deux mains poussent devant lui (il renverse les colonnes)
+--   Tiles    : bras levés, puis les deux poings frappent le sol (les dalles jaillissent)
+--   Chariot  : bras droit tendu, il appelle le char ; Leap : bras au ciel, il saute très haut puis retombe poings
+--   en avant ; Storm : les deux bras en V au ciel ; Gaze : penché en avant, mains aux tempes
+--   Clash    : finale, bras droit tendu vers le combattant (l'éclair part de sa main)
 -- États : essoufflé (il tombe à genoux, tête basse), touché (recul qui s'amortit), victoire du joueur (éjecté vers le
 -- ciel en tournoyant), défaite du joueur (il nargue en double biceps).
 -- Avec os (Boss_PumpGod_Rig.fbx) : BossRig ; sans os (ancien modèle) : le corps entier flotte, se tourne et se baisse.
 --   God.new(model, ground) -> god ; god:Play(kind, start, impact) ; god:MoveTo(from, to, start, arrive) ;
---   god:Winded(start, ends) ; god:Hurt(power) ; god:Eject() ; god:Taunt() ; god:Step(now, target) ; god:Destroy()
+--   god:Winded(start, ends) ; god:Hurt(power) ; god:Eject() ; god:Taunt() ; god:Clash(on) ;
+--   god:Leap(start, rise, lock, impact) ; god:Step(now, target) ; god:Skeleton() ; god:Destroy()
 
 local BossRig = require(script.Parent.Parent.BossFights.BossRig)
 
@@ -18,7 +24,38 @@ local God = {}
 God.__index = God
 
 -- Durée de la frappe après l'impact, puis du retour au repos
-local STRIKE = { Bolt = 0.25, Dumbbell = 0.45, Wave = 0.5, Slam = 0.55, Javelin = 0.35 }
+local STRIKE = {
+	Bolt = 0.25,
+	Dumbbell = 0.45,
+	Wave = 0.5,
+	Slam = 0.55,
+	Javelin = 0.35,
+	Column = 0.5,
+	Tiles = 0.5,
+	Chariot = 0.4,
+	Leap = 0.6,
+	Storm = 0.4,
+	Gaze = 3.4, -- il garde la pose pendant tout le balayage
+}
+local LEAP_HEIGHT = 70 -- studs : il sort de l'écran par le haut
+-- Articulations de la constellation (victoire) et les traits entre elles
+local BONES = {
+	"LowerTorso",
+	"UpperTorso",
+	"Head",
+	"LeftUpperArm",
+	"LeftLowerArm",
+	"LeftHand",
+	"RightUpperArm",
+	"RightLowerArm",
+	"RightHand",
+	"LeftUpperLeg",
+	"LeftLowerLeg",
+	"LeftFoot",
+	"RightUpperLeg",
+	"RightLowerLeg",
+	"RightFoot",
+}
 local RECOVER = 0.5
 local HURT_TIME = 0.4
 
@@ -50,6 +87,8 @@ function God.new(model: Model, ground: Vector3)
 		hurtPower = 0,
 		ejectAt = nil :: number?,
 		taunting = false,
+		clashing = false,
+		leap = nil :: { start: number, rise: number, lock: number, impact: number }?,
 		bornAt = os.clock(),
 		body = body,
 	}, God)
@@ -77,6 +116,38 @@ function God.Eject(self)
 	self.ejectAt = os.clock()
 end
 
+function God.Clash(self, on: boolean)
+	self.clashing = on
+	self.action = nil
+	self.winded = nil
+end
+
+function God.Leap(self, start: number, rise: number, lock: number, impact: number)
+	self.leap = { start = start, rise = rise, lock = lock, impact = impact }
+end
+
+-- Hauteur du saut au-dessus de la piste : il monte, reste là-haut pendant que le cercle suit, puis retombe
+function God.LeapHeight(self, now: number): number
+	local leap = self.leap
+	if not leap then
+		return 0
+	end
+	if now > leap.impact + 0.5 then
+		self.leap = nil
+		return 0
+	end
+	if now < leap.rise then
+		local k = math.clamp((now - leap.start) / math.max(leap.rise - leap.start, 0.05), 0, 1)
+		return LEAP_HEIGHT * (1 - (1 - k) ^ 2)
+	elseif now < leap.lock then
+		return LEAP_HEIGHT
+	elseif now < leap.impact then
+		local k = (now - leap.lock) / math.max(leap.impact - leap.lock, 0.05)
+		return LEAP_HEIGHT * (1 - k * k)
+	end
+	return 0
+end
+
 function God.Taunt(self)
 	self.taunting = true
 	self.action = nil
@@ -87,6 +158,8 @@ end
 function God.Weights(self, now: number): (string?, number, number)
 	if self.taunting then
 		return "Wave", 1, 0 -- double biceps tenu
+	elseif self.clashing then
+		return "Clash", 1, 0
 	end
 	local action = self.action
 	if not action then
@@ -183,7 +256,20 @@ function God.Step(self, now: number, target: Vector3?)
 		dip = -h * 0.07 * hit * w
 	elseif kind == "Javelin" then
 		lean += -0.1 * w * (1 - hit) + 0.2 * hit * w
+	elseif kind == "Column" then
+		lean += -0.1 * w * (1 - hit) + 0.3 * hit * w
+	elseif kind == "Tiles" then
+		lean += -0.12 * w * (1 - hit) + 0.35 * hit * w
+		dip = -h * 0.06 * hit * w
+	elseif kind == "Storm" then
+		lean += -0.2 * w
+	elseif kind == "Gaze" then
+		lean += 0.3 * w
+	elseif kind == "Clash" then
+		lean += 0.1 + math.sin(t * 30) * 0.02
 	end
+	-- Saut : il quitte la piste (au-dessus de l'écran) puis retombe
+	dip += self:LeapHeight(now)
 	-- À genoux : il tombe sur la piste, buste penché, tête basse
 	dip -= h * 0.18 * winded
 	lean += 0.5 * winded - 0.35 * hurt
@@ -280,6 +366,39 @@ function God.Step(self, now: number, target: Vector3?)
 			armTarget(rig, facing, "Right", lerp(Vector3.new(0.55, 0.55, -0.9), Vector3.new(0.15, 0.15, 1), hit), 0.95)
 		pose.Left = armTarget(rig, facing, "Left", toward(facing, rig:Joint("LeftUpperArm"), target), 0.9 - 0.3 * hit)
 		bend.Right = facing:VectorToWorldSpace(Vector3.new(1, -0.6, 0))
+	elseif kind == "Column" then
+		-- Mains à plat devant lui, qui poussent
+		for _, side in { "Left", "Right" } do
+			local s = if side == "Left" then -1 else 1
+			local dir = lerp(Vector3.new(0.45 * s, 0.3, 0.5), Vector3.new(0.25 * s, 0.1, 1), hit)
+			pose[side] = armTarget(rig, facing, side, dir, 0.7 + 0.25 * hit)
+		end
+	elseif kind == "Tiles" or kind == "Leap" then
+		-- Bras au ciel, puis les poings au sol (Leap : à l'atterrissage)
+		for _, side in { "Left", "Right" } do
+			local s = if side == "Left" then -1 else 1
+			local dir = lerp(Vector3.new(0.3 * s, 1, 0.1), Vector3.new(0.3 * s, -1, 0.6), hit)
+			pose[side] = armTarget(rig, facing, side, dir, 0.95)
+		end
+	elseif kind == "Chariot" then
+		pose.Right = armTarget(rig, facing, "Right", Vector3.new(0.4, 0.35 + 0.1 * hit, 1), 0.95)
+		pose.Left = armTarget(rig, facing, "Left", Vector3.new(-0.6, 0.9, 0.1), 0.9)
+	elseif kind == "Storm" then
+		-- Les deux bras en V au ciel ; ils tremblent à l'impact
+		local shiver = if hit > 0 then math.sin(t * 40) * 0.08 else 0
+		pose.Left = armTarget(rig, facing, "Left", Vector3.new(-0.6, 1, shiver), 0.95)
+		pose.Right = armTarget(rig, facing, "Right", Vector3.new(0.6, 1, -shiver), 0.95)
+	elseif kind == "Gaze" then
+		-- Mains aux tempes, le regard droit devant
+		for _, side in { "Left", "Right" } do
+			local s = if side == "Left" then -1 else 1
+			pose[side] = armTarget(rig, facing, side, Vector3.new(0.35 * s, 0.85, 0.35), 0.6)
+			bend[side] = facing:VectorToWorldSpace(Vector3.new(s, 0, 0))
+		end
+	elseif kind == "Clash" then
+		-- Bras droit tendu vers le combattant, le gauche tient le poignet
+		pose.Right = armTarget(rig, facing, "Right", toward(facing, rig:Joint("RightUpperArm"), target), 0.97)
+		pose.Left = armTarget(rig, facing, "Left", Vector3.new(0.3, 0, 0.7), 0.75)
 	end
 	for _, side in { "Left", "Right" } do
 		rig:Reach(side, lerp(idle[side], pose[side], w), bend[side])
@@ -295,6 +414,34 @@ function God.Step(self, now: number, target: Vector3?)
 	rig:Turn("RightFoot", CFrame.Angles(-0.35, 0, 0))
 	rig:Apply()
 end
+
+-- Position (monde) de ses articulations, pour la constellation de la victoire
+function God.Skeleton(self): { [string]: Vector3 }
+	local points = {}
+	if self.rig then
+		for _, name in BONES do
+			points[name] = self.rig:Joint(name)
+		end
+	end
+	return points
+end
+
+God.Links = {
+	{ "LowerTorso", "UpperTorso" },
+	{ "UpperTorso", "Head" },
+	{ "UpperTorso", "LeftUpperArm" },
+	{ "LeftUpperArm", "LeftLowerArm" },
+	{ "LeftLowerArm", "LeftHand" },
+	{ "UpperTorso", "RightUpperArm" },
+	{ "RightUpperArm", "RightLowerArm" },
+	{ "RightLowerArm", "RightHand" },
+	{ "LowerTorso", "LeftUpperLeg" },
+	{ "LeftUpperLeg", "LeftLowerLeg" },
+	{ "LeftLowerLeg", "LeftFoot" },
+	{ "LowerTorso", "RightUpperLeg" },
+	{ "RightUpperLeg", "RightLowerLeg" },
+	{ "RightLowerLeg", "RightFoot" },
+}
 
 -- Point (monde) des mains, là où naissent les éclairs et où se tient le javelot
 function God.Hand(self, side: string): Vector3
@@ -313,6 +460,14 @@ function God.Chest(self): Vector3
 end
 
 -- Point (monde) au-dessus de sa tête (étoiles quand il est essoufflé)
+-- Point (monde) de ses yeux : d'où part le regard brûlant
+function God.Eyes(self): Vector3
+	if self.rig then
+		return self.rig:Joint("Head") + Vector3.new(0, self.height * 0.05, 0)
+	end
+	return self.model:GetPivot().Position + Vector3.new(0, self.height * 0.45, 0)
+end
+
 function God.Top(self): Vector3
 	if self.rig then
 		return self.rig:Joint("Head") + Vector3.new(0, self.height * 0.18, 0)

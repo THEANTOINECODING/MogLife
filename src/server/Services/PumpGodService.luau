@@ -1,10 +1,17 @@
--- Combat du Dieu du Pump au Colisée (D89, D90, D91 — manche 1 complète).
+-- Combat du Dieu du Pump au Colisée (D89 à D92 : trois manches, finale, spectateurs).
 -- Le serveur décide de tout : il tire les attaques, fixe l'heure exacte de chaque impact (heure du serveur,
 -- workspace:GetServerTimeNow), juge si le joueur est touché d'après sa position, son saut et sa roulade, tient la vie
 -- du joueur et celle du dieu, et décide ce que fait le bouton FLEX. Les clients (PumpGodController) dessinent tout à
 -- partir des messages Remotes.PumpGodUpdate (envoyés à tous : les spectateurs voient le combat).
 -- Attaques (Config/PumpGod.luau) : Bolts (cercles), Dumbbell (bande traversée par un haltère), Wave (anneau à sauter),
--- Slam (cône devant lui, puis il est essoufflé), Javelin (javelot d'éclair, à renvoyer).
+-- Slam (cône devant lui, puis il est essoufflé), Javelin (javelot d'éclair, à renvoyer) ; manche 2 : Columns (colonnes
+-- qui tombent), Tiles (dalles par motifs), Chariot (char de shake), Leap (il retombe sur le joueur) ; manche 3, géant
+-- au bord de la piste : Storm (toute la piste sauf des cercles sûrs), Rings (anneaux à sauter), Gaze (regard qui
+-- balaie : se cacher derrière les colonnes).
+-- Chaque manche a sa jauge de vie du dieu ; à zéro, transition (le jeton du combat change : les attaques en cours
+-- s'arrêtent), puis manche suivante ; après la 3e, la finale (choc de rayons, FLEX en rythme).
+-- Spectateurs (Remotes.PumpGodCheer) : leurs encouragements remplissent la jauge de la foule (envoyée à tous sauf au
+-- combattant) ; à chaque palier, la foule agit (amphore de shake, pétales, chant).
 -- FLEX (Remotes.PumpGodFlex, appuyé / relâché), par ordre de priorité : renvoyer le javelot qui arrive, frapper le dieu
 -- essoufflé (combo de 3), lancer le disque porté ou en ramasser un, charger la pose sacrée dans le cercle doré.
 -- Pour l'instant le combat se lance seulement dans Studio (DevCommands « PumpGod »).
@@ -14,6 +21,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
+local TweenService = game:GetService("TweenService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local PumpGod = require(ReplicatedStorage.Shared.Config.PumpGod)
@@ -21,6 +29,9 @@ local Remotes = require(ReplicatedStorage.Shared.Remotes)
 
 local SPOT_TAG = "ColosseumSpot"
 local ATTACKS = PumpGod.Attacks
+local ROUNDS = PumpGod.Rounds
+local FINALE = PumpGod.Finale
+local CROWD = PumpGod.Crowd
 local PIT = Balance.Colosseum.PitRadius
 
 local ColosseumService
@@ -30,6 +41,8 @@ local StatsService
 
 type Javelin = { from: Vector3, dir: Vector3, start: number, length: number, parried: boolean }
 type Disc = { at: Vector3, born: number }
+-- Finale : k = position du choc (0 au joueur, 1 au dieu)
+type Finale = { k: number, beatStart: number, lastBeat: number, sentAt: number, calmUntil: number }
 
 type Fight = {
 	player: Player,
@@ -59,6 +72,20 @@ type Fight = {
 	carrying: number?,
 	sacred: { id: number, at: Vector3, ends: number }?,
 	chargeEnds: number?,
+	round: number,
+	phase: string, -- "Round" (on se bat), "Transition" (entre deux manches), "Finale"
+	giant: number, -- taille du dieu (1, ou Rounds[3].Giant)
+	pillars: { Vector3 }, -- colonnes de la manche 3 (cachettes contre le regard)
+	pillarFolder: Folder?,
+	finale: Finale?,
+	moveSaved: { walk: number, jump: number }?,
+	-- Foule
+	cheers: { [Player]: { count: number, at: number } },
+	gauge: number,
+	actions: number,
+	slow: number, -- secondes de plus avant la prochaine attaque (pétales)
+	chant: boolean, -- le prochain renvoi se fait de plus loin
+	amphora: { id: number, at: Vector3, ends: number }?,
 }
 
 local fights: { [Player]: Fight } = {}
@@ -149,8 +176,10 @@ local function hit(fight: Fight, kind: string, damage: number)
 	end
 end
 
+local nextRound
+
 local function hurtBoss(fight: Fight, kind: string, damage: number)
-	if fight.ended then
+	if fight.ended or fight.phase ~= "Round" then
 		return
 	end
 	fight.bossHp = math.max(fight.bossHp - damage, 0)
@@ -159,11 +188,11 @@ local function hurtBoss(fight: Fight, kind: string, damage: number)
 		player = fight.player,
 		kind = kind,
 		hp = fight.bossHp,
-		maxHp = PumpGod.BossHealth,
+		maxHp = ROUNDS[fight.round].BossHealth,
 		damage = damage,
 	})
 	if fight.bossHp <= 0 then
-		finish(fight, "Victory")
+		nextRound(fight, fight.round + 1)
 	end
 end
 
@@ -247,6 +276,39 @@ local function dropDisc(fight: Fight, at: Vector3)
 	end)
 end
 
+-- Essoufflé : il tombe à genoux, le joueur peut le frapper
+local function wind(fight: Fight, token: number)
+	if not alive(fight, token) then
+		return
+	end
+	local winded = PumpGod.Winded.Time
+	fight.windedUntil = now() + winded
+	fight.combo = 0
+	broadcast({ state = "Winded", player = fight.player, start = now(), ends = fight.windedUntil })
+	task.wait(winded)
+end
+
+-- Distance (à plat) entre un point et le segment [a, b]
+local function segmentDistance(p: Vector3, a: Vector3, b: Vector3): number
+	local ab = flat(b - a)
+	local ap = flat(p - a)
+	local k = math.clamp(ap:Dot(ab) / math.max(ab:Dot(ab), 1e-3), 0, 1)
+	return (ap - ab * k).Magnitude
+end
+
+-- Une colonne cache-t-elle le joueur (en `to`) au regard qui part de `from` ?
+local function hidden(fight: Fight, from: Vector3, to: Vector3): boolean
+	local ab = flat(to - from)
+	for _, pillar in fight.pillars do
+		local ap = flat(pillar - from)
+		local k = ap:Dot(ab) / math.max(ab:Dot(ab), 1e-3)
+		if k > 0 and k < 1 and (ap - ab * k).Magnitude < PumpGod.Pillars.Radius + 0.3 then
+			return true
+		end
+	end
+	return false
+end
+
 -- ------------------------------------------------------------------ attaques
 local function bolts(fight: Fight, token: number)
 	local spec = ATTACKS.Bolts
@@ -284,8 +346,8 @@ local function bolts(fight: Fight, token: number)
 	end
 end
 
-local function dumbbell(fight: Fight, token: number)
-	local spec = ATTACKS.Dumbbell
+-- Un objet qui traverse la piste en passant par le joueur (haltère qui roule : à sauter ; char de shake : trop haut)
+local function lane(fight: Fight, token: number, kind: string, spec, jumpable: boolean, size: number)
 	local root = rootOf(fight.player)
 	if not root then
 		return
@@ -306,7 +368,7 @@ local function dumbbell(fight: Fight, token: number)
 	broadcast({
 		state = "Attack",
 		player = fight.player,
-		kind = "Dumbbell",
+		kind = kind,
 		id = newId(fight),
 		a = a,
 		b = b,
@@ -317,27 +379,33 @@ local function dumbbell(fight: Fight, token: number)
 		speed = spec.Speed,
 	})
 	local unit = (b - a).Unit
-	watch(fight, token, roll, done, "Dumbbell", spec.Damage, true, function(t, r: BasePart)
+	watch(fight, token, roll, done, kind, spec.Damage, jumpable, function(t, r: BasePart)
 		local offset = flat(r.Position - a)
 		local s = (t - roll) * spec.Speed
 		local d = offset:Dot(unit)
 		local lateral = (offset - unit * d).Magnitude
-		return math.abs(d - s) < spec.Height * 0.6
+		return math.abs(d - s) < size
 			and lateral < spec.Width / 2
-			and feetHeight(fight, r) < PumpGod.JumpClear + spec.Height * 0.4
+			and (not jumpable or feetHeight(fight, r) < PumpGod.JumpClear + spec.Height * 0.4)
 	end)
 	task.wait(done - now() + 0.3)
-	-- En cognant le mur, l'haltère perd un disque
+	-- En cognant le mur, il perd un disque
 	if alive(fight, token) then
 		dropDisc(fight, b - unit * 4)
 	end
 end
 
-local function wave(fight: Fight, token: number)
-	local spec = ATTACKS.Wave
+local function dumbbell(fight: Fight, token: number)
+	lane(fight, token, "Dumbbell", ATTACKS.Dumbbell, true, ATTACKS.Dumbbell.Height * 0.6)
+end
+
+local function chariot(fight: Fight, token: number)
+	lane(fight, token, "Chariot", ATTACKS.Chariot, false, ATTACKS.Chariot.Height * 0.75)
+end
+
+-- Un anneau qui part du dieu à l'heure `go` ; renvoie l'heure où il atteint le mur
+local function ring(fight: Fight, token: number, spec, start: number, go: number): number
 	local origin = bossAt(fight, now())
-	local start = now()
-	local go = start + spec.Warn
 	local maxRadius = PIT + flat(origin - fight.center).Magnitude
 	local done = go + maxRadius / spec.Speed
 	broadcast({
@@ -357,6 +425,24 @@ local function wave(fight: Fight, token: number)
 		local d = flat(r.Position - origin).Magnitude
 		return math.abs(d - radius) < spec.Thickness / 2 and feetHeight(fight, r) < PumpGod.JumpClear
 	end)
+	return done
+end
+
+local function wave(fight: Fight, token: number)
+	local spec = ATTACKS.Wave
+	local start = now()
+	local done = ring(fight, token, spec, start, start + spec.Warn)
+	task.wait(done - now() + 0.2)
+end
+
+-- Anneaux du géant : plusieurs, l'un après l'autre
+local function rings(fight: Fight, token: number)
+	local spec = ATTACKS.Rings
+	local start = now()
+	local done = start
+	for k = 1, spec.Count do
+		done = ring(fight, token, spec, start, start + spec.Warn + (k - 1) * spec.Gap)
+	end
 	task.wait(done - now() + 0.2)
 end
 
@@ -407,15 +493,7 @@ local function slam(fight: Fight, token: number)
 		return math.acos(math.clamp(offset.Unit:Dot(dir), -1, 1)) < half
 	end)
 	task.wait(math.max(impact - now(), 0) + 0.15)
-	if not alive(fight, token) then
-		return
-	end
-	-- Essoufflé : il tombe à genoux, le joueur peut le frapper
-	local winded = PumpGod.Winded.Time
-	fight.windedUntil = now() + winded
-	fight.combo = 0
-	broadcast({ state = "Winded", player = fight.player, start = now(), ends = fight.windedUntil })
-	task.wait(winded)
+	wind(fight, token)
 end
 
 -- Javelot d'éclair : lancé vers le joueur ; FLEX quand il arrive près de lui pour le renvoyer
@@ -464,25 +542,291 @@ local function javelin(fight: Fight, token: number)
 	end
 end
 
-local RUN = { Bolts = bolts, Dumbbell = dumbbell, Wave = wave, Slam = slam, Javelin = javelin }
+-- Colonnes qui tombent du bord de la piste vers le joueur
+local function columns(fight: Fight, token: number)
+	local spec = ATTACKS.Columns
+	local last = now()
+	local lastEnd = nil
+	for k = 1, spec.Count do
+		local root = rootOf(fight.player)
+		if not root or not alive(fight, token) then
+			return
+		end
+		local toward = flat(root.Position - fight.center)
+		local base = if toward.Magnitude > 1 then math.atan2(toward.Z, toward.X) else math.random() * 2 * math.pi
+		local angle = base + (math.random() - 0.5) * math.rad(150)
+		local a = onFloor(fight, fight.center + Vector3.new(math.cos(angle), 0, math.sin(angle)) * (PIT - 1))
+		local dir = flat(root.Position - a)
+		dir = if dir.Magnitude > 1 then dir.Unit else flat(fight.center - a).Unit
+		local b = onFloor(fight, inPit(fight, a + dir * spec.Length, PIT - 1))
+		local start = now()
+		local impact = start + spec.Warn
+		broadcast({
+			state = "Attack",
+			player = fight.player,
+			kind = "Column",
+			id = newId(fight),
+			a = a,
+			b = b,
+			width = spec.Width,
+			start = start,
+			impact = impact,
+		})
+		watch(fight, token, impact, impact + 0.05, "Column", spec.Damage, false, function(_, r: BasePart)
+			return segmentDistance(r.Position, a, b) < spec.Width / 2
+		end)
+		last = impact
+		lastEnd = b
+		if k < spec.Count then
+			task.wait(spec.Gap)
+		end
+	end
+	task.wait(math.max(last - now(), 0) + 0.4)
+	-- La dernière se brise : un disque roule de ses débris
+	if lastEnd and alive(fight, token) then
+		dropDisc(fight, lastEnd)
+	end
+end
 
-local function pick(previous: string?): string
+-- Motifs des dalles de mosaïque (case i, j) : damier, bandes, bandes en travers, anneaux
+local PATTERNS = {
+	function(i: number, j: number): boolean
+		return (i + j) % 2 == 0
+	end,
+	function(i: number, _j: number): boolean
+		return i % 2 == 0
+	end,
+	function(_i: number, j: number): boolean
+		return j % 2 == 0
+	end,
+	function(i: number, j: number): boolean
+		return math.floor(math.sqrt((i + 0.5) ^ 2 + (j + 0.5) ^ 2)) % 2 == 0
+	end,
+}
+
+-- Dalles : un motif s'allume puis jaillit, puis le motif inverse (il faut changer de case)
+local function tiles(fight: Fight, token: number)
+	local spec = ATTACKS.Tiles
+	local cell = spec.Cell
+	local n = math.ceil(PIT / cell)
+	local pattern = PATTERNS[math.random(#PATTERNS)]
+	local flip = math.random() < 0.5
+	local start = now()
+	for round = 1, 2 do
+		if not alive(fight, token) then
+			return
+		end
+		local danger: { [string]: boolean } = {}
+		local cells = {}
+		for i = -n, n - 1 do
+			for j = -n, n - 1 do
+				local at = fight.center + Vector3.new((i + 0.5) * cell, 0, (j + 0.5) * cell)
+				local lit = pattern(i, j) ~= flip
+				if flat(at - fight.center).Magnitude < PIT + cell * 0.2 and lit == (round == 1) then
+					danger[i .. "," .. j] = true
+					table.insert(cells, onFloor(fight, at))
+				end
+			end
+		end
+		local impact = start + spec.Warn
+		broadcast({
+			state = "Attack",
+			player = fight.player,
+			kind = "Tiles",
+			id = newId(fight),
+			cells = cells,
+			cell = cell,
+			start = start,
+			impact = impact,
+		})
+		watch(fight, token, impact, impact + 0.05, "Tiles", spec.Damage, false, function(_, r: BasePart)
+			local offset = r.Position - fight.center
+			return danger[math.floor(offset.X / cell) .. "," .. math.floor(offset.Z / cell)] == true
+		end)
+		task.wait(math.max(impact - now(), 0) + spec.Gap)
+		start = now()
+	end
+end
+
+-- Il saute ; un grand cercle suit le joueur, se fige, et il retombe dessus ; puis il est essoufflé
+local function leap(fight: Fight, token: number)
+	local spec = ATTACKS.Leap
+	local start = now()
+	local lock = start + spec.Rise + spec.Follow
+	local impact = lock + spec.Fall
+	local id = newId(fight)
+	broadcast({
+		state = "Attack",
+		player = fight.player,
+		kind = "Leap",
+		id = id,
+		at = bossAt(fight, start),
+		radius = spec.Radius,
+		rise = start + spec.Rise,
+		lock = lock,
+		start = start,
+		impact = impact,
+	})
+	task.wait(math.max(lock - now(), 0))
+	local root = rootOf(fight.player)
+	if not root or not alive(fight, token) then
+		return
+	end
+	local target = onFloor(fight, inPit(fight, root.Position, PIT - 3))
+	fight.bossFrom = bossAt(fight, now())
+	fight.bossTo = target
+	fight.moveStart = lock
+	fight.moveEnd = impact
+	broadcast({ state = "LeapLock", player = fight.player, id = id, at = target, lock = lock, impact = impact })
+	watch(fight, token, impact, impact + 0.05, "Leap", spec.Damage, false, function(_, r: BasePart)
+		return flat(r.Position - target).Magnitude < spec.Radius
+	end)
+	task.wait(math.max(impact - now(), 0) + 0.15)
+	wind(fight, token)
+end
+
+-- Cercles sûrs de l'orage : le premier à quelques pas du joueur, les autres ailleurs, bien séparés
+local function safeSpots(fight: Fight, root: BasePart, spec): { Vector3 }
+	local angle = math.random() * 2 * math.pi
+	local first = root.Position + Vector3.new(math.cos(angle), 0, math.sin(angle)) * (6 + math.random() * 6)
+	local safes = { onFloor(fight, inPit(fight, first, PIT - spec.SafeRadius - 1)) }
+	for _ = 2, spec.Safe do
+		local spot = fight.center
+		for _ = 1, 12 do
+			local a = math.random() * 2 * math.pi
+			spot = fight.center + Vector3.new(math.cos(a), 0, math.sin(a)) * (math.random() * (PIT - 10))
+			local apart = true
+			for _, other in safes do
+				if flat(spot - other).Magnitude < spec.SafeRadius * 3 then
+					apart = false
+				end
+			end
+			if apart then
+				break
+			end
+		end
+		table.insert(safes, onFloor(fight, spot))
+	end
+	return safes
+end
+
+-- Orage : toute la piste s'allume sauf quelques cercles sûrs ; un disque tombe ensuite dans l'un d'eux
+local function storm(fight: Fight, token: number)
+	local spec = ATTACKS.Storm
+	local safes = {}
+	for _ = 1, spec.Count do
+		local root = rootOf(fight.player)
+		if not root or not alive(fight, token) then
+			return
+		end
+		local spots = safeSpots(fight, root, spec)
+		safes = spots
+		local start = now()
+		local impact = start + spec.Warn
+		broadcast({
+			state = "Attack",
+			player = fight.player,
+			kind = "Storm",
+			id = newId(fight),
+			at = fight.center,
+			radius = PIT,
+			safes = spots,
+			safeRadius = spec.SafeRadius,
+			start = start,
+			impact = impact,
+		})
+		watch(fight, token, impact, impact + 0.05, "Storm", spec.Damage, false, function(_, r: BasePart)
+			for _, safe in spots do
+				if flat(r.Position - safe).Magnitude < spec.SafeRadius then
+					return false
+				end
+			end
+			return true
+		end)
+		task.wait(math.max(impact - now(), 0) + spec.Gap)
+	end
+	if alive(fight, token) and #safes > 0 then
+		dropDisc(fight, safes[math.random(#safes)])
+	end
+end
+
+-- Regard brûlant : un rayon balaie la piste depuis le géant ; les colonnes cachent le joueur
+local function gaze(fight: Fight, token: number)
+	local spec = ATTACKS.Gaze
+	local origin = bossAt(fight, now())
+	local inward = flat(fight.center - origin)
+	local base = math.atan2(inward.Z, inward.X)
+	local half = math.rad(spec.Angle) / 2
+	local sign = if math.random() < 0.5 then 1 else -1
+	local from, to = base - half * sign, base + half * sign
+	local start = now()
+	local go = start + spec.Warn
+	local ends = go + spec.Sweep
+	local length = PIT * 2 + 4
+	broadcast({
+		state = "Attack",
+		player = fight.player,
+		kind = "Gaze",
+		id = newId(fight),
+		at = origin,
+		from = from,
+		to = to,
+		width = spec.Width,
+		length = length,
+		start = start,
+		impact = go,
+		ends = ends,
+	})
+	watch(fight, token, go, ends, "Gaze", spec.Damage, false, function(t, r: BasePart)
+		local a = from + (to - from) * math.clamp((t - go) / spec.Sweep, 0, 1)
+		local dir = Vector3.new(math.cos(a), 0, math.sin(a))
+		local offset = flat(r.Position - origin)
+		local along = offset:Dot(dir)
+		return along > 0
+			and along < length
+			and (offset - dir * along).Magnitude < spec.Width / 2
+			and not hidden(fight, origin, r.Position)
+	end)
+	task.wait(math.max(ends - now(), 0) + 0.2)
+	-- Il se frotte les yeux : le moment de le frapper
+	wind(fight, token)
+end
+
+local RUN = {
+	Bolts = bolts,
+	Dumbbell = dumbbell,
+	Wave = wave,
+	Slam = slam,
+	Javelin = javelin,
+	Columns = columns,
+	Tiles = tiles,
+	Chariot = chariot,
+	Leap = leap,
+	Storm = storm,
+	Rings = rings,
+	Gaze = gaze,
+}
+
+-- Tirage d'une attaque de la manche (nom = poids), jamais deux fois la même de suite
+local function pick(weights: { [string]: number }, previous: string?): string
 	local total = 0
-	for name, spec in ATTACKS do
+	for name, weight in weights do
 		if name ~= previous then
-			total += spec.Weight
+			total += weight
 		end
 	end
 	local roll = math.random() * total
-	for name, spec in ATTACKS do
+	local fallback = "Bolts"
+	for name, weight in weights do
 		if name ~= previous then
-			roll -= spec.Weight
+			fallback = name
+			roll -= weight
 			if roll <= 0 then
 				return name
 			end
 		end
 	end
-	return "Bolts"
+	return fallback
 end
 
 -- Un nouvel endroit sur le cercle autour du centre, plutôt en face du joueur
@@ -523,25 +867,33 @@ local function sacredLoop(fight: Fight, token: number)
 	end
 end
 
-local function loop(fight: Fight, token: number)
-	task.wait(2.5) -- le dieu se présente
+local function loop(fight: Fight, token: number, intro: number)
+	task.wait(intro) -- le dieu se présente
+	local spec = ROUNDS[fight.round]
 	local previous = nil
-	local opening = table.clone(PumpGod.Opening)
+	local opening = table.clone(spec.Opening)
 	while alive(fight, token) do
-		local name = table.remove(opening, 1) or pick(previous)
+		local name = table.remove(opening, 1) or pick(spec.Attacks, previous)
 		previous = name
 		RUN[name](fight, token)
 		if not alive(fight, token) then
 			return
 		end
-		local p = PumpGod.Pause
+		local p = spec.Pause
 		local k = math.clamp((os.clock() - fight.startedAt) / p.Over, 0, 1)
-		local pause = p.From + (p.To - p.From) * k
-		-- Il change de place pendant la pause
-		if not moveBoss(fight, token, orbitSpot(fight), math.min(PumpGod.Orbit.MoveTime, pause)) then
-			return
+		-- Les pétales de la foule le font attendre un peu plus
+		local pause = p.From + (p.To - p.From) * k + fight.slow
+		fight.slow = 0
+		if fight.giant == 1 then
+			-- Il change de place pendant la pause
+			if not moveBoss(fight, token, orbitSpot(fight), math.min(PumpGod.Orbit.MoveTime, pause)) then
+				return
+			end
+			task.wait(math.max(pause - PumpGod.Orbit.MoveTime, 0.2))
+		else
+			-- Géant : il reste au bord de la piste
+			task.wait(pause)
 		end
-		task.wait(math.max(pause - PumpGod.Orbit.MoveTime, 0.2))
 	end
 end
 
@@ -560,8 +912,14 @@ local function flexDown(fight: Fight, root: BasePart)
 			local s = (t - shot.start) * ATTACKS.Javelin.Speed
 			local tip = shot.from + shot.dir * s
 			local ahead = flat(root.Position - shot.from):Dot(shot.dir) - s -- distance qui reste au javelot
-			if s < shot.length and ahead > -2 and flat(root.Position - tip).Magnitude < PumpGod.Parry.Range then
+			-- Le chant de la foule rend le prochain renvoi plus facile
+			local range = PumpGod.Parry.Range * (if fight.chant then CROWD.ChantRange else 1)
+			if s < shot.length and ahead > -2 and flat(root.Position - tip).Magnitude < range then
 				shot.parried = true
+				if fight.chant then
+					fight.chant = false
+					broadcast({ state = "ChantUsed", player = fight.player })
+				end
 				fight.javelins[id] = nil
 				local target = bossAt(fight, t + PumpGod.Parry.Flight)
 				broadcast({
@@ -584,7 +942,8 @@ local function flexDown(fight: Fight, root: BasePart)
 	end
 	-- 2. Frapper le dieu essoufflé (combo de 3, le 3e en rythme = coup de Mog)
 	local punch = PumpGod.Punch
-	if t < fight.windedUntil and flat(root.Position - bossAt(fight, t)).Magnitude < PumpGod.Winded.Range then
+	local reach = if fight.giant > 1 then PumpGod.Winded.GiantRange else PumpGod.Winded.Range
+	if t < fight.windedUntil and flat(root.Position - bossAt(fight, t)).Magnitude < reach then
 		local gap = t - fight.comboAt
 		if gap < punch.MinGap then
 			return
@@ -646,13 +1005,40 @@ local function stopCharge(fight: Fight)
 	end
 end
 
+-- Finale : FLEX sur le temps pousse le choc vers le dieu ; à contretemps (ou deux fois sur le même temps), il recule
+local function finaleFlex(fight: Fight, finale: Finale)
+	local t = now() - PumpGod.Latency
+	if t < finale.beatStart - FINALE.Window then
+		return
+	end
+	local beat = math.floor((t - finale.beatStart) / FINALE.Beat + 0.5)
+	local off = math.abs(t - (finale.beatStart + beat * FINALE.Beat))
+	local good = off <= FINALE.Window and beat ~= finale.lastBeat
+	if good then
+		finale.lastBeat = beat
+		finale.k = math.min(finale.k + FINALE.Push, 1)
+	else
+		finale.k = math.max(finale.k - FINALE.Miss, 0)
+	end
+	broadcast({ state = "Pulse", player = fight.player, good = good, k = finale.k })
+	if finale.k >= 1 then
+		finish(fight, "Victory")
+	end
+end
+
 local function onFlex(player: Player, down: unknown)
 	local fight = fights[player]
 	local root = rootOf(player)
 	if not fight or fight.ended or not root or typeof(down) ~= "boolean" then
 		return
 	end
-	if down then
+	if fight.finale then
+		if down then
+			finaleFlex(fight, fight.finale)
+		end
+	elseif fight.phase ~= "Round" then
+		return
+	elseif down then
 		flexDown(fight, root)
 	else
 		stopCharge(fight)
@@ -685,8 +1071,131 @@ local function stepCharge(fight: Fight)
 	end
 end
 
--- ------------------------------------------------------------------ début et fin
-local function spawnBoss(spot: BasePart, center: Vector3): Model?
+-- Finale : le dieu pousse le choc vers le joueur, de plus en plus fort (sauf pendant les pétales de la foule)
+local function stepFinale(fight: Fight, dt: number)
+	local finale = fight.finale
+	local t = now()
+	if not finale or fight.ended or t < finale.beatStart then
+		return
+	end
+	if t >= finale.calmUntil then
+		finale.k -= (FINALE.Drift + FINALE.DriftGrow * (t - finale.beatStart)) * dt
+	end
+	if finale.k <= 0 then
+		-- L'éclair l'atteint : il prend des dégâts, le choc repart
+		finale.k = FINALE.Reset
+		fight.invulnUntil = 0
+		hit(fight, "Clash", FINALE.Burn)
+	end
+	if t - finale.sentAt > 0.15 and not fight.ended then
+		finale.sentAt = t
+		broadcast({ state = "Clash", player = fight.player, k = finale.k })
+	end
+end
+
+-- ------------------------------------------------------------------ foule
+local function sendCrowd(fight: Fight)
+	for _, other in Players:GetPlayers() do
+		-- Jamais au combattant : il ne voit pas la jauge
+		if other ~= fight.player then
+			local mine = fight.cheers[other]
+			Remotes.PumpGodUpdate:FireClient(other, {
+				state = "Crowd",
+				player = fight.player,
+				gauge = fight.gauge % CROWD.Step,
+				step = CROWD.Step,
+				left = CROWD.Max - (if mine then mine.count else 0),
+			})
+		end
+	end
+end
+
+local function crowdAction(fight: Fight)
+	fight.actions += 1
+	local action = CROWD.Actions[(fight.actions - 1) % #CROWD.Actions + 1]
+	if action == "Amphora" then
+		-- Une amphore de shake lancée près du combattant (à ses pieds pendant la finale : il ne bouge plus)
+		local root = rootOf(fight.player)
+		if not root then
+			return
+		end
+		local angle = math.random() * 2 * math.pi
+		local distance = if fight.finale then 0 else 5 + math.random() * 5
+		local spot = root.Position + Vector3.new(math.cos(angle), 0, math.sin(angle)) * distance
+		local id = newId(fight)
+		local ends = now() + CROWD.AmphoraLife
+		fight.amphora = { id = id, at = onFloor(fight, inPit(fight, spot, PIT - 3)), ends = ends }
+		broadcast({ state = "Amphora", player = fight.player, id = id, at = fight.amphora.at, ends = ends })
+	elseif action == "Petals" then
+		fight.slow += CROWD.Slow
+		if fight.finale then
+			fight.finale.calmUntil = now() + CROWD.Slow
+		end
+		broadcast({ state = "Petals", player = fight.player, ends = now() + CROWD.Slow })
+	else
+		fight.chant = true
+		broadcast({ state = "Chant", player = fight.player })
+	end
+end
+
+local function addCheers(fight: Fight, count: number)
+	for _ = 1, count do
+		fight.gauge += 1
+		if fight.gauge % CROWD.Step == 0 then
+			crowdAction(fight)
+		end
+	end
+	sendCrowd(fight)
+end
+
+local function onCheer(player: Player)
+	local root = rootOf(player)
+	if fights[player] or not root then
+		return
+	end
+	for _, fight in fights do
+		if not fight.ended and flat(root.Position - fight.center).Magnitude < CROWD.Range then
+			local mine = fight.cheers[player] or { count = 0, at = -math.huge }
+			fight.cheers[player] = mine
+			local t = os.clock()
+			if mine.count >= CROWD.Max or t - mine.at < CROWD.MinGap then
+				return
+			end
+			mine.count += 1
+			mine.at = t
+			addCheers(fight, 1)
+			return
+		end
+	end
+end
+
+-- Amphore : ramassée en marchant dessus (rend de la vie), sinon elle disparaît
+local function stepAmphora(fight: Fight)
+	local amphora = fight.amphora
+	if not amphora then
+		return
+	end
+	local root = rootOf(fight.player)
+	if now() > amphora.ends then
+		fight.amphora = nil
+		broadcast({ state = "AmphoraGone", player = fight.player, id = amphora.id })
+	elseif root and flat(root.Position - amphora.at).Magnitude < CROWD.AmphoraPick then
+		fight.amphora = nil
+		local before = fight.hp
+		fight.hp = math.min(fight.hp + CROWD.Heal, PumpGod.Health)
+		broadcast({
+			state = "Heal",
+			player = fight.player,
+			id = amphora.id,
+			hp = fight.hp,
+			amount = fight.hp - before,
+		})
+	end
+end
+
+-- ------------------------------------------------------------------ début, manches et fin
+-- Le dieu posé sur la piste en `ground`, tourné vers le centre ; scale : taille (géant en manche 3)
+local function spawnBoss(ground: Vector3, center: Vector3, scale: number): Model?
 	local folder = ServerStorage:FindFirstChild("NpcModels")
 	local template = folder and folder:FindFirstChild("PumpGod")
 	if not template or not template:IsA("Model") or not template.PrimaryPart then
@@ -703,18 +1212,162 @@ local function spawnBoss(spot: BasePart, center: Vector3): Model?
 			part.CanQuery = false
 		end
 	end
-	if PumpGod.BossScale ~= 1 then
-		model:ScaleTo(model:GetScale() * PumpGod.BossScale)
+	if PumpGod.BossScale * scale ~= 1 then
+		model:ScaleTo(model:GetScale() * PumpGod.BossScale * scale)
 	end
 	local body = model.PrimaryPart :: BasePart
-	local base = Vector3.new(spot.Position.X, spot.Position.Y - spot.Size.Y / 2, spot.Position.Z)
-	local look = Vector3.new(center.X, base.Y, center.Z)
+	local look = Vector3.new(center.X, ground.Y, center.Z)
+	if flat(look - ground).Magnitude < 0.5 then
+		look = ground + Vector3.new(0, 0, -1)
+	end
 	local pivotFromBody = body.CFrame:ToObjectSpace(model:GetPivot())
-	model:PivotTo(CFrame.lookAt(base, look) * pivotFromBody)
-	local lift = base.Y + body.Size.Y / 2 + PumpGod.BossHover - body.Position.Y
+	model:PivotTo(CFrame.lookAt(ground, look) * pivotFromBody)
+	local lift = ground.Y + body.Size.Y / 2 + PumpGod.BossHover * scale - body.Position.Y
 	model:PivotTo(model:GetPivot() + Vector3.new(0, lift, 0))
 	model.Parent = workspace
 	return model
+end
+
+-- Colonnes de la manche 3 : elles sortent du sol de la piste (de vraies colonnes, on se cache derrière)
+local function raisePillars(fight: Fight)
+	local spec = PumpGod.Pillars
+	local folder = Instance.new("Folder")
+	folder.Name = "ColosseumPillars"
+	folder.Parent = workspace
+	fight.pillarFolder = folder
+	local offset = math.random() * 2 * math.pi
+	for k = 1, spec.Count do
+		local angle = offset + 2 * math.pi * k / spec.Count
+		local at = fight.center + Vector3.new(math.cos(angle), 0, math.sin(angle)) * spec.Distance
+		table.insert(fight.pillars, at)
+		local pillar = Instance.new("Part")
+		pillar.Name = "Pillar"
+		pillar.Shape = Enum.PartType.Cylinder
+		pillar.Anchored = true
+		pillar.Material = Enum.Material.Marble
+		pillar.Color = Color3.fromRGB(236, 230, 218)
+		pillar.Size = Vector3.new(spec.Height, spec.Radius * 2, spec.Radius * 2)
+		local up = CFrame.new(at + Vector3.new(0, spec.Height / 2, 0)) * CFrame.Angles(0, 0, math.pi / 2)
+		pillar.CFrame = up - Vector3.new(0, spec.Height + 0.5, 0)
+		pillar.Parent = folder
+		local capital = Instance.new("Part")
+		capital.Name = "Capital"
+		capital.Anchored = true
+		capital.Material = Enum.Material.SmoothPlastic
+		capital.Color = Color3.fromRGB(255, 205, 80)
+		capital.Size = Vector3.new(spec.Radius * 2.6, 1.2, spec.Radius * 2.6)
+		local top = CFrame.new(at + Vector3.new(0, spec.Height + 0.6, 0))
+		capital.CFrame = top - Vector3.new(0, spec.Height + 2, 0)
+		capital.Parent = folder
+		local info = TweenInfo.new(1.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+		TweenService:Create(pillar, info, { CFrame = up }):Play()
+		TweenService:Create(capital, info, { CFrame = top }):Play()
+	end
+end
+
+local function clearField(fight: Fight)
+	table.clear(fight.javelins)
+	table.clear(fight.discs)
+	fight.carrying = nil
+	fight.sacred = nil
+	fight.chargeEnds = nil
+	fight.windedUntil = 0
+	fight.combo = 0
+end
+
+-- Finale : il ne bouge plus ; son rayon de Mog contre l'éclair du dieu
+local function startFinale(fight: Fight)
+	tokens += 1
+	fight.token = tokens
+	fight.phase = "Finale"
+	clearField(fight)
+	local t = now()
+	fight.finale = { k = 0.5, beatStart = t + FINALE.Intro, lastBeat = -1, sentAt = 0, calmUntil = 0 }
+	local root = rootOf(fight.player)
+	local boss = bossAt(fight, t)
+	if root then
+		local character = root.Parent :: Model
+		local humanoid = character:FindFirstChildOfClass("Humanoid")
+		if humanoid then
+			fight.moveSaved = { walk = humanoid.WalkSpeed, jump = humanoid.JumpHeight }
+			humanoid.WalkSpeed = 0
+			humanoid.JumpHeight = 0
+		end
+		character:PivotTo(CFrame.lookAt(root.Position, Vector3.new(boss.X, root.Position.Y, boss.Z)))
+	end
+	broadcast({
+		state = "Finale",
+		player = fight.player,
+		start = t,
+		beatStart = fight.finale.beatStart,
+		beat = FINALE.Beat,
+		k = fight.finale.k,
+		bossAt = boss,
+	})
+end
+
+-- Manche suivante (ou la finale après la dernière) : le jeton change (les attaques en cours s'arrêtent), le terrain se
+-- vide, le joueur récupère un peu de vie, le dieu se replace (géant au bord de la piste en manche 3)
+function nextRound(fight: Fight, index: number)
+	if fight.ended then
+		return
+	end
+	if index > #ROUNDS then
+		startFinale(fight)
+		return
+	end
+	tokens += 1
+	fight.token = tokens
+	local token = tokens
+	fight.phase = "Transition"
+	clearField(fight)
+	local spec = ROUNDS[index]
+	fight.round = index
+	fight.bossHp = spec.BossHealth
+	fight.hp = math.min(fight.hp + spec.Heal, PumpGod.Health)
+	local t = now()
+	local ground = bossAt(fight, t)
+	local giant = spec.Giant or 1
+	if giant > 1 then
+		-- Au bord de la piste, en face du joueur
+		local root = rootOf(fight.player)
+		local away = if root then flat(fight.center - root.Position) else Vector3.zero
+		away = if away.Magnitude > 1 then away.Unit else Vector3.new(1, 0, 0)
+		ground = onFloor(fight, fight.center + away * (PIT - (spec.Edge or 0)))
+	end
+	if giant ~= fight.giant or not fight.boss then
+		if fight.boss then
+			fight.boss:Destroy()
+		end
+		fight.boss = spawnBoss(ground, fight.center, giant)
+		fight.giant = giant
+	end
+	fight.bossFrom, fight.bossTo, fight.moveStart, fight.moveEnd = ground, ground, 0, 0
+	if giant > 1 and not fight.pillarFolder then
+		raisePillars(fight)
+	end
+	broadcast({
+		state = "Round",
+		player = fight.player,
+		round = index,
+		title = spec.Title,
+		hp = fight.hp,
+		maxHp = PumpGod.Health,
+		bossHp = fight.bossHp,
+		bossMaxHp = spec.BossHealth,
+		boss = fight.boss,
+		bossAt = ground,
+		start = t,
+		go = t + PumpGod.Transition,
+	})
+	task.delay(PumpGod.Transition, function()
+		if alive(fight, token) then
+			fight.phase = "Round"
+			fight.startedAt = os.clock()
+			task.spawn(loop, fight, token, 0.3)
+			task.spawn(sacredLoop, fight, token)
+		end
+	end)
 end
 
 function finish(fight: Fight, reason: string)
@@ -724,6 +1377,16 @@ function finish(fight: Fight, reason: string)
 	fight.ended = true
 	fights[fight.player] = nil
 	ColosseumService.SetFighter(fight.player, false)
+	-- Il peut de nouveau bouger (finale)
+	local root = rootOf(fight.player)
+	local humanoid = root and (root.Parent :: Model):FindFirstChildOfClass("Humanoid")
+	if fight.moveSaved and humanoid then
+		humanoid.WalkSpeed = fight.moveSaved.walk
+		humanoid.JumpHeight = fight.moveSaved.jump
+	end
+	if fight.pillarFolder then
+		fight.pillarFolder:Destroy()
+	end
 	-- Défaite (ou départ en plein combat) : il perd une part de son Mog (D89) ; il devra refaire tout le combat
 	local mogLost = 0
 	if reason == "Defeat" or reason == "Left" then
@@ -750,9 +1413,9 @@ function finish(fight: Fight, reason: string)
 		end
 		-- Victoire ou arrêt : il remonte dans les gradins
 		local stands = findSpot("Stands")
-		local root = rootOf(fight.player)
-		if stands and root then
-			local character = root.Parent :: Model
+		local back = rootOf(fight.player)
+		if stands and back then
+			local character = back.Parent :: Model
 			local look = Vector3.new(fight.center.X, stands.Position.Y + 3, fight.center.Z)
 			character:PivotTo(CFrame.lookAt(stands.Position + Vector3.new(0, 3, 0), look))
 		end
@@ -773,10 +1436,11 @@ function PumpGodService.Begin(player: Player): boolean
 	local floor = center.Position.Y - center.Size.Y / 2
 	local middle = Vector3.new(center.Position.X, floor, center.Position.Z)
 	local bossStart = Vector3.new(bossSpot.Position.X, floor, bossSpot.Position.Z)
+	local first = ROUNDS[1]
 	local fight: Fight = {
 		player = player,
 		hp = PumpGod.Health,
-		bossHp = PumpGod.BossHealth,
+		bossHp = first.BossHealth,
 		token = tokens,
 		startedAt = os.clock(),
 		boss = nil,
@@ -800,6 +1464,19 @@ function PumpGodService.Begin(player: Player): boolean
 		carrying = nil,
 		sacred = nil,
 		chargeEnds = nil,
+		round = 1,
+		phase = "Round",
+		giant = 1,
+		pillars = {},
+		pillarFolder = nil,
+		finale = nil,
+		moveSaved = nil,
+		cheers = {},
+		gauge = 0,
+		actions = 0,
+		slow = 0,
+		chant = false,
+		amphora = nil,
 	}
 	fights[player] = fight
 	ColosseumService.SetFighter(player, true)
@@ -807,7 +1484,7 @@ function PumpGodService.Begin(player: Player): boolean
 	local look = Vector3.new(center.Position.X, fighterSpot.Position.Y + 3, center.Position.Z)
 	local inward = flat(center.Position - fighterSpot.Position).Unit * PumpGod.FighterInset
 	character:PivotTo(CFrame.lookAt(fighterSpot.Position + inward + Vector3.new(0, 3, 0), look))
-	fight.boss = spawnBoss(bossSpot, middle)
+	fight.boss = spawnBoss(bossStart, middle, 1)
 	broadcast({
 		state = "Start",
 		player = player,
@@ -815,12 +1492,13 @@ function PumpGodService.Begin(player: Player): boolean
 		hp = fight.hp,
 		maxHp = PumpGod.Health,
 		bossHp = fight.bossHp,
-		bossMaxHp = PumpGod.BossHealth,
+		bossMaxHp = first.BossHealth,
 		center = middle,
 		bossAt = bossStart,
 	})
-	task.spawn(loop, fight, fight.token)
+	task.spawn(loop, fight, fight.token, 2.5)
 	task.spawn(sacredLoop, fight, fight.token)
+	sendCrowd(fight)
 	-- Mort (chute, reset) : le combat est perdu
 	local humanoid = character:FindFirstChildOfClass("Humanoid")
 	if humanoid then
@@ -842,10 +1520,31 @@ function PumpGodService.IsFighting(player: Player): boolean
 	return fights[player] ~= nil
 end
 
+-- Studio : passer à une manche (4 = la finale)
+function PumpGodService.DevRound(player: Player, index: number): boolean
+	local fight = fights[player]
+	if not fight or fight.ended or fight.finale then
+		return false
+	end
+	nextRound(fight, index)
+	return true
+end
+
+-- Studio : simuler des encouragements de la foule (tester seul)
+function PumpGodService.DevCheer(count: number): boolean
+	for _, fight in fights do
+		if not fight.ended then
+			addCheers(fight, count)
+			return true
+		end
+	end
+	return false
+end
+
 local function onRoll(player: Player)
 	local fight = fights[player]
 	local t = os.clock()
-	if not fight or fight.ended or t < fight.rollReadyAt then
+	if not fight or fight.ended or fight.finale or t < fight.rollReadyAt then
 		return
 	end
 	fight.rollReadyAt = t + PumpGod.Roll.Cooldown
@@ -865,14 +1564,17 @@ end
 function PumpGodService.Start()
 	Remotes.PumpGodRoll.OnServerEvent:Connect(onRoll)
 	Remotes.PumpGodFlex.OnServerEvent:Connect(onFlex)
-	-- Sauts (dernier instant où les pieds étaient assez haut) et charge de la pose sacrée
-	RunService.Heartbeat:Connect(function()
+	Remotes.PumpGodCheer.OnServerEvent:Connect(onCheer)
+	-- Sauts (dernier instant où les pieds étaient assez haut), charge de la pose sacrée, finale, amphore
+	RunService.Heartbeat:Connect(function(dt)
 		for _, fight in fights do
 			local root = rootOf(fight.player)
 			if root and feetHeight(fight, root) >= PumpGod.JumpClear then
 				fight.airAt = os.clock()
 			end
 			stepCharge(fight)
+			stepFinale(fight, dt)
+			stepAmphora(fight)
 		end
 	end)
 	Players.PlayerRemoving:Connect(function(player)
