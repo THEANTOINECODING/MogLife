@@ -8,6 +8,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local PumpGod = require(ReplicatedStorage.Shared.Config.PumpGod)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
@@ -37,6 +38,7 @@ local MinigameService
 local StyleService
 local TutorialService
 local WeeklyService
+local PumpGodService
 
 -- Un même boss peut avoir plusieurs emplacements (Kevin dans le garage de chaque maison)
 local spots: { [string]: { BasePart } } = {}
@@ -67,8 +69,11 @@ local function assess(player: Player, bossId: string)
 		beaten = beaten,
 		-- Perte si le joueur n'est pas prêt (défaite automatique)
 		autoLoss = cashLoss(data.Cash, data.Stage, BOSS.DefeatCashLossPercent, BOSS.DefeatCashLossCap),
-		-- Perte si le joueur perd le Mog-off (aucune en revanche)
-		fightLoss = if beaten then 0 else cashLoss(data.Cash, data.Stage, BOSS.MogOffLossPercent, BOSS.MogOffLossCap),
+		-- Perte si le joueur perd le Mog-off (aucune en revanche) ; au Colisée, c'est du Mog, même en revanche (D89)
+		fightLoss = if beaten or boss.arena
+			then 0
+			else cashLoss(data.Cash, data.Stage, BOSS.MogOffLossPercent, BOSS.MogOffLossCap),
+		mogLoss = if boss.arena then math.floor(data.Mog * PumpGod.DefeatMogShare) else 0,
 		blockingBossId = if not isCurrent and not beaten and currentStage.boss then currentStage.boss.id else nil,
 		mog = data.Mog,
 	}
@@ -364,6 +369,13 @@ local function onChallenge(player: Player, bossId: unknown)
 		return
 	end
 
+	-- Dernier boss : pas de Mog-off, le combat a lieu au Colisée du Pump (D94)
+	if state.boss.arena then
+		local started = PumpGodService.Challenge(player)
+		Remotes.BossUpdate:FireClient(player, { state = if started then "Arena" else "ArenaBusy", bossId = bossId })
+		return
+	end
+
 	local fight: Fight = {
 		bossId = bossId,
 		spot = spot,
@@ -448,6 +460,8 @@ function BossService.ShowChallenge(player: Player, bossId: string)
 		ready = state.ready,
 		beaten = state.beaten,
 		cashLoss = if state.ready then state.fightLoss else state.autoLoss,
+		arena = state.boss.arena == true,
+		mogLoss = state.mogLoss,
 		blockingBossId = state.blockingBossId,
 	})
 end
@@ -459,6 +473,7 @@ function BossService.Init(services)
 	StyleService = services.StyleService
 	TutorialService = services.TutorialService
 	WeeklyService = services.WeeklyService
+	PumpGodService = services.PumpGodService
 end
 
 -- Première rencontre avec chaque boss : présentation en cinématique (D53), une seule fois par joueur

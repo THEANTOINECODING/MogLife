@@ -2,8 +2,8 @@
 -- - Piliers de lumière (tag "ColosseumPortal", attribut Target = "Colosseum" ou "Temple") : un au temple du Dieu du
 --   Pump, un sur le parvis du colisée. Le joueur demande (ProximityPrompt), le serveur vérifie (distance, délai, pas en
 --   pleine série ni en combat), tout le monde voit la lumière monter (Remotes.ColosseumTravel), puis il arrive.
--- - Sécurité de la piste : seul le combattant du dernier boss a le droit d'y être (pour l'instant personne : le combat
---   arrive dans une prochaine tranche). Un joueur qui s'y retrouve (bug, glitch) remonte dans les gradins.
+-- - Sécurité de la piste : seul le combattant du dernier boss a le droit d'y être (défi accepté au temple, D94). Un
+--   joueur qui s'y retrouve (bug, glitch) remonte dans les gradins.
 -- Points de jeu de la carte (tag "ColosseumSpot", attribut Role) : Arrival, Stands, Center, Fighter, Boss.
 
 local CollectionService = game:GetService("CollectionService")

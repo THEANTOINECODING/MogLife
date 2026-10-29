@@ -93,6 +93,9 @@ type Fight = {
 
 local fights: { [Player]: Fight } = {}
 local tokens = 0
+-- Une seule piste : réservée pendant le voyage du challenger, libre un peu après la fin du combat précédent
+local arenaHeldBy: Player? = nil
+local arenaFreeAt = 0
 
 local PumpGodService = {}
 
@@ -1479,6 +1482,7 @@ function finish(fight: Fight, reason: string)
 	end
 	fight.ended = true
 	fights[fight.player] = nil
+	arenaFreeAt = os.clock() + PumpGod.EndDelay + 1
 	ColosseumService.SetFighter(fight.player, false)
 	-- Il peut de nouveau bouger (finale)
 	local root = rootOf(fight.player)
@@ -1550,9 +1554,22 @@ local function syncTo(player: Player)
 	end
 end
 
--- Lance le combat (pour l'instant seulement depuis Studio)
+-- La piste est-elle libre pour ce joueur ? (aucun combat, pas réservée par un autre, le dieu précédent est parti)
+local function arenaFree(player: Player): boolean
+	for _, fight in fights do
+		if not fight.ended then
+			return false
+		end
+	end
+	if arenaHeldBy and arenaHeldBy ~= player and arenaHeldBy.Parent then
+		return false
+	end
+	return os.clock() >= arenaFreeAt
+end
+
+-- Lance le combat (défi accepté au temple, ou DevCommands dans Studio)
 function PumpGodService.Begin(player: Player): boolean
-	if fights[player] or MinigameService.IsBusy(player) then
+	if fights[player] or MinigameService.IsBusy(player) or not arenaFree(player) then
 		return false
 	end
 	local center, fighterSpot, bossSpot = findSpot("Center"), findSpot("Fighter"), findSpot("Boss")
@@ -1624,6 +1641,25 @@ function PumpGodService.Begin(player: Player): boolean
 			finish(fight, "Defeat")
 		end)
 	end
+	return true
+end
+
+-- Défi accepté au temple (BossService) : colonne de lumière, puis il arrive sur la piste. false si la piste est prise.
+function PumpGodService.Challenge(player: Player): boolean
+	local root = rootOf(player)
+	if fights[player] or MinigameService.IsBusy(player) or not root or not arenaFree(player) then
+		return false
+	end
+	arenaHeldBy = player
+	Remotes.ColosseumTravel:FireAllClients({ player = player, from = root.Position })
+	task.delay(Balance.Colosseum.TravelDelay, function()
+		if arenaHeldBy == player then
+			arenaHeldBy = nil
+		end
+		if player.Parent then
+			PumpGodService.Begin(player)
+		end
+	end)
 	return true
 end
 

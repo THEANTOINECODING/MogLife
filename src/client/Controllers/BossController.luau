@@ -16,6 +16,7 @@ local TweenService = game:GetService("TweenService")
 local CollectionService = game:GetService("CollectionService")
 
 local BossFights = require(ReplicatedStorage.Shared.Config.BossFights)
+local Format = require(ReplicatedStorage.Shared.Format)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local BossSpecials = require(script.Parent.Parent.BossSpecials)
@@ -402,8 +403,21 @@ local function onBossPrompt(info)
 		Remotes.ChallengeBoss:FireServer(info.bossId)
 	end
 
-	if info.beaten then
+	-- Colisée du Pump (D94) : l'enjeu est du Mog, même en revanche
+	local mogLoss = Format.Short(info.mogLoss or 0)
+	if info.beaten and info.arena then
+		showPanel(
+			name,
+			line,
+			Texts.Get("Boss.RematchArena", { mog = mogLoss }),
+			Texts.Get("Boss.Fight"),
+			Texts.Get("Boss.Later")
+		)
+	elseif info.beaten then
 		showPanel(name, line, Texts.Get("Boss.Rematch"), Texts.Get("Boss.Fight"), Texts.Get("Boss.Later"))
+	elseif info.ready and info.arena then
+		local ready = Texts.Get("Boss.ReadyArena", { mog = mogLoss })
+		showPanel(name, line, `{required}\n{ready}`, Texts.Get("Boss.Fight"), Texts.Get("Boss.Later"))
 	elseif info.ready then
 		local ready = Texts.Get("Boss.Ready", { cash = info.cashLoss })
 		showPanel(name, line, `{required}\n{ready}`, Texts.Get("Boss.Fight"), Texts.Get("Boss.Later"))
@@ -546,6 +560,13 @@ local function onBossUpdate(update)
 			1
 		)
 		bossSays(update.bossId, `BossTaunt.{update.bossId}.{if update.won then "Behind" else "Ahead"}`)
+	elseif update.state == "Arena" or update.state == "ArenaBusy" then
+		-- Dernier boss : le combat se joue au Colisée (PumpGodController) ; ou la piste est prise
+		hidePanel()
+		MinigameController.SetGameplayLocked(false, "Boss")
+		if update.state == "ArenaBusy" then
+			UIController.Toast(Texts.Get("Boss.ArenaBusy"), 3)
+		end
 	elseif update.state == "Mogged" then
 		hidePanel()
 		MinigameController.SetGameplayLocked(false, "Boss")
