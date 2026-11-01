@@ -2,7 +2,7 @@
 -- rejouable (en le demandant au mentor). Chaque étape attend un événement du jeu ; la cible est montrée par un
 -- trait lumineux. Textes : Tutorial.<id>.Goal (objectif court), Tutorial.<id>.Say (réplique du mentor).
 -- Étape TryLook : le design prévoit un premier achat, mais la première aide ne rapporte que 5 Cash et le moins cher
--- des objets en coûte 25 ; on fait donc essayer un look (essayage gratuit). ❓ Prix d'un objet de départ.
+-- des objets en coûte 50 (D99) ; on fait donc essayer un look (essayage gratuit). ❓ Prix d'un objet de départ.
 
 export type Target = {
 	tag: string, -- tag CollectionService de la cible

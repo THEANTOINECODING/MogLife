@@ -1,6 +1,7 @@
 -- Ensembles MOG LIFE. Classés par prix croissant selon détails, silhouette et effets.
--- Le premier ensemble suit les premiers gains (25 Cash du bocal + 20 de Kevin) ; les derniers sont des objectifs
--- de style pour les stades avancés. Les prix restent à confronter aux parcours de l'alpha.
+-- Prix relevés en D99 (demande d'Antoine : le style doit se mériter) : ×2 pour les petits prix, jusqu'à ×5 pour les
+-- objets de luxe. Le premier ensemble coûte environ deux tours des premières aides et la victoire sur Kevin ; les
+-- derniers sont des objectifs de plusieurs heures aux stades avancés. À confronter aux parcours de l'alpha.
 -- Les articles anciens restent dans les données des joueurs et dans leur garde-robe.
 
 export type Set = {
@@ -15,26 +16,26 @@ export type Set = {
 
 local definitions = {
 	-- id, couleur RGB, prix en Cash, effet facultatif
-	{ "BoardwalkBolt", 250, 120, 38, 45 },
-	{ "JungleJolt", 21, 107, 53, 60 },
-	{ "TurboTaxi", 245, 192, 23, 80 },
-	{ "SunsetStunt", 211, 68, 46, 105 },
-	{ "CometCoach", 31, 58, 107, 130 },
-	{ "BubblegumBlitz", 239, 41, 120, 160 },
-	{ "CloudCruiser", 204, 197, 245, 195, "Snow" },
-	{ "FrostFlex", 141, 198, 238, 235, "Snow" },
-	{ "GarageGremlin", 56, 89, 94, 280 },
-	{ "ThunderArcade", 43, 40, 111, 330, "Pulse" },
-	{ "BrickhouseBrawler", 194, 17, 22, 385 },
-	{ "MidnightExpress", 15, 19, 31, 445 },
-	{ "PaperCrown", 244, 231, 186, 510, "Glint" },
-	{ "MoonMechanic", 203, 221, 230, 585, "Stardust" },
-	{ "CircuitAce", 12, 25, 70, 670, "Pulse" },
-	{ "RoyalRumble", 84, 18, 61, 765 },
-	{ "VelvetVillain", 90, 23, 123, 870 },
-	{ "IronMeteor", 52, 59, 74, 985 },
-	{ "DiscoDynamo", 94, 30, 145, 1110, "Glint" },
-	{ "GoldenHour", 239, 194, 79, 1250, "Glint" },
+	{ "BoardwalkBolt", 250, 120, 38, 90 },
+	{ "JungleJolt", 21, 107, 53, 130 },
+	{ "TurboTaxi", 245, 192, 23, 200 },
+	{ "SunsetStunt", 211, 68, 46, 290 },
+	{ "CometCoach", 31, 58, 107, 380 },
+	{ "BubblegumBlitz", 239, 41, 120, 510 },
+	{ "CloudCruiser", 204, 197, 245, 660, "Snow" },
+	{ "FrostFlex", 141, 198, 238, 830, "Snow" },
+	{ "GarageGremlin", 56, 89, 94, 1050 },
+	{ "ThunderArcade", 43, 40, 111, 1300, "Pulse" },
+	{ "BrickhouseBrawler", 194, 17, 22, 1550 },
+	{ "MidnightExpress", 15, 19, 31, 1850 },
+	{ "PaperCrown", 244, 231, 186, 2200, "Glint" },
+	{ "MoonMechanic", 203, 221, 230, 2600, "Stardust" },
+	{ "CircuitAce", 12, 25, 70, 3100, "Pulse" },
+	{ "RoyalRumble", 84, 18, 61, 3600 },
+	{ "VelvetVillain", 90, 23, 123, 4250 },
+	{ "IronMeteor", 52, 59, 74, 4900 },
+	{ "DiscoDynamo", 94, 30, 145, 5550, "Glint" },
+	{ "GoldenHour", 239, 194, 79, 6250, "Glint" },
 }
 
 local list: { Set } = {}

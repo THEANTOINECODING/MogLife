@@ -4,6 +4,12 @@ Format : date — décision — raison. La plus récente en haut.
 
 ## 2026-11-02 (Demande d'Antoine : caissier, prix, événements, finition des lieux)
 
+- **D99 — Prix relevés : le style et les boosts se méritent.** Demande d'Antoine (« que ce soit plus dur à récupérer »). Le design notait déjà que le Cash s'accumulait (03_PROGRESSION : ≈ 3 500 gagnés pour 1 290 d'objets) ; au stade 6, un tour des 8 aides rapporte ≈ 490 Cash, la tenue la plus chère en coûtait 1 250.
+  - **Courbe progressive** plutôt qu'un multiplicateur unique, pour que le début reste agréable : ×2 pour les prix de 50 ou moins, jusqu'à ×5 pour 1 000 et plus (interpolation logarithmique), arrondis (5, 10 ou 50). Exemples : premier ensemble 45 → 90, ThunderArcade 330 → 1 300, GoldenHour 1 250 → 6 250 ; trône 800 → 3 800 ; articles 25 → 50, 200 → 680.
+  - **Totaux** : ensembles 9 195 → 41 290 ; articles 1 910 → 5 065 ; meubles 4 055 → 15 710.
+  - **Boosts** relevés moins fort (ils rapportent du Mog, pas du style ; trop chers, plus personne ne les achèterait) : 20 → 40, 60 → 120, 150 → 350, 400 → 900.
+  - Gains inchangés (aides, boss, semaine, événements, duels). Les objets déjà achetés restent acquis. ❓ À confronter aux parcours de l'alpha (`tools/simulate_economy.luau`).
+
 - **D98 — Un caissier à l'épicerie, qui vend les mêmes boosts que le camion à shakes.** Demande d'Antoine.
   - **Caisse** (`grocery_checkout` dans `tools/build_map.py`), à droite en entrant : comptoir à bande verte, plateau en granit, tapis roulant avec un shake, un jus vert, un steak géant et des œufs dorés (les 4 boosts), scanner, caisse enregistreuse à écran vert, terminal de paiement, présentoir de barres protéinées, feu vert « caisse ouverte ». Derrière, contre le mur : un frigo vitré éclairé rempli de shakes aux 4 couleurs des boosts, et une ardoise de menu (4 pastilles, aucun texte).
   - **Barcode Barry** (`VendorGrocery`) : vendeur comme les autres (tag `VendorSpot`), qui reçoit le tag `BoostShop` : lui parler ouvre la même boutique de boosts que le camion et le distributeur (même serveur, mêmes prix, même distance). Son bouton s'appelle « Checkout » (nouvel attribut `TitleKey`).

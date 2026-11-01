@@ -51,10 +51,10 @@ end
 
 local Items: { [string]: Item } = {
 	-- Canapés
-	SaggyCouch = { slot = "Sofa", price = 40, order = 1, pieces = sofa(rgb(130, 90, 60), rgb(110, 74, 50)) },
+	SaggyCouch = { slot = "Sofa", price = 80, order = 1, pieces = sofa(rgb(130, 90, 60), rgb(110, 74, 50)) },
 	BenchSofa = {
 		slot = "Sofa",
-		price = 140,
+		price = 420,
 		requiredStage = 2,
 		order = 2,
 		pieces = {
@@ -68,14 +68,14 @@ local Items: { [string]: Item } = {
 	},
 	LeopardSofa = {
 		slot = "Sofa",
-		price = 300,
+		price = 1150,
 		requiredStage = 3,
 		order = 3,
 		pieces = sofa(rgb(225, 170, 70), rgb(80, 50, 30)),
 	},
 	ThroneSofa = {
 		slot = "Sofa",
-		price = 700,
+		price = 3250,
 		requiredStage = 5,
 		order = 4,
 		pieces = {
@@ -90,7 +90,7 @@ local Items: { [string]: Item } = {
 	-- Télés
 	TubeTv = {
 		slot = "Tv",
-		price = 50,
+		price = 100,
 		order = 1,
 		pieces = {
 			piece(V(4, 2, 1.6), V(0, 1, 0.2), rgb(120, 84, 56), M.WoodPlanks),
@@ -100,7 +100,7 @@ local Items: { [string]: Item } = {
 	},
 	GiantScreen = {
 		slot = "Tv",
-		price = 260,
+		price = 950,
 		requiredStage = 3,
 		order = 2,
 		pieces = {
@@ -113,7 +113,7 @@ local Items: { [string]: Item } = {
 	-- Lits
 	Mattress = {
 		slot = "Bed",
-		price = 30,
+		price = 60,
 		order = 1,
 		pieces = {
 			piece(V(5, 0.8, 7), V(0, 0.4, 0.5), rgb(230, 225, 210), M.Fabric),
@@ -122,7 +122,7 @@ local Items: { [string]: Item } = {
 	},
 	RaceCarBed = {
 		slot = "Bed",
-		price = 220,
+		price = 770,
 		requiredStage = 2,
 		order = 2,
 		pieces = {
@@ -139,7 +139,7 @@ local Items: { [string]: Item } = {
 	-- Tapis
 	PizzaRug = {
 		slot = "Rug",
-		price = 35,
+		price = 70,
 		order = 1,
 		pieces = {
 			piece(V(0.1, 7, 7), V(0, 0.05, 0), rgb(240, 180, 70), M.Fabric, CYLINDER_UP),
@@ -150,7 +150,7 @@ local Items: { [string]: Item } = {
 	},
 	ZebraRug = {
 		slot = "Rug",
-		price = 110,
+		price = 310,
 		requiredStage = 2,
 		order = 2,
 		pieces = {
@@ -163,7 +163,7 @@ local Items: { [string]: Item } = {
 	},
 	GoldRug = {
 		slot = "Rug",
-		price = 400,
+		price = 1650,
 		requiredStage = 4,
 		order = 3,
 		pieces = {
@@ -176,7 +176,7 @@ local Items: { [string]: Item } = {
 	-- Décoration murale (emplacement au centre du mur, le mur est juste derrière)
 	FlexPoster = {
 		slot = "Poster",
-		price = 25,
+		price = 50,
 		order = 1,
 		pieces = {
 			piece(V(4, 5, 0.1), V(0, 0, 0), rgb(250, 230, 120), M.SmoothPlastic),
@@ -187,7 +187,7 @@ local Items: { [string]: Item } = {
 	},
 	SunsetPoster = {
 		slot = "Poster",
-		price = 60,
+		price = 130,
 		order = 2,
 		pieces = {
 			piece(V(6, 4, 0.1), V(0, 0, 0), rgb(250, 140, 80)),
@@ -197,7 +197,7 @@ local Items: { [string]: Item } = {
 	},
 	NeonDumbbell = {
 		slot = "Poster",
-		price = 180,
+		price = 590,
 		requiredStage = 3,
 		order = 3,
 		pieces = {
@@ -210,7 +210,7 @@ local Items: { [string]: Item } = {
 	-- Plantes
 	Cactus = {
 		slot = "Plant",
-		price = 20,
+		price = 40,
 		order = 1,
 		pieces = {
 			piece(V(1.8, 1.6, 1.8), V(0, 0.8, 0), rgb(190, 100, 60), M.Concrete),
@@ -221,7 +221,7 @@ local Items: { [string]: Item } = {
 	},
 	ShakerPlant = {
 		slot = "Plant",
-		price = 80,
+		price = 200,
 		requiredStage = 2,
 		order = 2,
 		pieces = {
@@ -234,7 +234,7 @@ local Items: { [string]: Item } = {
 	-- Lampes
 	LavaLamp = {
 		slot = "Lamp",
-		price = 45,
+		price = 90,
 		order = 1,
 		pieces = {
 			piece(V(1.4, 1, 1.4), V(0, 0.5, 0), rgb(180, 180, 186), M.Metal),
@@ -244,7 +244,7 @@ local Items: { [string]: Item } = {
 	},
 	DumbbellLamp = {
 		slot = "Lamp",
-		price = 150,
+		price = 470,
 		requiredStage = 3,
 		order = 2,
 		pieces = {
@@ -257,7 +257,7 @@ local Items: { [string]: Item } = {
 	-- Trophées
 	BronzeCup = {
 		slot = "Trophy",
-		price = 60,
+		price = 130,
 		order = 1,
 		pieces = {
 			piece(V(4, 2.6, 1.6), V(0, 1.3, 0.5), rgb(120, 84, 56), M.WoodPlanks),
@@ -268,7 +268,7 @@ local Items: { [string]: Item } = {
 	},
 	GoldenDumbbell = {
 		slot = "Trophy",
-		price = 350,
+		price = 1400,
 		requiredStage = 4,
 		order = 2,
 		pieces = {
@@ -280,7 +280,7 @@ local Items: { [string]: Item } = {
 	},
 	BicepStatue = {
 		slot = "Trophy",
-		price = 800,
+		price = 3800,
 		requiredStage = 5,
 		order = 3,
 		pieces = {

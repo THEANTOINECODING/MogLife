@@ -48,7 +48,7 @@ local StyleItems: { [string]: Item } = {
 	-- Coupes
 	Banana = {
 		category = "Hair",
-		price = 40,
+		price = 80,
 		order = 1,
 		pieces = {
 			{ attach = "Head", size = V(0.7, 0.5, 1.6), offset = V(0, 0.6, -0.45), color = rgb(240, 200, 60) },
@@ -56,7 +56,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	Mullet = {
 		category = "Hair",
-		price = 60,
+		price = 130,
 		order = 2,
 		pieces = {
 			{ attach = "Head", size = V(1.06, 0.25, 1.06), offset = V(0, 0.55, 0), color = rgb(120, 70, 30) },
@@ -65,7 +65,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	Mohawk = {
 		category = "Hair",
-		price = 80,
+		price = 200,
 		order = 3,
 		pieces = {
 			{ attach = "Head", size = V(0.18, 0.75, 1.1), offset = V(0, 0.8, 0), color = rgb(255, 60, 140) },
@@ -73,7 +73,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	ShinyBald = {
 		category = "Hair",
-		price = 100,
+		price = 270,
 		order = 4,
 		pieces = {
 			{
@@ -89,7 +89,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	Pompadour = {
 		category = "Hair",
-		price = 150,
+		price = 470,
 		order = 5,
 		pieces = {
 			{ attach = "Head", size = V(1, 0.8, 1.5), offset = V(0, 0.75, -0.55), color = rgb(25, 25, 30) },
@@ -129,7 +129,7 @@ local StyleItems: { [string]: Item } = {
 	-- Barbes (chez le coiffeur)
 	LumberBeard = {
 		category = "Beard",
-		price = 45,
+		price = 90,
 		order = 1,
 		pieces = {
 			{ attach = "Head", size = V(0.9, 0.45, 0.4), offset = V(0, -0.45, -0.35), color = rgb(80, 45, 20) },
@@ -137,7 +137,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	Goatee = {
 		category = "Beard",
-		price = 30,
+		price = 60,
 		order = 2,
 		pieces = {
 			{ attach = "Head", size = V(0.25, 0.3, 0.2), offset = V(0, -0.5, -0.5), color = rgb(20, 18, 18) },
@@ -145,7 +145,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	Handlebar = {
 		category = "Beard",
-		price = 65,
+		price = 145,
 		order = 3,
 		pieces = {
 			{ attach = "Head", size = V(0.8, 0.12, 0.12), offset = V(0, -0.2, -0.55), color = rgb(200, 95, 30) },
@@ -153,7 +153,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	ChinStrap = {
 		category = "Beard",
-		price = 55,
+		price = 115,
 		order = 4,
 		pieces = {
 			{ attach = "Head", size = V(1.02, 0.15, 1.02), offset = V(0, -0.45, 0), color = rgb(20, 18, 18) },
@@ -163,7 +163,7 @@ local StyleItems: { [string]: Item } = {
 	-- Visage (chez le coiffeur)
 	FrownBrows = {
 		category = "Face",
-		price = 25,
+		price = 50,
 		order = 1,
 		pieces = {
 			{ attach = "Head", size = V(0.8, 0.12, 0.1), offset = V(0, 0.2, -0.55), color = rgb(30, 20, 12) },
@@ -171,7 +171,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	SparkleSmile = {
 		category = "Face",
-		price = 60,
+		price = 130,
 		order = 2,
 		pieces = {
 			{ attach = "Head", size = V(0.6, 0.15, 0.08), offset = V(0, -0.3, -0.55), color = rgb(255, 255, 250) },
@@ -179,7 +179,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	MegaJaw = {
 		category = "Face",
-		price = 120,
+		price = 350,
 		order = 3,
 		pieces = {
 			{ attach = "Head", size = V(1.2, 0.45, 1.05), offset = V(0, -0.4, -0.05), color = rgb(238, 189, 153) },
@@ -187,13 +187,13 @@ local StyleItems: { [string]: Item } = {
 	},
 
 	-- Hauts
-	TightTank = { category = "Top", price = 30, order = 1, pieces = { torsoShell(rgb(245, 245, 245), 1) } },
-	MogTank = { category = "Top", price = 70, order = 2, pieces = { torsoShell(rgb(35, 35, 40), 1) } },
-	Hawaiian = { category = "Top", price = 90, order = 3, pieces = { torsoShell(rgb(255, 120, 60), 1.5) } },
-	TrackJacket = { category = "Top", price = 120, order = 4, pieces = { torsoShell(rgb(40, 80, 200), 2) } },
+	TightTank = { category = "Top", price = 60, order = 1, pieces = { torsoShell(rgb(245, 245, 245), 1) } },
+	MogTank = { category = "Top", price = 165, order = 2, pieces = { torsoShell(rgb(35, 35, 40), 1) } },
+	Hawaiian = { category = "Top", price = 230, order = 3, pieces = { torsoShell(rgb(255, 120, 60), 1.5) } },
+	TrackJacket = { category = "Top", price = 350, order = 4, pieces = { torsoShell(rgb(40, 80, 200), 2) } },
 	BoxerRobe = {
 		category = "Top",
-		price = 160,
+		price = 510,
 		order = 5,
 		pieces = {
 			torsoShell(rgb(200, 20, 40), 3, Enum.Material.SmoothPlastic),
@@ -211,7 +211,7 @@ local StyleItems: { [string]: Item } = {
 	-- Bas
 	FluoShorts = {
 		category = "Bottom",
-		price = 35,
+		price = 70,
 		order = 1,
 		pieces = {
 			{ attach = "LowerTorso", size = V(1.1, 1.6, 1.15), offset = V(0, -0.2, 0), color = rgb(140, 255, 40) },
@@ -219,7 +219,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	VelvetJoggers = {
 		category = "Bottom",
-		price = 75,
+		price = 180,
 		order = 2,
 		pieces = {
 			{ attach = "LeftUpperLeg", size = V(1.12, 1, 1.12), offset = V(0, 0, 0), color = rgb(110, 35, 140) },
@@ -228,7 +228,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	LeatherPants = {
 		category = "Bottom",
-		price = 110,
+		price = 310,
 		order = 3,
 		pieces = {
 			{ attach = "LeftUpperLeg", size = V(1.1, 1, 1.1), offset = V(0, 0, 0), color = rgb(25, 22, 20) },
@@ -239,7 +239,7 @@ local StyleItems: { [string]: Item } = {
 	-- Accessoires
 	Headband = {
 		category = "Accessory",
-		price = 25,
+		price = 50,
 		order = 1,
 		pieces = {
 			{ attach = "Head", size = V(1.05, 0.18, 1.05), offset = V(0, 0.25, 0), color = rgb(220, 40, 40) },
@@ -247,7 +247,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	Sweatbands = {
 		category = "Accessory",
-		price = 35,
+		price = 70,
 		order = 2,
 		pieces = {
 			{ attach = "LeftLowerArm", size = V(1.2, 0.3, 1.2), offset = V(0, -0.3, 0), color = rgb(250, 250, 250) },
@@ -256,7 +256,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	DumbbellShades = {
 		category = "Accessory",
-		price = 50,
+		price = 100,
 		order = 3,
 		pieces = {
 			{ attach = "Head", size = V(0.95, 0.2, 0.12), offset = V(0, 0.1, -0.55), color = rgb(15, 15, 15) },
@@ -264,7 +264,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	ShakerBackpack = {
 		category = "Accessory",
-		price = 80,
+		price = 200,
 		order = 4,
 		pieces = {
 			{
@@ -279,7 +279,7 @@ local StyleItems: { [string]: Item } = {
 	},
 	GoldChain = {
 		category = "Accessory",
-		price = 200,
+		price = 680,
 		order = 5,
 		pieces = {
 			{
