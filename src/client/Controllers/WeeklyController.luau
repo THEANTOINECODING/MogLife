@@ -1,18 +1,20 @@
--- Récompenses de la semaine côté client (D67) : bouton « Weekly » en haut à droite (pastille quand quelque chose est
--- à réclamer) et sa fenêtre : les 3 défis de la semaine (progression, Cash, bouton Réclamer), le bonus des 3 défis
--- (trophée), le coffre de la semaine (7 jours) et le compte à rebours jusqu'aux prochains défis.
+-- Récompenses de la semaine côté client (D67, D96) : la fenêtre s'ouvre d'elle-même à chaque arrivée dans le jeu
+-- (une fois le joueur libre : pas pendant le tutoriel, le créateur de personnage ou une scène) : les 3 défis de la
+-- semaine (progression, Cash, bouton Réclamer), le bonus des 3 défis (trophée), le coffre de la semaine (7 jours) et
+-- le compte à rebours jusqu'aux prochains défis. Plus de bouton dans le menu.
 -- Le serveur décide de tout (WeeklyService) ; le client n'envoie que « réclamer ».
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
 
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Format = require(ReplicatedStorage.Shared.Format)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Ui = require(script.Parent.Parent.Ui)
 
+local WEEKLY_UI = Balance.WeeklyWindow
 local GOLD = Color3.fromRGB(255, 210, 60)
 local GREEN = Color3.fromRGB(60, 170, 80)
 local DIM = Color3.fromRGB(90, 90, 100)
@@ -22,14 +24,14 @@ local player = Players.LocalPlayer
 
 local UIController
 local MinigameController
+local CreatorController
+local CutsceneController
 
 type Row = { frame: Frame, label: TextLabel, fill: Frame, count: TextLabel, button: TextButton }
 
 local state: any = nil
 local receivedAt = 0
 local panel: Frame
-local weeklyButton: TextButton
-local badge: Frame
 local timerLabel: TextLabel
 local rows: { Row } = {}
 local bonusLabel: TextLabel
@@ -40,29 +42,11 @@ local chestButton: TextButton
 local footerLabel: TextLabel
 
 local WeeklyController = {}
-local mobileMenuOpen = false
+local shownOnArrival = false
+local tutorialActive = false
 
 local function layoutWeekly()
-	if UserInputService.TouchEnabled then
-		weeklyButton.AnchorPoint = Vector2.zero
-		weeklyButton.Position = UDim2.fromOffset(8, 292)
-		weeklyButton.Size = UDim2.fromOffset(112, 48)
-		weeklyButton.Visible = mobileMenuOpen
-		panel.Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 560) else UDim2.fromOffset(520, 560)
-	else
-		weeklyButton.AnchorPoint = Vector2.new(1, 0)
-		weeklyButton.Position = UDim2.new(1, -12, 0, 12)
-		weeklyButton.Size = UDim2.fromOffset(150, 54)
-		weeklyButton.Visible = true
-		panel.Size = UDim2.fromOffset(520, 560)
-	end
-end
-
-function WeeklyController.SetMobileMenuOpen(open: boolean)
-	mobileMenuOpen = open
-	if weeklyButton then
-		layoutWeekly()
-	end
+	panel.Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 560) else UDim2.fromOffset(520, 560)
 end
 
 local function setButton(button: TextButton, text: string, enabled: boolean, color: Color3)
@@ -88,20 +72,7 @@ local function remainingText(): string
 	return Texts.Get("Weekly.ResetsIn", { time = time })
 end
 
-local function claimable(): boolean
-	if not state then
-		return false
-	end
-	for _, challenge in state.challenges do
-		if challenge.progress >= challenge.target and not challenge.claimed then
-			return true
-		end
-	end
-	return state.bonus.ready or state.chest.canOpen
-end
-
 local function render()
-	badge.Visible = claimable()
 	if not state then
 		return
 	end
@@ -184,31 +155,6 @@ end
 
 local function buildGui()
 	local gui = Ui.create("ScreenGui", { Name = "Weekly", ResetOnSpawn = false, DisplayOrder = 1 })
-
-	-- Bouton en haut à droite
-	local open = Ui.button({
-		Name = "Open",
-		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, -12, 0, 12),
-		Size = UDim2.fromOffset(150, 54),
-		BackgroundColor3 = Color3.fromRGB(150, 70, 200),
-		Text = Texts.Get("Weekly.Button"),
-		Parent = gui,
-	})
-	weeklyButton = open
-	badge = Ui.create("Frame", {
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.new(1, -4, 0, 4),
-		Size = UDim2.fromOffset(22, 22),
-		BackgroundColor3 = Color3.fromRGB(235, 50, 50),
-		Visible = false,
-		ZIndex = 3,
-		Parent = open,
-	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 2, 0) })
-	Ui.label({ Size = UDim2.fromScale(1, 1), Text = "!", ZIndex = 4, Parent = badge })
-	open.Activated:Connect(function()
-		setOpen(not panel.Visible)
-	end)
 
 	panel = Ui.panel({
 		Name = "WeeklyPanel",
@@ -477,10 +423,41 @@ end
 function WeeklyController.Init(controllers)
 	UIController = controllers.UIController
 	MinigameController = controllers.MinigameController
+	CreatorController = controllers.CreatorController
+	CutsceneController = controllers.CutsceneController
+end
+
+-- À l'arrivée dans le jeu : la fenêtre s'ouvre dès que le joueur est libre (personnage là, rien d'autre à l'écran),
+-- après un court instant pour voir la ville. Pas pendant le tutoriel (trop de choses d'un coup pour un nouveau).
+local function openOnArrival()
+	local freeSince: number? = nil
+	local started = os.clock()
+	while os.clock() - started < WEEKLY_UI.ArrivalGiveUp do
+		task.wait(0.25)
+		local character = player.Character
+		local free = state ~= nil
+			and not tutorialActive
+			and character ~= nil
+			and character:FindFirstChild("HumanoidRootPart") ~= nil
+			and not CreatorController.IsOpen()
+			and not CutsceneController.IsPlaying()
+			and not MinigameController.IsGameplayLocked()
+		if not free then
+			freeSince = nil
+		elseif not freeSince then
+			freeSince = os.clock()
+		elseif os.clock() - freeSince >= WEEKLY_UI.ArrivalDelay then
+			setOpen(true)
+			return
+		end
+	end
 end
 
 function WeeklyController.Start()
 	buildGui()
+	Remotes.Tutorial.OnClientEvent:Connect(function(tutorial)
+		tutorialActive = tutorial ~= nil and not tutorial.done
+	end)
 	Remotes.WeeklyState.OnClientEvent:Connect(function(newState)
 		if typeof(newState) ~= "table" then
 			return
@@ -489,6 +466,10 @@ function WeeklyController.Start()
 		state = newState
 		receivedAt = os.clock()
 		render()
+		if not shownOnArrival then
+			shownOnArrival = true
+			task.spawn(openOnArrival)
+		end
 		-- Le coffre vient d'être ouvert : la scène d'ouverture
 		if state.chest and state.chest.opened and wasOpened == false then
 			chestScene(state.chest.cash or 0)

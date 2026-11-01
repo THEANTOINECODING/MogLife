@@ -28,6 +28,55 @@ function Ui.watchViewport(update: () -> ())
 	watchCamera()
 end
 
+-- Emplacements du menu (D96) : le rond qui ouvre le tiroir, la pastille d'objectif à côté, le tiroir dessous.
+-- Téléphone en portrait : le haut à gauche est pris par les compteurs, le rond passe à droite et la pastille dessous.
+export type MenuSlots = {
+	buttonAnchor: Vector2,
+	buttonPosition: UDim2,
+	buttonSize: UDim2,
+	pillPosition: UDim2,
+	pillSize: UDim2,
+	drawerAnchor: Vector2,
+	drawerPosition: UDim2,
+	tileSize: Vector2,
+}
+
+function Ui.menuSlots(): MenuSlots
+	if Ui.isPhonePortrait() then
+		return {
+			buttonAnchor = Vector2.new(1, 0),
+			buttonPosition = UDim2.new(1, -8, 0, 8),
+			buttonSize = UDim2.fromOffset(48, 48),
+			pillPosition = UDim2.fromOffset(8, 64),
+			pillSize = UDim2.new(1, -16, 0, 34),
+			drawerAnchor = Vector2.new(1, 0),
+			drawerPosition = UDim2.new(1, -8, 0, 62),
+			tileSize = Vector2.new(68, 54),
+		}
+	elseif UserInputService.TouchEnabled then
+		return {
+			buttonAnchor = Vector2.zero,
+			buttonPosition = UDim2.fromOffset(8, 8),
+			buttonSize = UDim2.fromOffset(44, 44),
+			pillPosition = UDim2.fromOffset(58, 10),
+			pillSize = UDim2.new(0.36, 0, 0, 40),
+			drawerAnchor = Vector2.zero,
+			drawerPosition = UDim2.fromOffset(8, 58),
+			tileSize = Vector2.new(68, 54),
+		}
+	end
+	return {
+		buttonAnchor = Vector2.zero,
+		buttonPosition = UDim2.fromOffset(12, 12),
+		buttonSize = UDim2.fromOffset(52, 52),
+		pillPosition = UDim2.fromOffset(72, 16),
+		pillSize = UDim2.fromOffset(330, 44),
+		drawerAnchor = Vector2.zero,
+		drawerPosition = UDim2.fromOffset(12, 72),
+		tileSize = Vector2.new(88, 64),
+	}
+end
+
 -- Crée une instance, applique ses propriétés, puis lui ajoute ses enfants.
 -- Parent est appliqué en dernier pour éviter des mises à jour inutiles.
 function Ui.create(className: string, props: { [string]: any }, children: { Instance }?): any

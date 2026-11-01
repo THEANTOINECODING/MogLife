@@ -228,6 +228,11 @@ local function setSideButtonsHidden(hidden: boolean, reason: string?)
 	end
 end
 
+-- Une fenêtre, une série ou une scène bloque-t-elle le jeu en ce moment ?
+function MinigameController.IsGameplayLocked(): boolean
+	return next(lockReasons) ~= nil
+end
+
 function MinigameController.SetSideButtonsHidden(hidden: boolean, reason: string)
 	setSideButtonsHidden(hidden, reason)
 end

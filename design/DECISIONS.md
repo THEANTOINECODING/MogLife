@@ -2,6 +2,14 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-01 (Menus)
+
+- **D96 — Nouveau menu : un rond ☰ et un tiroir ; objectif en une ligne ; fenêtre de la semaine à l'arrivée.** Choix d'Antoine (maquette proposée par Claude). L'ancienne colonne de grands boutons cachait le monde et dépassait de l'écran sur iPhone.
+  - **Menu** : un rond ☰ (en haut à gauche ; à droite en portrait, sous les compteurs à gauche) ouvre un petit tiroir de 4 cases à icône (Maison, Flex, Style, Settings), 68 × 54 px au toucher. Il se ferme d'un toucher ailleurs, en choisissant une case, quand le personnage se met à bouger ou quand une activité commence. Touche M au clavier, Select à la manette. Les emplacements sont communs (`Ui.menuSlots`).
+  - **Objectif** : une pastille d'une ligne à côté du rond (« 🎯 Squat to 45K Mog »), toujours visible hors tutoriel, combats et fenêtres ; un toucher affiche la phrase complète. Remplace la grande carte.
+  - **Semaine** : plus de bouton « Weekly ». La fenêtre s'ouvre d'elle-même à **chaque arrivée** dans le jeu, 2,5 s après que le joueur est libre (pas pendant le tutoriel, le créateur de personnage, une scène ou une série) ; on y réclame les gains comme avant. Un défi fini en cours de partie se réclame à la prochaine arrivée (message adapté).
+  Vérifié dans Studio : la fenêtre de la semaine s'ouvre à l'arrivée, l'ancien bouton n'existe plus, le tiroir contient les 4 cases (icône + nom), aucune erreur. Non vérifié : le rendu à l'écran (Studio en arrière-plan), le téléphone (portrait et paysage).
+
 ## 2026-11-01 (Colisée du Pump, finition)
 
 - **D95 — Combat du Dieu du Pump plus spectaculaire : bouton FLEX lisible, dieu frappable en rouge, animations retravaillées.** Demande d'Antoine (le combat en 3 étapes et ses mécaniques lui plaisent).

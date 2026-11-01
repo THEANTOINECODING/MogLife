@@ -127,7 +127,11 @@ local STRINGS: { [string]: string } = {
 	-- Séries
 	["Series.Complete"] = "Series complete! +{mog} Mog",
 	["Series.Accuracy"] = "Accuracy {score}%",
-	["Objective.Title"] = "Next goal",
+	["Objective.Icon"] = "🎯",
+	["Objective.Short.Boss"] = "Challenge {boss}!",
+	["Objective.Short.TryExercise"] = "Try the {exercise}",
+	["Objective.Short.Train"] = "{exercise} to {mog} Mog",
+	["Objective.Short.Top"] = "Rematch the Pump God",
 	-- Cinématiques (D53)
 	["Cutscene.Skip"] = "Skip",
 	["Cutscene.Intro1"] = "Welcome to MUSCLE CITY",
@@ -193,9 +197,15 @@ local STRINGS: { [string]: string } = {
 	["Boss.MoggedStamp"] = "MOGGED!",
 	-- Ce que dit le boss pendant le combat
 	-- Boutons du menu et réglages
+	["Menu.Home"] = "Home",
 	["Menu.Style"] = "Style",
 	["Menu.Settings"] = "Settings",
-	["Menu.More"] = "Menu",
+	["Menu.Open"] = "☰",
+	["Menu.Close"] = "✕",
+	["Menu.IconHome"] = "🏠",
+	["Menu.IconFlex"] = "💪",
+	["Menu.IconStyle"] = "👕",
+	["Menu.IconSettings"] = "⚙️",
 	["Movement.Run"] = "RUN",
 	["Settings.Title"] = "Settings",
 	["Settings.On"] = "On",
@@ -760,7 +770,6 @@ local STRINGS: { [string]: string } = {
 	["Settings.Duels.Hint"] = "Let other players challenge you to an arm wrestle",
 
 	-- Récompenses de la semaine (D67)
-	["Weekly.Button"] = "Weekly",
 	["Weekly.Title"] = "This week",
 	["Weekly.ResetsIn"] = "New challenges in {time}",
 	["Weekly.TimeDays"] = "{days}d {hours}h",
@@ -773,7 +782,7 @@ local STRINGS: { [string]: string } = {
 	["Weekly.BonusClaim"] = "Get trophy",
 	["Weekly.Trophy"] = "🏆 Weekly trophy earned! +{cash} Cash. Trophies: {count}",
 	["Weekly.TrophyLate"] = "🏆 Last week's trophy is yours! Trophies: {count}",
-	["Weekly.ChallengeDone"] = "Weekly challenge done: {challenge}! Claim it in Weekly.",
+	["Weekly.ChallengeDone"] = "Weekly challenge done: {challenge}! Claim it next time you join.",
 	["Weekly.Carried"] = "Rewards you didn't claim last week: +{cash} Cash!",
 	["Weekly.DayStamped"] = "Weekly chest: day checked! ({count}/7)",
 	["Weekly.ChestHint"] = "Play {minutes} min a day to check a box. Days checked: {days}/7",

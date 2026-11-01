@@ -1,5 +1,6 @@
--- Objectif toujours visible (D52) : une petite carte à gauche dit au joueur quoi faire ensuite, une fois le
--- tutoriel fini (pendant le tutoriel, c'est sa carte qui occupe cette place). Par ordre de priorité :
+-- Objectif toujours visible (D52, D96) : une pastille d'une ligne à côté du rond du menu dit au joueur quoi faire
+-- ensuite, une fois le tutoriel fini (pendant le tutoriel, c'est sa carte qui parle). Un toucher sur la pastille
+-- affiche la phrase complète. Par ordre de priorité :
 -- 1. assez de Mog pour le boss : aller le défier (le trait doré du guide y mène) ;
 -- 2. un exercice débloqué jamais essayé : l'essayer ;
 -- 3. sinon : s'entraîner sur l'exercice qui rapporte le plus, jusqu'au Mog du boss.
@@ -7,7 +8,6 @@
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local UserInputService = game:GetService("UserInputService")
 
 local Exercises = require(ReplicatedStorage.Shared.Config.Exercises)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
@@ -18,37 +18,38 @@ local Ui = require(script.Parent.Parent.Ui)
 
 local player = Players.LocalPlayer
 
-local card: Frame
+local pill: TextButton
 local goalLabel: TextLabel
+local fullText = ""
 local stats: { Mog: number, Stage: number }? = nil
 local records: { [string]: number } = {}
 local tutorialActive = false
 local hiddenForFight = false
-local crampedLandscape = false
-local mobileMenuOpen = false
+local menuOpen = false
+
+local UIController
 
 local ObjectiveController = {}
 
-local function layoutCard()
-	local camera = workspace.CurrentCamera
-	local size = camera and camera.ViewportSize or Vector2.zero
-	crampedLandscape = size.X > size.Y and size.Y < 500
-	if UserInputService.TouchEnabled then
-		card.Position = UDim2.fromOffset(8, 348)
-		card.Size = if Ui.isPhonePortrait() then UDim2.new(1, -16, 0, 76) else UDim2.fromOffset(250, 84)
-		goalLabel.Position = UDim2.fromOffset(12, 23)
-		goalLabel.Size = UDim2.new(1, -24, 1, -27)
-	else
-		card.Position = UDim2.fromOffset(12, 64)
-		card.Size = UDim2.fromOffset(250, 84)
-		goalLabel.Position = UDim2.fromOffset(12, 28)
-		goalLabel.Size = UDim2.new(1, -24, 1, -36)
-	end
-	card.Visible = stats ~= nil
+local function refreshVisible()
+	-- En portrait, le tiroir du menu s'ouvre par-dessus la pastille : elle s'efface le temps qu'il soit ouvert
+	pill.Visible = stats ~= nil
 		and not tutorialActive
 		and not hiddenForFight
-		and not crampedLandscape
-		and (not UserInputService.TouchEnabled or mobileMenuOpen)
+		and not (menuOpen and Ui.isPhonePortrait())
+end
+
+local function layoutPill()
+	local slots = Ui.menuSlots()
+	pill.Position = slots.pillPosition
+	pill.Size = slots.pillSize
+	refreshVisible()
+end
+
+-- Phrase courte (pastille) et phrase complète (au toucher)
+local function setGoal(short: string, full: string)
+	goalLabel.Text = short
+	fullText = full
 end
 
 local function exerciseName(id: string): string
@@ -56,23 +57,22 @@ local function exerciseName(id: string): string
 end
 
 local function render()
-	card.Visible = stats ~= nil
-		and not tutorialActive
-		and not hiddenForFight
-		and not crampedLandscape
-		and (not UserInputService.TouchEnabled or mobileMenuOpen)
+	refreshVisible()
 	if not stats then
 		return
 	end
 	local stage = Stages.List[stats.Stage]
 	local boss = stage and stage.boss
 	if not boss or boss.comingSoon then
-		goalLabel.Text = Texts.Get("Objective.Top")
+		setGoal(Texts.Get("Objective.Short.Top"), Texts.Get("Objective.Top"))
 		return
 	end
 	local bossName = Texts.Get(`Boss.{boss.id}`)
 	if stats.Mog >= boss.mogRequired then
-		goalLabel.Text = Texts.Get("Objective.Boss", { boss = bossName })
+		setGoal(
+			Texts.Get("Objective.Short.Boss", { boss = bossName }),
+			Texts.Get("Objective.Boss", { boss = bossName })
+		)
 		return
 	end
 	-- Exercice débloqué jamais essayé, puis meilleur exercice disponible
@@ -88,13 +88,17 @@ local function render()
 		end
 	end
 	if untried then
-		goalLabel.Text = Texts.Get("Objective.TryExercise", { exercise = exerciseName(untried) })
+		local exercise = exerciseName(untried)
+		setGoal(
+			Texts.Get("Objective.Short.TryExercise", { exercise = exercise }),
+			Texts.Get("Objective.TryExercise", { exercise = exercise })
+		)
 	elseif best then
-		goalLabel.Text = Texts.Get("Objective.Train", {
-			exercise = exerciseName(best),
-			mog = Format.Short(boss.mogRequired),
-			boss = bossName,
-		})
+		local mog = Format.Short(boss.mogRequired)
+		setGoal(
+			Texts.Get("Objective.Short.Train", { exercise = exerciseName(best), mog = mog }),
+			Texts.Get("Objective.Train", { exercise = exerciseName(best), mog = mog, boss = bossName })
+		)
 	end
 end
 
@@ -104,38 +108,50 @@ function ObjectiveController.SetHidden(hidden: boolean)
 	render()
 end
 
-function ObjectiveController.SetMobileMenuOpen(open: boolean)
-	mobileMenuOpen = open
-	render()
+-- Le tiroir du menu (SettingsController) est ouvert ou fermé
+function ObjectiveController.SetMenuOpen(open: boolean)
+	menuOpen = open
+	refreshVisible()
 end
 
 local function buildGui()
 	local gui = Ui.create("ScreenGui", { Name = "Objective", ResetOnSpawn = false, DisplayOrder = 2 })
-	card = Ui.panel({
-		Name = "Card",
-		Position = UDim2.fromOffset(12, 64),
-		Size = UDim2.fromOffset(250, 84),
+	pill = Ui.create("TextButton", {
+		Name = "Goal",
+		BackgroundColor3 = Color3.fromRGB(40, 35, 55),
+		BackgroundTransparency = 0.25,
+		AutoButtonColor = false,
+		Text = "",
 		Visible = false,
 		Parent = gui,
-	})
+	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.fromRGB(255, 220, 120), 1.5, 0.5) })
 	Ui.label({
-		Position = UDim2.fromOffset(12, 6),
-		Size = UDim2.new(1, -24, 0, 20),
-		TextXAlignment = Enum.TextXAlignment.Left,
-		TextColor3 = Color3.fromRGB(255, 220, 120),
-		Text = Texts.Get("Objective.Title"),
-		Parent = card,
+		Name = "Icon",
+		AnchorPoint = Vector2.new(0, 0.5),
+		Position = UDim2.new(0, 8, 0.5, 0),
+		Size = UDim2.new(0, 24, 0.7, 0),
+		Text = Texts.Get("Objective.Icon"),
+		TextStrokeTransparency = 1,
+		Parent = pill,
 	})
 	goalLabel = Ui.label({
-		Position = UDim2.fromOffset(12, 28),
-		Size = UDim2.new(1, -24, 1, -36),
+		AnchorPoint = Vector2.new(0, 0.5),
+		Position = UDim2.new(0, 38, 0.5, 0),
+		Size = UDim2.new(1, -50, 0.66, 0),
 		TextXAlignment = Enum.TextXAlignment.Left,
-		TextYAlignment = Enum.TextYAlignment.Top,
-		TextWrapped = true,
-		Parent = card,
+		Parent = pill,
 	})
+	pill.Activated:Connect(function()
+		if fullText ~= "" then
+			UIController.Toast(fullText, 3.5)
+		end
+	end)
 	gui.Parent = player:WaitForChild("PlayerGui")
-	Ui.watchViewport(layoutCard)
+	Ui.watchViewport(layoutPill)
+end
+
+function ObjectiveController.Init(controllers)
+	UIController = controllers.UIController
 end
 
 function ObjectiveController.Start()
