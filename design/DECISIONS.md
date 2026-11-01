@@ -2,6 +2,14 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-02 (Demande d'Antoine : caissier, prix, événements, finition des lieux)
+
+- **D98 — Un caissier à l'épicerie, qui vend les mêmes boosts que le camion à shakes.** Demande d'Antoine.
+  - **Caisse** (`grocery_checkout` dans `tools/build_map.py`), à droite en entrant : comptoir à bande verte, plateau en granit, tapis roulant avec un shake, un jus vert, un steak géant et des œufs dorés (les 4 boosts), scanner, caisse enregistreuse à écran vert, terminal de paiement, présentoir de barres protéinées, feu vert « caisse ouverte ». Derrière, contre le mur : un frigo vitré éclairé rempli de shakes aux 4 couleurs des boosts, et une ardoise de menu (4 pastilles, aucun texte).
+  - **Barcode Barry** (`VendorGrocery`) : vendeur comme les autres (tag `VendorSpot`), qui reçoit le tag `BoostShop` : lui parler ouvre la même boutique de boosts que le camion et le distributeur (même serveur, mêmes prix, même distance). Son bouton s'appelle « Checkout » (nouvel attribut `TitleKey`).
+  - **Modèle 3D** : ajouté à `tools/blender/build_townsfolk.py` (casquette et tablier verts, badge, shake géant avec paille) et exporté seul (`TOWNSFOLK_ONLY=VendorGrocery`) dans `assets/export/npcs/MogLife_Townsfolk_VendorGrocery.fbx` + sa texture. **À importer par Antoine** (Accueil > Importer 3D, puis `tools/install_townsfolk.luau`, qui accepte maintenant ce fichier seul) ; d'ici là, avatar provisoire aux couleurs de l'épicerie (`Npcs.VendorGrocery`).
+  Vérifié dans Studio (sans le son) : le caissier apparaît derrière le comptoir, tourné vers l'allée, avec le bouton « Checkout / Buy a boost » ; achat d'un Protein Shake par le vrai remote à côté de lui → « boost actif 3 min » ; Cash et boost du compte de test restaurés. Non vérifié : le modèle 3D définitif dans Studio (pas encore importé).
+
 ## 2026-11-01 (Décor de la ville)
 
 - **D97 — Ville plus soignée : fontaine à vraie eau, magasins habillés, ciel et lumière.** Demande d'Antoine (« détails sur les bâtiments, textures, plus esthétique, vraie eau dans la fontaine »).

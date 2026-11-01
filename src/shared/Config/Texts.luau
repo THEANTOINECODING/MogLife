@@ -86,6 +86,7 @@ local STRINGS: { [string]: string } = {
 	-- Boosts temporaires (D47)
 	["Boost.Prompt"] = "Buy a boost",
 	["Boost.Shop"] = "Shake Shack",
+	["Boost.Checkout"] = "Checkout",
 	["Boost.Title"] = "Gains Fuel",
 	["Boost.Subtitle"] = "Train with a boost: more Mog for a few minutes. Never required.",
 	["Boost.Effect"] = "x{multiplier} Mog for {minutes} min",
@@ -296,6 +297,7 @@ local STRINGS: { [string]: string } = {
 	["Npc.VendorClothes"] = "Coco the Stylist",
 	["Npc.VendorBarber"] = "Big Fade Freddy",
 	["Npc.VendorFurniture"] = "Dave the Decorator",
+	["Npc.VendorGrocery"] = "Barcode Barry",
 	["Npc.Mentor"] = "The Mysterious Coach",
 	["Mentor.Prompt"] = "Listen",
 	["Mentor.TutorialPrompt"] = "Show me the ropes",

@@ -33043,6 +33043,4050 @@
    }
   },
   {
+   "name": "CheckoutBody",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7,
+     3.2,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.2,
+       2.0,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      246,
+      242,
+      232
+     ]
+    },
+    "Material": "Plaster",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "CheckoutStripe",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7,
+     0.7,
+     0.06
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       70.42,
+       2.7,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      150,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CheckoutKick",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7,
+     0.4,
+     0.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       70.3,
+       0.6,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      44,
+      46,
+      52
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CheckoutTop",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7.4,
+     0.2,
+     2.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.2,
+       3.7,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      58,
+      60,
+      66
+     ]
+    },
+    "Material": "Granite",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "CheckoutBelt",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     4.2,
+     0.12,
+     1.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.2,
+       3.86,
+       94.1
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      28,
+      28,
+      32
+     ]
+    },
+    "Material": "Rubber",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CheckoutDivider",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.15,
+     0.3,
+     1.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.2,
+       3.95,
+       96.3
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      230,
+      60,
+      50
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CheckoutRail0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     4.2,
+     0.16,
+     0.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       70.12,
+       3.9,
+       94.1
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      204,
+      210
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CheckoutRail1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     4.2,
+     0.16,
+     0.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.28,
+       3.9,
+       94.1
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      204,
+      210
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "BeltShake",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.0,
+     0.7,
+     0.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.4,
+       4.4,
+       92.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      200,
+      230
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "BeltShakeLid",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.12,
+     0.8,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.4,
+       4.95,
+       92.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "BeltJuice",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.2,
+     0.55,
+     0.55
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.9,
+       4.5,
+       93.2
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      120,
+      230,
+      90
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false,
+    "Transparency": 0.15,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "BeltSteak",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.6,
+     0.4,
+     1.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.3,
+       4.12,
+       94.4
+      ],
+      "orientation": [
+       [
+        0.258819,
+        0.0,
+        -0.965926
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.965926,
+        0.0,
+        0.258819
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      90,
+      70
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "BeltSteakFat",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.2,
+     0.05,
+     0.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.3,
+       4.33,
+       94.4
+      ],
+      "orientation": [
+       [
+        0.258819,
+        0.0,
+        -0.965926
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.965926,
+        0.0,
+        0.258819
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      236,
+      210,
+      196
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "BeltSteakBone",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     0.3,
+     0.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.1,
+       4.15,
+       95.2
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      245,
+      240,
+      225
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "BeltEggBox",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.2,
+     0.3,
+     0.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.75,
+       4.06,
+       95.6
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      180,
+      150
+     ]
+    },
+    "Material": "Cardboard",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "BeltEgg0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.35,
+     0.4,
+     0.35
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.75,
+       4.3,
+       95.2
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      210,
+      60
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "BeltEgg1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.35,
+     0.4,
+     0.35
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.75,
+       4.3,
+       95.6
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      210,
+      60
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "BeltEgg2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.35,
+     0.4,
+     0.35
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.75,
+       4.3,
+       96.0
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      210,
+      60
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "RegisterBase",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.0,
+     0.7,
+     1.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.9,
+       4.15,
+       97.7
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      72,
+      80
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "RegisterDrawer",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.7,
+     0.35,
+     0.06
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.67,
+       4.0,
+       97.7
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      52,
+      54,
+      60
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "RegisterNeck",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.25,
+     0.6,
+     0.25
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.6,
+       4.75,
+       97.7
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      52,
+      54,
+      60
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "RegisterScreen",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.5,
+     0.95,
+     0.12
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.65,
+       5.3,
+       97.7
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.34202,
+        -0.939693
+       ],
+       [
+        0.0,
+        0.939693,
+        0.34202
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      40,
+      42,
+      48
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "RegisterGlow",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.3,
+     0.75,
+     0.04
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.72,
+       5.3,
+       97.7
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.34202,
+        -0.939693
+       ],
+       [
+        0.0,
+        0.939693,
+        0.34202
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      230,
+      140
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CardTerminal",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.3,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       70.05,
+       3.95,
+       98.7
+      ],
+      "orientation": [
+       [
+        -0.0,
+        -0.422618,
+        -0.906308
+       ],
+       [
+        0.0,
+        0.906308,
+        -0.422618
+       ],
+       [
+        1.0,
+        -0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      36,
+      36,
+      40
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CardTerminalLight",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.35,
+     0.04,
+     0.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       70.05,
+       4.13,
+       98.7
+      ],
+      "orientation": [
+       [
+        -0.0,
+        -0.422618,
+        -0.906308
+       ],
+       [
+        0.0,
+        0.906308,
+        -0.422618
+       ],
+       [
+        1.0,
+        -0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      200,
+      255
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "Scanner",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.9,
+     0.06,
+     0.9
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.2,
+       3.83,
+       96.55
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      180,
+      40,
+      40
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false,
+    "Transparency": 0.2
+   }
+  },
+  {
+   "name": "CandyRack",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     4.2,
+     1.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.5,
+       2.5,
+       91.3
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      62,
+      70
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "CandyRackTop",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.0,
+     0.2,
+     2.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.5,
+       4.7,
+       91.3
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      150,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "CandyBar00",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.12,
+     0.7,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       70.05,
+       1.6,
+       90.85
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      90,
+      90
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CandyBar01",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.12,
+     0.7,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.5,
+       1.6,
+       90.85
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CandyBar02",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.12,
+     0.7,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.95,
+       1.6,
+       90.85
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      160,
+      240
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CandyBar10",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.12,
+     0.7,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       70.05,
+       2.6,
+       90.85
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      160,
+      90,
+      220
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CandyBar11",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.12,
+     0.7,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.5,
+       2.6,
+       90.85
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      120,
+      210,
+      120
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CandyBar12",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.12,
+     0.7,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.95,
+       2.6,
+       90.85
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      140,
+      40
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CandyBar20",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.12,
+     0.7,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       70.05,
+       3.6,
+       90.85
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      90,
+      90
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CandyBar21",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.12,
+     0.7,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       69.5,
+       3.6,
+       90.85
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "CandyBar22",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.12,
+     0.7,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.95,
+       3.6,
+       90.85
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      160,
+      240
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "LanePole",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.2,
+     3.6,
+     0.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.3,
+       5.6,
+       98.95
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      204,
+      210
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "LaneLamp",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.7,
+     0.7,
+     0.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       68.3,
+       7.5,
+       98.95
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      230,
+      120
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false,
+    "Shape": "Ball"
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 0.8,
+      "Range": 10,
+      "Color": {
+       "Color3": [
+        0.549,
+        1.0,
+        0.6275
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "ShakeFridge",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6.4,
+     6.8,
+     0.9
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       64.8,
+       3.8,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      238,
+      242
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "ShakeFridgeInside",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.8,
+     6.0,
+     0.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.25,
+       4.0,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      220,
+      245,
+      255
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false,
+    "Transparency": 0.35
+   }
+  },
+  {
+   "name": "ShakeFridgeGlass",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.8,
+     6.0,
+     0.08
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.65,
+       4.0,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      230,
+      250
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false,
+    "Transparency": 0.65,
+    "Reflectance": 0.3
+   }
+  },
+  {
+   "name": "ShakeFridgeTop",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6.6,
+     0.5,
+     1.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.15,
+       7.4,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      150,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "ShakeFridgeHandle",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.15,
+     2.4,
+     0.15
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.77,
+       4.0,
+       98.0
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      204,
+      210
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "FridgeShelf0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.8,
+     0.08,
+     0.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.35,
+       1.65,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      210,
+      220
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false,
+    "Transparency": 0.3
+   }
+  },
+  {
+   "name": "FridgeShake0_0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       2.15,
+       93.0
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      200,
+      230
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake0_1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       2.15,
+       93.96
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      200,
+      230
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake0_2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       2.15,
+       94.92
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      200,
+      230
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake0_3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       2.15,
+       95.88
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      200,
+      230
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake0_4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       2.15,
+       96.84
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      200,
+      230
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake0_5",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       2.15,
+       97.8
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      200,
+      230
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShelf1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.8,
+     0.08,
+     0.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.35,
+       3.1,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      210,
+      220
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false,
+    "Transparency": 0.3
+   }
+  },
+  {
+   "name": "FridgeShake1_0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       3.6,
+       93.0
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      120,
+      230,
+      90
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake1_1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       3.6,
+       93.96
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      120,
+      230,
+      90
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake1_2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       3.6,
+       94.92
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      120,
+      230,
+      90
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake1_3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       3.6,
+       95.88
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      120,
+      230,
+      90
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake1_4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       3.6,
+       96.84
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      120,
+      230,
+      90
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake1_5",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       3.6,
+       97.8
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      120,
+      230,
+      90
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShelf2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.8,
+     0.08,
+     0.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.35,
+       4.55,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      210,
+      220
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false,
+    "Transparency": 0.3
+   }
+  },
+  {
+   "name": "FridgeShake2_0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       5.05,
+       93.0
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      90,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake2_1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       5.05,
+       93.96
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      90,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake2_2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       5.05,
+       94.92
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      90,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake2_3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       5.05,
+       95.88
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      90,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake2_4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       5.05,
+       96.84
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      90,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake2_5",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       5.05,
+       97.8
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      90,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShelf3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.8,
+     0.08,
+     0.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.35,
+       6.0,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      210,
+      220
+     ]
+    },
+    "Material": "Glass",
+    "CanCollide": false,
+    "Transparency": 0.3
+   }
+  },
+  {
+   "name": "FridgeShake3_0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       6.5,
+       93.0
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      210,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake3_1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       6.5,
+       93.96
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      210,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake3_2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       6.5,
+       94.92
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      210,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake3_3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       6.5,
+       95.88
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      210,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake3_4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       6.5,
+       96.84
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      210,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeShake3_5",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.85,
+     0.42,
+     0.42
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.4,
+       6.5,
+       97.8
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      210,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "FridgeLight",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     0.3,
+     0.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       65.45,
+       6.6,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 0.7,
+      "Range": 9,
+      "Color": {
+       "Color3": [
+        0.8235,
+        0.9412,
+        1.0
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "MenuBoard",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     6.6,
+     3.0,
+     0.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       64.5,
+       9.7,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      36,
+      40,
+      38
+     ]
+    },
+    "Material": "Slate",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "MenuFrame",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7.0,
+     3.4,
+     0.12
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       64.43,
+       9.7,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      130,
+      92,
+      60
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "MenuDot0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     1.1,
+     1.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       64.63,
+       9.9,
+       93.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        -0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      200,
+      230
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "MenuLine0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.9,
+     0.12,
+     0.05
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       64.62,
+       8.9,
+       93.0
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      210,
+      210,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "MenuDot1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     1.1,
+     1.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       64.63,
+       9.9,
+       94.6
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        -0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      120,
+      230,
+      90
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "MenuLine1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.9,
+     0.12,
+     0.05
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       64.62,
+       8.9,
+       94.6
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      210,
+      210,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "MenuDot2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     1.1,
+     1.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       64.63,
+       9.9,
+       96.2
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        -0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      90,
+      70
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "MenuLine2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.9,
+     0.12,
+     0.05
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       64.62,
+       8.9,
+       96.2
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      210,
+      210,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "MenuDot3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     1.1,
+     1.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       64.63,
+       9.9,
+       97.8
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        -0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      210,
+      60
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "MenuLine3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.9,
+     0.12,
+     0.05
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       64.62,
+       8.9,
+       97.8
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      210,
+      210,
+      200
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GroceryVendor",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.6,
+     0.2,
+     1.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       67.0,
+       0.5,
+       95.4
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "VendorSpot"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "attributes": {
+    "Npc": "VendorGrocery",
+    "Store": "Grocery",
+    "Tag": "BoostShop",
+    "TitleKey": "Boost.Checkout"
+   }
+  },
+  {
    "name": "GroceryIcon",
    "className": "Part",
    "properties": {

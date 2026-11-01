@@ -1,7 +1,8 @@
 -- Vendeurs des magasins (décision D38) : un PNJ par magasin, à son comptoir (tag VendorSpot dans la carte).
 -- Lui parler ouvre la boutique du magasin : il reçoit le tag de son point de vente (Mirror pour les vêtements et
 -- le coiffeur, FurnitureShop pour les meubles) et les mêmes attributs (Store, Categories), donc StyleService,
--- FurnitureService et leurs contrôleurs le traitent exactement comme un miroir ou un comptoir.
+-- FurnitureService et leurs contrôleurs le traitent exactement comme un miroir ou un comptoir. Le caissier de
+-- l'épicerie (D98) reçoit le tag BoostShop : il vend les mêmes boosts que le camion à shakes.
 -- Les miroirs et le comptoir restent en place (❓ D38 : les garder ou non est au créateur de trancher).
 
 local CollectionService = game:GetService("CollectionService")
@@ -26,7 +27,7 @@ local function spawnVendor(spot: Instance)
 	end
 	local facing = (spot.CFrame * CFrame.new(0, 0, -10)).Position
 	local _, body = Npc.Spawn(npc, Texts.Get(`Npc.{npc}`), spot, facing)
-	for _, name in { "Store", "Categories" } do
+	for _, name in { "Store", "Categories", "TitleKey" } do
 		local value = spot:GetAttribute(name)
 		if value ~= nil then
 			body:SetAttribute(name, value)

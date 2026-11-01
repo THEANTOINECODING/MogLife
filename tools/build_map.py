@@ -324,12 +324,15 @@ def style_display(F, name, local, stage, items, kind="Mannequin", yaw=0):
              extra={"CanQuery": False, "CanTouch": False})
 
 
-def vendor(F, name, local, npc, store, tag, categories=None, yaw=0):
+def vendor(F, name, local, npc, store, tag, categories=None, yaw=0, title=None):
     """Vendeur d'un magasin (tag VendorSpot, décision D38) : VendorService y fait apparaître le PNJ `npc`.
-    Il porte le tag `tag` du point de vente (Mirror ou FurnitureShop) : lui parler ouvre la même boutique."""
+    Il porte le tag `tag` du point de vente (Mirror, FurnitureShop ou BoostShop) : lui parler ouvre la même boutique.
+    `title` : clé de Texts affichée sur le bouton du point de vente (à la place du nom par défaut)."""
     attributes = {"Npc": npc, "Store": store, "Tag": tag}
     if categories:
         attributes["Categories"] = categories
+    if title:
+        attributes["TitleKey"] = title
     return P(F, name, (local[0], local[1] + 0.1, local[2]), (1.6, 0.2, 1.6), WHITE, yaw=yaw, transparency=1,
              collide=False, tags=["VendorSpot"], attributes=attributes, extra={"CanQuery": False, "CanTouch": False})
 
@@ -1103,7 +1106,108 @@ def grocery():
     c.append(P(F, "SignApple", (0, 17.5, 2), (5, 5, 5), (220, 40, 40), shape="Ball"))
     c.append(P(F, "SignStem", (0, 20.5, 2), (0.5, 1.6, 0.5), WOOD))
     c.append(P(F, "SignLeaf", (0.9, 20.5, 2), (1.6, 0.3, 0.9), (90, 170, 70)))
+    c += grocery_checkout(F)
     c.append(landmark(F, "GroceryIcon", (0, 27, 16), "Grocery"))
+    return c
+
+
+SHAKE_COLORS = ((240, 200, 230), (120, 230, 90), (200, 90, 70), (255, 210, 60))  # = couleurs de Config/Boosts.luau
+
+
+def grocery_checkout(F):
+    """Caisse de l'épicerie (D98) : comptoir avec tapis, caisse enregistreuse et présentoir de friandises ; derrière,
+    le caissier (VendorGrocery, tag BoostShop) vend les mêmes boosts que le camion à shakes. Contre le mur, un frigo
+    vitré rempli de shakes aux couleurs des 4 boosts et une ardoise de menu (pictogrammes, sans texte)."""
+    G = F.child((12.8, 0.3, 8.6), 90)  # repère de la caisse : -Z = côté client (l'allée), +Z = le mur
+    green, dark = (60, 150, 70), (44, 46, 52)
+    c = [
+        P(G, "CheckoutBody", (0, 1.6, 0), (7, 3.2, 2.4), (246, 242, 232), "Plaster"),
+        P(G, "CheckoutStripe", (0, 2.3, -1.22), (7, 0.7, 0.06), green, collide=False),
+        P(G, "CheckoutKick", (0, 0.2, -1.1), (7, 0.4, 0.3), dark, "Metal", collide=False),
+        P(G, "CheckoutTop", (0, 3.3, 0), (7.4, 0.2, 2.8), (58, 60, 66), "Granite"),
+        P(G, "CheckoutBelt", (-1.3, 3.46, 0), (4.2, 0.12, 1.7), (28, 28, 32), "Rubber", collide=False),
+        P(G, "CheckoutDivider", (0.9, 3.55, 0), (0.15, 0.3, 1.5), (230, 60, 50), collide=False),
+    ]
+    for k in range(2):  # bords chromés du tapis
+        c.append(P(G, f"CheckoutRail{k}", (-1.3, 3.5, (k * 2 - 1) * 0.92), (4.2, 0.16, 0.1), (200, 204, 210), "Metal",
+                   collide=False))
+    # Ce qui défile sur le tapis : un shake, un jus vert, un steak géant et une boîte d'œufs dorés
+    c += [
+        P(G, "BeltShake", (-3.0, 4.0, -0.2), (1.0, 0.7, 0.7), SHAKE_COLORS[0], roll=90, shape="Cylinder",
+          collide=False),
+        P(G, "BeltShakeLid", (-3.0, 4.55, -0.2), (0.12, 0.8, 0.8), WHITE, roll=90, shape="Cylinder", collide=False),
+        P(G, "BeltJuice", (-2.2, 4.1, 0.3), (1.2, 0.55, 0.55), SHAKE_COLORS[1], "Glass", roll=90, shape="Cylinder",
+          collide=False, transparency=0.15),
+        P(G, "BeltSteak", (-1.0, 3.72, -0.1), (1.6, 0.4, 1.1), SHAKE_COLORS[2], "Fabric", yaw=15, collide=False),
+        P(G, "BeltSteakFat", (-1.0, 3.93, -0.1), (1.2, 0.05, 0.7), (236, 210, 196), yaw=15, collide=False),
+        P(G, "BeltSteakBone", (-0.2, 3.75, 0.1), (0.6, 0.3, 0.3), (245, 240, 225), roll=90, shape="Cylinder",
+          collide=False),
+        P(G, "BeltEggBox", (0.2, 3.66, 0.45), (1.2, 0.3, 0.7), (200, 180, 150), "Cardboard", collide=False),
+    ]
+    for k in range(3):
+        c.append(P(G, f"BeltEgg{k}", (-0.2 + k * 0.4, 3.9, 0.45), (0.35, 0.4, 0.35), SHAKE_COLORS[3], "Metal",
+                   shape="Ball", collide=False))
+    # Caisse enregistreuse, écran incliné vers le client et terminal de paiement
+    c += [
+        P(G, "RegisterBase", (2.3, 3.75, 0.3), (2.0, 0.7, 1.5), (70, 72, 80), "Metal", collide=False),
+        P(G, "RegisterDrawer", (2.3, 3.6, -0.47), (1.7, 0.35, 0.06), (52, 54, 60), "Metal", collide=False),
+        P(G, "RegisterNeck", (2.3, 4.35, 0.6), (0.25, 0.6, 0.25), (52, 54, 60), "Metal", collide=False),
+        P(G, "RegisterScreen", (2.3, 4.9, 0.55), (1.5, 0.95, 0.12), (40, 42, 48), pitch=-20, collide=False),
+        P(G, "RegisterGlow", (2.3, 4.9, 0.48), (1.3, 0.75, 0.04), (110, 230, 140), "Neon", pitch=-20,
+          collide=False),
+        P(G, "CardTerminal", (3.3, 3.55, -0.85), (0.5, 0.3, 0.8), (36, 36, 40), pitch=25, collide=False),
+        P(G, "CardTerminalLight", (3.3, 3.73, -0.85), (0.35, 0.04, 0.3), (90, 200, 255), "Neon", pitch=25,
+          collide=False),
+        P(G, "Scanner", (1.15, 3.43, 0), (0.9, 0.06, 0.9), (180, 40, 40), "Glass", transparency=0.2,
+          collide=False),
+    ]
+    # Présentoir de friandises côté client (barres protéinées de toutes les couleurs)
+    H = G.child((-4.1, 0, -0.3))
+    c += [
+        P(H, "CandyRack", (0, 2.1, 0), (0.8, 4.2, 1.8), (60, 62, 70), "Metal"),
+        P(H, "CandyRackTop", (0, 4.3, 0), (1.0, 0.2, 2.0), green),
+    ]
+    bars = ((240, 90, 90), (250, 200, 60), (90, 160, 240), (160, 90, 220), (120, 210, 120), (250, 140, 40))
+    for row in range(3):
+        for k in range(3):
+            c.append(P(H, f"CandyBar{row}{k}", (-0.45, 1.2 + row * 1.0, -0.55 + k * 0.55), (0.12, 0.7, 0.4),
+                       bars[(row * 3 + k) % len(bars)], collide=False))
+    # Lampe de caisse : poteau et feu vert « caisse ouverte »
+    c += [
+        P(G, "LanePole", (3.55, 5.2, 0.9), (0.2, 3.6, 0.2), (200, 204, 210), "Metal", collide=False),
+        P(G, "LaneLamp", (3.55, 7.1, 0.9), (0.7, 0.7, 0.7), (110, 230, 120), "Neon", shape="Ball", collide=False,
+          children=[light((140, 255, 160), 0.8, 10)]),
+    ]
+    # Frigo vitré contre le mur, rempli de shakes (4 étagères, une couleur de boost chacune)
+    K = G.child((0, 0, 4.15))
+    c += [
+        P(K, "ShakeFridge", (0, 3.4, 0.25), (6.4, 6.8, 0.9), (235, 238, 242), "Metal"),
+        P(K, "ShakeFridgeInside", (0, 3.6, -0.2), (5.8, 6.0, 0.1), (220, 245, 255), "Neon", collide=False,
+          transparency=0.35),
+        P(K, "ShakeFridgeGlass", (0, 3.6, -0.6), (5.8, 6.0, 0.08), (200, 230, 250), "Glass", transparency=0.65,
+          collide=False, extra={"Reflectance": 0.3}),
+        P(K, "ShakeFridgeTop", (0, 7.0, -0.1), (6.6, 0.5, 1.3), green, collide=False),
+        P(K, "ShakeFridgeHandle", (2.6, 3.6, -0.72), (0.15, 2.4, 0.15), (200, 204, 210), "Metal", collide=False),
+    ]
+    for row, colr in enumerate(SHAKE_COLORS):
+        y = 1.3 + row * 1.45
+        c.append(P(K, f"FridgeShelf{row}", (0, y - 0.05, -0.3), (5.8, 0.08, 0.7), (200, 210, 220), "Glass",
+                   collide=False, transparency=0.3))
+        for k in range(6):
+            c.append(P(K, f"FridgeShake{row}_{k}", (-2.4 + k * 0.96, y + 0.45, -0.35), (0.85, 0.42, 0.42), colr,
+                       roll=90, shape="Cylinder", collide=False))
+    c.append(P(K, "FridgeLight", (0, 6.2, -0.4), (0.3, 0.3, 0.3), WHITE, transparency=1, collide=False,
+               extra=INVISIBLE, children=[light((210, 240, 255), 0.7, 9)]))
+    # Ardoise de menu au-dessus du frigo : les 4 boosts en pastilles (pictogrammes, aucun texte)
+    c.append(P(K, "MenuBoard", (0, 9.3, 0.55), (6.6, 3.0, 0.2), (36, 40, 38), "Slate", collide=False))
+    c.append(P(K, "MenuFrame", (0, 9.3, 0.62), (7.0, 3.4, 0.12), WOOD, "WoodPlanks", collide=False))
+    for k, colr in enumerate(SHAKE_COLORS):
+        c.append(P(K, f"MenuDot{k}", (-2.4 + k * 1.6, 9.5, 0.42), (0.1, 1.1, 1.1), colr, "Neon", yaw=90,
+                   shape="Cylinder", collide=False))
+        c.append(P(K, f"MenuLine{k}", (-2.4 + k * 1.6, 8.5, 0.43), (0.9, 0.12, 0.05), (210, 210, 200), collide=False))
+    # Le caissier, derrière le comptoir, tourné vers l'allée
+    c.append(vendor(F, "GroceryVendor", (15.0, 0.3, 8.6), "VendorGrocery", "Grocery", "BoostShop", yaw=90,
+                    title="Boost.Checkout"))
     return c
 
 

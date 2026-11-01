@@ -1,5 +1,6 @@
 --[[
-	Range les habitants importés depuis Blender (assets/export/npcs/MogLife_Townsfolk.fbx, Accueil > Importer 3D)
+	Range les habitants importés depuis Blender (assets/export/npcs/MogLife_Townsfolk.fbx ou MogLife_Townsfolk_<id>.fbx,
+	Accueil > Importer 3D)
 	dans ServerStorage.NpcModels : un modèle par personnage (nommé comme son id : Mom, Courier, VendorBarber,
 	Mentor…), dont la PrimaryPart est le corps. Npc.Spawn utilise alors ce vrai modèle au lieu de l'avatar provisoire.
 	Un modèle déjà présent du même nom est remplacé. À coller dans la barre de commande de Studio, en mode édition.
@@ -8,7 +9,14 @@
 
 local ServerStorage = game:GetService("ServerStorage")
 
-local imported = workspace:FindFirstChild("MogLife_Townsfolk")
+-- MogLife_Townsfolk (tous) ou MogLife_Townsfolk_<id> (un seul personnage, ex. MogLife_Townsfolk_VendorGrocery)
+local imported
+for _, child in workspace:GetChildren() do
+	if child.Name:sub(1, 17) == "MogLife_Townsfolk" then
+		imported = child
+		break
+	end
+end
 if not imported then
 	warn("[install_townsfolk] Modèle MogLife_Townsfolk introuvable dans Workspace : importer le FBX d'abord.")
 	return

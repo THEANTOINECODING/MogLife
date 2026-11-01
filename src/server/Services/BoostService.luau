@@ -1,4 +1,5 @@
--- Boosts temporaires (D47) : achetés en Cash au camion à shakes et au distributeur (tag "BoostShop"), ils
+-- Boosts temporaires (D47) : achetés en Cash au camion à shakes, au distributeur et au caissier de l'épicerie (D98)
+-- (tag "BoostShop"), ils
 -- multiplient le Mog des exercices pendant quelques minutes. Un seul actif à la fois : racheter le même prolonge
 -- (plafonné à Balance.BoostShop.MaxDuration), en acheter un autre le remplace.
 -- L'heure de fin est enregistrée (os.time) : le boost continue de s'écouler si le joueur se déconnecte.
@@ -111,7 +112,9 @@ local function setupShop(shop: Instance)
 	end
 	local prompt = Instance.new("ProximityPrompt")
 	prompt.ActionText = Texts.Get("Boost.Prompt")
-	prompt.ObjectText = Texts.Get("Boost.Shop")
+	-- Le caissier de l'épicerie a son propre titre (attribut TitleKey, D98) ; le camion et le distributeur, celui par défaut
+	local titleKey = shop:GetAttribute("TitleKey")
+	prompt.ObjectText = Texts.Get(if typeof(titleKey) == "string" then titleKey else "Boost.Shop")
 	prompt.MaxActivationDistance = 10
 	prompt.RequiresLineOfSight = false
 	prompt.Parent = shop

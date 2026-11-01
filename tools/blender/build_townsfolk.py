@@ -228,6 +228,17 @@ def vendor_furniture_extras(b, g):
     b.make(prism(tuple(lamp + Vector((0, 0, 0.55))), tuple(lamp + Vector((0, 0, 0.95))), 0.38, 0.2, sides=8), "accent2")
 
 
+def vendor_grocery_extras(b, g):
+    cap(b, g, "accent")                                                     # casquette de l'épicerie
+    b.make(block((0, -g["torso_d"] * 0.62, g["hip_z"] + 0.45), (g["hip_w"] * 1.05, 0.06, 1.9)), "accent")  # tablier
+    b.make(block((0.3, -g["torso_d"] * 0.66, g["top"] - 0.45), (0.28, 0.04, 0.16)), "gold")     # badge
+    shake = in_hand(g, 1, forward=0.15)                                       # un shake géant à la main
+    b.make(prism(tuple(shake + Vector((0, 0, -0.3))), tuple(shake + Vector((0, 0, 0.35))), 0.2, 0.26, sides=8), "accent2")
+    b.make(prism(tuple(shake + Vector((0, 0, 0.35))), tuple(shake + Vector((0, 0, 0.45))), 0.28, 0.28, sides=8), "white")
+    b.make(prism(tuple(shake + Vector((0.05, 0, 0.45))), tuple(shake + Vector((0.12, 0, 0.85))), 0.03, 0.03, sides=4),
+           "accent")                                                        # paille
+
+
 def mentor_extras(b, g):
     r, z, hy = g["head_r"], g["head_z"], g["hy"]
     b.make(half_sphere((0, hy + 0.12, z + r * 0.05), (r * 1.1, r * 1.2, r * 1.15)), "top")      # capuche
@@ -264,6 +275,8 @@ TOWNSFOLK = {
                         extras=vendor_barber_extras),
     "VendorFurniture": cfg(top_color=(0.82, 0.66, 0.3), shorts=(0.35, 0.3, 0.25), shoe=(0.4, 0.26, 0.14),
                            accent=(0.75, 0.12, 0.15), accent2=(0.96, 0.9, 0.75), extras=vendor_furniture_extras),
+    "VendorGrocery": cfg(top_color=(0.95, 0.95, 0.93), shorts=(0.22, 0.24, 0.3), hair=(0.12, 0.08, 0.06), skin=(0.78, 0.55, 0.4),
+                         accent=(0.24, 0.6, 0.3), accent2=(0.96, 0.66, 0.8), mouth="grin", extras=vendor_grocery_extras),
     "Mentor": cfg(scale=1.12, top="jacket", top_color=(0.24, 0.12, 0.38), shoe=(0.1, 0.1, 0.12), hair=(0.92, 0.92, 0.9), chest_w=1.5,
                   shoulder_w=1.9, delt=0.32, bicep=0.27, forearm=0.19, torso_d=0.75, mouth="smug", extras=mentor_extras),
 }
@@ -297,8 +310,12 @@ def merge_character(name, builder):
     return obj
 
 
+# TOWNSFOLK_ONLY=VendorGrocery : n'exporte que ce personnage (MogLife_Townsfolk_VendorGrocery.fbx)
+ONLY = os.environ.get("TOWNSFOLK_ONLY")
 objs = []
 for i, (name, c) in enumerate(TOWNSFOLK.items()):
+    if ONLY and name != ONLY:
+        continue
     b = build_bro(name, c)
     obj = merge_character(name, b)
     obj.location.x = i * 3.5
@@ -320,7 +337,7 @@ for o in objs:
     o.hide_set(False)
     o.select_set(True)
 bpy.context.view_layer.objects.active = objs[0]
-fbx = os.path.join(OUT, "MogLife_Townsfolk.fbx")
+fbx = os.path.join(OUT, f"MogLife_Townsfolk_{ONLY}.fbx" if ONLY else "MogLife_Townsfolk.fbx")
 bpy.ops.export_scene.fbx(
     filepath=fbx, use_selection=True, object_types={"MESH"},
     axis_forward="-Z", axis_up="Y", apply_unit_scale=True, apply_scale_options="FBX_SCALE_ALL",

@@ -128,6 +128,16 @@ local Npcs: { [string]: Look } = {
 		depth = 1.2,
 		head = 1,
 	},
+	-- Vendeurs : avatar provisoire seulement si leur modèle 3D manque dans ServerStorage.NpcModels
+	VendorGrocery = {
+		skin = rgb(200, 140, 100),
+		torso = rgb(60, 150, 70), -- tablier vert de l'épicerie
+		legs = rgb(56, 60, 76),
+		width = 1,
+		height = 1,
+		depth = 1,
+		head = 1.1,
+	},
 	MrsDoRe = {
 		skin = rgb(245, 210, 195),
 		torso = rgb(240, 120, 170),
