@@ -2,6 +2,15 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-01 (Colisée du Pump, finition)
+
+- **D95 — Combat du Dieu du Pump plus spectaculaire : bouton FLEX lisible, dieu frappable en rouge, animations retravaillées.** Demande d'Antoine (le combat en 3 étapes et ses mécaniques lui plaisent).
+  - **Bouton FLEX** (`Config/PumpGod.luau`, `FlexButton`) : gris quand il ne fait rien ; jaune qui grossit et dégonfle doucement (+9 %) dès qu'une action est possible (PUNCH!, GRAB, THROW!, PARRY!, HOLD!) ; pendant la finale, jaune et plus gros sur chaque temps.
+  - **Dieu frappable** (`Glow`) : contour et voile rouges qui clignotent quand le combattant peut le frapper (essoufflé à portée, ou disque en main) ; pour les spectateurs, pendant qu'il est essoufflé. Éclair blanc à chaque coup reçu.
+  - **Sensation de coup** (`HitCam`) : quand le combattant touche le dieu, le champ de vision se resserre d'un coup puis revient (plus fort pour le coup de Mog et le rayon).
+  - **Animations** (`PumpGod/God.luau`) : chaque attaque a un élan juste avant l'impact (il se ramasse, arme plus loin, tremble de puissance), un coup sec qui dépasse la pose et rebondit, et un mouvement du corps entier (buste qui tourne pour les lancers et les coups de poing, monté pendant la préparation, plongé au coup). Glissades : petit recul au départ, penché dans le sens du trajet, incliné dans les virages, bras et jambes qui traînent, rebond à l'arrivée, poussière au départ et à l'arrivée. Saut : il s'accroupit avant de bondir, genoux ramenés en l'air, s'écrase à l'atterrissage. La tête suit le joueur avant le corps. Au repos, il frime en double biceps toutes les ~6,5 s. Coups reçus : il pivote d'un côté, la tête part en arrière.
+  Vérifié dans Studio (sans image, Studio en arrière-plan) : bouton gris « FLEX » puis jaune qui pulse (1,00 → 1,09) sur GRAB et PARRY!, clignotement rouge en portant un disque, éclair blanc et resserrement de la caméra (70 → 64, puis retour à 70) au lancer ; manches 1, 2, 3, encouragements et finale enchaînés sans erreur. Mog du compte de test restauré (deux défaites pendant les tests). Non vérifié : l'animation à l'œil (amplitudes à régler en regardant), le téléphone.
+
 ## 2026-10-29 (Colisée du Pump, tranche 5 et audit)
 
 - **D94 — Le combat du Dieu du Pump est ouvert aux joueurs ; +40 PV entre les manches validés.** Choix d'Antoine.

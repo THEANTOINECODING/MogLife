@@ -90,12 +90,14 @@ local rollButton: TextButton
 local rollShade: Frame
 local flexButton: TextButton
 local flexStroke: UIStroke
+local flexScale: UIScale
 local banner: TextLabel
 local flash: Frame
 local cheerButton: TextButton
 local cheerFill: Frame
 local cheerLeft: TextLabel
 local cheerPop = 0
+local punch: { at: number, amount: number, base: number }? = nil -- à-coup de caméra en cours (punchCamera)
 local rewardCard: Frame
 local rewardLines: TextLabel
 local SoundController
@@ -516,6 +518,7 @@ local function buildGui()
 	})
 	flexStroke = Ui.stroke(Color3.new(1, 1, 1), 3, 0.1)
 	flexStroke.Parent = flexButton
+	flexScale = Ui.create("UIScale", { Parent = flexButton })
 	keyHint(flexButton, "PumpGod.KeyFlex")
 	rollButton.Activated:Connect(roll)
 	-- FLEX se maintient (pose sacrée) : appui et relâché
@@ -667,6 +670,10 @@ local function clear()
 	fight = nil
 	showControls(false)
 	cheerButton.Visible = false
+	if punch and workspace.CurrentCamera then
+		workspace.CurrentCamera.FieldOfView = punch.base
+		punch = nil
+	end
 	if SoundController then
 		SoundController.SetArena(false)
 	end
@@ -684,6 +691,34 @@ local function findGod(message)
 	if current and model and model:IsA("Model") and model.PrimaryPart and fight == current then
 		current.god = God.new(model, message.bossAt)
 	end
+end
+
+-- Le combattant frappe le dieu : le champ de vision se resserre d'un coup puis revient (sensation d'impact). Calculé
+-- à chaque image (stepPunchCamera) plutôt qu'avec un Tween : toujours rendu à sa valeur, même si l'image se fige.
+local function punchCamera(power: boolean)
+	local camera = workspace.CurrentCamera
+	if not camera then
+		return
+	end
+	local cam = PumpGod.HitCam
+	local base = if punch then punch.base else camera.FieldOfView
+	punch = { at = os.clock(), amount = if power then cam.PowerFov else cam.Fov, base = base }
+end
+
+local function stepPunchCamera()
+	local current = punch
+	local camera = workspace.CurrentCamera
+	if not current or not camera then
+		return
+	end
+	local k = (os.clock() - current.at) / PumpGod.HitCam.Time
+	if k >= 1 then
+		camera.FieldOfView = current.base
+		punch = nil
+		return
+	end
+	-- Resserré d'un coup, puis il revient en dépassant à peine (ressort)
+	camera.FieldOfView = current.base - current.amount * math.exp(-k * 4) * math.cos(k * 5)
 end
 
 local handlers = {}
@@ -748,6 +783,15 @@ function handlers.Move(message)
 	local current = fight
 	if current and current.god then
 		current.god:MoveTo(message.from, message.to, message.start, message.arrive)
+		if near(current.center) and (message.to - message.from).Magnitude > 4 then
+			local dust = Color3.fromRGB(225, 200, 160)
+			Fx.GroundBurst(message.from, 3, 9, dust, 0.45)
+			task.delay(math.max(message.arrive - Zones.ServerNow(), 0), function()
+				if fight == current and not current.ended then
+					Fx.GroundBurst(message.to, 3, 11, dust, 0.5)
+				end
+			end)
+		end
 	end
 end
 
@@ -1219,6 +1263,9 @@ function handlers.BossHit(message)
 	end
 	local power = message.kind == "PowerPunch" or message.kind == "Beam"
 	sfx("PumpGodPunch", if power then 0.75 else 1 + math.random() * 0.15)
+	if current.fighter == player then
+		punchCamera(power)
+	end
 	local god = current.god
 	if god then
 		god:Hurt(if power then 1.5 else 1)
@@ -1439,6 +1486,9 @@ function handlers.End(message)
 	clearField(current)
 	showControls(false)
 	local god = current.god
+	if god then
+		god:SetHittable(false)
+	end
 	if message.reason == "Victory" then
 		if god and god.rig and near(current.center) then
 			-- Il devient une constellation qui pose (double biceps) au-dessus du Colisée
@@ -1565,6 +1615,7 @@ function PumpGodController.Start()
 	end)
 	-- Le dieu s'anime avant la physique (écriture des os, D86) ; puis les boutons
 	RunService.PreSimulation:Connect(function()
+		stepPunchCamera()
 		local current = fight
 		if not current then
 			return
@@ -1612,29 +1663,46 @@ function PumpGodController.Start()
 				else Color3.fromRGB(120, 110, 120)
 		end
 		if not flexButton.Visible then
+			if current.god then
+				current.god:SetHittable(not current.ended and Zones.ServerNow() < current.windedUntil)
+			end
 			return
 		end
 		local left = math.clamp((rollReadyAt - os.clock()) / ROLL.Cooldown, 0, 1)
 		rollShade.Size = UDim2.fromScale(1, left)
 		local root = rootOf(player)
 		if root then
+			-- Gris : FLEX ne fait rien ici. Jaune qui gonfle et dégonfle : une action est possible (frapper, ramasser,
+			-- lancer, renvoyer, charger). Finale : jaune, il bat la mesure (gros sur chaque temps).
 			local key, ready = flexContext(current, root)
 			flexButton.Text = Texts.Get(key)
+			if current.god then
+				current.god:SetHittable(key == "PumpGod.PunchNow" or key == "PumpGod.ThrowNow")
+			end
 			local now = os.clock()
+			local style = PumpGod.FlexButton
 			local beat = now >= current.beatFrom and now <= current.beatTo
 			finale = current.finale
+			local scale = 1
 			if finale then
-				-- Finale : le bouton bat la mesure (il brille pendant la fenêtre de chaque temps)
 				local t = Zones.ServerNow()
 				local phase = ((t - finale.beatStart) / finale.beat) % 1
-				beat = t >= finale.beatStart - 0.1 and math.min(phase, 1 - phase) * finale.beat <= PumpGod.Finale.Window
+				local gap = math.min(phase, 1 - phase) * finale.beat
+				beat = t >= finale.beatStart - 0.1 and gap <= PumpGod.Finale.Window
+				ready = true
+				scale = 1 + style.BeatGrow * math.max(1 - gap / (finale.beat * 0.5), 0) ^ 3
+			elseif ready then
+				scale = 1 + style.Pulse * (0.5 + 0.5 * math.sin(now * style.PulseSpeed))
 			end
-			local glow = beat or (ready and math.floor(now * 6) % 2 == 0)
-			flexStroke.Color = if beat then GOLD elseif glow then Color3.fromRGB(255, 255, 200) else Color3.new(1, 1, 1)
-			flexStroke.Thickness = if beat then 6 elseif glow then 4 else 3
-			flexButton.BackgroundColor3 = if ready or beat
-				then Color3.fromRGB(255, 205, 60)
-				else Color3.fromRGB(255, 175, 35)
+			if beat and not finale then
+				scale += style.BeatGrow * 0.5
+			end
+			flexScale.Scale = scale
+			flexButton.BackgroundColor3 = if beat then style.Beat elseif ready then style.Ready else style.Idle
+			flexButton.TextColor3 = if ready or beat then style.ReadyText else style.IdleText
+			flexStroke.Color = if beat then GOLD elseif ready then style.ReadyStroke else style.IdleStroke
+			flexStroke.Thickness = if beat then 6 elseif ready then 4 else 2
+			flexStroke.Transparency = if ready or beat then 0 else 0.5
 		end
 	end)
 end

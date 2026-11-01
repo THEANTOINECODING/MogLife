@@ -153,6 +153,29 @@ return {
 	-- Caméra du combattant : de côté pendant la finale (recul et hauteur en fractions de la distance joueur-dieu) ;
 	-- vers le ciel (la constellation) pendant VictoryLook secondes après la victoire
 	Camera = { FinaleBack = 0.75, FinaleUp = 0.18, VictoryLook = 5.5 },
+	-- Bouton FLEX (D95) : gris s'il ne fait rien, jaune qui gonfle et dégonfle quand une action est possible
+	FlexButton = {
+		Idle = Color3.fromRGB(105, 105, 115),
+		IdleText = Color3.fromRGB(190, 190, 200),
+		IdleStroke = Color3.fromRGB(200, 200, 210),
+		Ready = Color3.fromRGB(255, 214, 40),
+		ReadyText = Color3.fromRGB(45, 30, 5),
+		ReadyStroke = Color3.fromRGB(255, 255, 210),
+		Beat = Color3.fromRGB(255, 236, 120),
+		Pulse = 0.09, -- grossit jusqu'à +9 %
+		PulseSpeed = 7, -- radians par seconde (un peu plus d'un battement par seconde)
+		BeatGrow = 0.16,
+	},
+	-- Le dieu frappable clignote en rouge ; un éclair blanc quand il prend un coup (contour Highlight)
+	Glow = {
+		Hittable = Color3.fromRGB(255, 40, 40),
+		HittableFill = 0.55, -- transparence du remplissage au plus fort du clignotement
+		BlinkSpeed = 9, -- radians par seconde
+		Hurt = Color3.fromRGB(255, 255, 255),
+		HurtTime = 0.18,
+	},
+	-- Caméra du combattant : petit à-coup de champ de vision quand il frappe le dieu
+	HitCam = { Fov = 6, PowerFov = 11, Time = 0.25 },
 
 	-- Le dieu dans l'arène
 	BossScale = 1.0, -- taille du modèle (le Dieu du Pump fait déjà 13 studs de haut)
