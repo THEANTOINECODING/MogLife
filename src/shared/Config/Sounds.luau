@@ -54,6 +54,15 @@ return {
 		PumpGodHurt = { id = "rbxassetid://9113573976", volume = 0.35, pitch = 0.7 }, -- le combattant est touché
 		PumpGodCrowd = { id = "rbxassetid://7755719721", volume = 0.25 }, -- la foule acclame
 		PumpGodBeat = { id = "rbxassetid://140323850218372", volume = 0.18 }, -- finale : chaque temps (aide au rythme)
+		-- Événements de ville (D100) : sons déjà vérifiés ci-dessus, réutilisés ❓ volumes à régler à l'oreille
+		EventStart = { id = "rbxassetid://9042409054", volume = 0.14, pitch = 1.15 }, -- fanfare courte
+		EventPickup = { id = "rbxassetid://134810204798705", volume = 0.3 }, -- haltère doré ramassé (cha-ching)
+		EventMega = { id = "rbxassetid://9042409054", volume = 0.2 }, -- MÉGA haltère
+		EventLand = { id = "rbxassetid://140323850218372", volume = 0.2, pitch = 0.8 }, -- un shake atterrit tout près
+		EventDrink = { id = "rbxassetid://18448089848", volume = 0.35 }, -- shake bu
+		EventTackle = { id = "rbxassetid://9113573976", volume = 0.35 }, -- plaquage du piano
+		EventWhoosh = { id = "rbxassetid://9120718279", volume = 0.18 }, -- le piano détale
+		EventCheer = { id = "rbxassetid://7755719721", volume = 0.22 }, -- piano arrêté : la foule acclame
 	},
 	Volume = {
 		Music = 1, -- volume général de la musique (multiplie celui de chaque morceau)

@@ -1,11 +1,13 @@
--- Événements de ville (EventService) côté client : bandeau d'annonce en haut de l'écran avec le temps restant,
--- et repères au-dessus des objets de l'événement (haltères dorés, distributeur, piano) pour les retrouver.
+-- Événements de ville (EventService) côté client : bandeau d'annonce en haut de l'écran avec ce qu'il reste à
+-- trouver (haltères, shakes, plaquages), le temps restant et sa jauge, et repères au-dessus des objets de
+-- l'événement pour les retrouver. Le spectacle dans le monde est joué par EventFxController (D100).
 
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 
+local Events = require(ReplicatedStorage.Shared.Config.Events)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Ui = require(script.Parent.Parent.Ui)
@@ -21,7 +23,9 @@ local banner: Frame
 local titleLabel: TextLabel
 local descLabel: TextLabel
 local timerLabel: TextLabel
-local current: { kind: string, endsAt: number }? = nil
+local counterLabel: TextLabel
+local timeBar: Frame
+local current: { kind: string, endsAt: number, startedAt: number }? = nil
 local inRun = false -- pendant une série ou un combat, le bandeau laisse la place aux textes du mini-jeu
 
 local EventController = {}
@@ -49,6 +53,20 @@ local function addMarker(object: Instance)
 	})
 end
 
+-- Ce qu'il reste à faire : haltères et shakes encore dans la ville, plaquages avant que le piano s'arrête
+local function counterText(kind: string): string
+	if kind == "GoldenDumbbells" then
+		return Texts.Get("Event.GoldenDumbbells.Left", { count = #CollectionService:GetTagged("EventDumbbell") })
+	elseif kind == "FreeShakes" then
+		return Texts.Get("Event.FreeShakes.Left", { count = #CollectionService:GetTagged("EventShake") })
+	elseif kind == "RunawayPiano" then
+		local piano = CollectionService:GetTagged("EventPiano")[1]
+		local hits = piano and piano:GetAttribute("Hits")
+		return if typeof(hits) == "number" then Texts.Get("Event.RunawayPiano.Left", { count = hits }) else ""
+	end
+	return ""
+end
+
 local function hideBanner()
 	local tween = TweenService:Create(banner, TweenInfo.new(0.3), { Position = UDim2.new(0.5, 0, 0, -220) })
 	tween.Completed:Connect(function(state)
@@ -64,7 +82,7 @@ local function showBanner(kind: string)
 		return
 	end
 	titleLabel.Text = Texts.Get(`Event.{kind}.Title`)
-	descLabel.Text = Texts.Get(`Event.{kind}.Desc`)
+	descLabel.Text = Texts.Get(`Event.{kind}.Desc`, { count = Events.RunawayPiano.Tackles })
 	banner.Visible = true
 	banner.Position = UDim2.new(0.5, 0, 0, -220)
 	TweenService:Create(banner, TweenInfo.new(0.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
@@ -77,7 +95,9 @@ local function onEvent(message)
 		return
 	end
 	if message.state == "Started" then
-		current = { kind = message.kind, endsAt = message.endsAt or workspace:GetServerTimeNow() + 60 }
+		local endsAt = message.endsAt or workspace:GetServerTimeNow() + 60
+		local duration = (Events :: any)[message.kind] and (Events :: any)[message.kind].Duration or 60
+		current = { kind = message.kind, endsAt = endsAt, startedAt = endsAt - duration }
 		showBanner(message.kind)
 	elseif message.state == "Ended" then
 		current = nil
@@ -93,12 +113,12 @@ local function buildGui()
 		Name = "Banner",
 		AnchorPoint = Vector2.new(0.5, 0),
 		Position = UDim2.new(0.5, 0, 0, -220),
-		Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 104) else UDim2.fromOffset(460, 104),
+		Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 120) else UDim2.fromOffset(460, 120),
 		Visible = false,
 		Parent = gui,
 	})
 	Ui.watchViewport(function()
-		banner.Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 104) else UDim2.fromOffset(460, 104)
+		banner.Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 120) else UDim2.fromOffset(460, 120)
 	end)
 	titleLabel = Ui.label({
 		Position = UDim2.fromOffset(14, 8),
@@ -112,13 +132,33 @@ local function buildGui()
 		Font = Enum.Font.GothamMedium,
 		Parent = banner,
 	})
+	counterLabel = Ui.label({
+		Position = UDim2.fromOffset(14, 76),
+		Size = UDim2.new(0.6, -14, 0, 22),
+		TextXAlignment = Enum.TextXAlignment.Left,
+		TextColor3 = Color3.fromRGB(255, 235, 170),
+		Parent = banner,
+	})
 	timerLabel = Ui.label({
-		Position = UDim2.fromOffset(14, 74),
-		Size = UDim2.new(1, -28, 0, 22),
+		AnchorPoint = Vector2.new(1, 0),
+		Position = UDim2.new(1, -14, 0, 76),
+		Size = UDim2.new(0.4, -14, 0, 22),
+		TextXAlignment = Enum.TextXAlignment.Right,
 		Font = Enum.Font.GothamMedium,
 		TextColor3 = Color3.fromRGB(210, 210, 225),
 		Parent = banner,
 	})
+	local track = Ui.create("Frame", {
+		Position = UDim2.new(0, 14, 1, -16),
+		Size = UDim2.new(1, -28, 0, 7),
+		BackgroundColor3 = Color3.fromRGB(50, 46, 66),
+		Parent = banner,
+	}, { Ui.corner(UDim.new(1, 0)) })
+	timeBar = Ui.create("Frame", {
+		Size = UDim2.fromScale(1, 1),
+		BackgroundColor3 = GOLD,
+		Parent = track,
+	}, { Ui.corner(UDim.new(1, 0)) })
 	gui.Parent = player:WaitForChild("PlayerGui")
 end
 
@@ -161,8 +201,12 @@ function EventController.Start()
 		while true do
 			task.wait(0.25)
 			if current then
-				local left = math.max(0, math.ceil(current.endsAt - workspace:GetServerTimeNow()))
+				local now = workspace:GetServerTimeNow()
+				local left = math.max(0, math.ceil(current.endsAt - now))
 				timerLabel.Text = Texts.Get("Event.TimeLeft", { seconds = left })
+				local total = math.max(current.endsAt - current.startedAt, 1)
+				timeBar.Size = UDim2.fromScale(math.clamp((current.endsAt - now) / total, 0, 1), 1)
+				counterLabel.Text = counterText(current.kind)
 			end
 		end
 	end)

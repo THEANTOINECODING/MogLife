@@ -76,6 +76,11 @@ local commands = {
 		EventService.Stop()
 		return EventService.Run(kind)
 	end,
+	-- Plaque le piano fugueur (même chemin que son bouton ; le joueur doit être à portée)
+	TacklePiano = function(player: Player)
+		EventService.Tackle(player)
+		return true
+	end,
 	-- Duel d'entraînement contre un mannequin (teste le bras de fer seul) ; perfect / good : sa précision (0 à 1)
 	DuelBot = function(player: Player, perfect: number?, good: number?)
 		local skill = if perfect then { perfect = perfect, good = good or 0 } else nil
