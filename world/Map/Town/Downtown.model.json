@@ -43022,21 +43022,21 @@
    }
   },
   {
-   "name": "GymAwning",
+   "name": "GymStripe0",
    "className": "Part",
    "properties": {
     "Anchored": true,
     "Size": [
-     22,
-     0.5,
-     3
+     0.1,
+     0.9,
+     45
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.5,
-       16.9,
-       -54.0
+       80.0,
+       2.8,
+       -95.1
       ],
       "orientation": [
        [
@@ -43064,9 +43064,1278 @@
       40
      ]
     },
-    "Material": "Fabric",
-    "CanCollide": true
+    "Material": "SmoothPlastic",
+    "CanCollide": false
    }
+  },
+  {
+   "name": "GymStripeGold0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     0.25,
+     45
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       80.0,
+       3.5,
+       -95.1
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GymTv00",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     4.6,
+     7.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       94.0,
+       13.1,
+       -94.95
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      24,
+      24,
+      28
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GymTvScreen00",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.06,
+     4.0,
+     7.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       94.0,
+       13.1,
+       -94.78
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      150,
+      255
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GymTv01",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     4.6,
+     7.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       66.0,
+       13.1,
+       -94.95
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      24,
+      24,
+      28
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GymTvScreen01",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.06,
+     4.0,
+     7.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       66.0,
+       13.1,
+       -94.78
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      120,
+      60
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GymStripe1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     0.9,
+     45
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       80.0,
+       2.8,
+       -12.9
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      40,
+      40
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GymStripeGold1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     0.25,
+     45
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       80.0,
+       3.5,
+       -12.9
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      40
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GymTv10",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     4.6,
+     7.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       94.0,
+       13.1,
+       -13.05
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      24,
+      24,
+      28
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GymTvScreen10",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.06,
+     4.0,
+     7.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       94.0,
+       13.1,
+       -13.22
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      255,
+      120,
+      60
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GymTv11",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     4.6,
+     7.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       66.0,
+       13.1,
+       -13.05
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      24,
+      24,
+      28
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GymTvScreen11",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.06,
+     4.0,
+     7.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       66.0,
+       13.1,
+       -13.22
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      150,
+      255
+     ]
+    },
+    "Material": "Neon",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GymFan0Rod",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.2,
+     1.2,
+     0.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       80.0,
+       19.1,
+       -66.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GymFan0Hub",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     1.1,
+     1.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       80.0,
+       18.5,
+       -66.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      200,
+      205
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "GymFan0Blade0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.8,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       80.0,
+       18.5,
+       -64.1
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      132,
+      88
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": false,
+    "Tags": {
+     "Tags": [
+      "Spinner"
+     ]
+    }
+   },
+   "attributes": {
+    "SpinCenter": {
+     "Vector3": [
+      80.0,
+      18.5,
+      -66.0
+     ]
+    },
+    "SpinSpeed": -3.5
+   }
+  },
+  {
+   "name": "GymFan0Blade1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.8,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       81.9,
+       18.5,
+       -66.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      132,
+      88
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": false,
+    "Tags": {
+     "Tags": [
+      "Spinner"
+     ]
+    }
+   },
+   "attributes": {
+    "SpinCenter": {
+     "Vector3": [
+      80.0,
+      18.5,
+      -66.0
+     ]
+    },
+    "SpinSpeed": -3.5
+   }
+  },
+  {
+   "name": "GymFan0Blade2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.8,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       80.0,
+       18.5,
+       -67.9
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      132,
+      88
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": false,
+    "Tags": {
+     "Tags": [
+      "Spinner"
+     ]
+    }
+   },
+   "attributes": {
+    "SpinCenter": {
+     "Vector3": [
+      80.0,
+      18.5,
+      -66.0
+     ]
+    },
+    "SpinSpeed": -3.5
+   }
+  },
+  {
+   "name": "GymFan0Blade3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.8,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       78.1,
+       18.5,
+       -66.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      132,
+      88
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": false,
+    "Tags": {
+     "Tags": [
+      "Spinner"
+     ]
+    }
+   },
+   "attributes": {
+    "SpinCenter": {
+     "Vector3": [
+      80.0,
+      18.5,
+      -66.0
+     ]
+    },
+    "SpinSpeed": -3.5
+   }
+  },
+  {
+   "name": "GymFan1Rod",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.2,
+     1.2,
+     0.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       80.0,
+       19.1,
+       -42.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GymFan1Hub",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     1.1,
+     1.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       80.0,
+       18.5,
+       -42.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.0,
+        -1.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -1.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      200,
+      205
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "GymFan1Blade0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.8,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       80.0,
+       18.5,
+       -40.1
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      132,
+      88
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": false,
+    "Tags": {
+     "Tags": [
+      "Spinner"
+     ]
+    }
+   },
+   "attributes": {
+    "SpinCenter": {
+     "Vector3": [
+      80.0,
+      18.5,
+      -42.0
+     ]
+    },
+    "SpinSpeed": 3.5
+   }
+  },
+  {
+   "name": "GymFan1Blade1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.8,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       81.9,
+       18.5,
+       -42.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      132,
+      88
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": false,
+    "Tags": {
+     "Tags": [
+      "Spinner"
+     ]
+    }
+   },
+   "attributes": {
+    "SpinCenter": {
+     "Vector3": [
+      80.0,
+      18.5,
+      -42.0
+     ]
+    },
+    "SpinSpeed": 3.5
+   }
+  },
+  {
+   "name": "GymFan1Blade2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.8,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       80.0,
+       18.5,
+       -43.9
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      132,
+      88
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": false,
+    "Tags": {
+     "Tags": [
+      "Spinner"
+     ]
+    }
+   },
+   "attributes": {
+    "SpinCenter": {
+     "Vector3": [
+      80.0,
+      18.5,
+      -42.0
+     ]
+    },
+    "SpinSpeed": 3.5
+   }
+  },
+  {
+   "name": "GymFan1Blade3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.8,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       78.1,
+       18.5,
+       -42.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      132,
+      88
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": false,
+    "Tags": {
+     "Tags": [
+      "Spinner"
+     ]
+    }
+   },
+   "attributes": {
+    "SpinCenter": {
+     "Vector3": [
+      80.0,
+      18.5,
+      -42.0
+     ]
+    },
+    "SpinSpeed": 3.5
+   }
+  },
+  {
+   "name": "BikeRackSlot",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "BikeRack"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         106.4,
+         0.7,
+         -75.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
    "className": "Part",
@@ -46322,20 +47591,545 @@
    ]
   },
   {
-   "name": "PoolRim",
+   "name": "PoolFloor",
    "className": "Part",
    "properties": {
     "Anchored": true,
     "Size": [
-     26,
-     0.8,
+     22.8,
+     0.1,
+     8.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -84.0,
+       0.25,
+       50.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      46,
+      110,
+      120
+     ]
+    },
+    "Material": "Slate",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "PoolWater",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     23.76,
+     1.35,
      12
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -84.0,
-       0.5,
+       1.05,
+       50.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      90,
+      170,
+      230
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "WaterVolume"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "PoolRimX-1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.6,
+     1.6,
+     12.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -96.2,
+       1.0,
+       50.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "Limestone",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "PoolRimZ-1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     22.8,
+     1.6,
+     1.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -84.0,
+       1.0,
+       44.8
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "Limestone",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "PoolRimX1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.6,
+     1.6,
+     12.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -71.8,
+       1.0,
+       50.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "Limestone",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "PoolRimZ1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     22.8,
+     1.6,
+     1.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -84.0,
+       1.0,
+       55.2
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "Limestone",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "PoolLadderRail0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.22,
+     2.4,
+     0.22
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -78.6,
+       1.5,
+       46.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      205,
+      208,
+      214
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "PoolLadderTop0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.22,
+     0.22,
+     1.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -78.6,
+       2.65,
+       45.4
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      205,
+      208,
+      214
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "PoolLadderRail1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.22,
+     2.4,
+     0.22
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -77.4,
+       1.5,
+       46.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      205,
+      208,
+      214
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "PoolLadderTop1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.22,
+     0.22,
+     1.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -77.4,
+       2.65,
+       45.4
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      205,
+      208,
+      214
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "PoolLadderStep",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.2,
+     0.12,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -78.0,
+       1.1,
+       46.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      205,
+      208,
+      214
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "DivingBase",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.0,
+     2.0,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -98.6,
+       1.1,
        50.0
       ],
       "orientation": [
@@ -46369,20 +48163,20 @@
    }
   },
   {
-   "name": "PoolWater",
+   "name": "DivingBoard",
    "className": "Part",
    "properties": {
     "Anchored": true,
     "Size": [
-     24,
-     0.2,
-     10
+     5.6,
+     0.25,
+     1.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       -84.0,
-       0.95,
+       -95.6,
+       2.2,
        50.0
       ],
       "orientation": [
@@ -46406,15 +48200,1601 @@
     },
     "Color": {
      "Color3uint8": [
-      70,
-      170,
-      230
+      60,
+      130,
+      200
      ]
     },
-    "Material": "Glass",
-    "CanCollide": false,
-    "Transparency": 0.25
+    "Material": "SmoothPlastic",
+    "CanCollide": true
    }
+  },
+  {
+   "name": "PoolFloat0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.4,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -80.0,
+       1.75,
+       50.55
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      60,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "PoolFloat1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.4,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -80.558,
+       1.75,
+       50.731
+      ],
+      "orientation": [
+       [
+        0.809017,
+        0.0,
+        0.587785
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.587785,
+        0.0,
+        0.809017
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "PoolFloat2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.4,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -80.904,
+       1.75,
+       51.206
+      ],
+      "orientation": [
+       [
+        0.309017,
+        0.0,
+        0.951057
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.951057,
+        0.0,
+        0.309017
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      60,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "PoolFloat3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.4,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -80.904,
+       1.75,
+       51.794
+      ],
+      "orientation": [
+       [
+        -0.309017,
+        0.0,
+        0.951057
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.951057,
+        0.0,
+        -0.309017
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "PoolFloat4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.4,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -80.558,
+       1.75,
+       52.269
+      ],
+      "orientation": [
+       [
+        -0.809017,
+        0.0,
+        0.587785
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.587785,
+        0.0,
+        -0.809017
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      60,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "PoolFloat5",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.4,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -80.0,
+       1.75,
+       52.45
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "PoolFloat6",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.4,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -79.442,
+       1.75,
+       52.269
+      ],
+      "orientation": [
+       [
+        -0.809017,
+        0.0,
+        -0.587785
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.587785,
+        0.0,
+        -0.809017
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      60,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "PoolFloat7",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.4,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -79.096,
+       1.75,
+       51.794
+      ],
+      "orientation": [
+       [
+        -0.309017,
+        0.0,
+        -0.951057
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.951057,
+        0.0,
+        -0.309017
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "PoolFloat8",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.4,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -79.096,
+       1.75,
+       51.206
+      ],
+      "orientation": [
+       [
+        0.309017,
+        0.0,
+        -0.951057
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.951057,
+        0.0,
+        0.309017
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      235,
+      60,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "PoolFloat9",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.4,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -79.442,
+       1.75,
+       50.731
+      ],
+      "orientation": [
+       [
+        0.809017,
+        0.0,
+        -0.587785
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.587785,
+        0.0,
+        0.809017
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "PoolBall",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     1.4,
+     1.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -89.0,
+       2.0,
+       48.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      50
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "PoolLight",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.4,
+     0.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -84.0,
+       1.1,
+       50.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "StreetLight"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 2,
+      "Range": 18,
+      "Color": {
+       "Color3": [
+        0.4706,
+        0.8235,
+        1.0
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "PoolLoungerSlot0",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Lounger"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -93.0,
+         0.2,
+         59.6
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "PoolLoungerSlot1",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Lounger"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -75.0,
+         0.2,
+         59.6
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ParkLamp0Slot",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "StreetLamp"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -92.0,
+         0.2,
+         34.4
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ParkLamp0Light",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.4,
+     0.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -92.0,
+       11.4,
+       36.7
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "StreetLight"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.1,
+      "Range": 28,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8627,
+        0.6667
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "ParkLamp1Slot",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "StreetLamp"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -74.0,
+         0.2,
+         34.4
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ParkLamp1Light",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.4,
+     0.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -74.0,
+       11.4,
+       36.7
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "StreetLight"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.1,
+      "Range": 28,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8627,
+        0.6667
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "ParkLamp2Slot",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "StreetLamp"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -56.0,
+         0.2,
+         34.4
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ParkLamp2Light",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.4,
+     0.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -56.0,
+       11.4,
+       36.7
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "StreetLight"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.1,
+      "Range": 28,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8627,
+        0.6667
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "ParkBench0",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bench"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -83.0,
+         0.2,
+         40.6
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ParkBench1",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bench"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -65.0,
+         0.2,
+         40.6
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ParkFlowerbed",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7,
+     0.8,
+     5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -92.0,
+       0.6,
+       30.5
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      80,
+      60
+     ]
+    },
+    "Material": "Ground",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "ParkFlowerbedFlowerSlot0",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -93.75,
+         1.0,
+         29.25
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ParkFlowerbedFlowerSlot1",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -90.25,
+         1.0,
+         29.25
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ParkFlowerbedFlowerSlot2",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -93.75,
+         1.0,
+         31.75
+        ],
+        "orientation": [
+         [
+          -1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ParkFlowerbedFlowerSlot3",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "FlowerPatch",
+    "PropHeight": 1.3,
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -90.25,
+         1.0,
+         31.75
+        ],
+        "orientation": [
+         [
+          -0.0,
+          0.0,
+          -1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          1.0,
+          0.0,
+          -0.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
   },
   {
    "name": "LifeguardChairSlot",
@@ -48485,6 +51865,250 @@
    }
   },
   {
+   "name": "TempleBrazier-1",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Colosseum_Brazier",
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -55.958,
+         0.1,
+         -80.0
+        ],
+        "orientation": [
+         [
+          -0.707107,
+          0.0,
+          -0.707107
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.707107,
+          0.0,
+          -0.707107
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "TempleFire-1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -55.958,
+       4.1,
+       -80.0
+      ],
+      "orientation": [
+       [
+        -0.707107,
+        0.0,
+        -0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.707107,
+        0.0,
+        -0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "ColosseumFire"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "TempleBrazier1",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Colosseum_Brazier",
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -80.0,
+         0.1,
+         -55.958
+        ],
+        "orientation": [
+         [
+          -0.707107,
+          0.0,
+          -0.707107
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.707107,
+          0.0,
+          -0.707107
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "TempleFire1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -80.0,
+       4.1,
+       -55.958
+      ],
+      "orientation": [
+       [
+        -0.707107,
+        0.0,
+        -0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.707107,
+        0.0,
+        -0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "ColosseumFire"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
    "name": "ColosseumPortalTemple",
    "className": "Part",
    "properties": {
@@ -49049,6 +52673,4334 @@
           -0.707107,
           0.0,
           -0.707107
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "ArenaTorch0-1Foot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.3,
+     0.4,
+     1.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -68.281,
+       0.42,
+       -60.929
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      50,
+      46,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "ArenaTorch0-1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.0,
+     0.45,
+     0.45
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -68.281,
+       2.72,
+       -60.929
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      54,
+      50
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ArenaTorch0-1Cup",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     1.8,
+     1.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -68.281,
+       5.47,
+       -60.929
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      62,
+      56
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ArenaTorch0-1Fire",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -68.281,
+       6.12,
+       -60.929
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "ColosseumFire"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "ArenaTorch01Foot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.3,
+     0.4,
+     1.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -60.929,
+       0.42,
+       -68.281
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      50,
+      46,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "ArenaTorch01",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.0,
+     0.45,
+     0.45
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -60.929,
+       2.72,
+       -68.281
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      54,
+      50
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ArenaTorch01Cup",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     1.8,
+     1.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -60.929,
+       5.47,
+       -68.281
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      62,
+      56
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ArenaTorch01Fire",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -60.929,
+       6.12,
+       -68.281
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "ColosseumFire"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "ArenaTorch1-1Foot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.3,
+     0.4,
+     1.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -57.676,
+       0.42,
+       -50.324
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      50,
+      46,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "ArenaTorch1-1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.0,
+     0.45,
+     0.45
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -57.676,
+       2.72,
+       -50.324
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      54,
+      50
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ArenaTorch1-1Cup",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     1.8,
+     1.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -57.676,
+       5.47,
+       -50.324
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      62,
+      56
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ArenaTorch1-1Fire",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -57.676,
+       6.12,
+       -50.324
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "ColosseumFire"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "ArenaTorch11Foot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.3,
+     0.4,
+     1.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -50.324,
+       0.42,
+       -57.676
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      50,
+      46,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "ArenaTorch11",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.0,
+     0.45,
+     0.45
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -50.324,
+       2.72,
+       -57.676
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      54,
+      50
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ArenaTorch11Cup",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     1.8,
+     1.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -50.324,
+       5.47,
+       -57.676
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      62,
+      56
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ArenaTorch11Fire",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -50.324,
+       6.12,
+       -57.676
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "ColosseumFire"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "ArenaTorch2-1Foot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.3,
+     0.4,
+     1.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -47.071,
+       0.42,
+       -39.719
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      50,
+      46,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "ArenaTorch2-1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.0,
+     0.45,
+     0.45
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -47.071,
+       2.72,
+       -39.719
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      54,
+      50
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ArenaTorch2-1Cup",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     1.8,
+     1.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -47.071,
+       5.47,
+       -39.719
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      62,
+      56
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ArenaTorch2-1Fire",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -47.071,
+       6.12,
+       -39.719
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "ColosseumFire"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "ArenaTorch21Foot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.3,
+     0.4,
+     1.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -39.719,
+       0.42,
+       -47.071
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      50,
+      46,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "ArenaTorch21",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.0,
+     0.45,
+     0.45
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -39.719,
+       2.72,
+       -47.071
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      54,
+      50
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ArenaTorch21Cup",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     1.8,
+     1.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -39.719,
+       5.47,
+       -47.071
+      ],
+      "orientation": [
+       [
+        0.0,
+        -1.0,
+        0.0
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      62,
+      56
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ArenaTorch21Fire",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -39.719,
+       6.12,
+       -47.071
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "ColosseumFire"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "NoLegsRing0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -92.0,
+       0.25,
+       -55.4
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -93.834,
+       0.25,
+       -55.219
+      ],
+      "orientation": [
+       [
+        0.980785,
+        0.0,
+        0.19509
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.19509,
+        0.0,
+        0.980785
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -95.597,
+       0.25,
+       -54.684
+      ],
+      "orientation": [
+       [
+        0.92388,
+        0.0,
+        0.382683
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.382683,
+        0.0,
+        0.92388
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -97.222,
+       0.25,
+       -53.816
+      ],
+      "orientation": [
+       [
+        0.83147,
+        0.0,
+        0.55557
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.55557,
+        0.0,
+        0.83147
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -98.647,
+       0.25,
+       -52.647
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing5",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -99.816,
+       0.25,
+       -51.222
+      ],
+      "orientation": [
+       [
+        0.55557,
+        0.0,
+        0.83147
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.83147,
+        0.0,
+        0.55557
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing6",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -100.684,
+       0.25,
+       -49.597
+      ],
+      "orientation": [
+       [
+        0.382683,
+        0.0,
+        0.92388
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.92388,
+        0.0,
+        0.382683
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing7",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -101.219,
+       0.25,
+       -47.834
+      ],
+      "orientation": [
+       [
+        0.19509,
+        0.0,
+        0.980785
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.980785,
+        0.0,
+        0.19509
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing8",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -101.4,
+       0.25,
+       -46.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing9",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -101.219,
+       0.25,
+       -44.166
+      ],
+      "orientation": [
+       [
+        -0.19509,
+        0.0,
+        0.980785
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.980785,
+        0.0,
+        -0.19509
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing10",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -100.684,
+       0.25,
+       -42.403
+      ],
+      "orientation": [
+       [
+        -0.382683,
+        0.0,
+        0.92388
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.92388,
+        0.0,
+        -0.382683
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing11",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -99.816,
+       0.25,
+       -40.778
+      ],
+      "orientation": [
+       [
+        -0.55557,
+        0.0,
+        0.83147
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.83147,
+        0.0,
+        -0.55557
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing12",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -98.647,
+       0.25,
+       -39.353
+      ],
+      "orientation": [
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        -0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing13",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -97.222,
+       0.25,
+       -38.184
+      ],
+      "orientation": [
+       [
+        -0.83147,
+        0.0,
+        0.55557
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.55557,
+        0.0,
+        -0.83147
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing14",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -95.597,
+       0.25,
+       -37.316
+      ],
+      "orientation": [
+       [
+        -0.92388,
+        0.0,
+        0.382683
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.382683,
+        0.0,
+        -0.92388
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing15",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -93.834,
+       0.25,
+       -36.781
+      ],
+      "orientation": [
+       [
+        -0.980785,
+        0.0,
+        0.19509
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.19509,
+        0.0,
+        -0.980785
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing16",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -92.0,
+       0.25,
+       -36.6
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing17",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -90.166,
+       0.25,
+       -36.781
+      ],
+      "orientation": [
+       [
+        -0.980785,
+        0.0,
+        -0.19509
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.19509,
+        0.0,
+        -0.980785
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing18",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -88.403,
+       0.25,
+       -37.316
+      ],
+      "orientation": [
+       [
+        -0.92388,
+        0.0,
+        -0.382683
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.382683,
+        0.0,
+        -0.92388
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing19",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -86.778,
+       0.25,
+       -38.184
+      ],
+      "orientation": [
+       [
+        -0.83147,
+        0.0,
+        -0.55557
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.55557,
+        0.0,
+        -0.83147
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing20",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -85.353,
+       0.25,
+       -39.353
+      ],
+      "orientation": [
+       [
+        -0.707107,
+        0.0,
+        -0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.707107,
+        0.0,
+        -0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing21",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -84.184,
+       0.25,
+       -40.778
+      ],
+      "orientation": [
+       [
+        -0.55557,
+        0.0,
+        -0.83147
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.83147,
+        0.0,
+        -0.55557
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing22",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -83.316,
+       0.25,
+       -42.403
+      ],
+      "orientation": [
+       [
+        -0.382683,
+        0.0,
+        -0.92388
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.92388,
+        0.0,
+        -0.382683
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing23",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -82.781,
+       0.25,
+       -44.166
+      ],
+      "orientation": [
+       [
+        -0.19509,
+        0.0,
+        -0.980785
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.980785,
+        0.0,
+        -0.19509
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing24",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -82.6,
+       0.25,
+       -46.0
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing25",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -82.781,
+       0.25,
+       -47.834
+      ],
+      "orientation": [
+       [
+        0.19509,
+        0.0,
+        -0.980785
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.980785,
+        0.0,
+        0.19509
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing26",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -83.316,
+       0.25,
+       -49.597
+      ],
+      "orientation": [
+       [
+        0.382683,
+        0.0,
+        -0.92388
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.92388,
+        0.0,
+        0.382683
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing27",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -84.184,
+       0.25,
+       -51.222
+      ],
+      "orientation": [
+       [
+        0.55557,
+        0.0,
+        -0.83147
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.83147,
+        0.0,
+        0.55557
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing28",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -85.353,
+       0.25,
+       -52.647
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        -0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing29",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -86.778,
+       0.25,
+       -53.816
+      ],
+      "orientation": [
+       [
+        0.83147,
+        0.0,
+        -0.55557
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.55557,
+        0.0,
+        0.83147
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing30",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -88.403,
+       0.25,
+       -54.684
+      ],
+      "orientation": [
+       [
+        0.92388,
+        0.0,
+        -0.382683
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.382683,
+        0.0,
+        0.92388
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "NoLegsRing31",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.971,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -90.166,
+       0.25,
+       -55.219
+      ],
+      "orientation": [
+       [
+        0.980785,
+        0.0,
+        -0.19509
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.19509,
+        0.0,
+        0.980785
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -46.0,
+       0.25,
+       -104.2
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -48.38,
+       0.25,
+       -103.966
+      ],
+      "orientation": [
+       [
+        0.980785,
+        0.0,
+        0.19509
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.19509,
+        0.0,
+        0.980785
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -50.669,
+       0.25,
+       -103.271
+      ],
+      "orientation": [
+       [
+        0.92388,
+        0.0,
+        0.382683
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.382683,
+        0.0,
+        0.92388
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -52.778,
+       0.25,
+       -102.144
+      ],
+      "orientation": [
+       [
+        0.83147,
+        0.0,
+        0.55557
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.55557,
+        0.0,
+        0.83147
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -54.627,
+       0.25,
+       -100.627
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing5",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -56.144,
+       0.25,
+       -98.778
+      ],
+      "orientation": [
+       [
+        0.55557,
+        0.0,
+        0.83147
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.83147,
+        0.0,
+        0.55557
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing6",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -57.271,
+       0.25,
+       -96.669
+      ],
+      "orientation": [
+       [
+        0.382683,
+        0.0,
+        0.92388
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.92388,
+        0.0,
+        0.382683
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing7",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -57.966,
+       0.25,
+       -94.38
+      ],
+      "orientation": [
+       [
+        0.19509,
+        0.0,
+        0.980785
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.980785,
+        0.0,
+        0.19509
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing8",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -58.2,
+       0.25,
+       -92.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing9",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -57.966,
+       0.25,
+       -89.62
+      ],
+      "orientation": [
+       [
+        -0.19509,
+        0.0,
+        0.980785
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.980785,
+        0.0,
+        -0.19509
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing10",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -57.271,
+       0.25,
+       -87.331
+      ],
+      "orientation": [
+       [
+        -0.382683,
+        0.0,
+        0.92388
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.92388,
+        0.0,
+        -0.382683
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing11",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -56.144,
+       0.25,
+       -85.222
+      ],
+      "orientation": [
+       [
+        -0.55557,
+        0.0,
+        0.83147
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.83147,
+        0.0,
+        -0.55557
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing12",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -54.627,
+       0.25,
+       -83.373
+      ],
+      "orientation": [
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        -0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing13",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -52.778,
+       0.25,
+       -81.856
+      ],
+      "orientation": [
+       [
+        -0.83147,
+        0.0,
+        0.55557
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.55557,
+        0.0,
+        -0.83147
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing14",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -50.669,
+       0.25,
+       -80.729
+      ],
+      "orientation": [
+       [
+        -0.92388,
+        0.0,
+        0.382683
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.382683,
+        0.0,
+        -0.92388
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing15",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -48.38,
+       0.25,
+       -80.034
+      ],
+      "orientation": [
+       [
+        -0.980785,
+        0.0,
+        0.19509
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.19509,
+        0.0,
+        -0.980785
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing16",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -46.0,
+       0.25,
+       -79.8
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing17",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -43.62,
+       0.25,
+       -80.034
+      ],
+      "orientation": [
+       [
+        -0.980785,
+        0.0,
+        -0.19509
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.19509,
+        0.0,
+        -0.980785
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing18",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -41.331,
+       0.25,
+       -80.729
+      ],
+      "orientation": [
+       [
+        -0.92388,
+        0.0,
+        -0.382683
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.382683,
+        0.0,
+        -0.92388
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing19",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -39.222,
+       0.25,
+       -81.856
+      ],
+      "orientation": [
+       [
+        -0.83147,
+        0.0,
+        -0.55557
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.55557,
+        0.0,
+        -0.83147
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing20",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -37.373,
+       0.25,
+       -83.373
+      ],
+      "orientation": [
+       [
+        -0.707107,
+        0.0,
+        -0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.707107,
+        0.0,
+        -0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing21",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -35.856,
+       0.25,
+       -85.222
+      ],
+      "orientation": [
+       [
+        -0.55557,
+        0.0,
+        -0.83147
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.83147,
+        0.0,
+        -0.55557
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing22",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -34.729,
+       0.25,
+       -87.331
+      ],
+      "orientation": [
+       [
+        -0.382683,
+        0.0,
+        -0.92388
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.92388,
+        0.0,
+        -0.382683
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing23",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -34.034,
+       0.25,
+       -89.62
+      ],
+      "orientation": [
+       [
+        -0.19509,
+        0.0,
+        -0.980785
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.980785,
+        0.0,
+        -0.19509
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing24",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -33.8,
+       0.25,
+       -92.0
+      ],
+      "orientation": [
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        1.0,
+        0.0,
+        -0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing25",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -34.034,
+       0.25,
+       -94.38
+      ],
+      "orientation": [
+       [
+        0.19509,
+        0.0,
+        -0.980785
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.980785,
+        0.0,
+        0.19509
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing26",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -34.729,
+       0.25,
+       -96.669
+      ],
+      "orientation": [
+       [
+        0.382683,
+        0.0,
+        -0.92388
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.92388,
+        0.0,
+        0.382683
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing27",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -35.856,
+       0.25,
+       -98.778
+      ],
+      "orientation": [
+       [
+        0.55557,
+        0.0,
+        -0.83147
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.83147,
+        0.0,
+        0.55557
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing28",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -37.373,
+       0.25,
+       -100.627
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        -0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing29",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -39.222,
+       0.25,
+       -102.144
+      ],
+      "orientation": [
+       [
+        0.83147,
+        0.0,
+        -0.55557
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.55557,
+        0.0,
+        0.83147
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing30",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -41.331,
+       0.25,
+       -103.271
+      ],
+      "orientation": [
+       [
+        0.92388,
+        0.0,
+        -0.382683
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.382683,
+        0.0,
+        0.92388
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "KingRing31",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.52,
+     0.1,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -43.62,
+       0.25,
+       -103.966
+      ],
+      "orientation": [
+       [
+        0.980785,
+        0.0,
+        -0.19509
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.19509,
+        0.0,
+        0.980785
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      206,
+      156,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "BleachersSlot0",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bleachers"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -46.0,
+         0.22,
+         -74.0
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "BleachersSlot1",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Bleachers"
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -74.0,
+         0.22,
+         -46.0
+        ],
+        "orientation": [
+         [
+          0.0,
+          0.0,
+          1.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          -1.0,
+          0.0,
+          0.0
          ]
         ]
        }

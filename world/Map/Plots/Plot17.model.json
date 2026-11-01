@@ -2847,6 +2847,938 @@
    }
   },
   {
+   "name": "FrontBed0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7.4,
+     0.5,
+     1.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       117.3,
+       0.45,
+       150.9
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      72,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "FrontBed0Soil",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7.0,
+     0.1,
+     1.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       117.3,
+       0.72,
+       150.9
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      80,
+      56,
+      40
+     ]
+    },
+    "Material": "Ground",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "FrontBed0Shrub0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     1.4,
+     1.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       114.833,
+       1.35,
+       150.9
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      64,
+      122,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "FrontBed0Shrub1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     1.4,
+     1.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       117.3,
+       1.35,
+       150.9
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      64,
+      122,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "FrontBed0Shrub2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     1.4,
+     1.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       119.767,
+       1.35,
+       150.9
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      64,
+      122,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "FrontBed0Flower0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     0.6,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       114.3,
+       1.05,
+       150.7
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      250,
+      250
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "FrontBed0Flower1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     0.6,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       116.067,
+       1.05,
+       150.7
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      120,
+      230
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "FrontBed0Flower2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     0.6,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       118.533,
+       1.05,
+       150.7
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      150,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "FrontBed0Flower3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     0.6,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       120.3,
+       1.05,
+       150.7
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      90,
+      120
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "FrontBed1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7.4,
+     0.5,
+     1.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       134.7,
+       0.45,
+       150.9
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      72,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "FrontBed1Soil",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     7.0,
+     0.1,
+     1.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       134.7,
+       0.72,
+       150.9
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      80,
+      56,
+      40
+     ]
+    },
+    "Material": "Ground",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "FrontBed1Shrub0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     1.4,
+     1.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       132.233,
+       1.35,
+       150.9
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      64,
+      122,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "FrontBed1Shrub1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     1.4,
+     1.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       134.7,
+       1.35,
+       150.9
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      64,
+      122,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "FrontBed1Shrub2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.4,
+     1.4,
+     1.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       137.167,
+       1.35,
+       150.9
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      64,
+      122,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "FrontBed1Flower0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     0.6,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       131.7,
+       1.05,
+       150.7
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      120,
+      230
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "FrontBed1Flower1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     0.6,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       133.467,
+       1.05,
+       150.7
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      150,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "FrontBed1Flower2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     0.6,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       135.933,
+       1.05,
+       150.7
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      90,
+      120
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "FrontBed1Flower3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.6,
+     0.6,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       137.7,
+       1.05,
+       150.7
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      210,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "PorchLight",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     0.3,
+     0.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       126.0,
+       8.1,
+       149.8
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "StreetLight"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   },
+   "children": [
+    {
+     "name": "Light",
+     "className": "PointLight",
+     "properties": {
+      "Brightness": 1.1,
+      "Range": 16,
+      "Color": {
+       "Color3": [
+        1.0,
+        0.8235,
+        0.5882
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
    "name": "LinkFloor",
    "className": "Part",
    "properties": {
@@ -3669,6 +4601,1098 @@
    },
    "attributes": {
     "HelpId": "OpenJar"
+   }
+  },
+  {
+   "name": "GnomeBoots",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.9,
+     0.3,
+     0.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       121.4,
+       0.4,
+       146.5
+      ],
+      "orientation": [
+       [
+        0.939693,
+        0.0,
+        -0.34202
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.34202,
+        0.0,
+        0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      70,
+      50,
+      40
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GnomeBody",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.1,
+     0.95,
+     0.95
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       121.4,
+       1.1,
+       146.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.939693,
+        -0.34202
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -0.34202,
+        0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      180,
+      30
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "GnomeBelt",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.15,
+     1.0,
+     1.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       121.4,
+       0.95,
+       146.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.939693,
+        -0.34202
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -0.34202,
+        0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      40,
+      40,
+      40
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "GnomeHead",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.8,
+     0.8,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       121.4,
+       2.0,
+       146.5
+      ],
+      "orientation": [
+       [
+        0.939693,
+        0.0,
+        -0.34202
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.34202,
+        0.0,
+        0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      200,
+      170
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "GnomeNose",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.28,
+     0.28,
+     0.28
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       121.537,
+       1.98,
+       146.124
+      ],
+      "orientation": [
+       [
+        0.939693,
+        0.0,
+        -0.34202
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.34202,
+        0.0,
+        0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      150,
+      140
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "GnomeBeard",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.75,
+     0.75,
+     0.75
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       121.468,
+       1.7,
+       146.312
+      ],
+      "orientation": [
+       [
+        0.939693,
+        0.0,
+        -0.34202
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.34202,
+        0.0,
+        0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "GnomeHat",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.82,
+     0.82
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       121.4,
+       2.5,
+       146.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.939693,
+        -0.34202
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -0.34202,
+        0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      40,
+      120,
+      220
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "GnomeHatTip",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.45,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       121.4,
+       2.9,
+       146.5
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.939693,
+        -0.34202
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        0.0,
+        -0.34202,
+        0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      40,
+      120,
+      220
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "GnomeHatBall",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     0.3,
+     0.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       121.4,
+       3.2,
+       146.5
+      ],
+      "orientation": [
+       [
+        0.939693,
+        0.0,
+        -0.34202
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.34202,
+        0.0,
+        0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      40,
+      120,
+      220
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "GnomeBar",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.0,
+     0.14,
+     0.14
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       121.4,
+       3.65,
+       146.5
+      ],
+      "orientation": [
+       [
+        0.939693,
+        0.0,
+        -0.34202
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.34202,
+        0.0,
+        0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      60,
+      60,
+      66
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "GnomeArm-1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.26,
+     1.3,
+     0.26
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       120.93,
+       2.8,
+       146.329
+      ],
+      "orientation": [
+       [
+        0.939693,
+        0.0,
+        -0.34202
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.34202,
+        0.0,
+        0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      180,
+      30
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GnomePlate-1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.25,
+     0.75,
+     0.75
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       120.601,
+       3.65,
+       146.209
+      ],
+      "orientation": [
+       [
+        0.939693,
+        0.0,
+        -0.34202
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.34202,
+        0.0,
+        0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      40,
+      40,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "GnomeArm1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.26,
+     1.3,
+     0.26
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       121.87,
+       2.8,
+       146.671
+      ],
+      "orientation": [
+       [
+        0.939693,
+        0.0,
+        -0.34202
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.34202,
+        0.0,
+        0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      180,
+      30
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "GnomePlate1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.25,
+     0.75,
+     0.75
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       122.199,
+       3.65,
+       146.791
+      ],
+      "orientation": [
+       [
+        0.939693,
+        0.0,
+        -0.34202
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.34202,
+        0.0,
+        0.939693
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      40,
+      40,
+      44
+     ]
+    },
+    "Material": "Metal",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ClotheslinePost-1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     6,
+     0.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       106.0,
+       3.2,
+       191.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      130,
+      92,
+      60
+     ]
+    },
+    "Material": "Wood",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "ClotheslinePost1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     6,
+     0.3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       118.0,
+       3.2,
+       191.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      130,
+      92,
+      60
+     ]
+    },
+    "Material": "Wood",
+    "CanCollide": true
+   }
+  },
+  {
+   "name": "ClotheslineRope",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     12,
+     0.08,
+     0.08
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       112.0,
+       6.0,
+       191.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "ClotheslineTank0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.5,
+     1.8,
+     0.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       108.4,
+       5.1,
+       191.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      60
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "ClotheslineStrap0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.9,
+     0.3,
+     0.12
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       108.4,
+       5.85,
+       191.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      200,
+      60
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "ClotheslineTank1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.5,
+     1.8,
+     0.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       112.0,
+       5.1,
+       191.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      40,
+      40,
+      44
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "ClotheslineStrap1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.9,
+     0.3,
+     0.12
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       112.0,
+       5.85,
+       191.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      40,
+      40,
+      44
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "ClotheslineTank2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1.5,
+     1.8,
+     0.1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       115.6,
+       5.1,
+       191.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      120,
+      200,
+      120
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "ClotheslineStrap2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.9,
+     0.3,
+     0.12
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       115.6,
+       5.85,
+       191.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      120,
+      200,
+      120
+     ]
+    },
+    "Material": "Fabric",
+    "CanCollide": false
    }
   },
   {

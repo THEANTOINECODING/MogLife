@@ -571,6 +571,149 @@ def decor(F, name, local, prop, yaw=0, height=None, collide=True, align=None):
     return prop_slot(F, name, local, prop, (), yaw=yaw, height=height, collide=collide, align=align)
 
 
+# ------------------------------------------------------------------ détails de finition (D101)
+GOLD_TRIM = (206, 156, 44)
+
+
+def vec3(v):
+    return {"Vector3": [round(x, 3) for x in v]}
+
+
+def bed(F, name, local, width, depth=1.6, k=0):
+    """Massif fleuri bordé de briques : terre, trois buis et des fleurs de couleurs variées entre eux."""
+    x, y, z = local
+    out = [
+        P(F, name, (x, y + 0.25, z), (width, 0.5, depth), (150, 72, 60), "Brick", collide=False),
+        P(F, name + "Soil", (x, y + 0.52, z), (width - 0.4, 0.1, depth - 0.4), (80, 56, 40), "Ground", collide=False),
+    ]
+    colors = ((240, 90, 120), (250, 210, 70), (250, 250, 250), (200, 120, 230), (250, 150, 60))
+    for j, dx in enumerate((-width / 3, 0, width / 3)):
+        out.append(P(F, f"{name}Shrub{j}", (x + dx, y + 1.15, z), (1.4, 1.4, 1.4), HEDGE, "Grass", shape="Ball",
+                     collide=False))
+    for j, dx in enumerate((-width / 2 + 0.7, -width / 6, width / 6, width / 2 - 0.7)):
+        out.append(P(F, f"{name}Flower{j}", (x + dx, y + 0.85, z - 0.2), (0.6, 0.6, 0.6), colors[(j + k) % 5],
+                     shape="Ball", collide=False))
+    return out
+
+
+def gnome(F, name, local, yaw=0, hat=(220, 40, 40), coat=(60, 110, 200)):
+    """Nain de jardin qui soulève un haltère au-dessus de sa tête (l'humour gym bro jusque dans les jardins)."""
+    G = F.child(local, yaw)
+    skin, dark = (240, 200, 170), (70, 50, 40)
+    out = [
+        P(G, name + "Boots", (0, 0.2, 0), (0.9, 0.3, 0.6), dark, collide=False),
+        P(G, name + "Body", (0, 0.9, 0), (1.1, 0.95, 0.95), coat, roll=90, shape="Cylinder", collide=False),
+        P(G, name + "Belt", (0, 0.75, 0), (0.15, 1.0, 1.0), (40, 40, 40), roll=90, shape="Cylinder", collide=False),
+        P(G, name + "Head", (0, 1.8, 0), (0.8, 0.8, 0.8), skin, shape="Ball", collide=False),
+        P(G, name + "Nose", (0, 1.78, -0.4), (0.28, 0.28, 0.28), (240, 150, 140), shape="Ball", collide=False),
+        P(G, name + "Beard", (0, 1.5, -0.2), (0.75, 0.75, 0.75), WHITE, shape="Ball", collide=False),
+        P(G, name + "Hat", (0, 2.3, 0), (0.5, 0.82, 0.82), hat, roll=90, shape="Cylinder", collide=False),
+        P(G, name + "HatTip", (0, 2.7, 0), (0.45, 0.5, 0.5), hat, roll=90, shape="Cylinder", collide=False),
+        P(G, name + "HatBall", (0, 3.0, 0), (0.3, 0.3, 0.3), hat, shape="Ball", collide=False),
+        P(G, name + "Bar", (0, 3.45, 0), (2.0, 0.14, 0.14), LAMP_GREY, "Metal", shape="Cylinder", collide=False),
+    ]
+    for sx in (-1, 1):
+        out += [
+            P(G, f"{name}Arm{sx}", (sx * 0.5, 2.6, 0), (0.26, 1.3, 0.26), coat, collide=False),
+            P(G, f"{name}Plate{sx}", (sx * 0.85, 3.45, 0), (0.25, 0.75, 0.75), (40, 40, 44), "Metal",
+              shape="Cylinder", collide=False),
+        ]
+    return out
+
+
+def clothesline(F, name, local, colors):
+    """Corde à linge du jardin : deux poteaux, une corde et des débardeurs de sport qui sèchent."""
+    x, y, z = local
+    out = []
+    for sx in (-1, 1):
+        out.append(P(F, f"{name}Post{sx}", (x + sx * 6, y + 3, z), (0.3, 6, 0.3), WOOD, "Wood"))
+    out.append(P(F, name + "Rope", (x, y + 5.8, z), (12, 0.08, 0.08), WHITE, collide=False))
+    for j, colr in enumerate(colors):
+        lx = x - 3.6 + j * 3.6
+        out.append(P(F, f"{name}Tank{j}", (lx, y + 4.9, z), (1.5, 1.8, 0.1), colr, "Fabric", collide=False))
+        out.append(P(F, f"{name}Strap{j}", (lx, y + 5.65, z), (0.9, 0.3, 0.12), colr, "Fabric", collide=False))
+    return out
+
+
+def torch(F, name, local, height=5.0):
+    """Torche sur pied : poteau, coupe en métal et feu (tag ColosseumFire : flammes et lumière côté client)."""
+    x, y, z = local
+    return [
+        P(F, name + "Foot", (x, y + 0.2, z), (1.3, 0.4, 1.3), (50, 46, 44), "Metal"),
+        P(F, name, (x, y + height / 2, z), (height, 0.45, 0.45), (60, 54, 50), "Metal", roll=90, shape="Cylinder"),
+        P(F, name + "Cup", (x, y + height + 0.25, z), (0.6, 1.8, 1.8), (70, 62, 56), "Metal", roll=90,
+          shape="Cylinder"),
+        P(F, name + "Fire", (x, y + height + 0.9, z), (1, 1, 1), WHITE, transparency=1, collide=False,
+          tags=["ColosseumFire"], extra=INVISIBLE),
+    ]
+
+
+def ceiling_fan(F, name, local, speed=3.0):
+    """Ventilateur de plafond : tige, moyeu et 4 pales ; les pièces tagguées Spinner tournent côté client
+    (AmbienceController) autour de leur attribut SpinCenter."""
+    x, y, z = local
+    center = vec3(F.p(local))
+    spin = {"SpinCenter": center, "SpinSpeed": speed}
+    out = [
+        P(F, name + "Rod", (x, y + 0.6, z), (0.2, 1.2, 0.2), LAMP_GREY, "Metal", collide=False),
+        P(F, name + "Hub", (x, y, z), (0.5, 1.1, 1.1), (200, 200, 205), "Metal", roll=90, shape="Cylinder",
+          collide=False),
+    ]
+    for i in range(4):
+        G = F.child(local, i * 90)
+        out.append(P(G, f"{name}Blade{i}", (1.9, 0, 0), (2.8, 0.1, 0.8), WOOD_LIGHT, "WoodPlanks", collide=False,
+                     tags=["Spinner"], attributes=spin))
+    return out
+
+
+def water_basin(F, name, local, size, height=1.0, rim=0.7, rim_color=(240, 236, 226), lilies=0, water=None):
+    """Bassin rempli de vraie eau (Terrain, tag WaterVolume) : fond, margelle de pierre, nénuphars.
+    L'eau Terrain se pose par cubes de 4 studs alignés sur le monde : bassin non tourné seulement, et `water`
+    (largeur, profondeur du volume d'eau) choisi pour que les cubes du bord soient pleins sous la margelle."""
+    x, y, z = local
+    w, d = size
+    ww, wd = water or (w + rim * 0.6, d + rim * 0.6)
+    out = [
+        P(F, name + "Floor", (x, y + 0.05, z), (w, 0.1, d), (46, 110, 120), "Slate"),
+        P(F, name + "Water", (x, y + height / 2 + 0.05, z), (ww, height - 0.25, wd),
+          (90, 170, 230), transparency=1, collide=False, tags=["WaterVolume"], extra=INVISIBLE),
+    ]
+    for sx in (-1, 1):
+        out.append(P(F, f"{name}RimX{sx}", (x + sx * (w + rim) / 2, y + height / 2, z), (rim, height, d + 2 * rim),
+                     rim_color, "Limestone"))
+        out.append(P(F, f"{name}RimZ{sx}", (x, y + height / 2, z + sx * (d + rim) / 2), (w, height, rim), rim_color,
+                     "Limestone"))
+    for j in range(lilies):
+        lx = x + (j - (lilies - 1) / 2) * w / max(lilies, 1) * 0.8
+        lz = z + (0.25 if j % 2 else -0.25) * d
+        out.append(P(F, f"{name}Lily{j}", (lx, y + height - 0.18, lz), (0.08, 1.4, 1.4), (70, 150, 70), "Grass",
+                     roll=90, shape="Cylinder", collide=False))
+        if j % 2 == 0:
+            out.append(P(F, f"{name}LilyFlower{j}", (lx + 0.2, y + height - 0.05, lz), (0.45, 0.45, 0.45),
+                         (250, 180, 210), shape="Ball", collide=False))
+    return out
+
+
+def citrus_pot(F, name, local, k=0):
+    """Citronnier dans une grande jarre de terre cuite (jardin romain)."""
+    x, y, z = local
+    clay = (196, 110, 70)
+    out = [
+        P(F, name + "Pot", (x, y + 1.0, z), (2.0, 2.4, 2.4), clay, "Brick", roll=90, shape="Cylinder"),
+        P(F, name + "PotRim", (x, y + 2.05, z), (0.3, 2.7, 2.7), (176, 96, 60), "Brick", roll=90, shape="Cylinder"),
+        P(F, name + "Soil", (x, y + 2.1, z), (0.1, 2.2, 2.2), (80, 56, 40), "Ground", roll=90, shape="Cylinder",
+          collide=False),
+        P(F, name + "Trunk", (x, y + 3.3, z), (2.6, 0.4, 0.4), (110, 78, 50), "Wood", roll=90, shape="Cylinder",
+          collide=False),
+        P(F, name + "Leaves", (x, y + 5.2, z), (3.6, 3.6, 3.6), (52, 110, 56), "Grass", shape="Ball", collide=False),
+    ]
+    for j in range(5):
+        a = math.radians(j * 72 + k * 23)
+        out.append(P(F, f"{name}Lemon{j}", (x + math.sin(a) * 1.55, y + 5.0 + (j % 2) * 0.8, z + math.cos(a) * 1.55),
+                     (0.5, 0.5, 0.5), (250, 220, 60), shape="Ball", collide=False))
+    return out
+
+
 # ------------------------------------------------------------------ 1. maison de maman (une par joueur)
 SLOTS = {
     # emplacement : (x, y, z, yaw) dans le repère de la maison ; yaw = direction où regarde le meuble
@@ -727,6 +870,11 @@ def plot(index, side, offset):
             colr = ((240, 90, 120), (250, 210, 70), (250, 250, 250), (200, 120, 230))[(j + k + index) % 4]
             c.append(P(H, f"WindowFlower{k}{j}", (wx - 2.2 + j * 1.1, 4.15, -0.85), (0.5, 0.5, 0.5), colr,
                        shape="Ball", collide=False))
+    # Massifs fleuris le long de la façade, de part et d'autre du porche, et lumière du porche la nuit (D101)
+    for k, sx in enumerate((-1, 1)):
+        c += bed(H, f"FrontBed{k}", (sx * 8.7, 0.1, -1.1), 7.4, k=index + k)
+    c.append(P(H, "PorchLight", (0, 8.0, -2.2), (0.3, 0.3, 0.3), WHITE, transparency=1, collide=False,
+               tags=["StreetLight"], extra=INVISIBLE, children=[light((255, 210, 150), 1.1, 16)]))
     # Passage couvert vers le garage, et porte qui s'ouvre toute seule quand un joueur approche (DoorService)
     c.append(P(H, "LinkFloor", (-14, 0.2, 22), (2.4, 0.4, 5.6), CONCRETE_LIGHT, "Concrete"))
     # (dans le mur gauche de la maison : sa largeur est le long de Z)
@@ -744,6 +892,11 @@ def plot(index, side, offset):
     # Maman attend devant la porte avec son bocal
     c.append(helper(F, "MomSpot", (21.5, 0.6, 6), "OpenJar"))
 
+    # Nain de jardin bodybuildé près du chemin, corde à linge (débardeurs de sport) dans le jardin de derrière (D101)
+    hats = ((220, 40, 40), (40, 120, 220), (240, 180, 30), (60, 160, 80))
+    c += gnome(F, "Gnome", (9.4, 0.1, 6.5), yaw=-20, hat=hats[index % 4], coat=hats[(index + 1) % 4])
+    tanks = ((240, 90, 90), (60, 110, 200), (250, 200, 60), (40, 40, 44), (120, 200, 120))
+    c += clothesline(F, "Clothesline", (0, 0.1, 51), [tanks[(index + j) % 5] for j in range(3)])
     # Jardin de derrière et bouche d'incendie sur le trottoir
     c += tree(F, "TreeA", (-14, 0, 56))
     c += tree(F, "TreeB", (14, 0, 60), height=7, radius=3.6, color=(96, 150, 70))
@@ -1225,7 +1378,18 @@ def gym():
     c.append(P(F, "SignBar", (0, 25, 6), (26, 1.2, 1.2), (180, 180, 186), "Metal", shape="Cylinder"))
     for k, dx in enumerate((-13, 13)):
         c.append(P(F, f"SignPlate{k}", (dx, 25, 6), (2, 9, 9), (40, 40, 44), "Metal", shape="Cylinder"))
-    c.append(P(F, "GymAwning", (0, 16.8, -1.5), (22, 0.5, 3), (200, 40, 40), "Fabric"))
+    # Bandes de couleur sur les murs de côté, écrans, ventilateurs qui tournent, range-vélos devant (D101)
+    for k, sx in enumerate((-1, 1)):
+        c.append(P(F, f"GymStripe{k}", (sx * 41.1, 2.7, 24), (0.1, 0.9, 45), (200, 40, 40), collide=False))
+        c.append(P(F, f"GymStripeGold{k}", (sx * 41.1, 3.4, 24), (0.1, 0.25, 45), (250, 200, 40), collide=False))
+        for j, lz in enumerate((10, 38)):
+            c.append(P(F, f"GymTv{k}{j}", (sx * 40.95, 13, lz), (0.3, 4.6, 7.6), (24, 24, 28), "Metal",
+                       collide=False))
+            c.append(P(F, f"GymTvScreen{k}{j}", (sx * 40.78, 13, lz), (0.06, 4.0, 7.0),
+                       ((70, 150, 255), (255, 120, 60))[(k + j) % 2], "Neon", collide=False))
+    for k, lx in enumerate((-12, 12)):
+        c += ceiling_fan(F, f"GymFan{k}", (lx, 18.4, 24), speed=3.5 if k else -3.5)
+    c.append(decor(F, "BikeRackSlot", (-21, WALK_TOP, -2.4), "BikeRack"))
     for ex, (x0, lz) in GYM_STATIONS.items():
         for k in range(3):
             c.append(station(F, f"{ex}Station{k + 1}", (x0 + k * 10, 0.8, lz), ex))
@@ -1287,9 +1451,30 @@ def park():
         c.append(P(F, f"TanLampHead{k}", (-43.8, 6.5, lz), (1.6, 1.6, 2.6), (255, 220, 120), "Neon",
                    children=[light((255, 200, 120), 2, 20)]))
         wrap(c, n0, F, f"TanLampSlot{k}", (-43, 0, lz), "TanningLamp", yaw=90)
-    c.append(P(F, "PoolRim", (-84, 0.4, 50), (26, 0.8, 12), WHITE, "Concrete"))
-    c.append(P(F, "PoolWater", (-84, 0.85, 50), (24, 0.2, 10), (70, 170, 230), "Glass", transparency=0.25,
-               collide=False))
+    # Piscine à vraie eau (D101) : fond carrelé, margelle, échelle, plongeoir, bouée, ballon, lumière la nuit
+    c += water_basin(F, "Pool", (-84, 0.1, 50), (22.8, 8.8), height=1.6, rim=1.6, rim_color=WHITE, water=(23.76, 12))
+    for k, lx in enumerate((-78.6, -77.4)):
+        c.append(P(F, f"PoolLadderRail{k}", (lx, 1.4, 46.0), (0.22, 2.4, 0.22), (205, 208, 214), "Metal",
+                   collide=False))
+        c.append(P(F, f"PoolLadderTop{k}", (lx, 2.55, 45.4), (0.22, 0.22, 1.4), (205, 208, 214), "Metal",
+                   collide=False))
+    c.append(P(F, "PoolLadderStep", (-78, 1.0, 46.0), (1.2, 0.12, 0.4), (205, 208, 214), "Metal", collide=False))
+    c.append(P(F, "DivingBase", (-98.6, 1.0, 50), (2.0, 2.0, 2.4), WHITE, "Concrete"))
+    c.append(P(F, "DivingBoard", (-95.6, 2.1, 50), (5.6, 0.25, 1.6), (60, 130, 200)))
+    for i in range(10):
+        G = F.child((-80, 0.1, 51.5), i * 36)
+        c.append(P(G, f"PoolFloat{i}", (0, 1.55, -0.95), (0.8, 0.4, 0.6), ((235, 60, 60), WHITE)[i % 2],
+                   collide=False))
+    c.append(P(F, "PoolBall", (-89, 1.9, 48), (1.4, 1.4, 1.4), (250, 200, 50), shape="Ball", collide=False))
+    c.append(P(F, "PoolLight", (-84, 1.0, 50), (0.4, 0.4, 0.4), WHITE, transparency=1, collide=False,
+               tags=["StreetLight"], extra=INVISIBLE, children=[light((120, 210, 255), 2, 18)]))
+    for k, lx in enumerate((-93, -75)):
+        c.append(decor(F, f"PoolLoungerSlot{k}", (lx, 0.1, 59.6), "Lounger", yaw=90))
+    for k, lx in enumerate((-92, -74, -56)):
+        c += lamp_post(F, f"ParkLamp{k}", (lx, 0.1, 34.4), arm_dir=1)
+    for k, lx in enumerate((-83, -65)):
+        c += bench(F, f"ParkBench{k}", (lx, 0.1, 40.6))
+    c += flowerbed(F, "ParkFlowerbed", (-92, 0.1, 30.5), (7, 5))
     n0 = len(c)
     c.append(P(F, "LifeguardChair", (-84, 4, 58.5), (2.4, 8, 2.4), WHITE, "WoodPlanks"))
     wrap(c, n0, F, "LifeguardChairSlot", (-84, 0.1, 58.8), "LifeguardChair")
@@ -1339,6 +1524,11 @@ def boss_arena():
     c.append(spot(T, "PumpGodSpot", (0, 2.5, 0), (14, 1, 14), (230, 180, 40), "BossSpot", {"BossId": "PumpGod"},
                   material="Marble"))
     c.append(landmark(T, "ArenaIcon", (0, 32, 0), "Arena"))
+    # Braseros allumés devant le temple (D101)
+    for sx in (-1, 1):
+        c.append(decor(T, f"TempleBrazier{sx}", (sx * 17, 0, -17), "Colosseum_Brazier", collide=False))
+        c.append(P(T, f"TempleFire{sx}", (sx * 17, 4.0, -17), (1, 1, 1), WHITE, transparency=1, collide=False,
+                   tags=["ColosseumFire"], extra=INVISIBLE))
     # Pilier de lumière vers le Colisée du Pump (D89), devant le temple, côté droit des marches
     c.append(P(T, "ColosseumPortalTemple", (12, 3, -19), (5, 6, 5), WHITE, transparency=1, collide=False,
                tags=["ColosseumPortal"], attributes={"Target": "Colosseum"}, extra={"CanTouch": False}))
@@ -1351,6 +1541,16 @@ def boss_arena():
         z = -54 + along * 0.707 - side * 3.0
         c.append(decor(F, f"RopeSlot{k}", (x, 0.12, z), "StanchionRope", yaw=-45))
     c.append(decor(F, "CrownSlot", (-60, 0.12, -98), "CrownCushion", yaw=135))
+    # Torches enflammées le long du tapis rouge, cercles dorés autour des scènes, gradins (D101)
+    for k, along in enumerate((-15, 0, 15)):
+        for side in (-1, 1):
+            x = -54 + along * 0.707 + side * 5.2 * 0.707
+            z = -54 + along * 0.707 - side * 5.2 * 0.707
+            c += torch(F, f"ArenaTorch{k}{side}", (x, 0.12, z))
+    for name, (x, z), r in (("NoLegsRing", (-92, -46), 9.0), ("KingRing", (-46, -92), 11.8)):
+        c += stone_ring(F.child((x, 0, z)), name, r, r + 0.8, 0.1, 0.2, 32, GOLD_TRIM, material="Metal")
+    c.append(decor(F, "BleachersSlot0", (-46, 0.12, -74), "Bleachers"))
+    c.append(decor(F, "BleachersSlot1", (-74, 0.12, -46), "Bleachers", yaw=90))
     c.append(decor(F, "SocksSlot", (-92, 0.1, -36), "GiantSocks"))
     return c
 
@@ -1679,6 +1879,10 @@ def colosseum():
                                collide=False))
                 c.append(P(Fv, f"ColosseumViaFire{k}{sx}", (sx * 8.5, 4.0, -z - 7), (1, 1, 1), WHITE,
                            transparency=1, collide=False, tags=["ColosseumFire"], extra=INVISIBLE))
+    # Citronniers en pots de terre cuite derrière chaque colonne de la voie (D101)
+    for k in range(1, int(via // 14) + 1):
+        for sx in (-1, 1):
+            c += citrus_pot(Fv, f"ColosseumLemon{k}{sx}", (sx * 13.5, 0, -k * 14), k + sx)
     # --- paysage autour : cyprès, rochers, buissons ; la vue depuis la voie reste dégagée
     rnd = random.Random(89)
     for i in range(30):

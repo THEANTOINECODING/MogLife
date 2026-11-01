@@ -5,6 +5,7 @@
 
 local CollectionService = game:GetService("CollectionService")
 local Lighting = game:GetService("Lighting")
+local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Ambience = require(ReplicatedStorage.Shared.Config.Ambience)
@@ -12,6 +13,8 @@ local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 
 local STREET_LIGHT_TAG = "StreetLight"
 local JET_TAG = "FountainJet"
+local SPINNER_TAG = "Spinner"
+local SPIN_DISTANCE = 120 -- au-delà, les ventilateurs ne tournent pas (téléphone)
 local TEXTURES = {
 	Smoke = "rbxasset://textures/particles/smoke_main.dds",
 	Sparkle = "rbxasset://textures/particles/sparkles_main.dds",
@@ -89,7 +92,42 @@ local function addJet(point: Instance)
 	emitter.Parent = attachment
 end
 
+-- Pièces qui tournent sur place (pales des ventilateurs de la salle, D101) : autour de leur attribut SpinCenter,
+-- à SpinSpeed radians par seconde. Rotation locale, purement décorative.
+local spinners: { [BasePart]: { center: Vector3, offset: CFrame, speed: number } } = {}
+
+local function addSpinner(part: Instance)
+	local center, speed = part:GetAttribute("SpinCenter"), part:GetAttribute("SpinSpeed")
+	if not part:IsA("BasePart") or typeof(center) ~= "Vector3" or typeof(speed) ~= "number" then
+		return
+	end
+	spinners[part] = { center = center, offset = CFrame.new(center):ToObjectSpace(part.CFrame), speed = speed }
+end
+
+local function spin()
+	local camera = workspace.CurrentCamera
+	if not camera or not next(spinners) then
+		return
+	end
+	local now = os.clock()
+	local parts, cframes = {}, {}
+	for part, entry in spinners do
+		if not part.Parent then
+			spinners[part] = nil
+		elseif (camera.CFrame.Position - entry.center).Magnitude < SPIN_DISTANCE then
+			table.insert(parts, part)
+			table.insert(cframes, CFrame.new(entry.center) * CFrame.Angles(0, now * entry.speed, 0) * entry.offset)
+		end
+	end
+	workspace:BulkMoveTo(parts, cframes, Enum.BulkMoveMode.FireCFrameChanged)
+end
+
 function AmbienceController.Start()
+	CollectionService:GetInstanceAddedSignal(SPINNER_TAG):Connect(addSpinner)
+	for _, part in CollectionService:GetTagged(SPINNER_TAG) do
+		addSpinner(part)
+	end
+	RunService.Heartbeat:Connect(spin)
 	CollectionService:GetInstanceAddedSignal(JET_TAG):Connect(addJet)
 	for _, point in CollectionService:GetTagged(JET_TAG) do
 		addJet(point)

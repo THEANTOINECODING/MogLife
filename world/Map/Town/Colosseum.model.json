@@ -55012,6 +55012,4806 @@
    ]
   },
   {
+   "name": "ColosseumLemon1-1Pot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.0,
+     2.4,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -222.945,
+       1.1,
+       -203.854
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      196,
+      110,
+      70
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon1-1PotRim",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     2.7,
+     2.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -222.945,
+       2.15,
+       -203.854
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      96,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon1-1Soil",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     2.2,
+     2.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -222.945,
+       2.2,
+       -203.854
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      80,
+      56,
+      40
+     ]
+    },
+    "Material": "Ground",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon1-1Trunk",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -222.945,
+       3.4,
+       -203.854
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      78,
+      50
+     ]
+    },
+    "Material": "Wood",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon1-1Leaves",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.6,
+     3.6,
+     3.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -222.945,
+       5.3,
+       -203.854
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      52,
+      110,
+      56
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon1-1Lemon0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -221.849,
+       5.1,
+       -202.758
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon1-1Lemon1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -221.564,
+       5.9,
+       -204.557
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon1-1Lemon2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -223.188,
+       5.1,
+       -205.384
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon1-1Lemon3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -224.476,
+       5.9,
+       -204.096
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon1-1Lemon4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -223.649,
+       5.1,
+       -202.472
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon11Pot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.0,
+     2.4,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -203.854,
+       1.1,
+       -222.945
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      196,
+      110,
+      70
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon11PotRim",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     2.7,
+     2.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -203.854,
+       2.15,
+       -222.945
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      96,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon11Soil",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     2.2,
+     2.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -203.854,
+       2.2,
+       -222.945
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      80,
+      56,
+      40
+     ]
+    },
+    "Material": "Ground",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon11Trunk",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -203.854,
+       3.4,
+       -222.945
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      78,
+      50
+     ]
+    },
+    "Material": "Wood",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon11Leaves",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.6,
+     3.6,
+     3.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -203.854,
+       5.3,
+       -222.945
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      52,
+      110,
+      56
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon11Lemon0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -202.304,
+       5.1,
+       -222.972
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon11Lemon1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -203.4,
+       5.9,
+       -224.428
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon11Lemon2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -205.123,
+       5.1,
+       -223.834
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon11Lemon3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -205.091,
+       5.9,
+       -222.013
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon11Lemon4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -203.349,
+       5.1,
+       -221.48
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon2-1Pot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.0,
+     2.4,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -232.845,
+       1.1,
+       -213.753
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      196,
+      110,
+      70
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon2-1PotRim",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     2.7,
+     2.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -232.845,
+       2.15,
+       -213.753
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      96,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon2-1Soil",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     2.2,
+     2.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -232.845,
+       2.2,
+       -213.753
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      80,
+      56,
+      40
+     ]
+    },
+    "Material": "Ground",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon2-1Trunk",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -232.845,
+       3.4,
+       -213.753
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      78,
+      50
+     ]
+    },
+    "Material": "Wood",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon2-1Leaves",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.6,
+     3.6,
+     3.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -232.845,
+       5.3,
+       -213.753
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      52,
+      110,
+      56
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon2-1Lemon0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -231.408,
+       5.1,
+       -213.172
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon2-1Lemon1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -231.849,
+       5.9,
+       -214.94
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon2-1Lemon2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -233.666,
+       5.1,
+       -215.068
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon2-1Lemon3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -234.349,
+       5.9,
+       -213.378
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon2-1Lemon4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -232.953,
+       5.1,
+       -212.207
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon21Pot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.0,
+     2.4,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -213.753,
+       1.1,
+       -232.845
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      196,
+      110,
+      70
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon21PotRim",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     2.7,
+     2.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -213.753,
+       2.15,
+       -232.845
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      96,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon21Soil",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     2.2,
+     2.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -213.753,
+       2.2,
+       -232.845
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      80,
+      56,
+      40
+     ]
+    },
+    "Material": "Ground",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon21Trunk",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -213.753,
+       3.4,
+       -232.845
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      78,
+      50
+     ]
+    },
+    "Material": "Wood",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon21Leaves",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.6,
+     3.6,
+     3.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -213.753,
+       5.3,
+       -232.845
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      52,
+      110,
+      56
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon21Lemon0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -212.337,
+       5.1,
+       -233.475
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon21Lemon1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -213.915,
+       5.9,
+       -234.386
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon21Lemon2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -215.269,
+       5.1,
+       -233.167
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon21Lemon3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -214.528,
+       5.9,
+       -231.503
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon21Lemon4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -212.716,
+       5.1,
+       -231.693
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon3-1Pot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.0,
+     2.4,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -242.744,
+       1.1,
+       -223.653
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      196,
+      110,
+      70
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon3-1PotRim",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     2.7,
+     2.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -242.744,
+       2.15,
+       -223.653
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      96,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon3-1Soil",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     2.2,
+     2.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -242.744,
+       2.2,
+       -223.653
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      80,
+      56,
+      40
+     ]
+    },
+    "Material": "Ground",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon3-1Trunk",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -242.744,
+       3.4,
+       -223.653
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      78,
+      50
+     ]
+    },
+    "Material": "Wood",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon3-1Leaves",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.6,
+     3.6,
+     3.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -242.744,
+       5.3,
+       -223.653
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      52,
+      110,
+      56
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon3-1Lemon0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -241.195,
+       5.1,
+       -223.68
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon3-1Lemon1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -242.291,
+       5.9,
+       -225.135
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon3-1Lemon2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -244.014,
+       5.1,
+       -224.542
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon3-1Lemon3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -243.982,
+       5.9,
+       -222.72
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon3-1Lemon4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -242.24,
+       5.1,
+       -222.187
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon31Pot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.0,
+     2.4,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -223.653,
+       1.1,
+       -242.744
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      196,
+      110,
+      70
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon31PotRim",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     2.7,
+     2.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -223.653,
+       2.15,
+       -242.744
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      96,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon31Soil",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     2.2,
+     2.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -223.653,
+       2.2,
+       -242.744
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      80,
+      56,
+      40
+     ]
+    },
+    "Material": "Ground",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon31Trunk",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -223.653,
+       3.4,
+       -242.744
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      78,
+      50
+     ]
+    },
+    "Material": "Wood",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon31Leaves",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.6,
+     3.6,
+     3.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -223.653,
+       5.3,
+       -242.744
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      52,
+      110,
+      56
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon31Lemon0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -222.595,
+       5.1,
+       -243.878
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon31Lemon1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -224.404,
+       5.9,
+       -244.1
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon31Lemon2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -225.174,
+       5.1,
+       -242.449
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon31Lemon3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -223.841,
+       5.9,
+       -241.206
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon31Lemon4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -222.248,
+       5.1,
+       -242.089
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon4-1Pot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.0,
+     2.4,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -252.644,
+       1.1,
+       -233.552
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      196,
+      110,
+      70
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon4-1PotRim",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     2.7,
+     2.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -252.644,
+       2.15,
+       -233.552
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      96,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon4-1Soil",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     2.2,
+     2.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -252.644,
+       2.2,
+       -233.552
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      80,
+      56,
+      40
+     ]
+    },
+    "Material": "Ground",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon4-1Trunk",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -252.644,
+       3.4,
+       -233.552
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      78,
+      50
+     ]
+    },
+    "Material": "Wood",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon4-1Leaves",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.6,
+     3.6,
+     3.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -252.644,
+       5.3,
+       -233.552
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      52,
+      110,
+      56
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon4-1Lemon0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -251.228,
+       5.1,
+       -234.182
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon4-1Lemon1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -252.806,
+       5.9,
+       -235.094
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon4-1Lemon2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -254.16,
+       5.1,
+       -233.874
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon4-1Lemon3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -253.419,
+       5.9,
+       -232.21
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon4-1Lemon4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -251.607,
+       5.1,
+       -232.4
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon41Pot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.0,
+     2.4,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -233.552,
+       1.1,
+       -252.644
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      196,
+      110,
+      70
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon41PotRim",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     2.7,
+     2.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -233.552,
+       2.15,
+       -252.644
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      96,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon41Soil",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     2.2,
+     2.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -233.552,
+       2.2,
+       -252.644
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      80,
+      56,
+      40
+     ]
+    },
+    "Material": "Ground",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon41Trunk",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -233.552,
+       3.4,
+       -252.644
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      78,
+      50
+     ]
+    },
+    "Material": "Wood",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon41Leaves",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.6,
+     3.6,
+     3.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -233.552,
+       5.3,
+       -252.644
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      52,
+      110,
+      56
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon41Lemon0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -233.022,
+       5.1,
+       -254.1
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon41Lemon1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -234.773,
+       5.9,
+       -253.598
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon41Lemon2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -234.837,
+       5.1,
+       -251.777
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon41Lemon3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -233.125,
+       5.9,
+       -251.154
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon41Lemon4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -232.003,
+       5.1,
+       -252.59
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon5-1Pot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.0,
+     2.4,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -262.543,
+       1.1,
+       -243.452
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      196,
+      110,
+      70
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon5-1PotRim",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     2.7,
+     2.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -262.543,
+       2.15,
+       -243.452
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      96,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon5-1Soil",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     2.2,
+     2.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -262.543,
+       2.2,
+       -243.452
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      80,
+      56,
+      40
+     ]
+    },
+    "Material": "Ground",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon5-1Trunk",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -262.543,
+       3.4,
+       -243.452
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      78,
+      50
+     ]
+    },
+    "Material": "Wood",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon5-1Leaves",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.6,
+     3.6,
+     3.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -262.543,
+       5.3,
+       -243.452
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      52,
+      110,
+      56
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon5-1Lemon0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -261.486,
+       5.1,
+       -244.585
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon5-1Lemon1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -263.295,
+       5.9,
+       -244.807
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon5-1Lemon2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -264.065,
+       5.1,
+       -243.156
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon5-1Lemon3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -262.732,
+       5.9,
+       -241.913
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon5-1Lemon4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -261.139,
+       5.1,
+       -242.796
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon51Pot",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.0,
+     2.4,
+     2.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -243.452,
+       1.1,
+       -262.543
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      196,
+      110,
+      70
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon51PotRim",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.3,
+     2.7,
+     2.7
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -243.452,
+       2.15,
+       -262.543
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      176,
+      96,
+      60
+     ]
+    },
+    "Material": "Brick",
+    "CanCollide": true,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon51Soil",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.1,
+     2.2,
+     2.2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -243.452,
+       2.2,
+       -262.543
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      80,
+      56,
+      40
+     ]
+    },
+    "Material": "Ground",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon51Trunk",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2.6,
+     0.4,
+     0.4
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -243.452,
+       3.4,
+       -262.543
+      ],
+      "orientation": [
+       [
+        0.0,
+        -0.707107,
+        0.707107
+       ],
+       [
+        1.0,
+        0.0,
+        0
+       ],
+       [
+        -0.0,
+        0.707107,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      110,
+      78,
+      50
+     ]
+    },
+    "Material": "Wood",
+    "CanCollide": false,
+    "Shape": "Cylinder"
+   }
+  },
+  {
+   "name": "ColosseumLemon51Leaves",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3.6,
+     3.6,
+     3.6
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -243.452,
+       5.3,
+       -262.543
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      52,
+      110,
+      56
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon51Lemon0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -243.533,
+       5.1,
+       -264.091
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon51Lemon1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -244.949,
+       5.9,
+       -262.945
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon51Lemon2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -244.296,
+       5.1,
+       -261.243
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon51Lemon3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -242.476,
+       5.9,
+       -261.339
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "ColosseumLemon51Lemon4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -242.004,
+       5.1,
+       -263.099
+      ],
+      "orientation": [
+       [
+        0.707107,
+        0.0,
+        0.707107
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.707107,
+        0.0,
+        0.707107
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      220,
+      60
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
    "name": "ColosseumCypress2",
    "className": "Model",
    "properties": {
