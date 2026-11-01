@@ -2,6 +2,15 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-01 (Décor de la ville)
+
+- **D97 — Ville plus soignée : fontaine à vraie eau, magasins habillés, ciel et lumière.** Demande d'Antoine (« détails sur les bâtiments, textures, plus esthétique, vraie eau dans la fontaine »).
+  - **Fontaine de la place** : refaite en pièces (`fountain()` dans `tools/build_map.py`) à la place du modèle Blender (dont l'eau et les jets étaient du plastique bleu). Bassin en pierre calcaire chaude, fond en mosaïque sarcelle rempli de **vraie eau Terrain** (pièce invisible taguée `WaterVolume`, remplie au démarrage par le nouveau `SceneryService`), pied, colonne à bague dorée, vasque, haltère doré au sommet. **Jets d'eau** en particules (points tagués `FountainJet`, posés côté client par `AmbienceController`) : 8 arcs depuis des becs dorés sur la margelle, une gerbe au-dessus de l'haltère, deux jets sur les disques, un rideau qui déborde de la vasque, des éclaboussures à la surface et quelques reflets. Lumière bleutée dans l'eau la nuit (avec les lampadaires). Réglages dans `Config/Ambience.luau`.
+  - **Magasins et salle** (`shop_dressing`) : auvents rayés inclinés aux couleurs de chaque boutique au-dessus des vitrines (remplacent les auvents plats des vêtements et de l'épicerie), jardinières avec buis et fleurs de part et d'autre de la porte, appliques de façade qui éclairent le trottoir la nuit, fausses fenêtres sur les murs de côté, toit couvert d'ardoise avec climatiseurs, aérations et verrière ou trappe.
+  - **Maisons** : jardinières fleuries sous les deux fenêtres de la façade (couleurs qui varient d'une maison à l'autre).
+  - **Ciel et lumière** : nuages dynamiques (`Terrain.Clouds`, `SceneryService`), rayons de soleil légers, brume de l'horizon moins grise (bleutée). Dans Studio, les effets par défaut du lieu (2e Atmosphere, Bloom et Depth of Field éteints, SunRays) faisaient doublon avec ceux du projet : retirés (à sauvegarder avec Ctrl+S).
+  Vérifié dans Studio (captures en édition et en jeu, sans le son) : l'eau et les 28 jets s'affichent, aucune erreur dans la console. Non vérifié : le rendu sur téléphone (nombre de particules raisonnable : 28 points, ~800 particules/s au total).
+
 ## 2026-11-01 (Menus)
 
 - **D96 — Nouveau menu : un rond ☰ et un tiroir ; objectif en une ligne ; fenêtre de la semaine à l'arrivée.** Choix d'Antoine (maquette proposée par Claude). L'ancienne colonne de grands boutons cachait le monde et dépassait de l'écran sur iPhone.

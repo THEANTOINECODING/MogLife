@@ -25,13 +25,18 @@ GROUND = 0.1  # dessus du sol herbeux (la Baseplate, à y = 0, est cachée desso
 
 
 # ------------------------------------------------------------------ maths
-def rot(yaw=0.0, roll=0.0):
-    """Matrice de rotation (lignes) : Ry(yaw) * Rz(roll), angles en degrés."""
+def rot(yaw=0.0, roll=0.0, pitch=0.0):
+    """Matrice de rotation (lignes) : Ry(yaw) * Rz(roll) * Rx(pitch), angles en degrés.
+    pitch > 0 relève le bout -Z (l'avant) de la pièce."""
     y, r = math.radians(yaw), math.radians(roll)
     cy, sy, cr, sr = math.cos(y), math.sin(y), math.cos(r), math.sin(r)
     ry = [[cy, 0, sy], [0, 1, 0], [-sy, 0, cy]]
     rz = [[cr, -sr, 0], [sr, cr, 0], [0, 0, 1]]
-    return [[round(sum(ry[i][k] * rz[k][j] for k in range(3)), 6) for j in range(3)] for i in range(3)]
+    m = [[sum(ry[i][k] * rz[k][j] for k in range(3)) for j in range(3)] for i in range(3)]
+    if pitch:
+        a = math.radians(pitch)
+        m = mul(m, [[1, 0, 0], [0, math.cos(a), -math.sin(a)], [0, math.sin(a), math.cos(a)]])
+    return [[round(m[i][j], 6) for j in range(3)] for i in range(3)]
 
 
 def mul(a, b):
@@ -66,11 +71,11 @@ def rgb(c):
 
 
 def part(name, pos, size, color, material="SmoothPlastic", yaw=0, roll=0, cls="Part", shape=None, collide=True,
-         transparency=0, children=None, extra=None, tags=None, attributes=None):
+         transparency=0, children=None, extra=None, tags=None, attributes=None, pitch=0):
     props = {
         "Anchored": True,
         "Size": [round(s, 3) for s in size],
-        "CFrame": {"CFrame": {"position": [round(p, 3) for p in pos], "orientation": rot(yaw, roll)}},
+        "CFrame": {"CFrame": {"position": [round(p, 3) for p in pos], "orientation": rot(yaw, roll, pitch)}},
         "Color": rgb(color),
         "Material": material,
         "CanCollide": collide,
@@ -392,6 +397,20 @@ def piece(F, name, prop, tint=None, material=None, collide=True, attributes=None
 SHOP_DIMS = {"Clothes": (44, 38), "Barber": (36, 32), "Furniture": (48, 38), "Grocery": (36, 32), "Gym": (84, 48)}
 SHOP_DOOR_WIDTH = {"Clothes": 10, "Barber": 8, "Furniture": 12, "Grocery": 10, "Gym": 18}  # = props_building.SHOPS
 SHOP_BACK_DOOR_WIDTH = {"Gym": 10}  # = props_building.BACK_DOORS (porte au milieu du mur du fond, D69)
+# = props_building.SHOPS : hauteur du toit, hauteur de la porte, vitrines (x, largeur, bas, haut)
+SHOP_HEIGHT = {"Clothes": 16, "Barber": 14, "Furniture": 16, "Grocery": 14, "Gym": 20}
+SHOP_DOOR_HEIGHT = {"Clothes": 10, "Barber": 9, "Furniture": 11, "Grocery": 9, "Gym": 13}
+SHOP_WINDOWS = {
+    "Clothes": ((-13.5, 12, 2.5, 11), (13.5, 12, 2.5, 11)),
+    "Barber": ((-10.5, 9, 3, 9.5), (10.5, 9, 3, 9.5)),
+    "Furniture": ((-15, 14, 2.5, 12), (15, 14, 2.5, 12)),
+    "Grocery": ((-11, 10, 2.5, 9), (11, 10, 2.5, 9)),
+    "Gym": ((-26, 16, 3, 12), (26, 16, 3, 12)),
+}
+# Rayures des auvents au-dessus des vitrines (couleur de l'enseigne et blanc)
+SHOP_AWNINGS = {"Clothes": ((60, 110, 200), WHITE), "Barber": ((200, 45, 45), WHITE),
+                "Furniture": ((40, 60, 110), (240, 226, 196)), "Grocery": ((60, 150, 70), WHITE),
+                "Gym": ((170, 30, 30), (40, 40, 44))}
 
 
 def auto_door(F, name, local, prop, yaw=0, swing=None):
@@ -416,7 +435,114 @@ def shop_shell(F, name, color, material, floor):
         # Deux battants vitrés, poignées au milieu (le battant de droite est retourné)
         auto_door(F, name + "DoorLeft", (-SHOP_DOOR_WIDTH[name] / 4, ft, 0.4), f"Door_Shop_{name}"),
         auto_door(F, name + "DoorRight", (SHOP_DOOR_WIDTH[name] / 4, ft, 0.4), f"Door_Shop_{name}", yaw=180),
-    ] + back_doors(F, name, d, ft)
+    ] + back_doors(F, name, d, ft) + shop_dressing(F, name)
+
+
+def awning(F, name, x, width, top, colors, depth=3.6, slope=24):
+    """Auvent rayé incliné au-dessus d'une vitrine : bandes de toile en pente vers la rue et lambrequin."""
+    out = []
+    n = max(3, round(width / 1.6))
+    stripe = width / n
+    a = math.radians(slope)
+    cz, cy = -depth / 2 * math.cos(a), top - depth / 2 * math.sin(a)
+    for k in range(n):
+        lx = x - width / 2 + stripe * (k + 0.5)
+        colr = colors[k % 2]
+        out.append(P(F, f"{name}{k}", (lx, cy, cz), (stripe + 0.02, 0.2, depth), colr, "Fabric", pitch=-slope,
+                     collide=False))
+        out.append(P(F, f"{name}Flap{k}", (lx, top - depth * math.sin(a) - 0.4, -depth * math.cos(a)),
+                     (stripe + 0.02, 0.8, 0.12), colr, "Fabric", collide=False))
+    for k, sx in enumerate((-1, 1)):  # deux tiges de fer qui le tiennent
+        out.append(P(F, f"{name}Rod{k}", (x + sx * (width / 2 - 0.4), cy - 0.5, cz), (0.15, 0.15, depth),
+                     LAMP_GREY, "Metal", pitch=-slope - 14, collide=False))
+    return out
+
+
+def planter(F, name, local, color=(150, 96, 70), flowers=((240, 90, 120), (250, 210, 70), (250, 250, 250))):
+    """Jardinière en bois : buis taillé en boule et quelques fleurs."""
+    x, y, z = local
+    out = [
+        P(F, name, (x, y + 0.8, z), (2.6, 1.6, 1.6), color, "WoodPlanks"),
+        P(F, name + "Soil", (x, y + 1.62, z), (2.3, 0.1, 1.3), (80, 56, 40), "Ground", collide=False),
+        P(F, name + "Bush", (x, y + 2.4, z), (1.9, 1.9, 1.9), HEDGE, "Grass", shape="Ball", collide=False),
+    ]
+    for k, colr in enumerate(flowers):
+        out.append(P(F, f"{name}Flower{k}", (x - 1.0 + k * 1.0, y + 1.9, z - 0.55), (0.5, 0.5, 0.5), colr,
+                     shape="Ball", collide=False))
+    return out
+
+
+def ac_unit(F, name, local, yaw=0):
+    """Climatiseur de toit : caisson, ventilateur, grilles et socle."""
+    G = F.child(local, yaw)
+    out = [
+        P(G, name + "Base", (0, 0.15, 0), (4.4, 0.3, 3.4), TIN_DARK, "Metal"),
+        P(G, name, (0, 1.5, 0), (4, 2.4, 3), TIN, "Metal"),
+        P(G, name + "Fan", (0.6, 2.75, 0), (0.12, 2.2, 2.2), TIN_DARK, "Metal", roll=90, shape="Cylinder"),
+        P(G, name + "Hub", (0.6, 2.8, 0), (0.15, 0.6, 0.6), LAMP_GREY, "Metal", roll=90, shape="Cylinder"),
+    ]
+    for k in range(4):
+        out.append(P(G, f"{name}Grille{k}", (-1.4 + k * 0.35, 1.5, -1.55), (0.12, 1.8, 0.1), TIN_DARK, "Metal"))
+    return out
+
+
+def roof_vent(F, name, local, height=1.8):
+    x, y, z = local
+    return [
+        P(F, name, (x, y + height / 2, z), (height, 0.8, 0.8), (190, 192, 196), "Metal", roll=90, shape="Cylinder"),
+        P(F, name + "Cap", (x, y + height + 0.15, z), (0.3, 1.3, 1.3), (160, 162, 168), "Metal", roll=90,
+          shape="Cylinder"),
+    ]
+
+
+def skylight(F, name, local, size=(6, 4)):
+    x, y, z = local
+    w, d = size
+    return [
+        P(F, name, (x, y + 0.35, z), (w, 0.7, d), (58, 58, 64), "Metal"),
+        P(F, name + "Glass", (x, y + 0.75, z), (w - 0.6, 0.12, d - 0.6), GLASS, "Glass",
+          extra={"Reflectance": 0.3}),
+    ]
+
+
+def shop_dressing(F, name):
+    """Habillage d'un magasin (D97) : auvents rayés sur les vitrines, jardinières de part et d'autre de la porte,
+    appliques allumées la nuit, fausses fenêtres sur les côtés et toit équipé (climatiseurs, aérations, verrière)."""
+    w, d = SHOP_DIMS[name]
+    h, dh, dw = SHOP_HEIGHT[name], SHOP_DOOR_HEIGHT[name], SHOP_DOOR_WIDTH[name]
+    c = []
+    for k, (x, ww, y0, y1) in enumerate(SHOP_WINDOWS[name]):
+        c += awning(F, f"{name}Awning{k}_", x, ww + 1.2, y1 + 1.5, SHOP_AWNINGS[name])
+    for k, sx in enumerate((-1, 1)):
+        c += planter(F, f"{name}Planter{k}", (sx * (dw / 2 + 3.2), 0, -1.4))
+        # Les appliques de la façade (modèle 3D) éclairent le trottoir la nuit
+        c.append(P(F, f"{name}Sconce{k}", (sx * (dw / 2 + 1.2), dh + 2.7, -1.7), (0.3, 0.3, 0.3), WHITE,
+                   transparency=1, collide=False, tags=["StreetLight"], extra={"CanQuery": False, "CanTouch": False},
+                   children=[light((255, 214, 160), 1.2, 16)]))
+        # Fausses fenêtres sur les murs de côté (cadre sombre, vitre, appui)
+        for j, fz in enumerate((d * 0.3, d * 0.7)):
+            G = F.child((sx * (w / 2 + 0.12), 0, fz), -90 * sx)
+            wy = h * 0.55
+            c += [
+                P(G, f"{name}SideFrame{k}{j}", (0, wy, 0), (5.6, 5.6, 0.2), (58, 58, 64), "Metal", collide=False),
+                P(G, f"{name}SideGlass{k}{j}", (0, wy, -0.08), (4.8, 4.8, 0.08), GLASS, "Glass", collide=False,
+                  extra={"Reflectance": 0.2}),
+                P(G, f"{name}SideBar{k}{j}", (0, wy, -0.14), (0.25, 4.8, 0.08), (58, 58, 64), "Metal",
+                  collide=False),
+                P(G, f"{name}SideSill{k}{j}", (0, wy - 3.0, -0.25), (6.2, 0.3, 0.6), TRIM, collide=False),
+            ]
+    # Toit plat (dessus à h + 0,6) : rien au milieu (l'icône de la boutique flotte au-dessus)
+    top = h + 0.6
+    c.append(P(F, f"{name}RoofDeck", (0, top + 0.03, d / 2), (w - 2, 0.06, d - 2), (128, 128, 132), "Slate"))
+    c += ac_unit(F, f"{name}AcA", (w * 0.28, top, d * 0.62), yaw=15)
+    c += roof_vent(F, f"{name}VentA", (-w * 0.12, top, d * 0.78))
+    c += roof_vent(F, f"{name}VentB", (w * 0.36, top, d * 0.25), height=1.3)
+    if w >= 40:
+        c += ac_unit(F, f"{name}AcB", (-w * 0.3, top, d * 0.35), yaw=-10)
+        c += skylight(F, f"{name}Skylight", (-w * 0.26, top, d * 0.72))
+    else:
+        c.append(P(F, f"{name}Hatch", (-w * 0.28, top + 0.3, d * 0.6), (3, 0.6, 3), TIN_DARK, "Metal"))
+    return c
 
 
 def back_doors(F, name, d, ft):
@@ -589,6 +715,15 @@ def plot(index, side, offset):
     c.append(piece(H, "HouseTrim", "House_Trim", collide=False))
     c.append(piece(H, "HouseInterior", "House_Interior_" + ("Cream", "Mint", "Rose", "Blue")[index % 4],
                    collide=False))
+    # Jardinières fleuries sous les deux fenêtres de la façade (D97)
+    for k, wx in enumerate((-8, 8)):
+        c.append(P(H, f"WindowBox{k}", (wx, 3.3, -0.75), (5.6, 0.9, 1.0), (150, 96, 70), "WoodPlanks",
+                   collide=False))
+        c.append(P(H, f"WindowBoxLeaves{k}", (wx, 3.85, -0.75), (5.2, 0.4, 0.8), HEDGE, "Grass", collide=False))
+        for j in range(5):
+            colr = ((240, 90, 120), (250, 210, 70), (250, 250, 250), (200, 120, 230))[(j + k + index) % 4]
+            c.append(P(H, f"WindowFlower{k}{j}", (wx - 2.2 + j * 1.1, 4.15, -0.85), (0.5, 0.5, 0.5), colr,
+                       shape="Ball", collide=False))
     # Passage couvert vers le garage, et porte qui s'ouvre toute seule quand un joueur approche (DoorService)
     c.append(P(H, "LinkFloor", (-14, 0.2, 22), (2.4, 0.4, 5.6), CONCRETE_LIGHT, "Concrete"))
     # (dans le mur gauche de la maison : sa largeur est le long de Z)
@@ -707,6 +842,89 @@ def ring():
 
 
 # ------------------------------------------------------------------ 3. le centre-ville
+MARBLE = (238, 226, 204)
+MARBLE_WARM = (222, 204, 176)
+GOLD = (206, 156, 44)
+POOL_TILE = (46, 128, 150)
+
+
+def jet(F, name, local, kind, direction=(0, 1, 0)):
+    """Point d'où sort un jet d'eau (tag FountainJet) : AmbienceController y accroche les particules du type
+    `kind` (Config/Ambience.luau), dirigées vers `direction` (repère du monde)."""
+    return P(F, name, local, (0.2, 0.2, 0.2), WHITE, transparency=1, collide=False, tags=["FountainJet"],
+             extra=INVISIBLE, attributes={"Jet": kind, "JetDir": {"Vector3": [round(v, 3) for v in direction]}})
+
+
+def stone_ring(F, name, r0, r1, y0, y1, count, color, material="Limestone"):
+    """Anneau de pierre visible (margelle) : `count` blocs entre les rayons r0..r1 et les hauteurs y0..y1."""
+    out = []
+    step = 360.0 / count
+    width = 2 * r1 * math.sin(math.radians(step / 2)) + 0.05
+    for i in range(count):
+        G = F.child((0, 0, 0), step * i)
+        out.append(P(G, f"{name}{i}", (0, (y0 + y1) / 2, -(r0 + r1) / 2), (width, y1 - y0, r1 - r0), color, material))
+    return out
+
+
+def fountain(F):
+    """Grande fontaine de la place (D97) : bassin de marbre rempli de vraie eau (Terrain, tag WaterVolume, remplie
+    par SceneryService), vasque haute, haltère doré au sommet, jets d'eau en arc depuis la margelle, gerbe au-dessus
+    de l'haltère, rideau qui déborde de la vasque, éclaboussures et lumière dans l'eau la nuit."""
+    c = [
+        P(F, "FountainStep", (0, 0.2, 0), (0.4, 21.4, 21.4), CONCRETE_LIGHT, "Concrete", roll=90, shape="Cylinder"),
+        P(F, "FountainPool", (0, 0.45, 0), (0.3, 17.2, 17.2), POOL_TILE, "Slate", roll=90, shape="Cylinder"),
+        # Volume d'eau : bord caché dans la margelle (l'eau Terrain se pose par cubes de 4 studs)
+        P(F, "FountainWater", (0, 1.25, 0), (1.3, 17.6, 17.6), (90, 170, 230), roll=90, shape="Cylinder",
+          transparency=1, collide=False, tags=["WaterVolume"], extra=INVISIBLE),
+    ]
+    c += stone_ring(F, "FountainRim", 8.4, 9.8, 0.4, 2.1, 28, MARBLE)
+    c += stone_ring(F, "FountainRimCap", 8.2, 10.1, 2.1, 2.5, 28, MARBLE_WARM)
+    # Pied, colonne (bague dorée), vasque et son eau, tige et haltère doré
+    c += [
+        P(F, "FountainPedestal", (0, 1.4, 0), (2.0, 5.0, 5.0), MARBLE, "Marble", roll=90, shape="Cylinder"),
+        P(F, "FountainPedestalCap", (0, 2.5, 0), (0.3, 5.4, 5.4), MARBLE_WARM, "Marble", roll=90, shape="Cylinder"),
+        P(F, "FountainColumn", (0, 3.85, 0), (2.8, 2.2, 2.2), MARBLE, "Marble", roll=90, shape="Cylinder"),
+        P(F, "FountainColumnBand", (0, 3.9, 0), (0.35, 2.5, 2.5), GOLD, "Metal", roll=90, shape="Cylinder"),
+        P(F, "FountainBowl", (0, 5.45, 0), (0.5, 8.4, 8.4), MARBLE, "Marble", roll=90, shape="Cylinder"),
+        P(F, "FountainBowlFoot", (0, 5.05, 0), (0.4, 4.0, 4.0), MARBLE_WARM, "Marble", roll=90, shape="Cylinder"),
+        P(F, "FountainBowlWater", (0, 5.95, 0), (0.1, 7.4, 7.4), (70, 165, 205), "Glass", roll=90, shape="Cylinder",
+          transparency=0.25, collide=False, extra={"Reflectance": 0.25}),
+    ]
+    c += stone_ring(F, "FountainBowlRim", 3.7, 4.3, 5.7, 6.2, 18, MARBLE_WARM)
+    c += [
+        P(F, "FountainStem", (0, 6.9, 0), (1.6, 1.0, 1.0), GOLD, "Metal", roll=90, shape="Cylinder"),
+        P(F, "FountainBar", (0, 8, 0), (8.6, 0.9, 0.9), GOLD, "Metal", shape="Cylinder"),
+    ]
+    for k, sx in enumerate((-1, 1)):
+        c += [
+            P(F, f"FountainPlate{k}", (sx * 3.3, 8, 0), (0.9, 4.6, 4.6), GOLD, "Metal", shape="Cylinder"),
+            P(F, f"FountainPlateSmall{k}", (sx * 2.5, 8, 0), (0.7, 3.4, 3.4), GOLD, "Metal", shape="Cylinder"),
+            P(F, f"FountainCollar{k}", (sx * 4.0, 8, 0), (0.5, 1.5, 1.5), GOLD, "Metal", shape="Cylinder"),
+        ]
+    # Jets : 8 becs dorés sur la margelle tirent en arc vers le pied
+    for i in range(8):
+        a = math.radians(22.5 + 45 * i)
+        dx, dz = math.sin(a), math.cos(a)  # du centre vers le bec
+        c.append(P(F, f"FountainNozzle{i}", (dx * 9.0, 2.65, dz * 9.0), (0.3, 0.6, 0.6), GOLD, "Metal", roll=90,
+                   shape="Cylinder"))
+        c.append(jet(F, f"FountainArc{i}", (dx * 8.9, 2.85, dz * 8.9), "Arc", (-dx * 0.57, 0.82, -dz * 0.57)))
+        # Éclaboussures là où retombent les arcs et le rideau de la vasque
+        c.append(jet(F, f"FountainSplash{i}", (dx * 3.6, 1.75, dz * 3.6), "Splash"))
+        # Rideau qui déborde de la vasque
+        b = math.radians(45 * i)
+        c.append(jet(F, f"FountainCurtain{i}", (math.sin(b) * 4.3, 6.15, math.cos(b) * 4.3), "Curtain",
+                     (math.sin(b), 0, math.cos(b))))
+    # Gerbe au-dessus de l'haltère et deux jets au sommet des disques
+    c.append(jet(F, "FountainGeyser", (0, 8.5, 0), "Geyser"))
+    for k, sx in enumerate((-1, 1)):
+        c.append(jet(F, f"FountainPlateJet{k}", (sx * 3.3, 10.35, 0), "PlateJet", (sx * 0.25, 1, 0)))
+    c.append(jet(F, "FountainSparkle", (0, 9, 0), "Sparkle"))
+    # La nuit : lumière bleutée dans l'eau (allumée avec les lampadaires)
+    c.append(P(F, "FountainLight", (0, 1.4, 0), (0.4, 0.4, 0.4), WHITE, transparency=1, collide=False,
+               tags=["StreetLight"], extra=INVISIBLE, children=[light((120, 210, 255), 2.2, 20)]))
+    return c
+
+
 def plaza():
     F = Frame((0, GROUND, 0))
     c = [P(F, "Plaza", (0, 0.06, 0), (2 * PLAZA, 0.12, 2 * PLAZA), PAVING, "Pavement")]
@@ -716,18 +934,7 @@ def plaza():
         c.append(P(S, f"Avenue{side}", (0, 0.06, PLAZA + length / 2), (2 * AVENUE, 0.12, length), PAVING, "Pavement"))
         for k, sx in enumerate((-1, 1)):
             c += lamp_post(S, f"AvenueLamp{side}{k}", (sx * (AVENUE + 1.5), 0, PLAZA + length / 2), arm_dir=0)
-    # Grande fontaine : un haltère doré
-    n0 = len(c)
-    c.append(P(F, "FountainBasin", (0, 0.9, 0), (1.8, 18, 18), (200, 200, 205), "Concrete", roll=90,
-               shape="Cylinder"))
-    c.append(P(F, "FountainWater", (0, 1.6, 0), (0.2, 16, 16), (90, 170, 230), "Glass", roll=90, shape="Cylinder",
-               transparency=0.2, collide=False))
-    c.append(P(F, "FountainColumn", (0, 4, 0), (6, 2.4, 2.4), (200, 200, 205), "Concrete", roll=90,
-               shape="Cylinder"))
-    c.append(P(F, "FountainBar", (0, 8, 0), (8, 0.9, 0.9), (230, 190, 60), "Metal", shape="Cylinder"))
-    for k, dx in enumerate((-3.8, 3.8)):
-        c.append(P(F, f"FountainPlate{k}", (dx, 8, 0), (0.9, 4.4, 4.4), (230, 190, 60), "Metal", shape="Cylinder"))
-    wrap(c, n0, F, "FountainSlot", (0, 0.12, 0), "Fountain")
+    c += fountain(F)
     for k, (x, z, yaw) in enumerate(((0, -14, 0), (14, 0, 90), (-14, 0, -90))):
         c += bench(F, f"FountainBench{k}", (x, 0, z), yaw=yaw)
     # Podium des 3 plus gros moggers du serveur (statues mises à jour par le serveur, tag MogStatue)
@@ -758,9 +965,6 @@ def shop_frame(cx):
 def clothing_store():
     F = shop_frame(-78)
     c = shop_shell(F, "Clothes", (120, 170, 210), "Plaster", ((236, 230, 220), "Marble", 0.4))
-    for k in range(7):  # auvent rayé
-        c.append(P(F, f"ClothesAwning{k}", (-18 + k * 6, 13.6, -1.6), (6, 0.4, 3.2),
-                   (60, 110, 200) if k % 2 == 0 else WHITE, "Fabric"))
     c.append(P(F, "SignShirt", (0, 20.5, 1), (7, 8, 1), (240, 90, 90)))
     for k, sx in enumerate((-1, 1)):
         c.append(P(F, f"SignSleeve{k}", (sx * 4.8, 22.7, 1), (3.4, 3.4, 1), (240, 90, 90)))
@@ -883,9 +1087,6 @@ def furniture_store():
 def grocery():
     F = shop_frame(82)
     c = shop_shell(F, "Grocery", (250, 240, 210), "Plaster", (WHITE, "SmoothPlastic", 0.3))
-    for k in range(7):
-        c.append(P(F, f"GroceryAwning{k}", (-15 + k * 5, 12.5, -1.6), (5, 0.4, 3.2),
-                   (210, 50, 50) if k % 2 == 0 else WHITE, "Fabric"))
     for k, colr in enumerate(((220, 60, 50), (250, 200, 60), (120, 180, 60), (250, 140, 40))):
         lx = -14 + k * 3.4 if k < 2 else 8 + (k - 2) * 3.4
         c.append(P(F, f"Crate{k}", (lx, 1, 2.5), (3, 2, 2.4), WOOD, "WoodPlanks"))

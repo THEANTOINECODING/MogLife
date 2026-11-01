@@ -223,7 +223,7 @@ Déjà fait : plusieurs stations par exercice, bouton Maison et bus, icônes et 
 - **Haltères dorés cachés** dans la ville (toits, recoins) à collectionner, petite récompense.
 - **Coins vides du centre** : salle en plein air « Muscle Beach », camion à shakes protéinés (nouvel habitant ou nouvelle aide), terrain de basket.
 - **Prochaines zones visibles au loin** derrière la bordure de la ville (plage, montagne) avec un panneau honnête « Bientôt ».
-- **Vie dans la ville** : voitures qui roulent sur l'anneau, pigeons, joggeurs, jets d'eau de la fontaine, sons d'ambiance par zone.
+- **Vie dans la ville** : voitures qui roulent sur l'anneau, pigeons, joggeurs, sons d'ambiance par zone (jets d'eau de la fontaine : fait, D97).
 - **Objets de décor dans Blender** (canapés, voitures, piano, fontaine, temple, arbres) pour remplacer les blocs.
 - **Performance mobile** : réduire le nombre de lumières si les tests sur téléphone le demandent.
 

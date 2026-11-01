@@ -2179,6 +2179,674 @@
    ]
   },
   {
+   "name": "WindowBox0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.6,
+     0.9,
+     1.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.25,
+       3.4,
+       -6.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      96,
+      70
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "WindowBoxLeaves0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.2,
+     0.4,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.25,
+       3.95,
+       -6.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      64,
+      122,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "WindowFlower00",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.15,
+       4.25,
+       -3.8
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      250,
+      250
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "WindowFlower01",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.15,
+       4.25,
+       -4.9
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      120,
+      230
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "WindowFlower02",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.15,
+       4.25,
+       -6.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      90,
+      120
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "WindowFlower03",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.15,
+       4.25,
+       -7.1
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      210,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "WindowFlower04",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.15,
+       4.25,
+       -8.2
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      250,
+      250
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "WindowBox1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.6,
+     0.9,
+     1.0
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.25,
+       3.4,
+       -22.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      150,
+      96,
+      70
+     ]
+    },
+    "Material": "WoodPlanks",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "WindowBoxLeaves1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     5.2,
+     0.4,
+     0.8
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.25,
+       3.95,
+       -22.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      64,
+      122,
+      60
+     ]
+    },
+    "Material": "Grass",
+    "CanCollide": false
+   }
+  },
+  {
+   "name": "WindowFlower10",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.15,
+       4.25,
+       -19.8
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      120,
+      230
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "WindowFlower11",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.15,
+       4.25,
+       -20.9
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      90,
+      120
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "WindowFlower12",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.15,
+       4.25,
+       -22.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      210,
+      70
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "WindowFlower13",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.15,
+       4.25,
+       -23.1
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      250,
+      250,
+      250
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
+   "name": "WindowFlower14",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     0.5,
+     0.5,
+     0.5
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       151.15,
+       4.25,
+       -24.2
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      200,
+      120,
+      230
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Shape": "Ball"
+   }
+  },
+  {
    "name": "LinkFloor",
    "className": "Part",
    "properties": {
