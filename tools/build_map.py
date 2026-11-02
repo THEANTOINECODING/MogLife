@@ -1295,7 +1295,7 @@ def grocery_checkout(F):
         P(G, "BeltSteakFat", (-1.0, 3.93, -0.1), (1.2, 0.05, 0.7), (236, 210, 196), yaw=15, collide=False),
         P(G, "BeltSteakBone", (-0.2, 3.75, 0.1), (0.6, 0.3, 0.3), (245, 240, 225), roll=90, shape="Cylinder",
           collide=False),
-        P(G, "BeltEggBox", (0.2, 3.66, 0.45), (1.2, 0.3, 0.7), (200, 180, 150), "Cardboard", collide=False),
+        P(G, "BeltEggBox", (0.7, 3.66, 0.45), (1.2, 0.3, 0.7), (200, 180, 150), "Cardboard", collide=False),
     ]
     for k in range(3):
         c.append(P(G, f"BeltEgg{k}", (-0.2 + k * 0.4, 3.9, 0.45), (0.35, 0.4, 0.35), SHAKE_COLORS[3], "Metal",
@@ -1977,7 +1977,7 @@ def separate_coplanar(root):
     Renvoie le nombre de pièces décalées."""
     parts = _blocks(root, [])
     moved = 0
-    for _ in range(3):
+    for _ in range(8):  # une face par paire et par passage : une paire peut en partager plusieurs
         grid = {}
         boxes = []
         for idx, node in enumerate(parts):
