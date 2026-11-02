@@ -30,6 +30,7 @@ local ORDER = {
 	"NpcController",
 	"MotionController",
 	"ColosseumController",
+	"StatueWallController",
 	"PumpGodController",
 }
 

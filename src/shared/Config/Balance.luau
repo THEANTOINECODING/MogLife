@@ -424,6 +424,16 @@ return {
 		PitHeight = 9, -- hauteur du mur de la piste
 	},
 
+	-- Mur des Colosses (D107) : rayons dorés des yeux et sceptres qui pulsent (StatueWallController)
+	StatueWall = {
+		Range = 420, -- studs : au-delà, les effets du mur sont coupés (téléphone)
+		EyeBeamLength = 46, -- studs : longueur des rayons sortant des yeux
+		EyeBeamWidth = { 0.9, 7 }, -- largeur du rayon à l'œil, puis au bout
+		EyeFlicker = 0.6, -- battements par seconde de l'intensité des rayons
+		ScepterPulse = 0.8, -- battements par seconde de la lumière des sceptres
+		ScepterLight = { Range = 40, Brightness = { 1, 3.5 } },
+	},
+
 	-- Cycle jour / nuit (heure de Lighting.ClockTime, de 0 à 24)
 	DayNight = {
 		DayMinutes = 12, -- durée réelle d'une journée (6 h -> 18 h)
@@ -462,6 +472,7 @@ return {
 		-- Le boss joue en direct ; à égalité parfaite de points, la manche va au joueur (D88)
 		-- Défaite automatique (Mog insuffisant) : perte de Cash, annoncée avant le combat
 		DefeatCashLossPercent = 0.10,
+		ChallengeCooldown = 2, -- secondes entre deux défis (un double appui ne fait pas perdre deux fois)
 		DefeatCashLossCap = { 50, 120, 300, 600, 1_200, 2_500 }, -- par stade du joueur ❓
 		-- Mog-off perdu (avec assez de Mog) : perte plus faible, annoncée aussi ❓
 		MogOffLossPercent = 0.05,
@@ -476,6 +487,7 @@ return {
 	BoostShop = {
 		Distance = 14, -- distance max (studs) au comptoir pour acheter
 		MaxDuration = 900, -- un boost prolongé ne dépasse jamais 15 minutes
+		MinExtension = 0.5, -- refusé (sans payer) si l'achat ajouterait moins de cette part de sa durée
 	},
 
 	-- Apparence provisoire (avatar Roblox) en attendant le personnage du jeu

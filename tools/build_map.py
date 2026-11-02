@@ -1940,6 +1940,115 @@ def colosseum():
                            height=2.2, collide=False))
     return model("Colosseum", c)
 
+# ------------------------------------------------------------------ 6. le Mur des Colosses (D107)
+# Le monde est fermé par un mur continu de statues géantes en marbre (dieux « gym bro » qui portent la corniche),
+# autour de la ville (un carré) et du Colisée (un cercle) : leur contour commun. Modèles : tools/blender/
+# props_statue_wall.py ; tailles, positions et points d'effet : assets/export/props/statue_wall_manifest.json.
+# Un module (socle + mur + entablement + un colosse) fait au plus MODULE["width"] ; sur chaque côté, les modules sont
+# un peu resserrés pour tomber juste, et un pilier à brasero cache chaque jonction. Collisions : un bloc invisible
+# haut par module (on ne grimpe pas sur les statues, on ne sort pas du monde).
+with open(os.path.join(ROOT, "assets", "export", "props", "statue_wall_manifest.json"), encoding="utf-8") as _f:
+    WALL = json.load(_f)
+TOWN_WALL = 244  # demi-côté du carré de la ville, sur l'axe des modules (les arbres de bordure s'arrêtent à 230)
+COLO_WALL = 170  # rayon autour du Colisée (cyprès et rochers jusqu'à ~146)
+WALL_POSES = ("Atlas", "Torch", "Scepter", "Atlas", "Flex", "Torch")
+WALL_GLOW = {"Atlas": 2, "Torch": 3, "Scepter": 1, "Flex": 1}  # lueurs (yeux, veines) sur une statue sur N
+PIER_FIRE_EVERY = 2  # un brasero allumé sur N piliers
+WALL_FIRE_RANGE = 360  # studs : les flammes du mur se voient de loin (au-delà de la portée des braseros du Colisée)
+
+
+def wall_outline():
+    """Points du contour (sens horaire vu du ciel), chaque côté découpé en modules : liste de (a, b, dedans)
+    où dedans est le point vers lequel les colosses regardent."""
+    R, c = COLO_WALL, COLO_CENTER
+    t = TOWN_WALL
+    j = c[1] + math.sqrt(R * R - (t + c[0]) ** 2)  # croisement du carré et du cercle (x = -t ou z = -t)
+    town = (0.0, 0.0)
+    runs = [((-t, j), (-t, t)), ((-t, t), (t, t)), ((t, t), (t, -t)), ((t, -t), (j, -t))]
+    out = []
+    for a, b in runs:
+        length = math.dist(a, b)
+        n = math.ceil(length / WALL["module"]["width"])
+        for k in range(n):
+            p0 = [a[i] + (b[i] - a[i]) * k / n for i in range(2)]
+            p1 = [a[i] + (b[i] - a[i]) * (k + 1) / n for i in range(2)]
+            out.append((p0, p1, town))
+    # arc autour du Colisée, du croisement sud au croisement ouest, par l'extérieur
+    a0 = math.atan2(-t - c[1], j - c[0])
+    a1 = math.atan2(j - c[1], -t - c[0]) - 2 * math.pi
+    step = 2 * math.asin(WALL["module"]["width"] / 2 / R)
+    n = math.ceil(abs(a1 - a0) / step)
+    for k in range(n):
+        u0, u1 = a0 + (a1 - a0) * k / n, a0 + (a1 - a0) * (k + 1) / n
+        p0 = [c[0] + R * math.cos(u0), c[1] + R * math.sin(u0)]
+        p1 = [c[0] + R * math.cos(u1), c[1] + R * math.sin(u1)]
+        out.append((p0, p1, c))
+    return out
+
+
+def wall_piece(F, name, prop, collide=False):
+    m = WALL["pieces"][prop]
+    cx, cy = m["center"]
+    return prop_slot(F, name, (cx, m["bottom"], cy), prop, collide=collide)
+
+
+def statue_wall():
+    c = []
+    M = WALL["module"]
+    for i, (p0, p1, inside) in enumerate(wall_outline()):
+        mid = [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2]
+        length = math.dist(p0, p1)
+        # le module regarde vers l'intérieur (son -Z local), perpendiculaire au côté
+        ex, ez = (p1[0] - p0[0]) / length, (p1[1] - p0[1]) / length
+        nx, nz = -ez, ex
+        if (inside[0] - mid[0]) * nx + (inside[1] - mid[1]) * nz < 0:
+            nx, nz = -nx, -nz
+        yaw = math.degrees(math.atan2(-nx, -nz))
+        F = Frame((mid[0], GROUND, mid[1]), yaw)
+        pose = WALL_POSES[i % len(WALL_POSES)]
+        statue = f"Colossus_{pose}"
+        glow = i % WALL_GLOW[pose] == 0
+        c.append(wall_piece(F, f"Wall{i}Module", "StatueWall_Module"))
+        c.append(wall_piece(F, f"Wall{i}Statue", statue))
+        c.append(wall_piece(F, f"Wall{i}Gold", statue + "_Gold"))
+        if glow:
+            c.append(wall_piece(F, f"Wall{i}Glow", statue + "_Glow"))
+        # collision : tout le module, très haut
+        c.append(P(F, f"Wall{i}Block", (0, 80, 0), (length + 0.5, 160, M["depth"]), WHITE, transparency=1,
+                   extra=INVISIBLE))
+        # effets (manifest en repère Blender : x, y vers l'arrière, z vers le haut -> repère local x, y, z)
+        fx = WALL["statues"][pose]
+        if "Flame" in fx:
+            x, y, z = fx["Flame"]
+            c.append(P(F, f"Wall{i}Flame", (x, z, y), (1, 1, 1), WHITE, transparency=1, collide=False,
+                       tags=["ColosseumFire"], attributes={"FireSize": 6, "FireRange": WALL_FIRE_RANGE},
+                       extra=INVISIBLE))
+        if glow:
+            gx, gy, gz = fx["Gaze"]
+            gaze = apply(rot(yaw), [gx, gz, gy])
+            for k, (x, y, z) in enumerate(fx["Eyes"]):
+                c.append(P(F, f"Wall{i}Eye{k}", (x, z, y), (0.5, 0.5, 0.5), WHITE, transparency=1, collide=False,
+                           tags=["ColossusGlow"], attributes={"Kind": "Eye", "Gaze": {"Vector3": [round(v, 3) for v in gaze]}},
+                           extra=INVISIBLE))
+            if "Scepter" in fx:
+                x, y, z = fx["Scepter"]
+                c.append(P(F, f"Wall{i}Scepter", (x, z, y), (1, 1, 1), WHITE, transparency=1, collide=False,
+                           tags=["ColossusGlow"], attributes={"Kind": "Scepter"}, extra=INVISIBLE))
+        # pilier sur la jonction de départ (le contour est fermé : chaque jonction est le départ d'un module)
+        for j, (px, pz) in enumerate((p0,)):
+            G = Frame((px, GROUND, pz), yaw)
+            c.append(decor(G, f"Wall{i}Pier{j}", (0, 0, -3.2), "StatueWall_Pier"))
+            c.append(P(G, f"Wall{i}PierBlock{j}", (0, 80, -3.2), (WALL["pier"]["size"] + 2.6, 160,
+                                                                 WALL["pier"]["size"] + 2.6), WHITE, transparency=1,
+                       extra=INVISIBLE))
+            if (i + j) % PIER_FIRE_EVERY == 0:
+                fx_, fy_, fz_ = WALL["pier"]["fire"]
+                c.append(P(G, f"Wall{i}PierFire{j}", (fx_, fz_, -3.2 + fy_), (1, 1, 1), WHITE, transparency=1,
+                           collide=False, tags=["ColosseumFire"],
+                           attributes={"FireSize": 9, "FireRange": WALL_FIRE_RANGE}, extra=INVISIBLE))
+    return model("StatueWall", c)
+
+
 # ------------------------------------------------------------------ écriture
 # ------------------------------------------------------------------ faces superposées (D102)
 ZFIGHT_EPS = 0.03  # studs : la plus petite pièce dépasse d'autant (invisible, mais plus de scintillement)
@@ -2047,7 +2156,7 @@ if __name__ == "__main__":
     out = os.path.join(WORLD, "Map")
     written = set()
     plots = [plot(i, side, offset) for i, (side, offset) in enumerate(plot_list(), start=1)]
-    town = [ring(), downtown(), colosseum()]
+    town = [ring(), downtown(), colosseum(), statue_wall()]
     # Toute la carte d'un coup : les faces superposées entre deux fichiers (allée d'une maison et trottoir) comptent
     print(separate_coplanar({"children": plots + town}), "faces superposées séparées")
     for i, node in enumerate(plots, start=1):

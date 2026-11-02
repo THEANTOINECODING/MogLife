@@ -1,5 +1,7 @@
 -- Le Colisée du Pump (D89, tranche 1) côté client : l'arène vit.
 -- - Braseros (tag "ColosseumFire") : feu, braises et lumière orangée ; éteints loin du joueur (téléphone).
+--   Attributs optionnels du repère : FireSize (taille des flammes, 3 par défaut) et FireRange (portée d'allumage),
+--   pour les torches et braseros géants du Mur des Colosses (D107), visibles de loin.
 -- - Foule des gradins (MapProps « Colosseum_Crowd ») : elle sautille par vagues, chaque secteur à son rythme.
 -- - Portails (tag "ColosseumPortal" = l'ouverture de l'arche, D105) : tourbillon doré qui tourne dans l'arche,
 --   éclats de lumière aspirés vers le centre, cœur qui bat.
@@ -54,24 +56,26 @@ local function addFire(anchor: Instance)
 	if not anchor:IsA("BasePart") or fires[anchor] then
 		return
 	end
+	local size = anchor:GetAttribute("FireSize")
+	local scale = if typeof(size) == "number" then size / 3 else 1
 	local fire = Instance.new("Fire")
-	fire.Size = 3
+	fire.Size = 3 * scale
 	fire.Heat = 7
 	fire.Color = FLAME
 	fire.SecondaryColor = Color3.fromRGB(200, 50, 20)
 	fire.Parent = anchor
 	local light = Instance.new("PointLight")
 	light.Color = FLAME
-	light.Range = 14
+	light.Range = math.min(14 * scale, 60)
 	light.Brightness = 1
 	light.Shadows = false
 	light.Parent = anchor
 	local embers = Instance.new("ParticleEmitter")
 	embers.Color = ColorSequence.new(Color3.fromRGB(255, 190, 80), Color3.fromRGB(255, 90, 30))
 	embers.LightEmission = 1
-	embers.Size = NumberSequence.new(0.18, 0)
+	embers.Size = NumberSequence.new(0.18 * scale, 0)
 	embers.Lifetime = NumberRange.new(1.2, 2)
-	embers.Speed = NumberRange.new(3, 6)
+	embers.Speed = NumberRange.new(3 * scale, 6 * scale)
 	embers.SpreadAngle = Vector2.new(25, 25)
 	embers.Acceleration = Vector3.new(0, 2, 0)
 	embers.Rate = 6
@@ -264,7 +268,9 @@ function ColosseumController.Start()
 		while true do
 			local here = myPosition()
 			for anchor, effects in fires do
-				local on = here ~= nil and (anchor.Position - here).Magnitude < SETTINGS.FireRange
+				local range = anchor:GetAttribute("FireRange")
+				local reach = if typeof(range) == "number" then range else SETTINGS.FireRange
+				local on = here ~= nil and (anchor.Position - here).Magnitude < reach
 				for _, effect in effects do
 					(effect :: any).Enabled = on
 				end

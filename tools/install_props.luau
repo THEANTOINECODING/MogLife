@@ -1,7 +1,8 @@
 --[[
 	Range les décors importés depuis Blender dans ServerStorage.Props (là où PropService et FurnitureService
 	les cherchent). À coller dans la barre de commande de Studio (Affichage > Barre de commande), en mode édition,
-	juste après l'import de assets/export/props/MogLife_AllProps.fbx, MogLife_Buildings.fbx, Props_Colosseum.fbx ou Props_Colosseum_Portal.fbx
+	juste après l'import de assets/export/props/MogLife_AllProps.fbx, MogLife_Buildings.fbx, Props_Colosseum.fbx, Props_Colosseum_Portal.fbx
+	ou Props_StatueWall.fbx
 	(Accueil > Importer 3D).
 
 	- Prend le modèle importé (« props », « MogLife_AllProps » ou « MogLife_Buildings » dans Workspace) et ses MeshParts.
@@ -21,7 +22,15 @@ local PALETTE = "rbxassetid://123907474681522" -- assets/export/props/MogProps_P
 -- Le Colisée du Pump (D89) et son portail (D105) ont leurs propres couleurs (grès, marbre, velums) : palette à part
 local COLOSSEUM_PALETTE = "rbxassetid://121502714741030" -- assets/export/props/Colosseum_Palette.png
 
-local imported = workspace:FindFirstChild("Props_Colosseum")
+-- Mur des Colosses (D107) : pas de texture, une matière Roblox par pièce selon la fin de son nom
+local STATUE_WALL = {
+	Gold = { Material = Enum.Material.Foil, Color = Color3.fromRGB(214, 164, 52) },
+	Glow = { Material = Enum.Material.Neon, Color = Color3.fromRGB(255, 196, 70) },
+	Marble = { Material = Enum.Material.Marble, Color = Color3.fromRGB(232, 228, 218) },
+}
+
+local imported = workspace:FindFirstChild("Props_StatueWall")
+	or workspace:FindFirstChild("Props_Colosseum")
 	or workspace:FindFirstChild("Props_Colosseum_Portal")
 	or workspace:FindFirstChild("props")
 	or workspace:FindFirstChild("MogLife_GymStations")
@@ -57,7 +66,16 @@ for _, part in imported:GetDescendants() do
 		end
 		part.Size *= scale
 		part.Anchored = true
-		if imported.Name == "Props_Colosseum" or imported.Name == "Props_Colosseum_Portal" then
+		if imported.Name == "Props_StatueWall" then
+			local look = if part.Name:match("_Gold$")
+				then STATUE_WALL.Gold
+				elseif part.Name:match("_Glow$") then STATUE_WALL.Glow
+				else STATUE_WALL.Marble
+			part.TextureID = ""
+			part.Material = look.Material
+			part.Color = look.Color
+			part.CastShadow = look ~= STATUE_WALL.Glow
+		elseif imported.Name == "Props_Colosseum" or imported.Name == "Props_Colosseum_Portal" then
 			part.TextureID = COLOSSEUM_PALETTE
 		elseif part.TextureID == "" then
 			part.TextureID = PALETTE

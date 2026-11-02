@@ -6,6 +6,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 
 local ProfileStore = require(ServerScriptService.ServerPackages.ProfileStore)
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 
 local STORE_NAME = "PlayerData_v1"
 
@@ -31,7 +32,7 @@ local function onPlayerAdded(player: Player)
 	})
 
 	if profile == nil then
-		player:Kick("Impossible de charger tes données. Reconnecte-toi.")
+		player:Kick(Texts.Get("Data.LoadFailed"))
 		return
 	end
 
@@ -40,7 +41,7 @@ local function onPlayerAdded(player: Player)
 
 	profile.OnSessionEnd:Connect(function()
 		profiles[player] = nil
-		player:Kick("Session terminée. Reconnecte-toi.")
+		player:Kick(Texts.Get("Data.SessionEnded"))
 	end)
 
 	if player.Parent == Players then

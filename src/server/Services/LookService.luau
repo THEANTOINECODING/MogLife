@@ -90,6 +90,10 @@ local function onSetLook(player: Player, raw: unknown, hair: unknown)
 	lastRequest[player] = now
 	local firstTime = not data.Look.Created
 	local look = Look.Sanitize(raw, Look.Sanitize(data.Look, nil), unlockedTitles(data))
+	-- Nouvelle couleur de cheveux choisie au créateur : la teinture du coiffeur (D106) l'aurait cachée, on la retire
+	if look.Hair ~= data.Look.Hair then
+		look.Dye = ""
+	end
 	look.Created = true
 	data.Look = look
 	local ok, hairId = validHair(data, hair)

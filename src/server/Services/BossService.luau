@@ -44,6 +44,7 @@ local PumpGodService
 local spots: { [string]: { BasePart } } = {}
 local models: { [BasePart]: Model } = {}
 local fights: { [Player]: Fight } = {}
+local lastChallenge: { [Player]: number } = {}
 
 local BossService = {}
 
@@ -350,6 +351,11 @@ local function onChallenge(player: Player, bossId: unknown)
 	if typeof(bossId) ~= "string" or fights[player] or MinigameService.IsBusy(player) then
 		return
 	end
+	local now = os.clock()
+	if now - (lastChallenge[player] or -math.huge) < BOSS.ChallengeCooldown then
+		return
+	end
+	lastChallenge[player] = now
 	local spot = nearestSpot(player, bossId)
 	if not spot then
 		return
@@ -441,9 +447,10 @@ local function setupSpot(spot: Instance)
 	end)
 end
 
--- Le joueur est-il en plein Mog-off (y compris entre deux manches) ?
+-- Le joueur est-il en plein Mog-off (y compris entre deux manches), ou au combat du Dieu du Pump au Colisée ?
+-- (bus, maison, portails, duels et bancs le refusent : sinon on fuirait un combat perdu sans perdre de Mog)
 function BossService.IsFighting(player: Player): boolean
-	return fights[player] ~= nil
+	return fights[player] ~= nil or PumpGodService.IsFighting(player)
 end
 
 -- Envoie la fenêtre de défi au joueur (prompt du boss ; aussi utilisé par les tests de DevService)
@@ -518,7 +525,10 @@ function BossService.Start()
 	end)
 	CollectionService:GetInstanceAddedSignal(SPOT_TAG):Connect(setupSpot)
 	Remotes.ChallengeBoss.OnServerEvent:Connect(onChallenge)
-	Players.PlayerRemoving:Connect(endFight)
+	Players.PlayerRemoving:Connect(function(player)
+		lastChallenge[player] = nil
+		endFight(player)
+	end)
 end
 
 return BossService

@@ -82,6 +82,11 @@ local function finish(player: Player, helpId: string, reason: string): { [string
 	end
 	if cash > 0 then
 		StatsService.Add(player, "Cash", cash)
+		-- Le délai part dès qu'une aide a rapporté, même arrêtée avant la fin : sinon on referait la même aide en
+		-- boucle (arrêter juste avant la dernière répétition) sans jamais attendre
+		readyAt[player] = readyAt[player] or {}
+		readyAt[player][helpId] = workspace:GetServerTimeNow() + Balance.Helps.Cooldown
+		sendState(player)
 	end
 
 	if completed then
@@ -91,9 +96,6 @@ local function finish(player: Player, helpId: string, reason: string): { [string
 			if flawless then
 				WeeklyService.Track(player, "FlawlessHelps")
 			end
-			readyAt[player] = readyAt[player] or {}
-			readyAt[player][helpId] = workspace:GetServerTimeNow() + Balance.Helps.Cooldown
-			sendState(player)
 		end
 		Remotes.Notify:FireClient(player, {
 			key = if cash == 0 then "Help.Failed" elseif firstTime then "Help.Done" else "Help.Thanks",

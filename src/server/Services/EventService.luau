@@ -106,14 +106,20 @@ local function announce(kind: string, state: string, extra: { [string]: any }?)
 	Remotes.CityEvent:FireAllClients(message)
 end
 
-local function playerFromHit(hit: BasePart): Player?
+-- Joueur vivant qui touche `prop`. Le contact est signalé par le client du joueur : on vérifie aussi que son corps
+-- est vraiment à côté (un tricheur ne ramasse pas tout depuis l'autre bout de la ville)
+local function playerFromHit(hit: BasePart, prop: BasePart): Player?
 	local character = hit.Parent
 	local player = character and Players:GetPlayerFromCharacter(character)
 	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-	if player and humanoid and humanoid.Health > 0 then
-		return player
+	local root = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
+	if not player or not humanoid or humanoid.Health <= 0 or not root then
+		return nil
 	end
-	return nil
+	if (root.Position - prop.Position).Magnitude > prop.Size.Magnitude / 2 + Events.TouchReach then
+		return nil
+	end
+	return player
 end
 
 local finish: () -> ()
@@ -158,7 +164,7 @@ local function goldenDumbbells(event: Event)
 				local taken = false
 				part.CanTouch = true
 				part.Touched:Connect(function(hit)
-					local player = playerFromHit(hit)
+					local player = playerFromHit(hit, part)
 					if taken or not player then
 						return
 					end
@@ -229,7 +235,7 @@ local function freeShakes(event: Event)
 					announce("FreeShakes", "Landed", { position = part.Position })
 				end)
 				part.Touched:Connect(function(hit)
-					local player = playerFromHit(hit)
+					local player = playerFromHit(hit, part)
 					if not player or not part.Parent then
 						return
 					end

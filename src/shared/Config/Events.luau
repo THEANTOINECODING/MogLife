@@ -13,6 +13,7 @@ return {
 	Interval = { 540, 720 }, -- secondes entre deux événements (au hasard dans cet intervalle)
 	Center = Vector3.new(0, 0, 0), -- centre de la ville (la place et sa fontaine)
 	EndDelay = 5, -- secondes entre la fin d'un événement réussi (piano arrêté, tout ramassé) et sa clôture
+	TouchReach = 10, -- studs : un objet à ramasser ne compte que si le joueur est vraiment à côté (anti-triche)
 
 	GoldenDumbbells = {
 		Count = 8,

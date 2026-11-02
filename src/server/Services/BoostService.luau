@@ -75,12 +75,18 @@ local function onBuy(player: Player, boostId: unknown)
 		return
 	end
 
-	StatsService.Add(player, "Cash", -boost.price)
 	local now = os.time()
 	local currentId, endsAt = BoostService.Active(player)
 	-- Même boost : on prolonge ; autre boost : il remplace l'ancien
 	local start = if currentId == boostId then endsAt else now
-	data.Boost = { Id = boostId, EndsAt = math.min(start + boost.duration, now + Balance.BoostShop.MaxDuration) }
+	local ends = math.min(start + boost.duration, now + Balance.BoostShop.MaxDuration)
+	-- Déjà presque au maximum : on ne fait pas payer un prolongement qui ne servirait à rien
+	if ends - start < boost.duration * Balance.BoostShop.MinExtension then
+		Remotes.Notify:FireClient(player, { key = "Boost.Full" })
+		return
+	end
+	StatsService.Add(player, "Cash", -boost.price)
+	data.Boost = { Id = boostId, EndsAt = ends }
 	sendState(player)
 	Remotes.Notify:FireClient(player, {
 		key = "Boost.Bought",

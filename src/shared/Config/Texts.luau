@@ -99,6 +99,10 @@ local STRINGS: { [string]: string } = {
 	["Boost.Extend"] = "Extend: {price}",
 	["Boost.Locked"] = "Unlocked at stage {stage}.",
 	["Boost.Bought"] = "{boost}: boost active for {minutes} min!",
+	["Boost.Full"] = "Your boost is already maxed out! Come back when it runs low.",
+	-- Sauvegarde (message d'expulsion de DataService)
+	["Data.LoadFailed"] = "We couldn't load your save. Please rejoin!",
+	["Data.SessionEnded"] = "Your save was opened in another server. Please rejoin!",
 	["Boost.Active"] = "{boost} x{multiplier}",
 	["Boost.ProteinShake"] = "Protein Shake",
 	["Boost.TurboJuice"] = "Turbo Kale Juice",
