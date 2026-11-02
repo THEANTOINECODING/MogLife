@@ -410,6 +410,10 @@ export type FollowOptions = {
 	points: () -> { Vector3 }, -- points du corps à garder visibles (estompage, contrôle de l'angle)
 	ignore: () -> { Instance }, -- objets qui ne gênent jamais (station, objet tenu, boss)
 	enterTime: number?, -- secondes pour arriver depuis la caméra du joueur
+	-- Plan fixe (combat de boss) : la caméra ne suit pas le sujet et ne change d'angle que si l'écran tourne ou si
+	-- l'interface prend plus de place qu'au moment du cadrage (une fois, au début de la 1re manche) ; jamais quand
+	-- elle en reprend moins (entre deux manches), ni pour un décor qui passe devant
+	fixed: boolean?,
 }
 
 local REPLAN_MOVE = 4 -- studs : le sujet s'est vraiment déplacé, l'angle est recalculé
@@ -471,23 +475,30 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 		end
 		local now = os.clock()
 		-- Suit les vrais déplacements, en douceur (pas les mouvements des répétitions : la racine bouge peu)
-		smoothAnchor = smoothAnchor:Lerp(anchor, math.min(dt * 3, 1))
+		if not options.fixed then
+			smoothAnchor = smoothAnchor:Lerp(anchor, math.min(dt * 3, 1))
+		end
 		-- Écran tourné, interface du mini-jeu vraiment déplacée, vrai déplacement : nouvel angle. Les petits
 		-- changements de l'interface (texte qui change de taille) ne bougent pas la caméra (D87)
 		local low, high = CameraFraming.FreeArea()
 		local tolerance = camera.ViewportSize.Magnitude * AREA_TOLERANCE
+		local areaChanged = if options.fixed
+			then math.max(low.X - areaLow.X, low.Y - areaLow.Y, areaHigh.X - high.X, areaHigh.Y - high.Y) > tolerance
+			else (low - areaLow).Magnitude > tolerance or (high - areaHigh).Magnitude > tolerance
 		if
 			camera.ViewportSize ~= viewport
-			or (low - areaLow).Magnitude > tolerance
-			or (high - areaHigh).Magnitude > tolerance
-			or (anchor - planned).Magnitude > REPLAN_MOVE
+			or areaChanged
+			or (not options.fixed and (anchor - planned).Magnitude > REPLAN_MOVE)
 		then
+			if options.fixed then
+				smoothAnchor = anchor
+			end
 			viewport = camera.ViewportSize
 			areaLow, areaHigh = low, high
 			replan(anchor)
 		end
 		-- Contrôle de visibilité : si un grand décor cache le corps trop longtemps, nouvel angle
-		if now >= nextCheck then
+		if not options.fixed and now >= nextCheck then
 			nextCheck = now + BLOCK_CHECK
 			local ignore = ignoreList(options.ignore())
 			local seen = visibleShare(camera.CFrame.Position, options.points(), ignore, true)

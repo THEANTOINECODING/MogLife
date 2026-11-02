@@ -51688,9 +51688,9 @@
     "CFrame": {
      "CFrame": {
       "position": [
-       -257.168,
+       -249.39,
        3.15,
-       -279.795
+       -287.574
       ],
       "orientation": [
        [
@@ -51757,9 +51757,9 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         -258.37,
+         -250.592,
          3.1,
-         -280.29
+         -288.069
         ],
         "orientation": [
          [
@@ -52309,14 +52309,14 @@
     "Anchored": true,
     "Size": [
      12,
-     0.2,
+     0.23,
      6.02
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -214.107,
-       0.2,
+       0.215,
        -214.107
       ],
       "orientation": [
@@ -52450,14 +52450,14 @@
     "Anchored": true,
     "Size": [
      12,
-     0.2,
+     0.23,
      6.02
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -218.349,
-       0.2,
+       0.185,
        -218.349
       ],
       "orientation": [
@@ -52732,14 +52732,14 @@
     "Anchored": true,
     "Size": [
      12,
-     0.2,
+     0.23,
      6.02
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -226.835,
-       0.2,
+       0.215,
        -226.835
       ],
       "orientation": [
@@ -52873,14 +52873,14 @@
     "Anchored": true,
     "Size": [
      12,
-     0.2,
+     0.23,
      6.02
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -231.077,
-       0.2,
+       0.185,
        -231.077
       ],
       "orientation": [
@@ -53014,14 +53014,14 @@
     "Anchored": true,
     "Size": [
      12,
-     0.2,
+     0.23,
      6.02
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -235.32,
-       0.2,
+       0.215,
        -235.32
       ],
       "orientation": [
@@ -53155,14 +53155,14 @@
     "Anchored": true,
     "Size": [
      12,
-     0.2,
+     0.23,
      6.02
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -239.562,
-       0.2,
+       0.185,
        -239.562
       ],
       "orientation": [
@@ -53437,14 +53437,14 @@
     "Anchored": true,
     "Size": [
      12,
-     0.2,
+     0.23,
      6.02
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -248.048,
-       0.2,
+       0.215,
        -248.048
       ],
       "orientation": [
@@ -53578,14 +53578,14 @@
     "Anchored": true,
     "Size": [
      12,
-     0.2,
+     0.23,
      6.02
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -252.29,
-       0.2,
+       0.185,
        -252.29
       ],
       "orientation": [

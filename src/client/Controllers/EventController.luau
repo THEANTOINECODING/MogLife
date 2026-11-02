@@ -26,17 +26,32 @@ local timerLabel: TextLabel
 local counterLabel: TextLabel
 local timeBar: Frame
 local current: { kind: string, endsAt: number, startedAt: number }? = nil
-local inRun = false -- pendant une série ou un combat, le bandeau laisse la place aux textes du mini-jeu
+local markers: { BillboardGui } = {}
+local busySignal = Instance.new("BindableEvent")
 
 local EventController = {}
+
+-- Occupé (série, aide, combat de boss du début à la fin, Dieu du Pump, duel) : l'événement ne se montre pas du tout
+-- (ni bandeau, ni repères, ni messages, ni spectacle) ; il revient à la fin s'il dure encore.
+local BUSY_ATTRIBUTES = { "InRun", "InFight", "InDuel" }
+function EventController.IsBusy(): boolean
+	for _, attribute in BUSY_ATTRIBUTES do
+		if player:GetAttribute(attribute) then
+			return true
+		end
+	end
+	return false
+end
+EventController.BusyChanged = busySignal.Event
 
 -- Repère visible de loin au-dessus d'un objet de l'événement
 local function addMarker(object: Instance)
 	if not object:IsA("BasePart") then
 		return
 	end
-	Ui.create("BillboardGui", {
+	local marker = Ui.create("BillboardGui", {
 		Name = "EventMarker",
+		Enabled = not EventController.IsBusy(),
 		Size = UDim2.fromOffset(46, 46),
 		StudsOffsetWorldSpace = Vector3.new(0, object.Size.Y / 2 + 2.5, 0),
 		AlwaysOnTop = true,
@@ -51,6 +66,13 @@ local function addMarker(object: Instance)
 			TextColor3 = GOLD,
 		}),
 	})
+	table.insert(markers, marker)
+	marker.Destroying:Connect(function()
+		local index = table.find(markers, marker)
+		if index then
+			table.remove(markers, index)
+		end
+	end)
 end
 
 -- Ce qu'il reste à faire : haltères et shakes encore dans la ville, plaquages avant que le piano s'arrête
@@ -78,7 +100,7 @@ local function hideBanner()
 end
 
 local function showBanner(kind: string)
-	if inRun then
+	if EventController.IsBusy() then
 		return
 	end
 	titleLabel.Text = Texts.Get(`Event.{kind}.Title`)
@@ -102,7 +124,7 @@ local function onEvent(message)
 	elseif message.state == "Ended" then
 		current = nil
 		hideBanner()
-	elseif message.state == "Stopped" and message.name then
+	elseif message.state == "Stopped" and message.name and not EventController.IsBusy() then
 		UIController.Toast(Texts.Get("Event.RunawayPiano.Stopped", { name = message.name }))
 	end
 end
@@ -173,30 +195,28 @@ function EventController.Start()
 	end
 	CollectionService:GetInstanceAddedSignal(EVENT_TAG):Connect(addMarker)
 	Remotes.CityEvent.OnClientEvent:Connect(onEvent)
-	-- Pendant ses séries et combats, le bandeau se range ; il revient après si l'événement dure encore
-	Remotes.SeriesUpdate.OnClientEvent:Connect(function(update)
-		if update.state == "Started" then
-			inRun = true
-			if current then
+	local wasBusy = EventController.IsBusy()
+	local function refreshBusy()
+		local busy = EventController.IsBusy()
+		if busy == wasBusy then
+			return
+		end
+		wasBusy = busy
+		for _, marker in markers do
+			marker.Enabled = not busy
+		end
+		if current then
+			if busy then
 				hideBanner()
-			end
-		elseif update.state == "Ended" and update.kind ~= "Boss" then
-			inRun = false
-			if current then
+			else
 				showBanner(current.kind)
 			end
 		end
-	end)
-	-- Combat de boss : plusieurs manches à la suite, le bandeau ne revient qu'à la fin du combat
-	Remotes.BossUpdate.OnClientEvent:Connect(function(update)
-		local state = update.state
-		if state == "Victory" or state == "Defeat" or state == "Aborted" then
-			inRun = false
-			if current then
-				showBanner(current.kind)
-			end
-		end
-	end)
+		busySignal:Fire(busy)
+	end
+	for _, attribute in BUSY_ATTRIBUTES do
+		player:GetAttributeChangedSignal(attribute):Connect(refreshBusy)
+	end
 	task.spawn(function()
 		while true do
 			task.wait(0.25)

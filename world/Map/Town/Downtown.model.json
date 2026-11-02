@@ -10572,15 +10572,15 @@
     "Anchored": true,
     "Size": [
      1.67,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -58.725,
-       11.868,
-       105.644
+       11.91,
+       105.662
       ],
       "orientation": [
        [
@@ -10666,15 +10666,15 @@
     "Anchored": true,
     "Size": [
      1.67,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -60.375,
-       11.868,
-       105.644
+       11.896,
+       105.656
       ],
       "orientation": [
        [
@@ -10760,7 +10760,7 @@
     "Anchored": true,
     "Size": [
      1.67,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
@@ -10854,15 +10854,15 @@
     "Anchored": true,
     "Size": [
      1.67,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -63.675,
-       11.868,
-       105.644
+       11.84,
+       105.632
       ],
       "orientation": [
        [
@@ -12264,14 +12264,14 @@
     "Anchored": true,
     "Size": [
      2.6,
-     1.6,
+     1.63,
      1.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -69.8,
-       0.9,
+       0.885,
        105.4
       ],
       "orientation": [
@@ -13000,14 +13000,14 @@
     "Anchored": true,
     "Size": [
      2.6,
-     1.6,
+     1.63,
      1.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -86.2,
-       0.9,
+       0.885,
        105.4
       ],
       "orientation": [
@@ -13783,14 +13783,14 @@
     "Anchored": true,
     "Size": [
      4.4,
-     0.3,
+     0.33,
      3.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -90.32,
-       16.85,
+       16.835,
        80.44
       ],
       "orientation": [
@@ -14353,14 +14353,14 @@
     "Anchored": true,
     "Size": [
      4.4,
-     0.3,
+     0.33,
      3.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -64.8,
-       16.85,
+       16.835,
        90.7
       ],
       "orientation": [
@@ -14731,14 +14731,14 @@
     "Anchored": true,
     "Size": [
      6,
-     0.7,
+     0.73,
      4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -66.56,
-       17.05,
+       17.035,
        76.64
       ],
       "orientation": [
@@ -15783,14 +15783,14 @@
       "Anchored": true,
       "Size": [
        9,
-       11,
+       11.03,
        0.3
       ],
       "CFrame": {
        "CFrame": {
         "position": [
          -66.0,
-         5.6,
+         5.585,
          67.1
         ],
         "orientation": [
@@ -15889,14 +15889,14 @@
       "Anchored": true,
       "Size": [
        9,
-       11,
+       11.03,
        0.3
       ],
       "CFrame": {
        "CFrame": {
         "position": [
          -78.0,
-         5.6,
+         5.585,
          67.1
         ],
         "orientation": [
@@ -17141,15 +17141,15 @@
     "Anchored": true,
     "Size": [
      1.72,
-     0.2,
+     0.23,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -37.95,
-       10.368,
-       105.644
+       10.382,
+       105.65
       ],
       "orientation": [
        [
@@ -17235,15 +17235,15 @@
     "Anchored": true,
     "Size": [
      1.72,
-     0.2,
+     0.23,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -39.65,
-       10.368,
-       105.644
+       10.354,
+       105.638
       ],
       "orientation": [
        [
@@ -17329,15 +17329,15 @@
     "Anchored": true,
     "Size": [
      1.72,
-     0.2,
+     0.23,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -41.35,
-       10.368,
-       105.644
+       10.382,
+       105.65
       ],
       "orientation": [
        [
@@ -17423,15 +17423,15 @@
     "Anchored": true,
     "Size": [
      1.72,
-     0.2,
+     0.23,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -43.05,
-       10.368,
-       105.644
+       10.354,
+       105.638
       ],
       "orientation": [
        [
@@ -17705,14 +17705,14 @@
     "Anchored": true,
     "Size": [
      2.6,
-     1.6,
+     1.63,
      1.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -22.8,
-       0.9,
+       0.885,
        105.4
       ],
       "orientation": [
@@ -18441,14 +18441,14 @@
     "Anchored": true,
     "Size": [
      2.6,
-     1.6,
+     1.63,
      1.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -37.2,
-       0.9,
+       0.885,
        105.4
       ],
       "orientation": [
@@ -19224,14 +19224,14 @@
     "Anchored": true,
     "Size": [
      4.4,
-     0.3,
+     0.33,
      3.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -40.08,
-       14.85,
+       14.835,
        84.16
       ],
       "orientation": [
@@ -19794,14 +19794,14 @@
     "Anchored": true,
     "Size": [
      3,
-     0.6,
+     0.63,
      3
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -19.92,
-       15.0,
+       14.985,
        84.8
       ],
       "orientation": [
@@ -21874,15 +21874,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        57.756,
-       12.868,
-       105.644
+       12.91,
+       105.662
       ],
       "orientation": [
        [
@@ -21968,15 +21968,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        56.067,
-       12.868,
-       105.644
+       12.91,
+       105.662
       ],
       "orientation": [
        [
@@ -22062,15 +22062,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        54.378,
-       12.868,
-       105.644
+       12.91,
+       105.662
       ],
       "orientation": [
        [
@@ -22156,15 +22156,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        52.689,
-       12.868,
-       105.644
+       12.91,
+       105.662
       ],
       "orientation": [
        [
@@ -22250,15 +22250,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        51.0,
-       12.868,
-       105.644
+       12.91,
+       105.662
       ],
       "orientation": [
        [
@@ -22344,15 +22344,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        49.311,
-       12.868,
-       105.644
+       12.91,
+       105.662
       ],
       "orientation": [
        [
@@ -22438,15 +22438,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        47.622,
-       12.868,
-       105.644
+       12.896,
+       105.656
       ],
       "orientation": [
        [
@@ -22532,7 +22532,7 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
@@ -22626,15 +22626,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        44.244,
-       12.868,
-       105.644
+       12.84,
+       105.632
       ],
       "orientation": [
        [
@@ -22814,15 +22814,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        27.756,
-       12.868,
-       105.644
+       12.91,
+       105.662
       ],
       "orientation": [
        [
@@ -22908,15 +22908,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        26.067,
-       12.868,
-       105.644
+       12.91,
+       105.662
       ],
       "orientation": [
        [
@@ -23002,15 +23002,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        24.378,
-       12.868,
-       105.644
+       12.91,
+       105.662
       ],
       "orientation": [
        [
@@ -23096,15 +23096,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        22.689,
-       12.868,
-       105.644
+       12.91,
+       105.662
       ],
       "orientation": [
        [
@@ -23190,15 +23190,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        21.0,
-       12.868,
-       105.644
+       12.91,
+       105.662
       ],
       "orientation": [
        [
@@ -23284,15 +23284,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        19.311,
-       12.868,
-       105.644
+       12.896,
+       105.656
       ],
       "orientation": [
        [
@@ -23378,7 +23378,7 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
@@ -23472,15 +23472,15 @@
     "Anchored": true,
     "Size": [
      1.709,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        15.933,
-       12.868,
-       105.644
+       12.84,
+       105.632
       ],
       "orientation": [
        [
@@ -23754,14 +23754,14 @@
     "Anchored": true,
     "Size": [
      2.6,
-     1.6,
+     1.63,
      1.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        45.2,
-       0.9,
+       0.885,
        105.4
       ],
       "orientation": [
@@ -24490,14 +24490,14 @@
     "Anchored": true,
     "Size": [
      2.6,
-     1.6,
+     1.63,
      1.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        26.8,
-       0.9,
+       0.885,
        105.4
       ],
       "orientation": [
@@ -25273,14 +25273,14 @@
     "Anchored": true,
     "Size": [
      4.4,
-     0.3,
+     0.33,
      3.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        22.56,
-       16.85,
+       16.835,
        80.44
       ],
       "orientation": [
@@ -25843,14 +25843,14 @@
     "Anchored": true,
     "Size": [
      4.4,
-     0.3,
+     0.33,
      3.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        50.4,
-       16.85,
+       16.835,
        90.7
       ],
       "orientation": [
@@ -26221,14 +26221,14 @@
     "Anchored": true,
     "Size": [
      6,
-     0.7,
+     0.73,
      4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        48.48,
-       17.05,
+       17.035,
        76.64
       ],
       "orientation": [
@@ -26411,14 +26411,14 @@
     "Size": [
      1.2,
      3,
-     5
+     5.03
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        40.9,
        19.6,
-       101.8
+       101.785
       ],
       "orientation": [
        [
@@ -26458,14 +26458,14 @@
     "Size": [
      1.2,
      3,
-     5
+     5.03
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        31.1,
        19.6,
-       101.8
+       101.785
       ],
       "orientation": [
        [
@@ -27971,15 +27971,15 @@
     "Anchored": true,
     "Size": [
      1.62,
-     0.2,
+     0.23,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        97.8,
-       9.868,
-       105.644
+       9.882,
+       105.65
       ],
       "orientation": [
        [
@@ -28065,15 +28065,15 @@
     "Anchored": true,
     "Size": [
      1.62,
-     0.2,
+     0.23,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        96.2,
-       9.868,
-       105.644
+       9.854,
+       105.638
       ],
       "orientation": [
        [
@@ -28159,15 +28159,15 @@
     "Anchored": true,
     "Size": [
      1.62,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        94.6,
-       9.868,
-       105.644
+       9.896,
+       105.656
       ],
       "orientation": [
        [
@@ -28253,7 +28253,7 @@
     "Anchored": true,
     "Size": [
      1.62,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
@@ -28347,15 +28347,15 @@
     "Anchored": true,
     "Size": [
      1.62,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        91.4,
-       9.868,
-       105.644
+       9.84,
+       105.632
       ],
       "orientation": [
        [
@@ -28441,15 +28441,15 @@
     "Anchored": true,
     "Size": [
      1.62,
-     0.2,
+     0.23,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        89.8,
-       9.868,
-       105.644
+       9.882,
+       105.65
       ],
       "orientation": [
        [
@@ -28535,15 +28535,15 @@
     "Anchored": true,
     "Size": [
      1.62,
-     0.2,
+     0.23,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        88.2,
-       9.868,
-       105.644
+       9.854,
+       105.638
       ],
       "orientation": [
        [
@@ -28723,15 +28723,15 @@
     "Anchored": true,
     "Size": [
      1.62,
-     0.2,
+     0.23,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        75.8,
-       9.868,
-       105.644
+       9.882,
+       105.65
       ],
       "orientation": [
        [
@@ -28817,15 +28817,15 @@
     "Anchored": true,
     "Size": [
      1.62,
-     0.2,
+     0.23,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        74.2,
-       9.868,
-       105.644
+       9.854,
+       105.638
       ],
       "orientation": [
        [
@@ -28911,15 +28911,15 @@
     "Anchored": true,
     "Size": [
      1.62,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        72.6,
-       9.868,
-       105.644
+       9.896,
+       105.656
       ],
       "orientation": [
        [
@@ -29005,7 +29005,7 @@
     "Anchored": true,
     "Size": [
      1.62,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
@@ -29099,15 +29099,15 @@
     "Anchored": true,
     "Size": [
      1.62,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        69.4,
-       9.868,
-       105.644
+       9.84,
+       105.632
       ],
       "orientation": [
        [
@@ -29193,15 +29193,15 @@
     "Anchored": true,
     "Size": [
      1.62,
-     0.2,
+     0.23,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        67.8,
-       9.868,
-       105.644
+       9.882,
+       105.65
       ],
       "orientation": [
        [
@@ -29287,15 +29287,15 @@
     "Anchored": true,
     "Size": [
      1.62,
-     0.2,
+     0.23,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        66.2,
-       9.868,
-       105.644
+       9.854,
+       105.638
       ],
       "orientation": [
        [
@@ -29475,14 +29475,14 @@
     "Anchored": true,
     "Size": [
      2.6,
-     1.6,
+     1.63,
      1.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        90.2,
-       0.9,
+       0.885,
        105.4
       ],
       "orientation": [
@@ -30211,7 +30211,7 @@
     "Anchored": true,
     "Size": [
      2.6,
-     1.6,
+     1.66,
      1.6
     ],
     "CFrame": {
@@ -30994,14 +30994,14 @@
     "Anchored": true,
     "Size": [
      4.4,
-     0.3,
+     0.33,
      3.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        71.92,
-       14.85,
+       14.835,
        84.16
       ],
       "orientation": [
@@ -31564,14 +31564,14 @@
     "Anchored": true,
     "Size": [
      3,
-     0.6,
+     0.63,
      3
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        92.08,
-       15.0,
+       14.985,
        84.8
       ],
       "orientation": [
@@ -31611,14 +31611,14 @@
     "Anchored": true,
     "Size": [
      3,
-     2,
+     2.03,
      2.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        96.0,
-       1.1,
+       1.085,
        101.5
       ],
       "orientation": [
@@ -31705,14 +31705,14 @@
     "Anchored": true,
     "Size": [
      3,
-     2,
+     2.03,
      2.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        92.6,
-       1.1,
+       1.085,
        101.5
       ],
       "orientation": [
@@ -31799,14 +31799,14 @@
     "Anchored": true,
     "Size": [
      3,
-     2,
+     2.03,
      2.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        74.0,
-       1.1,
+       1.085,
        101.5
       ],
       "orientation": [
@@ -31893,14 +31893,14 @@
     "Anchored": true,
     "Size": [
      3,
-     2,
+     2.03,
      2.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        70.6,
-       1.1,
+       1.085,
        101.5
       ],
       "orientation": [
@@ -33142,15 +33142,15 @@
    "properties": {
     "Anchored": true,
     "Size": [
-     7,
-     0.4,
+     7.06,
+     0.43,
      0.3
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        70.3,
-       0.6,
+       0.585,
        95.4
       ],
       "orientation": [
@@ -34232,14 +34232,14 @@
     "Anchored": true,
     "Size": [
      0.9,
-     0.06,
+     0.09,
      0.9
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        69.2,
-       3.83,
+       3.815,
        96.55
       ],
       "orientation": [
@@ -35148,12 +35148,12 @@
     "Size": [
      5.8,
      0.08,
-     0.7
+     0.73
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       65.35,
+       65.365,
        1.65,
        95.4
       ],
@@ -35484,12 +35484,12 @@
     "Size": [
      5.8,
      0.08,
-     0.7
+     0.73
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       65.35,
+       65.365,
        3.1,
        95.4
       ],
@@ -35820,12 +35820,12 @@
     "Size": [
      5.8,
      0.08,
-     0.7
+     0.73
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       65.35,
+       65.365,
        4.55,
        95.4
       ],
@@ -36156,12 +36156,12 @@
     "Size": [
      5.8,
      0.08,
-     0.7
+     0.73
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       65.35,
+       65.365,
        6.0,
        95.4
       ],
@@ -37682,14 +37682,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.656,
+       12.896,
        -87.818
       ],
       "orientation": [
@@ -37776,7 +37776,7 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
@@ -37870,14 +37870,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.632,
+       12.84,
        -84.691
       ],
       "orientation": [
@@ -37964,14 +37964,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.662,
+       12.91,
        -83.127
       ],
       "orientation": [
@@ -38058,14 +38058,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.662,
+       12.91,
        -81.564
       ],
       "orientation": [
@@ -38152,14 +38152,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.656,
+       12.896,
        -80.0
       ],
       "orientation": [
@@ -38246,7 +38246,7 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
@@ -38340,14 +38340,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.632,
+       12.84,
        -76.873
       ],
       "orientation": [
@@ -38434,14 +38434,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.656,
+       12.896,
        -75.309
       ],
       "orientation": [
@@ -38528,7 +38528,7 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
@@ -38622,14 +38622,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.632,
+       12.84,
        -72.182
       ],
       "orientation": [
@@ -38810,14 +38810,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.656,
+       12.896,
        -35.818
       ],
       "orientation": [
@@ -38904,7 +38904,7 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
@@ -38998,14 +38998,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.632,
+       12.84,
        -32.691
       ],
       "orientation": [
@@ -39092,14 +39092,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.662,
+       12.91,
        -31.127
       ],
       "orientation": [
@@ -39186,14 +39186,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.662,
+       12.91,
        -29.564
       ],
       "orientation": [
@@ -39280,14 +39280,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.662,
+       12.91,
        -28.0
       ],
       "orientation": [
@@ -39374,14 +39374,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.662,
+       12.91,
        -26.436
       ],
       "orientation": [
@@ -39468,14 +39468,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.29,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.662,
+       12.91,
        -24.873
       ],
       "orientation": [
@@ -39562,14 +39562,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.656,
+       12.896,
        -23.309
       ],
       "orientation": [
@@ -39656,7 +39656,7 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
@@ -39750,14 +39750,14 @@
     "Anchored": true,
     "Size": [
      1.584,
-     0.2,
+     0.26,
      3.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       105.644,
-       12.868,
+       105.632,
+       12.84,
        -20.182
       ],
       "orientation": [
@@ -39938,14 +39938,14 @@
     "Anchored": true,
     "Size": [
      2.6,
-     1.6,
+     1.63,
      1.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        105.4,
-       0.9,
+       0.885,
        -66.2
       ],
       "orientation": [
@@ -40674,14 +40674,14 @@
     "Anchored": true,
     "Size": [
      2.6,
-     1.6,
+     1.63,
      1.6
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        105.4,
-       0.9,
+       0.885,
        -41.8
       ],
       "orientation": [
@@ -41457,14 +41457,14 @@
     "Anchored": true,
     "Size": [
      4.4,
-     0.3,
+     0.33,
      3.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        74.24,
-       20.85,
+       20.835,
        -30.48
       ],
       "orientation": [
@@ -42027,14 +42027,14 @@
     "Anchored": true,
     "Size": [
      4.4,
-     0.3,
+     0.33,
      3.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        87.2,
-       20.85,
+       20.835,
        -79.2
       ],
       "orientation": [
@@ -42405,14 +42405,14 @@
     "Anchored": true,
     "Size": [
      6,
-     0.7,
+     0.73,
      4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        69.44,
-       21.05,
+       21.035,
        -75.84
       ],
       "orientation": [
@@ -47183,7 +47183,7 @@
    "properties": {
     "Anchored": true,
     "Size": [
-     64,
+     64.06,
      0.12,
      4
     ],
@@ -47231,14 +47231,14 @@
     "Anchored": true,
     "Size": [
      16,
-     0.8,
+     0.83,
      14
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -52.0,
-       0.5,
+       0.485,
        24.0
       ],
       "orientation": [
@@ -48122,14 +48122,14 @@
     "Anchored": true,
     "Size": [
      2.0,
-     2.0,
+     2.03,
      2.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -98.6,
-       1.1,
+       1.085,
        50.0
       ],
       "orientation": [
@@ -48263,8 +48263,8 @@
     "Anchored": true,
     "Size": [
      0.8,
-     0.4,
-     0.6
+     0.34,
+     0.54
     ],
     "CFrame": {
      "CFrame": {
@@ -48357,8 +48357,8 @@
     "Anchored": true,
     "Size": [
      0.8,
-     0.4,
-     0.6
+     0.34,
+     0.54
     ],
     "CFrame": {
      "CFrame": {
@@ -48451,8 +48451,8 @@
     "Anchored": true,
     "Size": [
      0.8,
-     0.4,
-     0.6
+     0.34,
+     0.54
     ],
     "CFrame": {
      "CFrame": {
@@ -48545,8 +48545,8 @@
     "Anchored": true,
     "Size": [
      0.8,
-     0.4,
-     0.6
+     0.34,
+     0.54
     ],
     "CFrame": {
      "CFrame": {
@@ -48639,8 +48639,8 @@
     "Anchored": true,
     "Size": [
      0.8,
-     0.4,
-     0.6
+     0.34,
+     0.54
     ],
     "CFrame": {
      "CFrame": {
@@ -50273,14 +50273,14 @@
     "Anchored": true,
     "Size": [
      0.4,
-     9,
+     9.03,
      2
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -89.8,
-       4.6,
+       4.585,
        22.0
       ],
       "orientation": [
@@ -50530,9 +50530,9 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         -72.0,
+         -75.0,
          0.1,
-         14.0
+         17.0
         ],
         "orientation": [
          [
@@ -50899,14 +50899,14 @@
     "Anchored": true,
     "Size": [
      64,
-     0.12,
+     0.15,
      64
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -70.0,
-       0.16,
+       0.145,
        -70.0
       ],
       "orientation": [

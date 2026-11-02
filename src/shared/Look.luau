@@ -35,6 +35,7 @@ export type Piece = {
 	part: string, -- partie R15 à laquelle la pièce est soudée
 	offset: Vector3, -- décalage par rapport au centre de cette partie, au repos
 	tint: string?, -- "Skin", "Hair", "Eyes", "Top", "Shorts" ou nil (couleurs de la texture)
+	color: Color3?, -- couleur propre de l'objet (coupe ou barbe achetée), à la place de la teinte (D102)
 	key: string, -- nom de la pièce sans le corps (<Partie>[_<Groupe>]) : sa jumelle dans un autre corps a le même
 	item: string?, -- objet de style (nil pour le corps)
 }
@@ -215,6 +216,12 @@ function Look.Pieces(bodyKey: string, look: LookData, items: { string }, options
 		end
 	end
 	for _, itemId in items do
+		-- Coupe ou barbe achetée : elle garde la couleur montrée en boutique (crête rose, banane jaune) ; les coupes de
+		-- départ prennent la couleur de cheveux choisie à la création (D102)
+		local item = StyleItems[itemId]
+		local ownColor = if item and not item.starter
+			then item.swatch or (item.pieces[1] and item.pieces[1].color)
+			else nil
 		for key, offset in (StylePieces[bodyKey] and StylePieces[bodyKey][itemId]) or {} do
 			local split = string.split(key, "_")
 			local part = split[1]
@@ -224,7 +231,8 @@ function Look.Pieces(bodyKey: string, look: LookData, items: { string }, options
 					template = `{bodyKey}__{itemId}__{key}`,
 					part = part,
 					offset = offset,
-					tint = split[2],
+					tint = if ownColor and split[2] == "Hair" then nil else split[2],
+					color = if split[2] == "Hair" then ownColor else nil,
 					key = key,
 					item = itemId,
 				})

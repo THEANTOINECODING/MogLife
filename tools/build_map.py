@@ -1463,8 +1463,9 @@ def park():
     c.append(P(F, "DivingBoard", (-95.6, 2.1, 50), (5.6, 0.25, 1.6), (60, 130, 200)))
     for i in range(10):
         G = F.child((-80, 0.1, 51.5), i * 36)
-        c.append(P(G, f"PoolFloat{i}", (0, 1.55, -0.95), (0.8, 0.4, 0.6), ((235, 60, 60), WHITE)[i % 2],
-                   collide=False))
+        # bandes blanches un peu plus fines que les rouges : aucune face commune (pas de scintillement)
+        c.append(P(G, f"PoolFloat{i}", (0, 1.55, -0.95), (0.8, 0.4, 0.6) if i % 2 == 0 else (0.8, 0.34, 0.54),
+                   ((235, 60, 60), WHITE)[i % 2], collide=False))
     c.append(P(F, "PoolBall", (-89, 1.9, 48), (1.4, 1.4, 1.4), (250, 200, 50), shape="Ball", collide=False))
     c.append(P(F, "PoolLight", (-84, 1.0, 50), (0.4, 0.4, 0.4), WHITE, transparency=1, collide=False,
                tags=["StreetLight"], extra=INVISIBLE, children=[light((120, 210, 255), 2, 18)]))
@@ -1487,7 +1488,8 @@ def park():
     c.append(W(F, "TreehouseRoof", (-94, 13.75, 22), (7.6, 2.5, 7.6), (160, 60, 50), "WoodPlanks"))
     c.append(P(F, "Ladder", (-89.8, 4.5, 22), (0.4, 9, 2), WOOD_LIGHT, "WoodPlanks"))
     c.append(helper(F, "KidSpot", (-82, 0.6, 22), "Nails", yaw=-90))
-    for k, (x, z) in enumerate(((-100, 40), (-44, 58), (-72, 14))):
+    # (le 3e reculé en D102 : son feuillage avalait le lampadaire de l'avenue)
+    for k, (x, z) in enumerate(((-100, 40), (-44, 58), (-75, 17))):
         c += tree(F, f"ParkTree{k}", (x, 0, z), height=8 + (k % 3), radius=4 + (k % 2))
     c.append(decor(F, "PicnicSlot", (-60, 0.1, 60), "PicnicTable"))
     c.append(decor(F, "FlowersSlot", (-70, 0.1, 30), "FlowerPatch", collide=False))
@@ -1847,7 +1849,8 @@ def colosseum():
     c.append(P(F0, "ColosseumPortalBack", (14, 3, -(L["plaza_outer"] - 8)), (5, 6, 5), WHITE, transparency=1,
                collide=False, tags=["ColosseumPortal"], attributes={"Target": "Temple"}, extra={"CanTouch": False}))
     # Arrêt de bus du colisée (réseau de bus de la ville)
-    c += bus_stop(F0.child((-16, 0, -(L["plaza_outer"] - 9)), 0), "BusStopColosseum", (0, 0, 0), "Colosseum")
+    # à gauche de la statue d'entrée (D102 : l'abribus était dedans)
+    c += bus_stop(F0.child((-27, 0, -(L["plaza_outer"] - 9)), 0), "BusStopColosseum", (0, 0, 0), "Colosseum")
     c.append(landmark(F0, "ColosseumIcon", (0, L["facade_height"] + 12, 0), "Colosseum"))
 
     # --- porte triomphale dans la haie (coin sud-ouest) et voie bordée de colonnes
@@ -1922,14 +1925,120 @@ def colosseum():
     return model("Colosseum", c)
 
 # ------------------------------------------------------------------ écriture
+# ------------------------------------------------------------------ faces superposées (D102)
+ZFIGHT_EPS = 0.03  # studs : la plus petite pièce dépasse d'autant (invisible, mais plus de scintillement)
+
+
+def _blocks(node, out):
+    props = node.get("properties", {})
+    if node.get("className") == "Part" and props.get("Shape", "Block") == "Block"             and props.get("Transparency", 0) < 0.95 and "Size" in props:
+        out.append(node)
+    for child in node.get("children", []):
+        _blocks(child, out)
+    return out
+
+
+def _faces(node):
+    props = node["properties"]
+    pos = props["CFrame"]["CFrame"]["position"]
+    m = props["CFrame"]["CFrame"]["orientation"]
+    size = props["Size"]
+    axes = [[m[0][j], m[1][j], m[2][j]] for j in range(3)]
+    out = []
+    for i in range(3):
+        for sgn in (1, -1):
+            n = [a * sgn for a in axes[i]]
+            c = [pos[k] + n[k] * size[i] / 2 for k in range(3)]
+            others = [(axes[j], size[j] / 2) for j in range(3) if j != i]
+            out.append((i, sgn, n, c, others))
+    return out
+
+
+def _dot(a, b):
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+
+
+def _overlap(fa, fb):
+    area = 1.0
+    for axis, half in fa[4]:
+        ca = _dot(fa[3], axis)
+        cb = _dot(fb[3], axis)
+        eb = sum(abs(_dot(ax, axis)) * h for ax, h in fb[4])
+        o = min(ca + half, cb + eb) - max(ca - half, cb - eb)
+        if o <= 0.02:
+            return 0.0
+        area *= o
+    return area
+
+
+def separate_coplanar(root):
+    """Deux faces au même endroit, dans le même sens, de couleurs ou matières différentes : Roblox les fait
+    scintiller (elles « changent de couleur » quand la caméra bouge). La plus petite pièce dépasse un peu.
+    Renvoie le nombre de pièces décalées."""
+    parts = _blocks(root, [])
+    moved = 0
+    for _ in range(3):
+        grid = {}
+        boxes = []
+        for idx, node in enumerate(parts):
+            props = node["properties"]
+            pos, size = props["CFrame"]["CFrame"]["position"], props["Size"]
+            r = math.sqrt(sum(v * v for v in size)) / 2 + 0.05
+            lo = [int(math.floor((pos[k] - r) / 16)) for k in range(3)]
+            hi = [int(math.floor((pos[k] + r) / 16)) for k in range(3)]
+            boxes.append((pos, r))
+            for gx in range(lo[0], hi[0] + 1):
+                for gy in range(lo[1], hi[1] + 1):
+                    for gz in range(lo[2], hi[2] + 1):
+                        grid.setdefault((gx, gy, gz), []).append(idx)
+        pairs = set()
+        for cell in grid.values():
+            for a in range(len(cell)):
+                for b in range(a + 1, len(cell)):
+                    i, j = cell[a], cell[b]
+                    (pa, ra), (pb, rb) = boxes[i], boxes[j]
+                    if sum((pa[k] - pb[k]) ** 2 for k in range(3)) <= (ra + rb) ** 2:
+                        pairs.add((min(i, j), max(i, j)))
+        changed = 0
+        for i, j in sorted(pairs):
+            A, B = parts[i]["properties"], parts[j]["properties"]
+            if A["Color"] == B["Color"] and A["Material"] == B["Material"]:
+                continue
+            for fa in _faces(parts[i]):
+                hit = None
+                for fb in _faces(parts[j]):
+                    if _dot(fa[2], fb[2]) > 0.999 and abs(_dot([fb[3][k] - fa[3][k] for k in range(3)], fa[2])) < 0.01                             and _overlap(fa, fb) > 0.05:
+                        hit = fb
+                        break
+                if not hit:
+                    continue
+                vol = lambda P: P["Size"][0] * P["Size"][1] * P["Size"][2]
+                small, face = (parts[i], fa) if vol(A) <= vol(B) else (parts[j], hit)
+                props = small["properties"]
+                axis, n = face[0], face[2]
+                props["Size"][axis] = round(props["Size"][axis] + ZFIGHT_EPS, 3)
+                pos = props["CFrame"]["CFrame"]["position"]
+                props["CFrame"]["CFrame"]["position"] = [round(pos[k] + n[k] * ZFIGHT_EPS / 2, 3) for k in range(3)]
+                changed += 1
+                break
+        moved += changed
+        if not changed:
+            break
+    return moved
+
+
 if __name__ == "__main__":
     out = os.path.join(WORLD, "Map")
     written = set()
-    for i, (side, offset) in enumerate(plot_list(), start=1):
+    plots = [plot(i, side, offset) for i, (side, offset) in enumerate(plot_list(), start=1)]
+    town = [ring(), downtown(), colosseum()]
+    # Toute la carte d'un coup : les faces superposées entre deux fichiers (allée d'une maison et trottoir) comptent
+    print(separate_coplanar({"children": plots + town}), "faces superposées séparées")
+    for i, node in enumerate(plots, start=1):
         path = os.path.join(out, "Plots", f"Plot{i:02d}.model.json")
-        write(path, plot(i, side, offset))
+        write(path, node)
         written.add(os.path.normpath(path))
-    for node in (ring(), downtown(), colosseum()):
+    for node in town:
         path = os.path.join(out, "Town", f"{node['name']}.model.json")
         write(path, node)
         written.add(os.path.normpath(path))

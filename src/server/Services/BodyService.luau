@@ -275,12 +275,12 @@ local function buildShell(
 		clone.Massless = true
 		clone.CFrame = target.CFrame * CFrame.new(offset)
 		-- Couleur choisie, visible au travers des zones semi-transparentes de la texture
-		local color = entry.tint and Look.Color(look, entry.tint)
+		local color = entry.color or entry.tint and Look.Color(look, entry.tint)
 		if color then
 			clone.Color = color
 			-- L'atlas importé rend son voile alpha noir/blanc opaque sur les cheveux dans Roblox.
 			-- Sans cette texture, la couleur choisie reste uniforme sur chaque coupe et barbe.
-			if entry.tint == "Hair" and clone:IsA("MeshPart") then
+			if (entry.tint == "Hair" or entry.color) and clone:IsA("MeshPart") then
 				clone.TextureID = ""
 			end
 		end

@@ -195,15 +195,15 @@
    "properties": {
     "Anchored": true,
     "Size": [
-     224,
-     0.64,
+     224.06,
+     0.67,
      0.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        0.0,
-       0.42,
+       0.405,
        111.8
       ],
       "orientation": [
@@ -242,15 +242,15 @@
    "properties": {
     "Anchored": true,
     "Size": [
-     280,
-     0.64,
+     280.06,
+     0.67,
      0.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        0.0,
-       0.42,
+       0.405,
        132.2
       ],
       "orientation": [
@@ -4387,15 +4387,15 @@
    "properties": {
     "Anchored": true,
     "Size": [
-     208,
-     0.64,
+     208.06,
+     0.67,
      0.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        111.8,
-       0.42,
+       0.405,
        0.0
       ],
       "orientation": [
@@ -4434,15 +4434,15 @@
    "properties": {
     "Anchored": true,
     "Size": [
-     264,
-     0.64,
+     264.06,
+     0.67,
      0.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        132.2,
-       0.42,
+       0.405,
        0.0
       ],
       "orientation": [
@@ -8989,15 +8989,15 @@
    "properties": {
     "Anchored": true,
     "Size": [
-     224,
-     0.64,
+     224.06,
+     0.67,
      0.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        0.0,
-       0.42,
+       0.405,
        -111.8
       ],
       "orientation": [
@@ -9036,15 +9036,15 @@
    "properties": {
     "Anchored": true,
     "Size": [
-     280,
-     0.64,
+     280.06,
+     0.67,
      0.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        0.0,
-       0.42,
+       0.405,
        -132.2
       ],
       "orientation": [
@@ -13800,15 +13800,15 @@
    "properties": {
     "Anchored": true,
     "Size": [
-     208,
-     0.64,
+     208.06,
+     0.67,
      0.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -111.8,
-       0.42,
+       0.405,
        0.0
       ],
       "orientation": [
@@ -13847,15 +13847,15 @@
    "properties": {
     "Anchored": true,
     "Size": [
-     264,
-     0.64,
+     264.06,
+     0.67,
      0.4
     ],
     "CFrame": {
      "CFrame": {
       "position": [
        -132.2,
-       0.42,
+       0.405,
        0.0
       ],
       "orientation": [

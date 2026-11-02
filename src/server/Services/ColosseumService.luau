@@ -117,6 +117,7 @@ end
 -- Le combattant du Dieu du Pump (PumpGodService) : il a le droit d'être sur la piste
 function ColosseumService.SetFighter(player: Player, fighting: boolean)
 	fighters[player] = if fighting then true else nil
+	player:SetAttribute("InFight", if fighting then true else nil)
 end
 
 -- Renvoie un joueur au temple, avec la colonne de lumière (défaite contre le Dieu du Pump)

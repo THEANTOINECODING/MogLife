@@ -181,7 +181,8 @@ end
 
 -- Caméra de duel : le joueur et le boss de profil, dans la partie de l'écran que le mini-jeu laisse libre (D86).
 -- Caméra stable (CameraFraming.Follow) : le boss est mesuré UNE fois au début (il se gonfle à chaque pose : la
--- caméra ne doit pas zoomer et dézoomer avec lui) et l'angle ne change que si un mur cache durablement la scène.
+-- caméra ne doit pas zoomer et dézoomer avec lui). Plan fixe (D102) : elle ne suit pas les mouvements des manches
+-- et ne change d'angle que si l'écran tourne.
 local stopFollow: (() -> ())? = nil
 local function startDuelCamera(bossId: string)
 	local model = bossModel(bossId)
@@ -250,6 +251,7 @@ local function startDuelCamera(bossId: string)
 			return { model }
 		end,
 		enterTime = 0.8,
+		fixed = true, -- plan fixe de côté pendant tout le combat (demande d'Antoine, D102)
 	})
 end
 
@@ -480,8 +482,8 @@ local function onBossUpdate(update)
 		setMeter(0, 0)
 		renderPips()
 		intro(update.bossId, update.intro or 4)
-		-- Entrée en scène (D53) : la caméra tourne autour du boss en contre-plongée, il se gonfle, puis on passe au
-		-- duel. Elle tient dans le temps de présentation du serveur ; la passer ne fait qu'avancer la caméra de duel.
+		-- Entrée en scène (D53, calmée en D102) : plan en contre-plongée sur le boss qui avance à peine, il se gonfle,
+		-- puis on passe au duel. Elle tient dans le temps de présentation du serveur ; la passer ne fait qu'avancer la caméra de duel.
 		local model = bossModel(update.bossId)
 		if model then
 			local base, size, front = CutsceneController.Measure(model)
@@ -493,8 +495,8 @@ local function onBossUpdate(update)
 			end
 			CutsceneController.Play({
 				{
-					from = around(math.rad(-50), -size * 0.35),
-					to = around(math.rad(40), size * 0.05),
+					from = around(math.rad(20), -size * 0.3),
+					to = around(math.rad(26), -size * 0.25),
 					duration = 2.2,
 					onStart = function()
 						local scale = model:GetScale()

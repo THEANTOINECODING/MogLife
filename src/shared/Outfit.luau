@@ -32,7 +32,15 @@ function Outfit.HeadCenter(stage: string, look: Look.LookData?): Vector3?
 	return skeleton and skeleton.Head
 end
 
-local function place(template: Instance?, cframe: CFrame, parent: Instance, whiten: boolean, color: Color3?)
+-- flat : sans la texture (cheveux et barbes : couleur unie, comme sur le personnage, voir BodyService)
+local function place(
+	template: Instance?,
+	cframe: CFrame,
+	parent: Instance,
+	whiten: boolean,
+	color: Color3?,
+	flat: boolean?
+)
 	if not template or not template:IsA("BasePart") then
 		return
 	end
@@ -44,6 +52,9 @@ local function place(template: Instance?, cframe: CFrame, parent: Instance, whit
 	clone.CFrame = cframe
 	if color then
 		clone.Color = color
+		if flat and clone:IsA("MeshPart") then
+			clone.TextureID = ""
+		end
 	end
 	if whiten and clone:IsA("MeshPart") then
 		clone.TextureID = ""
@@ -80,7 +91,7 @@ function Outfit.Build(stage: string, items: { string }, options: Options?): Mode
 		-- Mannequin : le corps est blanchi ; sur les objets exposés, ce qui prend la couleur de peau prend celle
 		-- du mannequin, et les cheveux la couleur de cheveux par défaut
 		local isBody = entry.folder == "Bodies"
-		local color = if entry.tint then Look.Color(look, entry.tint) else nil
+		local color = entry.color or if entry.tint then Look.Color(look, entry.tint) else nil
 		if whiten and entry.tint == "Skin" then
 			color = MANNEQUIN_COLOR
 		end
@@ -89,7 +100,8 @@ function Outfit.Build(stage: string, items: { string }, options: Options?): Mode
 			CFrame.new(skeleton[entry.part] + entry.offset),
 			model,
 			whiten and isBody,
-			color
+			color,
+			entry.tint == "Hair" or entry.color ~= nil
 		)
 	end
 	model.WorldPivot = CFrame.new()

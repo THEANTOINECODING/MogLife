@@ -30,6 +30,7 @@ local FX_DISTANCE = 260 -- au-delà, on n'anime pas (téléphone)
 
 local player = Players.LocalPlayer
 
+local EventController
 local SoundController
 local UIController
 
@@ -342,7 +343,7 @@ local function land(entry: Shake)
 		Rate = 0,
 	}):Emit(14)
 	Debris:AddItem(puff, 1.2)
-	if near(entry.ground, 40) then
+	if near(entry.ground, 40) and not EventController.IsBusy() then
 		SoundController.Play("EventLand")
 	end
 end
@@ -610,9 +611,9 @@ local function updatePiano(entry: Piano, now: number, dt: number)
 		entry.mood = mood
 		if mood == "Down" then
 			entry.downAt = now
-		elseif mood == "Tired" and near(source.Position, 70) then
+		elseif mood == "Tired" and near(source.Position, 70) and not EventController.IsBusy() then
 			UIController.Toast(Texts.Get("Event.RunawayPiano.Tired"), 2)
-		elseif mood == "Panic" and near(source.Position, 60) then
+		elseif mood == "Panic" and near(source.Position, 60) and not EventController.IsBusy() then
 			SoundController.Play("EventWhoosh")
 		end
 	end
@@ -712,6 +713,13 @@ local function onEvent(message)
 	end
 	local kind, state = message.kind, message.state
 	local mine = message.userId == player.UserId
+	-- Occupé (série, aide, combat) : le spectacle continue dans le monde, mais sans sons ni messages à l'écran
+	if EventController.IsBusy() then
+		if typeof(message.position) == "Vector3" then
+			burst(message.position, if message.mega then MEGA_RED else GOLD, 0.7)
+		end
+		return
+	end
 	if state == "Started" then
 		SoundController.Play("EventStart")
 	elseif kind == "GoldenDumbbells" and state == "Taken" and typeof(message.position) == "Vector3" then
@@ -753,6 +761,7 @@ local function onEvent(message)
 end
 
 function EventFxController.Init(controllers)
+	EventController = controllers.EventController
 	SoundController = controllers.SoundController
 	UIController = controllers.UIController
 end

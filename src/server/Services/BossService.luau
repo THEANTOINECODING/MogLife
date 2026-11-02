@@ -81,6 +81,7 @@ end
 
 local function endFight(player: Player)
 	fights[player] = nil
+	player:SetAttribute("InFight", nil)
 end
 
 local function finishFight(player: Player, fight: Fight)
@@ -391,6 +392,7 @@ local function onChallenge(player: Player, bossId: unknown)
 		stakes = state.fightLoss,
 	}
 	fights[player] = fight
+	player:SetAttribute("InFight", true) -- tout le combat, manches et entractes compris (le client range les événements)
 	-- Présentation (écran VS, compte à rebours) avant la première manche
 	Remotes.BossUpdate:FireClient(player, {
 		state = "FightStarted",
