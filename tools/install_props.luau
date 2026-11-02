@@ -1,7 +1,8 @@
 --[[
 	Range les décors importés depuis Blender dans ServerStorage.Props (là où PropService et FurnitureService
 	les cherchent). À coller dans la barre de commande de Studio (Affichage > Barre de commande), en mode édition,
-	juste après l'import de assets/export/props/MogLife_AllProps.fbx, MogLife_Buildings.fbx ou Props_Colosseum.fbx (Accueil > Importer 3D).
+	juste après l'import de assets/export/props/MogLife_AllProps.fbx, MogLife_Buildings.fbx, Props_Colosseum.fbx ou Props_Colosseum_Portal.fbx
+	(Accueil > Importer 3D).
 
 	- Prend le modèle importé (« props », « MogLife_AllProps » ou « MogLife_Buildings » dans Workspace) et ses MeshParts.
 	- Selon les réglages, l'importateur lit parfois le FBX en centimètres (tout 100 fois trop grand) : détecté et corrigé.
@@ -17,10 +18,11 @@
 local ServerStorage = game:GetService("ServerStorage")
 
 local PALETTE = "rbxassetid://123907474681522" -- assets/export/props/MogProps_Palette.png
--- Le Colisée du Pump (D89) a ses propres couleurs (grès, marbre, velums) : sa palette est à part
+-- Le Colisée du Pump (D89) et son portail (D105) ont leurs propres couleurs (grès, marbre, velums) : palette à part
 local COLOSSEUM_PALETTE = "rbxassetid://121502714741030" -- assets/export/props/Colosseum_Palette.png
 
 local imported = workspace:FindFirstChild("Props_Colosseum")
+	or workspace:FindFirstChild("Props_Colosseum_Portal")
 	or workspace:FindFirstChild("props")
 	or workspace:FindFirstChild("MogLife_GymStations")
 	or workspace:FindFirstChild("MogLife_AllProps")
@@ -55,7 +57,7 @@ for _, part in imported:GetDescendants() do
 		end
 		part.Size *= scale
 		part.Anchored = true
-		if imported.Name == "Props_Colosseum" then
+		if imported.Name == "Props_Colosseum" or imported.Name == "Props_Colosseum_Portal" then
 			part.TextureID = COLOSSEUM_PALETTE
 		elseif part.TextureID == "" then
 			part.TextureID = PALETTE

@@ -407,9 +407,18 @@ return {
 
 	-- Le Colisée du Pump (D89) : piliers de lumière entre le temple et le colisée, sécurité de la piste
 	Colosseum = {
-		PortalDistance = 12, -- distance max (studs) au pilier pour l'utiliser
+		PortalDistance = 12, -- distance max (studs) au portail pour l'utiliser
 		PortalCooldown = 4, -- secondes entre deux voyages
-		TravelDelay = 1.3, -- secondes de lumière avant d'arriver (le pilier monte, l'écran blanchit)
+		TravelDelay = 1.3, -- secondes de lumière avant d'arriver (la colonne monte, l'écran blanchit)
+		-- Tourbillon doré dans l'arche des portails (D105) : bras de lumière en spirale qui tournent vers le centre
+		Vortex = {
+			Arms = 3, -- bras de la spirale
+			Dots = 6, -- éclats de lumière par bras
+			Spin = 1.6, -- radians par seconde
+			Twist = 2.4, -- radians d'enroulement d'un bras, du bord au centre
+			Pulse = 2.2, -- battements par seconde du cœur
+			Range = 160, -- studs : au-delà, le tourbillon ne s'anime plus (téléphone)
+		},
 		PitCheckEvery = 1, -- secondes entre deux contrôles de la piste (un joueur qui n'y combat pas en ressort)
 		CrowdBounce = 0.18, -- studs : la foule sautille
 		CrowdSpeed = 3.2, -- sautillements par seconde

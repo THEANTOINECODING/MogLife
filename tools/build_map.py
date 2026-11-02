@@ -571,6 +571,24 @@ def decor(F, name, local, prop, yaw=0, height=None, collide=True, align=None):
     return prop_slot(F, name, local, prop, (), yaw=yaw, height=height, collide=collide, align=align)
 
 
+# Portail du Colisée (D105, tools/blender/props_portal.py) : l'arche est posée à PORTAL_HEIGHT studs de haut ;
+# l'ouverture fait alors PORTAL_OPENING (largeur, hauteur utile) et commence à PORTAL_SILL du sol. Le repère invisible
+# (tag ColosseumPortal) a exactement la taille de l'ouverture : le jeu y met son invite et y dessine le tourbillon.
+PORTAL_HEIGHT = 11
+PORTAL_OPENING = (4.1, 8.2)
+PORTAL_SILL = 0.73
+
+
+def colosseum_portal(F, name, local, yaw, target):
+    x, y, z = local
+    w, h = PORTAL_OPENING
+    return [
+        decor(F, name + "Arch", local, "Colosseum_Portal", yaw=yaw, height=PORTAL_HEIGHT),
+        P(F, name, (x, y + PORTAL_SILL + h / 2, z), (w, h, 1), WHITE, yaw=yaw, transparency=1, collide=False,
+          tags=["ColosseumPortal"], attributes={"Target": target}, extra={"CanTouch": False}),
+    ]
+
+
 # ------------------------------------------------------------------ détails de finition (D101)
 GOLD_TRIM = (206, 156, 44)
 
@@ -1531,9 +1549,8 @@ def boss_arena():
         c.append(decor(T, f"TempleBrazier{sx}", (sx * 17, 0, -17), "Colosseum_Brazier", collide=False))
         c.append(P(T, f"TempleFire{sx}", (sx * 17, 4.0, -17), (1, 1, 1), WHITE, transparency=1, collide=False,
                    tags=["ColosseumFire"], extra=INVISIBLE))
-    # Pilier de lumière vers le Colisée du Pump (D89), devant le temple, côté droit des marches
-    c.append(P(T, "ColosseumPortalTemple", (12, 3, -19), (5, 6, 5), WHITE, transparency=1, collide=False,
-               tags=["ColosseumPortal"], attributes={"Target": "Colosseum"}, extra={"CanTouch": False}))
+    # Portail vers le Colisée du Pump (D89, arche gothique en D105) : en tête du tapis rouge, entre les deux torches
+    c += colosseum_portal(T, "ColosseumPortalTemple", (0, 0.12, -17.6), 0, "Colosseum")
     # Ambiance de match (apparaît avec les modèles 3D) : projecteurs, gong, cordons, trophées des boss
     c.append(decor(F, "SpotlightSlot0", (-100, 0.12, -40), "Spotlight", yaw=-45))
     c.append(decor(F, "SpotlightSlot1", (-40, 0.12, -100), "Spotlight", yaw=135))
@@ -1845,9 +1862,8 @@ def colosseum():
     c.append(point(F0, "ColosseumArrival", (0, 0.5, -(L["plaza_outer"] - 5)), "ColosseumSpot", {"Role": "Arrival"}))
     c.append(point(F0, "ColosseumStandsSpot", (0, L["walk_top"] + 0.5, -(L["walk_outer"] - 2)), "ColosseumSpot",
                    {"Role": "Stands"}))
-    # Portail de retour vers la ville (pilier de lumière), sur le parvis
-    c.append(P(F0, "ColosseumPortalBack", (14, 3, -(L["plaza_outer"] - 8)), (5, 6, 5), WHITE, transparency=1,
-               collide=False, tags=["ColosseumPortal"], attributes={"Target": "Temple"}, extra={"CanTouch": False}))
+    # Portail de retour vers la ville (D105), sur le parvis, à droite de la statue, ouverture tournée vers l'arrivée
+    c += colosseum_portal(F0, "ColosseumPortalBack", (22, 0, -(L["plaza_outer"] - 8)), 90, "Temple")
     # Arrêt de bus du colisée (réseau de bus de la ville)
     # à gauche de la statue d'entrée (D102 : l'abribus était dedans)
     c += bus_stop(F0.child((-27, 0, -(L["plaza_outer"] - 9)), 0), "BusStopColosseum", (0, 0, 0), "Colosseum")

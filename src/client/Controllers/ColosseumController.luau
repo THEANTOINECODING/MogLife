@@ -1,7 +1,8 @@
 -- Le Colisée du Pump (D89, tranche 1) côté client : l'arène vit.
 -- - Braseros (tag "ColosseumFire") : feu, braises et lumière orangée ; éteints loin du joueur (téléphone).
 -- - Foule des gradins (MapProps « Colosseum_Crowd ») : elle sautille par vagues, chaque secteur à son rythme.
--- - Piliers de lumière (tag "ColosseumPortal") : colonne dorée qui tourne, poussières de lumière qui montent.
+-- - Portails (tag "ColosseumPortal" = l'ouverture de l'arche, D105) : tourbillon doré qui tourne dans l'arche,
+--   éclats de lumière aspirés vers le centre, cœur qui bat.
 -- - Voyage (Remotes.ColosseumTravel) : la colonne s'élargit et monte jusqu'au ciel autour du joueur qui part ; pour
 --   soi, l'écran blanchit puis revient à l'arrivée. Tout est local : rien ne part vers le serveur.
 
@@ -19,6 +20,7 @@ local FIRE_TAG = "ColosseumFire"
 local PORTAL_TAG = "ColosseumPortal"
 local CROWD_NAME = "Colosseum_Crowd"
 local SETTINGS = Balance.Colosseum
+local VORTEX = SETTINGS.Vortex
 local GOLD = Color3.fromRGB(255, 214, 110)
 local FLAME = Color3.fromRGB(255, 150, 50)
 
@@ -26,7 +28,8 @@ local player = Players.LocalPlayer
 
 local fires: { [BasePart]: { Instance } } = {}
 local crowds: { [BasePart]: { base: CFrame, phase: number } } = {}
-local portals: { [BasePart]: { spin: BasePart, ring: BasePart } } = {}
+type Portal = { core: BasePart, glow: BasePart, dots: { BasePart }, frames: { CFrame } }
+local portals: { [BasePart]: Portal } = {}
 
 local ColosseumController = {}
 
@@ -85,7 +88,8 @@ local function trackCrowd(part: Instance)
 	crowds[part] = { base = part.CFrame, phase = (math.atan2(p.Z, p.X) * 3) % (2 * math.pi) }
 end
 
--- Pilier de lumière : colonne dorée, anneau au sol, poussières qui montent
+-- Portail : le repère a la taille de l'ouverture de l'arche (ovale, face à son axe Z). Fond doré, cœur clair qui
+-- bat, bras de lumière en spirale (des éclats posés à chaque image), poussières aspirées vers le centre.
 local function addPortal(anchor: Instance)
 	if not anchor:IsA("BasePart") or portals[anchor] then
 		return
@@ -93,37 +97,66 @@ local function addPortal(anchor: Instance)
 	local folder = Instance.new("Folder")
 	folder.Name = "PortalFx"
 	folder.Parent = anchor
-	local foot = anchor.Position - Vector3.new(0, anchor.Size.Y / 2, 0)
-	local upright = CFrame.Angles(0, 0, math.pi / 2)
-	local core = effectPart("Core", Vector3.new(24, 1.6, 1.6), GOLD, 0.6, folder)
+	local size = anchor.Size
+	-- Cylindre couché : son axe X passe dans l'axe du portail, ses diamètres Y, Z font l'ovale
+	local facing = anchor.CFrame * CFrame.Angles(0, math.pi / 2, 0)
+	local glow = effectPart("Glow", Vector3.new(0.15, size.Y, size.X), GOLD, 0.35, folder)
+	glow.Shape = Enum.PartType.Cylinder
+	glow.CFrame = facing
+	local core =
+		effectPart("Core", Vector3.new(0.3, size.Y * 0.4, size.X * 0.4), Color3.fromRGB(255, 248, 220), 0.1, folder)
 	core.Shape = Enum.PartType.Cylinder
-	core.CFrame = CFrame.new(foot + Vector3.new(0, 12, 0)) * upright
-	local halo = effectPart("Halo", Vector3.new(24, 4.6, 4.6), GOLD, 0.9, folder)
-	halo.Shape = Enum.PartType.Cylinder
-	halo.CFrame = core.CFrame
-	local ring = effectPart("Ring", Vector3.new(0.2, 7, 7), GOLD, 0.25, folder)
-	ring.Shape = Enum.PartType.Cylinder
-	ring.CFrame = CFrame.new(foot + Vector3.new(0, 0.12, 0)) * upright
+	core.CFrame = facing
+	local dots = {}
+	for i = 1, VORTEX.Arms * VORTEX.Dots do
+		local dot = effectPart("Swirl", Vector3.one * 0.3, Color3.fromRGB(255, 236, 160), 0, folder)
+		dot.Shape = Enum.PartType.Ball
+		dot.CFrame = anchor.CFrame
+		dots[i] = dot
+	end
 	local light = Instance.new("PointLight")
 	light.Color = GOLD
-	light.Range = 12
-	light.Brightness = 1.2
+	light.Range = 14
+	light.Brightness = 1.4
 	light.Parent = core
+	-- Poussières : nées sur le bord de l'ovale, aspirées vers le centre
 	local motes = Instance.new("ParticleEmitter")
+	motes.Shape = Enum.ParticleEmitterShape.Disc
+	motes.ShapeInOut = Enum.ParticleEmitterShapeInOut.Inward
+	motes.ShapeStyle = Enum.ParticleEmitterShapeStyle.Surface
+	motes.EmissionDirection = Enum.NormalId.Right -- l'axe X du cylindre = l'axe du portail
 	motes.Color = ColorSequence.new(GOLD)
 	motes.LightEmission = 1
 	motes.Size = NumberSequence.new({
 		NumberSequenceKeypoint.new(0, 0),
-		NumberSequenceKeypoint.new(0.3, 0.35),
+		NumberSequenceKeypoint.new(0.3, 0.25),
 		NumberSequenceKeypoint.new(1, 0),
 	})
-	motes.Lifetime = NumberRange.new(2, 3)
-	motes.Speed = NumberRange.new(4, 7)
-	motes.SpreadAngle = Vector2.new(8, 8)
-	motes.Rate = 14
-	motes.EmissionDirection = Enum.NormalId.Right -- l'axe X du cylindre est vertical
-	motes.Parent = ring
-	portals[anchor] = { spin = halo, ring = ring }
+	motes.Lifetime = NumberRange.new(0.8, 1.2)
+	motes.Speed = NumberRange.new(2, 3)
+	motes.Rate = 18
+	motes.Parent = glow
+	portals[anchor] = { core = core, glow = glow, dots = dots, frames = table.create(#dots, anchor.CFrame) }
+end
+
+-- Une image du tourbillon : chaque bras part du bord et s'enroule vers le centre ; le tout tourne, le cœur bat
+local function spinPortal(anchor: BasePart, fx: Portal, now: number)
+	local half = anchor.Size / 2
+	local turn = now * VORTEX.Spin
+	local i = 0
+	for arm = 0, VORTEX.Arms - 1 do
+		for k = 1, VORTEX.Dots do
+			i += 1
+			local r = 1 - (k - 0.5) / VORTEX.Dots -- du bord (1) vers le centre (0)
+			local a = turn + arm * 2 * math.pi / VORTEX.Arms + (1 - r) * VORTEX.Twist
+			fx.frames[i] = anchor.CFrame
+				* CFrame.new(math.cos(a) * half.X * r * 0.92, math.sin(a) * half.Y * r * 0.92, 0)
+		end
+	end
+	workspace:BulkMoveTo(fx.dots, fx.frames, Enum.BulkMoveMode.FireCFrameChanged)
+	local beat = 0.5 + 0.5 * math.sin(now * VORTEX.Pulse * 2 * math.pi)
+	fx.core.Transparency = 0.05 + 0.3 * beat
+	fx.glow.Transparency = 0.3 + 0.1 * beat
 end
 
 -- Le voyage : la colonne s'élargit et monte jusqu'au ciel ; pour soi, un flash blanc qui couvre l'arrivée
@@ -253,9 +286,8 @@ function ColosseumController.Start()
 			end
 		end
 		for anchor, fx in portals do
-			if (anchor.Position - here).Magnitude < 200 then
-				fx.spin.CFrame = fx.spin.CFrame * CFrame.Angles(0.02, 0, 0)
-				fx.ring.Transparency = 0.45 + 0.2 * math.sin(now * 3)
+			if (anchor.Position - here).Magnitude < VORTEX.Range then
+				spinPortal(anchor, fx, now)
 			end
 		end
 	end)

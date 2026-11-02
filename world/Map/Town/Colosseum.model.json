@@ -51619,25 +51619,92 @@
    }
   },
   {
+   "name": "ColosseumPortalBackArch",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Colosseum_Portal",
+    "PropHeight": 11
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -283.331,
+         3.1,
+         -252.218
+        ],
+        "orientation": [
+         [
+          0.707107,
+          0.0,
+          -0.707107
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.707107,
+          0.0,
+          0.707107
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
    "name": "ColosseumPortalBack",
    "className": "Part",
    "properties": {
     "Anchored": true,
     "Size": [
-     5,
-     6,
-     5
+     4.1,
+     8.2,
+     1
     ],
     "CFrame": {
      "CFrame": {
       "position": [
-       -277.674,
-       6.1,
-       -257.875
+       -283.331,
+       7.93,
+       -252.218
       ],
       "orientation": [
        [
-        -0.707107,
+        0.707107,
         0.0,
         -0.707107
        ],
@@ -51649,7 +51716,7 @@
        [
         0.707107,
         0.0,
-        -0.707107
+        0.707107
        ]
       ]
      }

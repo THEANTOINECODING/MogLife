@@ -1,5 +1,5 @@
 -- Le Colisée du Pump (D89, tranche 1) : l'arène du dernier boss, au-delà du coin sud-ouest de la ville.
--- - Piliers de lumière (tag "ColosseumPortal", attribut Target = "Colosseum" ou "Temple") : un au temple du Dieu du
+-- - Portails dorés (D105 ; tag "ColosseumPortal" = leur ouverture, attribut Target = "Colosseum" ou "Temple") : un au temple du Dieu du
 --   Pump, un sur le parvis du colisée. Le joueur demande (ProximityPrompt), le serveur vérifie (distance, délai, pas en
 --   pleine série ni en combat), tout le monde voit la lumière monter (Remotes.ColosseumTravel), puis il arrive.
 -- - Sécurité de la piste : seul le combattant du dernier boss a le droit d'y être (défi accepté au temple, D94). Un
@@ -45,7 +45,7 @@ local function findPortal(target: string): BasePart?
 	return nil
 end
 
--- Où l'on arrive : sur le parvis du colisée, tourné vers son entrée ; ou à côté du pilier du temple
+-- Où l'on arrive : sur le parvis du colisée, tourné vers son entrée ; ou devant le portail du temple
 local function destination(target: string): CFrame?
 	if target == "Colosseum" then
 		local arrival, center = findSpot("Arrival"), findSpot("Center")
@@ -60,7 +60,7 @@ local function destination(target: string): CFrame?
 	if not portal then
 		return nil
 	end
-	-- Devant le pilier du temple, côté ville, tourné vers la ville
+	-- Devant le portail du temple, côté arène, tourné vers l'arène
 	return portal.CFrame * CFrame.new(0, 0, -6)
 end
 
