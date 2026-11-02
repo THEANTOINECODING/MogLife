@@ -1,5 +1,6 @@
--- Mini-jeu « Hammer » (aide : clous de la cabane du petit voisin, D81) : le marteau balaie la planche ; toucher
--- l'écran (n'importe où) quand il est pile au-dessus du clou. Le clou change de place à chaque coup.
+-- Mini-jeu « Hammer » (aide : clous de la cabane du petit voisin, D81) : le marteau fait des allers-retours au-dessus
+-- de la planche, à la même vitesse dans les deux sens (D106) ; toucher l'écran (n'importe où) quand il est pile
+-- au-dessus du clou, à l'aller comme au retour. Le clou change de place à chaque coup.
 -- Surprises : clou tordu (deux coups, le premier le redresse, niveau Hammer.BentLevel), pouce du petit voisin
 -- posé sur la planche : le taper = raté (niveau Hammer.ThumbLevel). Clavier : Espace ; manette : bouton A.
 
@@ -56,21 +57,25 @@ function Hammer.new(parent: GuiObject, interval: number, onRep: (string) -> (), 
 	local nailX = 0.5
 	local hammerX = 0.5
 
-	-- Le marteau traverse la planche de gauche à droite à vitesse constante (aller), puis remonte vite à gauche
-	-- (retour : il est levé, on ne peut pas frapper). Un seul passage au-dessus du clou par pulsation.
-	local sweep = interval * SETTINGS.SweepFraction
-	local function positionAt(t: number): (number, boolean)
-		local u = t % interval
-		if u < sweep then
-			return 0.05 + 0.9 * u / sweep, true
+	-- Le marteau traverse la planche en une pulsation, puis revient en une pulsation, à vitesse constante (D106).
+	-- Il passe donc une fois au-dessus du clou par pulsation, dans un sens ou dans l'autre.
+	local period = interval * 2
+	local function positionAt(t: number): (number, number)
+		local u = (t % period) / interval
+		if u < 1 then
+			return 0.05 + 0.9 * u, 1
 		end
-		return 0.95 - 0.9 * (u - sweep) / (interval - sweep), false
+		return 0.95 - 0.9 * (u - 1), -1
 	end
-	-- Écart de temps (secondes) entre maintenant et le passage (aller) du marteau au-dessus de x
+	-- Écart de temps (secondes) entre maintenant et le passage le plus proche du marteau au-dessus de x
 	local function timeTo(x: number, t: number): number
-		local crossing = (x - 0.05) / 0.9 * sweep
-		local offset = (t - crossing) % interval
-		return math.min(offset, interval - offset)
+		local u = (x - 0.05) / 0.9
+		local best = math.huge
+		for _, crossing in { u * interval, (2 - u) * interval } do
+			local offset = (t - crossing) % period
+			best = math.min(best, offset, period - offset)
+		end
+		return best
 	end
 	local bent = false
 	local bentQuality = "Perfect"
@@ -112,9 +117,8 @@ function Hammer.new(parent: GuiObject, interval: number, onRep: (string) -> (), 
 			return
 		end
 		local t = now - self.startTime
-		local _, forward = positionAt(t)
-		-- Marteau qui revient (ou pause après un coup) : le geste est vu, mais ce n'est pas le moment
-		if not self:RepReady() or not forward then
+		-- Pause après un coup : le geste est vu, mais ce n'est pas le moment
+		if not self:RepReady() then
 			self:Nope(hammer)
 			return
 		end
@@ -157,23 +161,23 @@ function Hammer.new(parent: GuiObject, interval: number, onRep: (string) -> (), 
 	local wasAligned = false
 	self:OnStep(function(_, t)
 		local now = os.clock()
-		local forward
-		hammerX, forward = positionAt(t)
+		local direction
+		hammerX, direction = positionAt(t)
 		local plankLeft = plank.AbsolutePosition.X - panel.AbsolutePosition.X
 		local x = plankLeft + hammerX * plank.AbsoluteSize.X
 		local since = now - strikeAt
 		local struck = since < 0.15
-		hammer.Position = UDim2.fromOffset(x, if struck then 150 elseif forward then 96 else 60)
-		hammer.Rotation = if struck then -45 else 10
+		hammer.Position = UDim2.fromOffset(x, if struck then 150 else 96)
+		hammer.Rotation = if struck then -45 else 10 * direction
 		guideLine.Position = UDim2.fromOffset(x, 110)
-		local aligned = forward and timeTo(nailX, t) <= SETTINGS.PerfectTime * self.timingScale
+		local aligned = timeTo(nailX, t) <= SETTINGS.PerfectTime * self.timingScale
 		guideLine.BackgroundColor3 = if aligned then Color3.fromRGB(255, 215, 40) else Color3.new(1, 1, 1)
 		if aligned and not wasAligned then
 			self:GuideCue()
 		end
 		wasAligned = aligned
 		plank.Position = UDim2.new(0.5, if struck and strikeQuality ~= "Miss" then math.random(-2, 2) else 0, 0, 170)
-		if not self:RepReady() or not forward then
+		if not self:RepReady() then
 			hammer.TextTransparency = 0.5
 		else
 			hammer.TextTransparency = 0
@@ -182,13 +186,13 @@ function Hammer.new(parent: GuiObject, interval: number, onRep: (string) -> (), 
 
 	-- État de la partie pour les tests automatiques (tests/minigames_bot.luau) : ne change rien au jeu
 	function self.Probe()
-		local _, forward = positionAt(os.clock() - self.startTime)
+		local _, direction = positionAt(os.clock() - self.startTime)
 		return {
 			hammerX = hammerX,
 			nailX = nailX,
 			thumbX = thumbX,
 			bent = bent,
-			forward = forward,
+			direction = direction,
 			ready = self:RepReady(),
 		}
 	end

@@ -172,8 +172,8 @@ local function buildGui()
 	})
 	Ui.create("UISizeConstraint", { MaxSize = Vector2.new(560, 440), Parent = panel })
 	Ui.label({
-		Position = UDim2.fromOffset(16, 12),
-		Size = UDim2.new(1, -32, 0, 38),
+		Position = UDim2.fromOffset(60, 12),
+		Size = UDim2.new(1, -120, 0, 38),
 		TextColor3 = Color3.fromRGB(255, 220, 120),
 		Text = Texts.Get("Boost.Title"),
 		Parent = panel,
@@ -188,7 +188,7 @@ local function buildGui()
 	})
 	list = Ui.create("ScrollingFrame", {
 		Position = UDim2.fromOffset(16, 82),
-		Size = UDim2.new(1, -32, 1, -160),
+		Size = UDim2.new(1, -32, 1, -96),
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
 		ScrollBarThickness = 6,
@@ -196,14 +196,7 @@ local function buildGui()
 		CanvasSize = UDim2.new(),
 		Parent = panel,
 	}, { Ui.create("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }) })
-	local closeButton = Ui.button({
-		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.5, 0, 1, -14),
-		Size = UDim2.fromOffset(200, 50),
-		BackgroundColor3 = Color3.fromRGB(90, 90, 90),
-		Text = Texts.Get("Shop.Close"),
-		Parent = panel,
-	})
+	local closeButton = Ui.closeButton({ Text = Texts.Get("Shop.Close"), Parent = panel })
 	closeButton.Activated:Connect(close)
 	gui.Parent = player:WaitForChild("PlayerGui")
 

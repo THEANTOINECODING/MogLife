@@ -192,39 +192,26 @@ function BOTS.Rope(p, now, c, m)
 	end
 end
 function BOTS.Twist(p, now, c, m)
-	-- Tient le bocal (Espace) ; mouillé : lâche et reprend ; puis dévisse (flèche gauche)
-	if not p.holding then
-		if m.gripped then
-			c.keyUp(Enum.KeyCode.Space)
-			m.gripped = false
-			return
-		end
-		c.keyDown(Enum.KeyCode.Space)
-		m.gripped = true
+	-- Tape le couvercle (Espace) jusqu'à ce que l'air sorte, puis un glissé (flèche gauche)
+	if p.waiting or now - (m.t or 0) < 0.12 then
 		return
 	end
-	if not p.resting and now - (m.t or 0) > 0.12 then
+	if p.phase == "Tap" then
+		m.t = now
+		c.key(Enum.KeyCode.Space)
+	elseif p.phase == "Twist" then
 		m.t = now
 		c.key(Enum.KeyCode.Left)
 	end
 end
-function BOTS.Pressure(p, _, c)
-	if not c.touching() then
-		c.touchDown()
-	end
-	local range = workspace.CurrentCamera.ViewportSize.Y * 0.35 / 1.15
-	local need = p.center - p.pressure
-	if p.state ~= "Pumping" or need <= p.half * 0.4 then
-		-- Rien à pomper : la poignée remonte (remonter n'envoie pas d'air)
-		c.touchMove(0, -0.1 * range)
-	elseif p.stroke >= 0.95 then
-		c.touchMove(0, -range)
-	else
-		c.touchMove(0, math.min(need / p.airPerStroke, 0.04) * range)
+function BOTS.Pressure(p, now, c)
+	-- Écrase la pédale (Espace) pile au temps
+	if not p.answered and math.abs(now - p.beatAt) < 0.03 then
+		c.key(Enum.KeyCode.Space)
 	end
 end
 function BOTS.Hammer(p, now, c, m)
-	if p.ready and p.forward and now - (m.t or 0) > 0.4 and math.abs(p.hammerX - p.nailX) < 0.02 then
+	if p.ready and now - (m.t or 0) > 0.4 and math.abs(p.hammerX - p.nailX) < 0.02 then
 		m.t = now
 		c.key(Enum.KeyCode.Space)
 	end

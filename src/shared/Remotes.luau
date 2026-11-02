@@ -20,7 +20,8 @@ local NAMES = {
 	"BuyStyle", -- client -> serveur : (itemId: string)
 	"EquipStyle", -- client -> serveur : (category: string, itemId: string?) nil = retirer
 	"BuyStyleSet", -- client -> serveur : (setId: string), achète haut + bas en une transaction
-	"EquipStyleSet", -- client -> serveur : (setId: string), équipe haut + bas possédés
+	"EquipStyleSet",
+	"SetHairDye", -- client -> serveur : (dye: string) teinture du coiffeur, "" = couleur d'origine (D106) -- client -> serveur : (setId: string), équipe haut + bas possédés
 	"StyleState", -- serveur -> client : ({ owned: { [itemId]: true }, equipped: { [category]: itemId } })
 	"BuyFurniture", -- client -> serveur : (itemId: string) au comptoir du magasin de meubles
 	"PlaceFurniture", -- client -> serveur : (slot: string, itemId: string?) nil = vider l'emplacement
@@ -107,6 +108,7 @@ return remotes :: {
 	EquipStyle: RemoteEvent,
 	BuyStyleSet: RemoteEvent,
 	EquipStyleSet: RemoteEvent,
+	SetHairDye: RemoteEvent,
 	StyleState: RemoteEvent,
 	BuyFurniture: RemoteEvent,
 	PlaceFurniture: RemoteEvent,

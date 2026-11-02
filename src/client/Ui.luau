@@ -169,4 +169,23 @@ function Ui.button(props: { [string]: any }): TextButton
 	})
 end
 
+-- Croix de fermeture (D106) : pastille ronde dans le coin haut droit du panneau, assez grande pour un pouce
+function Ui.closeButton(props: { [string]: any }): TextButton
+	local base = {
+		Name = "Close",
+		AnchorPoint = Vector2.new(1, 0),
+		Position = UDim2.new(1, -10, 0, 10),
+		Size = UDim2.fromOffset(44, 44),
+		BackgroundColor3 = Color3.fromRGB(220, 60, 70),
+		ZIndex = 10,
+	}
+	for key, value in props do
+		base[key] = value
+	end
+	local button = Ui.button(base)
+	button:FindFirstChildOfClass("UICorner").CornerRadius = UDim.new(1, 0)
+	Ui.stroke(Color3.new(1, 1, 1), 2, 0.2).Parent = button
+	return button
+end
+
 return Ui

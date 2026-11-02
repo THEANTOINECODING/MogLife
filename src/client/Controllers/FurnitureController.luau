@@ -170,12 +170,12 @@ local function open(newMode: "Store" | "Home", slotName: string?)
 		titleLabel.Text = Texts.Get("Furniture.Title")
 		hintLabel.Text = Texts.Get("Furniture.Hint")
 		list.Position = UDim2.fromOffset(16, 134)
-		list.Size = UDim2.new(1, -32, 1, -214)
+		list.Size = UDim2.new(1, -32, 1, -150)
 	else
 		titleLabel.Text = Texts.Get("Furniture.HomeTitle", { slot = Texts.Get(`Slot.{slot}`) })
 		hintLabel.Text = Texts.Get("Furniture.HomeHint")
 		list.Position = UDim2.fromOffset(16, 84)
-		list.Size = UDim2.new(1, -32, 1, -164)
+		list.Size = UDim2.new(1, -32, 1, -100)
 	end
 	panel.Visible = true
 	MinigameController.SetGameplayLocked(true, "Furniture")
@@ -209,8 +209,8 @@ local function buildGui()
 	})
 	cashLabel = Ui.label({
 		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, -16, 0, 12),
-		Size = UDim2.new(0.38, -16, 0, 40),
+		Position = UDim2.new(1, -64, 0, 12),
+		Size = UDim2.new(0.38, -64, 0, 40),
 		TextXAlignment = Enum.TextXAlignment.Right,
 		TextColor3 = Color3.fromRGB(140, 255, 140),
 		Parent = panel,
@@ -269,15 +269,7 @@ local function buildGui()
 		Ui.create("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }),
 	})
 
-	local closeButton = Ui.button({
-		Name = "Close",
-		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.5, 0, 1, -14),
-		Size = UDim2.fromOffset(200, 52),
-		BackgroundColor3 = Color3.fromRGB(90, 90, 90),
-		Text = Texts.Get("Shop.Close"),
-		Parent = panel,
-	})
+	local closeButton = Ui.closeButton({ Text = Texts.Get("Shop.Close"), Parent = panel })
 	closeButton.Activated:Connect(close)
 
 	gui.Parent = player:WaitForChild("PlayerGui")

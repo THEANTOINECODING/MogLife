@@ -291,14 +291,14 @@ local function buildGui()
 		Name = "SettingsPanel",
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.52),
-		Size = UDim2.fromOffset(460, 60 + #Settings.List * 64 + 72),
+		Size = UDim2.fromOffset(460, 60 + #Settings.List * 64 + 16),
 		Visible = false,
 		Parent = gui,
 	})
 	Ui.create("UISizeConstraint", { MaxSize = Vector2.new(460, 640), Parent = panel })
 	Ui.label({
-		Position = UDim2.fromOffset(16, 12),
-		Size = UDim2.new(1, -32, 0, 40),
+		Position = UDim2.fromOffset(60, 12),
+		Size = UDim2.new(1, -120, 0, 40),
 		TextColor3 = Color3.fromRGB(255, 220, 120),
 		Text = Texts.Get("Settings.Title"),
 		Parent = panel,
@@ -306,7 +306,7 @@ local function buildGui()
 	local rowList = Ui.create("ScrollingFrame", {
 		Name = "Options",
 		Position = UDim2.fromOffset(16, 60),
-		Size = UDim2.new(1, -32, 1, -136),
+		Size = UDim2.new(1, -32, 1, -76),
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
 		ScrollingDirection = Enum.ScrollingDirection.Y,
@@ -375,14 +375,7 @@ local function buildGui()
 		end)
 		renderSwitch(key)
 	end
-	local closeButton = Ui.button({
-		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.5, 0, 1, -14),
-		Size = UDim2.fromOffset(180, 48),
-		BackgroundColor3 = Color3.fromRGB(90, 90, 90),
-		Text = Texts.Get("Shop.Close"),
-		Parent = panel,
-	})
+	local closeButton = Ui.closeButton({ Text = Texts.Get("Shop.Close"), Parent = panel })
 	closeButton.Activated:Connect(function()
 		setPanel(false)
 	end)

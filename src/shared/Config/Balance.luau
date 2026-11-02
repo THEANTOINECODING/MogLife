@@ -61,6 +61,7 @@ return {
 			Expression = "Confident",
 			First = "Brad",
 			Title = "Spaghetti",
+			Dye = "", -- teinture du coiffeur (D106), "" = couleur d'origine de la coupe
 		},
 	},
 
@@ -80,6 +81,17 @@ return {
 	-- Fenêtre de la semaine (D96) : elle s'ouvre à l'arrivée, une fois le joueur libre depuis ArrivalDelay secondes
 	WeeklyWindow = { ArrivalDelay = 2.5, ArrivalGiveUp = 180, RaySpeed = 14 }, -- RaySpeed : degrés/s des rayons
 	-- Interface vivante (D84) : compteurs qui défilent, icônes qui s'envolent vers le HUD
+	-- Bandeau des événements de ville (D106) : une ligne de Height pixels (+ DetailHeight pour la consigne, montrée
+	-- DetailSeconds secondes), Width de large hors téléphone en portrait ; position du haut en portrait / ordinateur
+	EventBanner = {
+		Height = 48,
+		DetailHeight = 34,
+		DetailSeconds = 6,
+		Width = 340,
+		PortraitTop = 106,
+		DesktopTop = 120,
+	},
+
 	HudFx = {
 		RollTime = 0.6, -- secondes pour que le compteur atteigne sa nouvelle valeur
 		PulseScale = 1.25, -- rebond du compteur quand il monte
@@ -226,44 +238,29 @@ return {
 			FakeChance = 0.3,
 		},
 
-		-- Bocal : taper vite pour dévisser, s'arrêter quand le couvercle devient rouge
-		-- Bocal de maman (refait en D88) : une main tient le bocal, l'autre dévisse d'un glissé vers la gauche
+		-- Bocal de maman (refait en D106) : taper Taps fois le couvercle (l'air sort), puis un glissé pour dévisser
 		Twist = {
-			NotchesPerJar = 4, -- quarts de tour pour ouvrir un bocal (POP !), puis un nouveau bocal arrive
-			PopTime = 0.9, -- secondes de la scène d'ouverture avant le quart suivant
-			PerfectTime = 0.55, -- quart fait en moins de 0,55 intervalle = Perfect
-			MissTime = 1.3, -- au-delà de 1,3 intervalle = raté
-			SwipeFraction = 0.07, -- longueur du glissé (part de la hauteur de l'écran)
-			WetLevel = 1, -- bocal mouillé à partir de ce niveau : lâcher et reprendre
-			WetChance = 0.3,
-			WetDelay = 0.15, -- il devient glissant peu après le début du quart (intervalles)
-			TightLevel = 2, -- couvercle dur : deux coups pour ce quart
-			TightChance = 0.3,
+			Taps = 3, -- tapes pour faire sortir l'air
+			PerfectTime = 0.8, -- bocal ouvert (tapes + glissé) en moins de 0,8 intervalle = Perfect
+			MissTime = 1.6, -- au-delà de 1,6 intervalle = raté
+			PopTime = 0.7, -- secondes de la scène d'ouverture avant le bocal suivant
+			TightLevel = 1, -- couvercle coriace : plus de tapes
+			TightChance = 0.35,
+			TightTaps = 5,
 		},
 
-		-- Pneu du coursier (refait en D82) : pomper en glissant vers le bas, s'arrêter dans la zone verte
+		-- Pneu du coursier (refait en D106) : pompe à pied, écraser la pédale quand elle est tout en haut (au temps)
 		Pressure = {
-			AirPerStroke = 0.25, -- un coup de pompe complet envoie 25 % de la jauge
-			StrokeFraction = 0.35, -- part de la hauteur de l'écran pour un coup complet (iPhone : ~135 pt)
-			KeySpeed = 1.6, -- clavier / manette : vitesse de la poignée (coups par seconde)
-			ReturnSpeed = 3, -- la poignée remonte toute seule
-			CenterMin = 0.45, -- centre de la zone verte, tiré au sort à chaque pneu
-			CenterMax = 0.8,
-			ZoneHalf = 0.07,
-			ZoneShrinkPerLevel = 0.01,
-			PerfectHalf = 0.025,
-			Burst = 0.95, -- au-dessus : le pneu éclate
-			HoldTime = 0.45, -- secondes dans le vert sans pomper pour valider
-			Jitter = 0.012, -- hausse de pression ignorée (pouce qui tremble) pendant ce temps
-			TireTime = 3, -- au-delà de 3 intervalles, le coursier part (raté)
-			Leak = 0.02, -- fuite lente (par seconde) : un pneu trop gonflé redescend doucement
-			VaryLevel = 1, -- chaque pneu prend l'air différemment
-			LeakLevel = 2, -- fuite plus forte
-			LeakLevelBonus = 0.05,
+			Steps = 4, -- crans pour remplir un pneu
+			FirstBeat = 1.2, -- le premier temps arrive après 1,2 intervalle (le temps de voir la pédale monter)
+			RideTime = 0.8, -- secondes : le vélo s'en va, le suivant arrive
+			LeakLevel = 1, -- pneu qui fuit : un raté fait perdre un cran
+			BigLevel = 2, -- gros pneu de cargo : plus de crans
+			BigChance = 0.35,
+			BigSteps = 6,
 		},
-		-- (un seul passage du marteau par pulsation, notation au temps)
+		-- Marteau : allers-retours à vitesse constante, un passage au-dessus du clou par pulsation (D106)
 		Hammer = {
-			SweepFraction = 0.75, -- part de la pulsation où le marteau traverse la planche (aller)
 			PerfectTime = 0.08, -- secondes d'écart avec le passage au-dessus du clou
 			GoodTime = 0.18,
 			BentLevel = 1, -- clous tordus : deux coups

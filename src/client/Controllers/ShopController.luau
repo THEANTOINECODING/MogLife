@@ -11,6 +11,7 @@ local ProximityPromptService = game:GetService("ProximityPromptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
+local LookConfig = require(ReplicatedStorage.Shared.Config.Look)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local StyleItems = require(ReplicatedStorage.Shared.Config.StyleItems)
 local StyleSets = require(ReplicatedStorage.Shared.Config.StyleSets)
@@ -119,6 +120,88 @@ end
 
 local render
 
+-- Teintures du coiffeur (D106) : une rangée de pastilles au-dessus des coupes ; gratuites, la coupe portée prend la
+-- couleur tout de suite (l'aperçu aussi, sans attendre le serveur)
+local function addDyeRow()
+	local current = look and look.Dye or ""
+	local row = Ui.create("Frame", {
+		Name = "DyeRow",
+		Size = UDim2.new(1, -12, 0, 84),
+		BackgroundColor3 = Color3.fromRGB(40, 35, 55),
+		BackgroundTransparency = 0.2,
+		LayoutOrder = 0,
+		Parent = list,
+	}, { Ui.corner(UDim.new(0, 10)) })
+	Ui.label({
+		Position = UDim2.fromOffset(10, 4),
+		Size = UDim2.new(1, -20, 0, 22),
+		TextXAlignment = Enum.TextXAlignment.Left,
+		TextColor3 = Color3.fromRGB(255, 220, 120),
+		Text = Texts.Get("Shop.HairColor"),
+		Parent = row,
+	})
+	local strip = Ui.create("ScrollingFrame", {
+		Position = UDim2.fromOffset(6, 30),
+		Size = UDim2.new(1, -12, 0, 50),
+		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
+		ScrollingDirection = Enum.ScrollingDirection.X,
+		ScrollBarThickness = 3,
+		AutomaticCanvasSize = Enum.AutomaticSize.X,
+		CanvasSize = UDim2.new(),
+		Parent = row,
+	}, {
+		Ui.create("UIListLayout", {
+			FillDirection = Enum.FillDirection.Horizontal,
+			VerticalAlignment = Enum.VerticalAlignment.Center,
+			Padding = UDim.new(0, 8),
+			SortOrder = Enum.SortOrder.LayoutOrder,
+		}),
+		Ui.create("UIPadding", { PaddingLeft = UDim.new(0, 4), PaddingRight = UDim.new(0, 4) }),
+	})
+	local dyes = { "" }
+	for _, id in LookConfig.HairDyes do
+		table.insert(dyes, id)
+	end
+	for index, dye in dyes do
+		local color = Look.DyeColor({ Dye = dye } :: any)
+		local chosen = dye == current
+		local swatch = Ui.create("TextButton", {
+			Name = if dye == "" then "Original" else dye,
+			Text = "",
+			AutoButtonColor = true,
+			Size = UDim2.fromOffset(if dye == "" then 78 else 42, 42), -- « Original » : une pilule, son nom lisible
+			BackgroundColor3 = color or Color3.new(1, 1, 1),
+			LayoutOrder = index,
+			Parent = strip,
+		}, {
+			Ui.corner(UDim.new(1, 0)),
+			Ui.stroke(
+				if chosen then Color3.fromRGB(255, 215, 60) else Color3.new(1, 1, 1),
+				if chosen then 4 else 2,
+				if chosen then 0 else 0.4
+			),
+		})
+		if dye == "" then
+			-- Couleur d'origine : arc-en-ciel, le nom dessous
+			Ui.gradient(Color3.fromRGB(255, 120, 160), Color3.fromRGB(120, 180, 255), 45).Parent = swatch
+			Ui.label({
+				Size = UDim2.fromScale(1, 1),
+				Text = Texts.Get("Shop.HairColorOriginal"),
+				Font = Enum.Font.GothamBold,
+				Parent = swatch,
+			})
+		end
+		swatch.Activated:Connect(function()
+			if look then
+				look.Dye = dye
+			end
+			Remotes.SetHairDye:FireServer(dye)
+			render()
+		end)
+	end
+end
+
 local function onSetButton(setId: string)
 	previewing = nil
 	previewSet = setId
@@ -164,7 +247,7 @@ function render()
 		tab.BackgroundColor3 = if cat == category then Color3.fromRGB(220, 120, 30) else Color3.fromRGB(70, 70, 80)
 	end
 	for _, child in list:GetChildren() do
-		if child:IsA("GuiButton") or child.Name == "Empty" then
+		if child:IsA("GuiButton") or child.Name == "Empty" or child.Name == "DyeRow" then
 			child:Destroy()
 		end
 	end
@@ -235,6 +318,9 @@ function render()
 	end
 
 	local items = sortedItems(category)
+	if category == "Hair" then
+		addDyeRow()
+	end
 	if wardrobe and #items == 0 then
 		Ui.label({
 			Name = "Empty",
@@ -401,8 +487,8 @@ local function buildGui()
 	})
 	cashLabel = Ui.label({
 		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, -16, 0, 12),
-		Size = UDim2.new(0.4, -16, 0, 40),
+		Position = UDim2.new(1, -64, 0, 12),
+		Size = UDim2.new(0.4, -64, 0, 40),
 		TextXAlignment = Enum.TextXAlignment.Right,
 		TextColor3 = Color3.fromRGB(140, 255, 140),
 		Parent = panel,
@@ -420,7 +506,7 @@ local function buildGui()
 	viewport = Ui.create("ViewportFrame", {
 		Name = "Preview",
 		Position = UDim2.fromOffset(16, 78),
-		Size = UDim2.new(0.36, -16, 1, -184),
+		Size = UDim2.new(0.36, -16, 1, -124),
 		BackgroundColor3 = Color3.fromRGB(30, 26, 44),
 		BackgroundTransparency = 0.1,
 		Ambient = Color3.fromRGB(150, 150, 160),
@@ -431,7 +517,7 @@ local function buildGui()
 	world = Ui.create("WorldModel", { Parent = viewport })
 	viewport.CurrentCamera = Ui.create("Camera", { FieldOfView = 35, Parent = viewport })
 	previewLabel = Ui.label({
-		Position = UDim2.new(0, 16, 1, -104),
+		Position = UDim2.new(0, 16, 1, -44),
 		Size = UDim2.new(0.36, -16, 0, 26),
 		TextColor3 = Color3.fromRGB(255, 220, 120),
 		Text = Texts.Get("Shop.YourLook"),
@@ -453,7 +539,7 @@ local function buildGui()
 	list = Ui.create("ScrollingFrame", {
 		Name = "List",
 		Position = UDim2.new(0.36, 8, 0, 126),
-		Size = UDim2.new(0.64, -24, 1, -200),
+		Size = UDim2.new(0.64, -24, 1, -140),
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
 		ScrollBarThickness = 6,
@@ -464,15 +550,7 @@ local function buildGui()
 		Ui.create("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }),
 	})
 
-	local closeButton = Ui.button({
-		Name = "Close",
-		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.5, 0, 1, -14),
-		Size = UDim2.fromOffset(200, 50),
-		BackgroundColor3 = Color3.fromRGB(90, 90, 90),
-		Text = Texts.Get("Shop.Close"),
-		Parent = panel,
-	})
+	local closeButton = Ui.closeButton({ Text = Texts.Get("Shop.Close"), Parent = panel })
 	closeButton.Activated:Connect(close)
 	Ui.watchViewport(function()
 		local camera = workspace.CurrentCamera
@@ -488,16 +566,16 @@ local function buildGui()
 			tabArea.Position = UDim2.fromOffset(16, 286)
 			tabArea.Size = UDim2.new(1, -32, 0, 40)
 			list.Position = UDim2.fromOffset(16, 334)
-			list.Size = UDim2.new(1, -32, 1, -400)
+			list.Size = UDim2.new(1, -32, 1, -340)
 		else
 			viewport.Position = UDim2.fromOffset(16, 78)
-			viewport.Size = UDim2.new(0.36, -16, 1, -184)
-			previewLabel.Position = UDim2.new(0, 16, 1, -104)
+			viewport.Size = UDim2.new(0.36, -16, 1, -124)
+			previewLabel.Position = UDim2.new(0, 16, 1, -44)
 			previewLabel.Size = UDim2.new(0.36, -16, 0, 26)
 			tabArea.Position = UDim2.new(0.36, 8, 0, 78)
 			tabArea.Size = UDim2.new(0.64, -24, 0, 40)
 			list.Position = UDim2.new(0.36, 8, 0, 126)
-			list.Size = UDim2.new(0.64, -24, 1, -200)
+			list.Size = UDim2.new(0.64, -24, 1, -140)
 		end
 	end)
 

@@ -1,12 +1,11 @@
--- Mini-jeu « Twist » (aide : ouvrir le bocal de maman, refait en D88) : comme pour de vrai, il faut deux mains.
--- Un pouce TIENT le bocal (rester appuyé sur la gauche du panneau ou de l'écran), l'autre DÉVISSE le couvercle (glisser
--- vers la gauche sur la droite). Sans tenir le bocal, il tourne avec le couvercle : rien ne se dévisse.
--- Un coup de couvercle = un quart de tour = une répétition : vite = Perfect, plus lentement = Good, trop lent = raté.
--- 4 quarts : POP, le couvercle saute, les cornichons jaillissent, maman fait la fête, un nouveau bocal arrive.
--- Surprises : bocal mouillé (niveau Twist.WetLevel) : la main glisse, il faut lâcher le bocal et le reprendre ;
--- couvercle dur (niveau Twist.TightLevel) : deux coups pour ce quart.
--- Clavier : maintenir Espace ou Maj pour tenir, flèche gauche (ou A / Q) pour dévisser. Manette : maintenir L1 / L2,
--- bouton X ou stick à gauche pour dévisser.
+-- Mini-jeu « Twist » (aide : ouvrir le bocal de maman, refait en D106) : le truc de grand-mère.
+-- 1. TAPER : toucher l'écran (n'importe où) pour taper le couvercle ; au bout de Twist.Taps tapes, PSSHT, l'air sort.
+-- 2. TOURNER : un seul glissé (dans n'importe quel sens) dévisse le couvercle : POP, les cornichons jaillissent,
+--    maman fait la fête, un nouveau bocal arrive. Un bocal ouvert = une répétition : vite = Perfect, plus lentement =
+--    Good, trop lent = raté (le bocal suivant arrive).
+-- Glisser avant d'avoir assez tapé : le couvercle ne bouge pas (« tape d'abord ! »).
+-- Surprise : couvercle coriace (niveau Twist.TightLevel), il faut plus de tapes (Twist.TightTaps).
+-- Clavier : Espace pour taper, flèches pour tourner. Manette : A pour taper, croix ou stick pour tourner.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
@@ -19,26 +18,11 @@ local Ui = require(script.Parent.Parent.Ui)
 local SETTINGS = Balance.Minigames.Twist
 local LID = Color3.fromRGB(240, 196, 64)
 local LID_DARK = Color3.fromRGB(170, 120, 30)
+local LID_READY = Color3.fromRGB(255, 236, 140)
 local GLASS = Color3.fromRGB(150, 215, 140)
-local GRIP_ON = Color3.fromRGB(90, 220, 100)
-local GRIP_OFF = Color3.fromRGB(70, 65, 95)
-local WET = Color3.fromRGB(90, 170, 255)
+local DOT_OFF = Color3.fromRGB(60, 55, 80)
+local DOT_ON = Color3.fromRGB(90, 220, 100)
 local RIDGES = 7
-
-local GRIP_KEYS = {
-	[Enum.KeyCode.Space] = true,
-	[Enum.KeyCode.LeftShift] = true,
-	[Enum.KeyCode.RightShift] = true,
-	[Enum.KeyCode.ButtonL1] = true,
-	[Enum.KeyCode.ButtonL2] = true,
-}
-local TWIST_KEYS = {
-	[Enum.KeyCode.Left] = true,
-	[Enum.KeyCode.A] = true,
-	[Enum.KeyCode.Q] = true,
-	[Enum.KeyCode.ButtonX] = true,
-	[Enum.KeyCode.DPadLeft] = true,
-}
 
 local Twist = {}
 
@@ -47,161 +31,155 @@ function Twist.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 	local panel = self:Panel(UDim2.fromOffset(340, 390))
 	local rng = self:Random()
 
-	-- Main gauche : la prise du bocal (verte quand on tient, bleue quand le bocal est mouillé)
-	local grip = Ui.create("Frame", {
-		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 14, 0.56, 0),
-		Size = UDim2.fromOffset(78, 78),
-		BackgroundColor3 = GRIP_OFF,
-		ZIndex = 4,
-		Parent = panel,
-	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 3, 0.2) })
-	local gripIcon = self:Emoji(grip, "✋", 48, 5)
-	gripIcon.Position = UDim2.fromScale(0.5, 0.5)
-	local holdLabel = Ui.label({
-		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 1, 4),
-		Size = UDim2.fromOffset(110, 22),
-		Text = Texts.Get("Minigame.Twist.Hold"),
-		ZIndex = 5,
-		Parent = grip,
-	})
-
-	-- Le bocal (de face) et son couvercle
+	-- Le bocal (de face), ses cornichons et son couvercle
 	local jar = Ui.create("Frame", {
 		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.6, 0, 1, -26),
-		Size = UDim2.fromOffset(150, 190),
+		Position = UDim2.new(0.5, 0, 1, -24),
+		Size = UDim2.fromOffset(160, 200),
 		BackgroundColor3 = GLASS,
 		BackgroundTransparency = 0.2,
 		Parent = panel,
-	}, { Ui.corner(UDim.new(0, 26)), Ui.stroke(Color3.new(1, 1, 1), 3, 0.3) })
+	}, { Ui.corner(UDim.new(0, 28)), Ui.stroke(Color3.new(1, 1, 1), 3, 0.3) })
+	local jarHome = jar.Position
 	for index = 1, 3 do
-		local pickle = self:Emoji(jar, "🥒", 50, 2)
-		pickle.Position = UDim2.fromScale(0.25 + (index - 1) * 0.25, 0.5 + (index % 2) * 0.18)
+		local pickle = self:Emoji(jar, "🥒", 54, 2)
+		pickle.Position = UDim2.fromScale(0.25 + (index - 1) * 0.25, 0.52 + (index % 2) * 0.18)
 		pickle.Rotation = index * 50
 	end
-	local drops = self:Emoji(jar, "💦", 46, 6)
-	drops.Position = UDim2.fromScale(0.82, 0.25)
 	local lid = Ui.create("Frame", {
 		AnchorPoint = Vector2.new(0.5, 1),
 		Position = UDim2.new(0.5, 0, 0, 14),
-		Size = UDim2.new(1, 18, 0, 50),
+		Size = UDim2.new(1, 22, 0, 54),
 		BackgroundColor3 = LID,
 		ClipsDescendants = true,
 		ZIndex = 3,
 		Parent = jar,
 	}, { Ui.corner(UDim.new(0, 12)), Ui.stroke(LID_DARK, 3, 0) })
 	local lidHome = lid.Position
+	local lidScale = Ui.create("UIScale", { Parent = lid })
 	local ridges = {}
 	for index = 1, RIDGES do
 		ridges[index] = Ui.create("Frame", {
 			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(0.04 + (index - 1) / (RIDGES - 1) * 0.92, 0.5),
 			Size = UDim2.new(0, 7, 1, -12),
 			BackgroundColor3 = LID_DARK,
 			ZIndex = 4,
 			Parent = lid,
 		}, { Ui.corner(UDim.new(1, 0)) })
 	end
-	-- Flèche du geste : glisser vers la gauche sur le couvercle
-	local arrow = self:Emoji(panel, "⬅️", 46, 7)
-	-- Quarts de tour du bocal en cours
-	local pipsFrame = Ui.create("Frame", {
+
+	-- Tapes du bocal en cours (une pastille par tape à faire), au-dessus du couvercle
+	local dotsFrame = Ui.create("Frame", {
 		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 0, 14),
-		Size = UDim2.fromOffset(200, 26),
+		Position = UDim2.new(0.5, 0, 0, 16),
+		Size = UDim2.fromOffset(240, 28),
 		BackgroundTransparency = 1,
 		Parent = panel,
 	}, {
 		Ui.create("UIListLayout", {
 			FillDirection = Enum.FillDirection.Horizontal,
 			HorizontalAlignment = Enum.HorizontalAlignment.Center,
-			Padding = UDim.new(0, 12),
+			Padding = UDim.new(0, 10),
 		}),
 	})
-	local pips = {}
-	for index = 1, SETTINGS.NotchesPerJar do
-		pips[index] = Ui.create("Frame", {
-			Size = UDim2.fromOffset(26, 26),
-			BackgroundColor3 = Color3.fromRGB(60, 55, 80),
-			LayoutOrder = index,
-			Parent = pipsFrame,
-		}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 2, 0.4) })
-	end
+	local dots: { Frame } = {}
+
+	-- Consigne du moment, au-dessus du bocal : TAPE ! puis TOURNE ! avec la flèche qui tourne
+	local cue = Ui.label({
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.new(0.5, 0, 0, 74),
+		Size = UDim2.fromOffset(200, 40),
+		TextColor3 = LID_READY,
+		ZIndex = 8,
+		Parent = panel,
+	})
+	local spinArrow = self:Emoji(panel, "🔄", 64, 9)
 	local mom = self:Emoji(panel, "👩", 50, 8)
-	mom.Position = UDim2.new(1, -30, 0, 66)
-	local jarHome = jar.Position
+	mom.Position = UDim2.new(1, -32, 0, 76)
 
 	-- État
-	local grips: { [InputObject]: number } = {} -- doigts (ou souris) qui tiennent le bocal : moment de la prise
-	local keyGripAt: number? = nil -- touche de prise maintenue (clavier, manette)
-	local lidTouches: { [InputObject]: Vector2 } = {} -- doigts posés sur le couvercle : point de départ
-	local lidFired: { [InputObject]: boolean } = {}
-	local quarters = 0
-	local strokes = 0 -- coups faits sur le quart en cours (couvercle dur : 2)
-	local need = 1
+	local phase: "Tap" | "Twist" | "Pop" = "Tap"
+	local taps = 0
+	local need = SETTINGS.Taps
 	local repStart = os.clock() + interval * 0.3
-	local lockedUntil = repStart
-	local wetAt: number? = nil -- bocal mouillé : il faut une prise prise APRÈS ce moment
-	local popping = false
 	local started = false
-	local spunAt = -math.huge -- le bocal a tourné tout seul (pas tenu)
-	local twistAt = -math.huge
-	local turned = 0 -- position des stries du couvercle
+	local tapAt = -math.huge
+	local readyAt = -math.huge -- l'air est sorti : le couvercle attend son glissé
+	local stuckAt = -math.huge -- glissé trop tôt : le couvercle résiste
 	local momCheerUntil = 0
-	local quarterId = 0
 
-	-- Le bocal est-il bien tenu ? (une prise, et si le bocal est mouillé, une prise reprise depuis)
-	local function holding(): boolean
-		local latest = keyGripAt
-		for _, at in grips do
-			latest = if latest then math.max(latest, at) else at
+	local function setDots(count: number)
+		for _, dot in dots do
+			dot:Destroy()
 		end
-		if not latest then
-			return false
+		table.clear(dots)
+		for index = 1, count do
+			dots[index] = Ui.create("Frame", {
+				Size = UDim2.fromOffset(28, 28),
+				BackgroundColor3 = DOT_OFF,
+				LayoutOrder = index,
+				Parent = dotsFrame,
+			}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 2, 0.4) })
 		end
-		return wetAt == nil or latest > wetAt
 	end
 
-	local function newQuarter(at: number)
+	-- Petit mot qui saute du couvercle (TOK !, PSSHT !)
+	local function pop(text: string, color: Color3)
+		local word = Ui.label({
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.new(0.5, rng:NextInteger(-50, 50), 0, 120),
+			Size = UDim2.fromOffset(120, 36),
+			Text = text,
+			TextColor3 = color,
+			ZIndex = 20,
+			Parent = panel,
+		})
+		TweenService:Create(word, TweenInfo.new(0.45, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+			Position = word.Position - UDim2.fromOffset(0, 50),
+			TextTransparency = 1,
+			TextStrokeTransparency = 1,
+		}):Play()
+		task.delay(0.5, function()
+			word:Destroy()
+		end)
+	end
+
+	local function newJar(at: number)
+		phase = "Tap"
+		taps = 0
 		repStart = at
-		lockedUntil = repStart
-		strokes = 0
-		need = 1
-		wetAt = nil
-		quarterId += 1
-		local id = quarterId
+		need = SETTINGS.Taps
 		if self.level >= SETTINGS.TightLevel and rng:NextNumber() < SETTINGS.TightChance then
-			need = 2
+			need = SETTINGS.TightTaps
 			self:Announce("Minigame.Twist.Twist.Tight")
 		end
-		if self.level >= SETTINGS.WetLevel and rng:NextNumber() < SETTINGS.WetChance then
-			-- Le bocal devient glissant un peu après le début du quart
-			task.delay(math.max(repStart + interval * SETTINGS.WetDelay - os.clock(), 0), function()
-				if not self.destroyed and quarterId == id and not popping then
-					wetAt = os.clock()
-					Kit.Sound("SceneTouch", 0.5)
-					self:Announce("Minigame.Twist.Twist.Wet")
-				end
-			end)
-		end
+		setDots(need)
+		lid.Position = lidHome
+		lid.Rotation = 0
 	end
-	newQuarter(repStart)
+	newJar(repStart)
 
-	-- Le bocal s'ouvre : le couvercle saute, les cornichons jaillissent, puis un nouveau bocal arrive
-	local function pop()
-		popping = true
+	-- Bocal ouvert : le couvercle saute, les cornichons jaillissent, puis un nouveau bocal arrive
+	local function open(now: number)
+		phase = "Pop"
+		local took = (now - repStart) / interval
+		local quality = if took <= SETTINGS.PerfectTime / self.timingScale
+			then "Perfect"
+			elseif took <= SETTINGS.MissTime then "Good"
+			else "Miss"
+		self:Rep(quality, lid)
 		Kit.Haptic("Strong")
 		Kit.Sound("SceneImpact", 1.35)
 		self:Shake(6)
-		momCheerUntil = os.clock() + 1.2
+		momCheerUntil = now + 1.2
 		TweenService:Create(lid, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-			Position = lidHome + UDim2.fromOffset(80, -200),
-			Rotation = 400,
+			Position = lidHome + UDim2.fromOffset(90, -210),
+			Rotation = 420,
 		}):Play()
 		for index = 1, 7 do
 			local pickle = self:Emoji(panel, "🥒", 40, 19)
-			pickle.Position = jar.Position - UDim2.fromOffset(0, 190)
+			pickle.Position = jar.Position - UDim2.fromOffset(0, 200)
 			local angle = math.rad(-160 + index * 20)
 			TweenService:Create(pickle, TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 				Position = pickle.Position + UDim2.fromOffset(math.cos(angle) * 150, math.sin(angle) * 120),
@@ -212,172 +190,92 @@ function Twist.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 				pickle:Destroy()
 			end)
 		end
-		task.delay(SETTINGS.PopTime * 0.6, function()
+		task.delay(SETTINGS.PopTime, function()
 			if self.destroyed then
 				return
 			end
-			quarters = 0
-			lid.Position = lidHome
-			lid.Rotation = 0
-			jar.Position = jarHome + UDim2.fromOffset(320, 0)
-			TweenService:Create(jar, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+			jar.Position = jarHome + UDim2.fromOffset(340, 0)
+			newJar(os.clock() + 0.3)
+			TweenService:Create(jar, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
 				Position = jarHome,
 			}):Play()
-			popping = false
 		end)
 	end
 
-	-- Un coup sur le couvercle
-	local function twist()
+	-- 1. Une tape sur le couvercle
+	self:OnPress(function()
 		local now = os.clock()
-		if popping or now < lockedUntil then
-			self:Nope(lid)
+		if phase ~= "Tap" or now < repStart then
 			return
 		end
 		started = true
-		if not holding() then
-			-- Pas tenu (ou mouillé et pas repris) : le bocal tourne avec le couvercle, rien ne se dévisse
-			spunAt = now
-			Kit.Sound("SceneTouch", 0.6)
-			self:Announce(if wetAt then "Minigame.Twist.Twist.Wet" else "Minigame.Twist.Twist.NoGrip")
-			return
-		end
-		twistAt = now
-		turned += 1
-		strokes += 1
-		Kit.Sound("SceneTouch", 0.9 + strokes * 0.2)
+		taps += 1
+		tapAt = now
 		Kit.Haptic("Light")
-		if strokes < need then
+		if dots[taps] then
+			dots[taps].BackgroundColor3 = DOT_ON
+		end
+		if taps < need then
+			Kit.Sound("SceneTouch", 1 + taps * 0.12)
+			pop(Texts.Get("Minigame.Twist.Tok"), Color3.new(1, 1, 1))
 			return
 		end
-		local took = (now - repStart) / interval
-		local quality = if took <= SETTINGS.PerfectTime / self.timingScale
-			then "Perfect"
-			elseif took <= SETTINGS.MissTime then "Good"
-			else "Miss"
-		self:Rep(quality, lid)
-		quarters += 1
-		if quarters >= SETTINGS.NotchesPerJar then
-			pop()
-			newQuarter(now + SETTINGS.PopTime)
-		else
-			Kit.Sound("SceneImpact", 0.9 + quarters * 0.1)
-			newQuarter(now + 0.15)
-		end
-	end
+		-- Dernière tape : l'air sort, le couvercle est prêt à tourner
+		phase = "Twist"
+		readyAt = now
+		Kit.Sound("SceneImpact", 1.6)
+		pop(Texts.Get("Minigame.Twist.Pssht"), Color3.fromRGB(170, 230, 255))
+	end)
 
-	-- Gestes : à gauche (prise du bocal et tout ce qui est à sa gauche), on tient ; à droite, on glisse vers la gauche
-	local function divider(): number
-		return grip.AbsolutePosition.X + grip.AbsoluteSize.X + 10
-	end
-	local function swipeDistance(): number
-		local camera = workspace.CurrentCamera
-		local height = if camera then camera.ViewportSize.Y else 600
-		return math.max(30, height * SETTINGS.SwipeFraction)
-	end
-	local function checkSwipe(key: InputObject, position: Vector3)
-		local start = lidTouches[key]
-		if start and not lidFired[key] and start.X - position.X >= swipeDistance() then
-			lidFired[key] = true
-			twist()
-		end
-	end
-	local mouse: InputObject? = nil -- bouton de souris enfoncé sur le couvercle
-	self:Connect(Kit.Input.InputBegan, function(input)
-		local press = input.UserInputType == Enum.UserInputType.Touch
-			or input.UserInputType == Enum.UserInputType.MouseButton1
-		if press and not self:_overButton(input.Position) then
-			if input.Position.X < divider() then
-				grips[input] = os.clock()
-				Kit.Haptic("Light")
-			else
-				lidTouches[input] = Vector2.new(input.Position.X, input.Position.Y)
-				if input.UserInputType == Enum.UserInputType.MouseButton1 then
-					mouse = input
-				end
-			end
-		elseif GRIP_KEYS[input.KeyCode] then
-			keyGripAt = os.clock()
-		elseif TWIST_KEYS[input.KeyCode] then
-			twist()
+	-- 2. Le glissé qui dévisse (n'importe quel sens)
+	self:OnSwipe(function()
+		local now = os.clock()
+		if phase == "Twist" then
+			open(now)
+		elseif phase == "Tap" and now >= repStart then
+			stuckAt = now
+			self:Nope(lid)
+			self:Announce("Minigame.Twist.Twist.TapFirst")
 		end
 	end)
-	self:Connect(Kit.Input.InputChanged, function(input)
-		if lidTouches[input] then
-			checkSwipe(input, input.Position)
-		elseif input.UserInputType == Enum.UserInputType.MouseMovement and mouse then
-			checkSwipe(mouse, input.Position)
-		elseif input.KeyCode == Enum.KeyCode.Thumbstick1 or input.KeyCode == Enum.KeyCode.Thumbstick2 then
-			if input.Position.X < -0.7 and not lidFired[input] then
-				lidFired[input] = true
-				twist()
-			elseif input.Position.X > -0.3 then
-				lidFired[input] = nil
-			end
-		end
-	end)
-	self:Connect(Kit.Input.InputEnded, function(input)
-		grips[input] = nil
-		lidTouches[input] = nil
-		lidFired[input] = nil
-		if input == mouse then
-			mouse = nil
-		end
-		if GRIP_KEYS[input.KeyCode] then
-			keyGripAt = nil
-		end
-	end)
+	self:Guide(panel, "Tap")
 
 	self:OnStep(function()
 		local now = os.clock()
-		-- Trop lent : le quart est raté (une fois la partie commencée)
-		if started and not popping and now > repStart and (now - repStart) / interval > SETTINGS.MissTime + 0.4 then
+		-- Trop lent : le bocal est raté, le suivant arrive (une fois la partie commencée)
+		if started and phase ~= "Pop" and (now - repStart) / interval > SETTINGS.MissTime + 0.4 then
 			self:Rep("Miss", lid)
-			newQuarter(now)
+			newJar(now + 0.2)
 		end
-		local held = holding()
-		local anyGrip = keyGripAt ~= nil or next(grips) ~= nil
-		grip.BackgroundColor3 = if held then GRIP_ON elseif wetAt and anyGrip then WET else GRIP_OFF
-		gripIcon.Text = if held then "✊" else "✋"
-		grip.Size = if held then UDim2.fromOffset(84, 84) else UDim2.fromOffset(78, 78)
-		holdLabel.TextTransparency = if held then 0.6 else 0
-		drops.Visible = wetAt ~= nil
-		drops.Rotation = math.sin(now * 8) * 10
-		-- Couvercle : ses stries défilent à chaque coup
-		local since = now - twistAt
-		local shift = turned * 0.07 + (if since < 0.15 then since / 0.15 * 0.07 else 0)
-		for index, ridge in ridges do
-			ridge.Position = UDim2.fromScale(0.04 + (((index - 1) / RIDGES + shift) % 1) * 0.92, 0.5)
-		end
-		-- Bocal pas tenu : il tourne avec le couvercle
-		local spin = now - spunAt
-		jar.Rotation = if spin < 0.4 then math.sin(spin * 40) * 12 * (1 - spin / 0.4) else 0
-		-- Flèche : elle glisse vers la gauche au-dessus du couvercle (pâle tant que le bocal n'est pas tenu)
+		-- Couvercle : il s'écrase un peu à chaque tape ; prêt, il brille et pulse ; il résiste à un glissé trop tôt
+		local sinceTap = now - tapAt
+		local squash = if sinceTap < 0.12 then 1 - sinceTap / 0.12 else 0
+		local ready = phase == "Twist"
+		lidScale.Scale = 1 - squash * 0.08 + (if ready then 0.04 * math.sin(now * 14) else 0)
+		lid.BackgroundColor3 = if ready then LID_READY else LID
+		local stuck = now - stuckAt
+		lid.Rotation = if phase == "Pop" then lid.Rotation elseif stuck < 0.3 then math.sin(stuck * 60) * 4 else 0
+		jar.Position = if phase == "Pop" or sinceTap > 0.12
+			then jar.Position
+			else jarHome + UDim2.fromOffset(0, squash * 5)
+		-- Consigne et flèche qui tourne
+		cue.Text = if phase == "Tap"
+			then Texts.Get("Minigame.Twist.TapCue")
+			elseif ready then Texts.Get("Minigame.Twist.TwistCue")
+			else ""
 		local lidCenter = lid.AbsolutePosition + lid.AbsoluteSize / 2 - panel.AbsolutePosition
-		local slide = (now * 1.5) % 1
-		arrow.Position = UDim2.fromOffset(lidCenter.X + 30 - slide * 60, lidCenter.Y - 44)
-		arrow.TextTransparency = if popping then 1 elseif held then 0.1 else 0.65
-		for index, pip in pips do
-			pip.BackgroundColor3 = if index <= quarters
-				then Color3.fromRGB(90, 220, 100)
-				elseif index == quarters + 1 and strokes > 0 then Color3.fromRGB(255, 210, 60)
-				else Color3.fromRGB(60, 55, 80)
-		end
+		spinArrow.Visible = ready
+		spinArrow.Position = UDim2.fromOffset(lidCenter.X, lidCenter.Y)
+		spinArrow.Rotation = -((now - readyAt) * 360) % 360
+		-- Maman : elle attend, elle grimace si le couvercle résiste, elle fait la fête au POP
 		local cheering = now < momCheerUntil
-		mom.Text = if cheering then "🥳" elseif spin < 0.6 then "😬" else "👩"
+		mom.Text = if cheering then "🥳" elseif stuck < 0.6 then "😬" elseif ready then "😮" else "👩"
 		mom.Rotation = if cheering then math.sin(now * 20) * 12 else 0
 	end)
 
 	-- État de la partie pour les tests automatiques (tests/minigames_bot.luau) : ne change rien au jeu
 	function self.Probe()
-		local now = os.clock()
-		return {
-			phase = "Free",
-			resting = popping or now < lockedUntil,
-			holding = holding(),
-			wet = wetAt ~= nil,
-			fill = strokes / need,
-		}
+		return { phase = phase, taps = taps, need = need, waiting = os.clock() < repStart }
 	end
 
 	return self

@@ -1,12 +1,13 @@
--- Événements de ville (EventService) côté client : bandeau d'annonce en haut de l'écran avec ce qu'il reste à
--- trouver (haltères, shakes, plaquages), le temps restant et sa jauge, et repères au-dessus des objets de
--- l'événement pour les retrouver. Le spectacle dans le monde est joué par EventFxController (D100).
+-- Événements de ville (EventService) côté client : petit bandeau en haut de l'écran (D106 : une ligne, icône, titre,
+-- ce qu'il reste à trouver, temps restant et sa jauge ; la consigne seulement les premières secondes) avec une croix ;
+-- fermé, il laisse une pastille ronde qui le rouvre. Repères au-dessus des objets de l'événement pour les retrouver. Le spectacle dans le monde est joué par EventFxController (D100).
 
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Events = require(ReplicatedStorage.Shared.Config.Events)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
@@ -19,13 +20,19 @@ local player = Players.LocalPlayer
 
 local UIController
 
+local BANNER = Balance.EventBanner
 local banner: Frame
+local pill: TextButton
+local pillTimer: TextLabel
+local iconLabel: TextLabel
 local titleLabel: TextLabel
 local descLabel: TextLabel
 local timerLabel: TextLabel
 local counterLabel: TextLabel
 local timeBar: Frame
 local current: { kind: string, endsAt: number, startedAt: number }? = nil
+local dismissed = false -- le joueur a fermé le bandeau de cet événement : seule la pastille reste
+local detailUntil = 0 -- la consigne reste affichée jusque-là
 local markers: { BillboardGui } = {}
 local busySignal = Instance.new("BindableEvent")
 
@@ -89,27 +96,44 @@ local function counterText(kind: string): string
 	return ""
 end
 
-local function hideBanner()
-	local tween = TweenService:Create(banner, TweenInfo.new(0.3), { Position = UDim2.new(0.5, 0, 0, -220) })
-	tween.Completed:Connect(function(state)
-		if state == Enum.PlaybackState.Completed then
-			banner.Visible = false
-		end
-	end)
-	tween:Play()
+-- Emplacement : en haut à droite sur téléphone ou tablette en paysage (le centre est au HUD, la gauche au menu),
+-- sous la pastille d'objectif en portrait, sous le HUD sur ordinateur
+local function layoutBanner()
+	local wide = false
+	if Ui.isPhonePortrait() then
+		banner.AnchorPoint = Vector2.new(0.5, 0)
+		banner.Position = UDim2.new(0.5, 0, 0, BANNER.PortraitTop)
+		wide = true
+	elseif UserInputService.TouchEnabled then
+		banner.AnchorPoint = Vector2.new(1, 0)
+		banner.Position = UDim2.new(1, -8, 0, 8)
+	else
+		banner.AnchorPoint = Vector2.new(0.5, 0)
+		banner.Position = UDim2.new(0.5, 0, 0, BANNER.DesktopTop)
+	end
+	local detail = os.clock() < detailUntil
+	local height = if detail then BANNER.Height + BANNER.DetailHeight else BANNER.Height
+	banner.Size = if wide then UDim2.new(1, -16, 0, height) else UDim2.fromOffset(BANNER.Width, height)
+	descLabel.Visible = detail
+	pill.AnchorPoint = banner.AnchorPoint
+	pill.Position = banner.Position
+end
+
+-- Ce qui se voit : rien quand on est occupé ou sans événement ; sinon le bandeau, ou la pastille s'il a été fermé
+local function refreshBanner()
+	local show = current ~= nil and not EventController.IsBusy()
+	banner.Visible = show and not dismissed
+	pill.Visible = show and dismissed
 end
 
 local function showBanner(kind: string)
-	if EventController.IsBusy() then
-		return
-	end
 	titleLabel.Text = Texts.Get(`Event.{kind}.Title`)
 	descLabel.Text = Texts.Get(`Event.{kind}.Desc`, { count = Events.RunawayPiano.Tackles })
-	banner.Visible = true
-	banner.Position = UDim2.new(0.5, 0, 0, -220)
-	TweenService:Create(banner, TweenInfo.new(0.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-		Position = UDim2.new(0.5, 0, 0, 222), -- sous le panneau Mog / Cash du HUD
-	}):Play()
+	iconLabel.Text = Texts.Get(`Event.{kind}.Icon`)
+	pill.Text = iconLabel.Text
+	detailUntil = os.clock() + BANNER.DetailSeconds
+	layoutBanner()
+	refreshBanner()
 end
 
 local function onEvent(message)
@@ -120,10 +144,11 @@ local function onEvent(message)
 		local endsAt = message.endsAt or workspace:GetServerTimeNow() + 60
 		local duration = (Events :: any)[message.kind] and (Events :: any)[message.kind].Duration or 60
 		current = { kind = message.kind, endsAt = endsAt, startedAt = endsAt - duration }
+		dismissed = false
 		showBanner(message.kind)
 	elseif message.state == "Ended" then
 		current = nil
-		hideBanner()
+		refreshBanner()
 	elseif message.state == "Stopped" and message.name and not EventController.IsBusy() then
 		UIController.Toast(Texts.Get("Event.RunawayPiano.Stopped", { name = message.name }))
 	end
@@ -133,46 +158,48 @@ local function buildGui()
 	local gui = Ui.create("ScreenGui", { Name = "CityEvent", ResetOnSpawn = false, DisplayOrder = 2 })
 	banner = Ui.panel({
 		Name = "Banner",
-		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 0, -220),
-		Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 120) else UDim2.fromOffset(460, 120),
 		Visible = false,
 		Parent = gui,
 	})
-	Ui.watchViewport(function()
-		banner.Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 120) else UDim2.fromOffset(460, 120)
-	end)
+	iconLabel = Ui.label({
+		AnchorPoint = Vector2.new(0, 0.5),
+		Position = UDim2.fromOffset(8, BANNER.Height / 2),
+		Size = UDim2.fromOffset(32, 32),
+		Parent = banner,
+	})
 	titleLabel = Ui.label({
-		Position = UDim2.fromOffset(14, 8),
-		Size = UDim2.new(1, -28, 0, 36),
+		Position = UDim2.fromOffset(46, 5),
+		Size = UDim2.new(1, -94, 0, 20),
+		TextXAlignment = Enum.TextXAlignment.Left,
 		TextColor3 = GOLD,
 		Parent = banner,
 	})
-	descLabel = Ui.label({
-		Position = UDim2.fromOffset(14, 46),
-		Size = UDim2.new(1, -28, 0, 26),
-		Font = Enum.Font.GothamMedium,
-		Parent = banner,
-	})
 	counterLabel = Ui.label({
-		Position = UDim2.fromOffset(14, 76),
-		Size = UDim2.new(0.6, -14, 0, 22),
+		Position = UDim2.fromOffset(46, 26),
+		Size = UDim2.new(0.6, -46, 0, 16),
 		TextXAlignment = Enum.TextXAlignment.Left,
+		Font = Enum.Font.GothamBold,
 		TextColor3 = Color3.fromRGB(255, 235, 170),
 		Parent = banner,
 	})
 	timerLabel = Ui.label({
 		AnchorPoint = Vector2.new(1, 0),
-		Position = UDim2.new(1, -14, 0, 76),
-		Size = UDim2.new(0.4, -14, 0, 22),
+		Position = UDim2.new(1, -48, 0, 26),
+		Size = UDim2.new(0.4, -48, 0, 16),
 		TextXAlignment = Enum.TextXAlignment.Right,
-		Font = Enum.Font.GothamMedium,
+		Font = Enum.Font.GothamBold,
 		TextColor3 = Color3.fromRGB(210, 210, 225),
 		Parent = banner,
 	})
+	descLabel = Ui.label({
+		Position = UDim2.fromOffset(10, BANNER.Height),
+		Size = UDim2.new(1, -20, 0, BANNER.DetailHeight - 8),
+		Font = Enum.Font.GothamMedium,
+		Parent = banner,
+	})
 	local track = Ui.create("Frame", {
-		Position = UDim2.new(0, 14, 1, -16),
-		Size = UDim2.new(1, -28, 0, 7),
+		Position = UDim2.new(0, 10, 1, -6),
+		Size = UDim2.new(1, -20, 0, 3),
 		BackgroundColor3 = Color3.fromRGB(50, 46, 66),
 		Parent = banner,
 	}, { Ui.corner(UDim.new(1, 0)) })
@@ -181,6 +208,41 @@ local function buildGui()
 		BackgroundColor3 = GOLD,
 		Parent = track,
 	}, { Ui.corner(UDim.new(1, 0)) })
+	local closeButton = Ui.closeButton({
+		AnchorPoint = Vector2.new(1, 0.5),
+		Position = UDim2.new(1, -6, 0, BANNER.Height / 2),
+		Size = UDim2.fromOffset(36, 36),
+		Text = Texts.Get("Shop.Close"),
+		Parent = banner,
+	})
+	closeButton.Activated:Connect(function()
+		dismissed = true
+		refreshBanner()
+	end)
+	-- Bandeau fermé : pastille ronde (icône de l'événement, temps restant dessous) ; la toucher le rouvre
+	pill = Ui.button({
+		Name = "Pill",
+		Size = UDim2.fromOffset(BANNER.Height, BANNER.Height),
+		BackgroundColor3 = Color3.fromRGB(60, 40, 100),
+		Visible = false,
+		Parent = gui,
+	})
+	pill:FindFirstChildOfClass("UICorner").CornerRadius = UDim.new(1, 0)
+	Ui.stroke(GOLD, 2, 0).Parent = pill
+	pillTimer = Ui.label({
+		AnchorPoint = Vector2.new(0.5, 0),
+		Position = UDim2.new(0.5, 0, 1, 2),
+		Size = UDim2.fromOffset(BANNER.Height + 16, 16),
+		Font = Enum.Font.GothamBold,
+		Parent = pill,
+	})
+	pill.Activated:Connect(function()
+		dismissed = false
+		if current then
+			showBanner(current.kind)
+		end
+	end)
+	Ui.watchViewport(layoutBanner)
 	gui.Parent = player:WaitForChild("PlayerGui")
 end
 
@@ -205,13 +267,7 @@ function EventController.Start()
 		for _, marker in markers do
 			marker.Enabled = not busy
 		end
-		if current then
-			if busy then
-				hideBanner()
-			else
-				showBanner(current.kind)
-			end
-		end
+		refreshBanner()
 		busySignal:Fire(busy)
 	end
 	for _, attribute in BUSY_ATTRIBUTES do
@@ -224,6 +280,10 @@ function EventController.Start()
 				local now = workspace:GetServerTimeNow()
 				local left = math.max(0, math.ceil(current.endsAt - now))
 				timerLabel.Text = Texts.Get("Event.TimeLeft", { seconds = left })
+				pillTimer.Text = timerLabel.Text
+				if descLabel.Visible ~= (os.clock() < detailUntil) then
+					layoutBanner()
+				end
 				local total = math.max(current.endsAt - current.startedAt, 1)
 				timeBar.Size = UDim2.fromScale(math.clamp((current.endsAt - now) / total, 0, 1), 1)
 				counterLabel.Text = counterText(current.kind)

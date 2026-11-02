@@ -77,32 +77,24 @@ local function buildGui()
 		Name = "Bus",
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.55),
-		Size = UDim2.fromOffset(360, 420),
+		Size = UDim2.fromOffset(360, 360),
 		Visible = false,
 		Parent = gui,
 	})
 	Ui.label({
-		Position = UDim2.fromOffset(16, 12),
-		Size = UDim2.new(1, -32, 0, 40),
+		Position = UDim2.fromOffset(60, 12),
+		Size = UDim2.new(1, -120, 0, 40),
 		TextColor3 = Color3.fromRGB(255, 220, 120),
 		Text = Texts.Get("Bus.Title"),
 		Parent = panel,
 	})
 	list = Ui.create("Frame", {
 		Position = UDim2.fromOffset(20, 64),
-		Size = UDim2.new(1, -40, 1, -140),
+		Size = UDim2.new(1, -40, 1, -80),
 		BackgroundTransparency = 1,
 		Parent = panel,
 	}, { Ui.create("UIListLayout", { Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder }) })
-	local closeButton = Ui.button({
-		Name = "Close",
-		AnchorPoint = Vector2.new(0.5, 1),
-		Position = UDim2.new(0.5, 0, 1, -14),
-		Size = UDim2.fromOffset(200, 52),
-		BackgroundColor3 = Color3.fromRGB(90, 90, 90),
-		Text = Texts.Get("Shop.Close"),
-		Parent = panel,
-	})
+	local closeButton = Ui.closeButton({ Text = Texts.Get("Shop.Close"), Parent = panel })
 	closeButton.Activated:Connect(close)
 
 	gui.Parent = player:WaitForChild("PlayerGui")

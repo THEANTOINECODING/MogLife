@@ -7,10 +7,12 @@ local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local LookConfig = require(ReplicatedStorage.Shared.Config.Look)
 local StyleItems = require(ReplicatedStorage.Shared.Config.StyleItems)
 local StyleSets = require(ReplicatedStorage.Shared.Config.StyleSets)
 local StylePieces = require(ReplicatedStorage.Shared.Config.StylePieces)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
+local Look = require(ReplicatedStorage.Shared.Look)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 
 local MIRROR_TAG = "Mirror"
@@ -103,7 +105,7 @@ local function buildVisuals(player: Player)
 			part.Name = `{itemId}_{index}`
 			part.Size = attach.Size * piece.size
 			part.CFrame = attach.CFrame * CFrame.new(attach.Size * piece.offset)
-			part.Color = piece.color
+			part.Color = if item.category == "Hair" then Look.DyeColor(data.Look) or piece.color else piece.color
 			part.Material = piece.material or Enum.Material.SmoothPlastic
 			part.Shape = piece.shape or Enum.PartType.Block
 			part.Transparency = piece.transparency or 0
@@ -273,6 +275,20 @@ local function onEquip(player: Player, category: unknown, itemId: unknown)
 	sendState(player)
 end
 
+-- Teinture du coiffeur (D106) : gratuite, une couleur de la liste ou "" (couleur d'origine de la coupe)
+local function onSetDye(player: Player, dye: unknown)
+	local data = DataService.Get(player)
+	if not data or typeof(dye) ~= "string" or (dye ~= "" and not table.find(LookConfig.HairDyes, dye)) then
+		return
+	end
+	if data.Look.Dye == dye then
+		return
+	end
+	data.Look.Dye = dye
+	buildVisuals(player)
+	sendState(player)
+end
+
 local function setupMirror(mirror: Instance)
 	if not mirror:IsA("BasePart") then
 		return
@@ -327,6 +343,7 @@ function StyleService.Start()
 	Remotes.EquipStyle.OnServerEvent:Connect(onEquip)
 	Remotes.BuyStyleSet.OnServerEvent:Connect(onBuySet)
 	Remotes.EquipStyleSet.OnServerEvent:Connect(onEquipSet)
+	Remotes.SetHairDye.OnServerEvent:Connect(onSetDye)
 	Remotes.RequestStats.OnServerEvent:Connect(sendState)
 end
 

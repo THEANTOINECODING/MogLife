@@ -27,6 +27,7 @@ export type LookData = {
 	Expression: string,
 	First: string,
 	Title: string,
+	Dye: string?, -- teinture de la coupe (LookConfig.HairDyes), "" ou nil : couleur d'origine (D106)
 }
 
 export type Piece = {
@@ -77,6 +78,7 @@ function Look.Default(): LookData
 		Expression = d.Expression,
 		First = d.First,
 		Title = d.Title,
+		Dye = "",
 	}
 end
 
@@ -128,6 +130,9 @@ function Look.Sanitize(raw: unknown, fallback: LookData?, unlocked: { [string]: 
 	if contains(LookConfig.NickFirst, source.First) then
 		out.First = source.First
 	end
+	if source.Dye == "" or contains(LookConfig.HairDyes, source.Dye) then
+		out.Dye = source.Dye
+	end
 	local rewardTitle = Look.RewardTitle(source.Title) ~= nil and (unlocked == nil or unlocked[source.Title] == true)
 	if contains(LookConfig.NickTitle, source.Title) or rewardTitle then
 		out.Title = source.Title
@@ -137,7 +142,20 @@ end
 
 -- Clé courte de l'apparence (pour savoir s'il faut reconstruire le corps)
 function Look.Key(look: LookData): string
-	return table.concat({ look.Gender, look.Skin, look.Hair, look.Eyes, look.Top, look.Shorts, look.Expression }, ",")
+	return table.concat(
+		{ look.Gender, look.Skin, look.Hair, look.Eyes, look.Top, look.Shorts, look.Expression, look.Dye or "" },
+		","
+	)
+end
+
+-- Couleur de la teinture choisie chez le coiffeur (nil : pas de teinture, la coupe garde sa couleur)
+function Look.DyeColor(look: LookData?): Color3?
+	local dye = look and look.Dye
+	if not dye or dye == "" or not contains(LookConfig.HairDyes, dye) then
+		return nil
+	end
+	local swatch = findSwatch(LookConfig.HairColors, dye)
+	return swatch and swatch.color
 end
 
 -- Couleur d'une teinte pour cette apparence
@@ -217,10 +235,14 @@ function Look.Pieces(bodyKey: string, look: LookData, items: { string }, options
 	end
 	for _, itemId in items do
 		-- Coupe ou barbe achetée : elle garde la couleur montrée en boutique (crête rose, banane jaune) ; les coupes de
-		-- départ prennent la couleur de cheveux choisie à la création (D102)
+		-- départ prennent la couleur de cheveux choisie à la création (D102). Une teinture du coiffeur colore la coupe
+		-- portée, quelle qu'elle soit (D106).
 		local item = StyleItems[itemId]
-		local ownColor = if item and not item.starter
-			then item.swatch or (item.pieces[1] and item.pieces[1].color)
+		local ownColor = if item
+				and item.category == "Hair"
+				and Look.DyeColor(look)
+			then Look.DyeColor(look)
+			elseif item and not item.starter then item.swatch or (item.pieces[1] and item.pieces[1].color)
 			else nil
 		for key, offset in (StylePieces[bodyKey] and StylePieces[bodyKey][itemId]) or {} do
 			local split = string.split(key, "_")
