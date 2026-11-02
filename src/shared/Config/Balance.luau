@@ -78,7 +78,7 @@ return {
 
 	-- Émotes : poses de culturisme (MogOff.Strike), visibles par tous
 	-- Fenêtre de la semaine (D96) : elle s'ouvre à l'arrivée, une fois le joueur libre depuis ArrivalDelay secondes
-	WeeklyWindow = { ArrivalDelay = 2.5, ArrivalGiveUp = 180 },
+	WeeklyWindow = { ArrivalDelay = 2.5, ArrivalGiveUp = 180, RaySpeed = 14 }, -- RaySpeed : degrés/s des rayons
 	-- Interface vivante (D84) : compteurs qui défilent, icônes qui s'envolent vers le HUD
 	HudFx = {
 		RollTime = 0.6, -- secondes pour que le compteur atteigne sa nouvelle valeur

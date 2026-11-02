@@ -4,6 +4,12 @@ Format : date — décision — raison. La plus récente en haut.
 
 ## 2026-11-02 (Retours d'Antoine après test : choix faits par QCM)
 
+- **D103 — Fenêtre de la semaine « miniature YouTube », qui tient sur téléphone.** Choix d'Antoine : style « carte YouTube », carte compacte centrée.
+  - Rayons jaunes qui tournent derrière (CanvasGroup), titre « 🔥 THIS WEEK 🔥 » jaune cerné de noir, penché, qui claque à l'ouverture puis respire ; autocollants 🤑 et 😱 qui se dandinent ; **« UP TO 💵 3.2K CASH!! »** = tout ce qu'il reste à gagner (défis, trophée, coffre) ; compte à rebours dans une pastille rouge.
+  - Défis en cartes avec une icône par type (💯 🏋️ ⭐ 🤝 ✨ 🎉 💪 🥇 🗿 🙌), barre épaisse, bouton « CLAIM +560 » vert qui bat quand c'est prêt (sinon « +560 💵 » grisé) ; trophée sur fond doré ; coffre 🎁 avec ses 7 jours. Gros bouton rouge « LET'S GO! ➜ » qui ferme.
+  - Taille calculée sur la place réelle de l'écran (plus de réduction à 55 %) : la liste défile ; téléphone en paysage (moins de 470 de haut) : en-tête sur une ligne, autocollants cachés. Textes des défis sur deux lignes si besoin (langues longues).
+  Vérifié dans Studio (sans le son, par les mesures, Studio en arrière-plan : animations non vues) : la fenêtre s'ouvre à l'arrivée avec les vraies données ; à la taille d'un iPhone en portrait (370 × 660), tous les textes font au moins 16 px et la liste tient presque sans défiler. Non vérifié : téléphone réel, paysage mesuré, rendu à l'œil.
+
 - **D102 — Corrections : événements discrets pendant les activités, caméra fixe des boss, couleur des coupes, carte sans scintillement.**
   - **Événements** (choix « cacher puis montrer après ») : pendant une série, une aide, tout un combat de boss (manches et entractes), le combat du Dieu du Pump ou un duel, l'événement ne se montre pas : ni bandeau, ni repères ✦ (ils traversaient les murs), ni messages, ni sons. Le spectacle continue dans le monde. Le bandeau revient à la fin si l'événement dure encore. Le serveur pose l'attribut joueur `InFight` (BossService, ColosseumService.SetFighter) à côté de `InRun` et `InDuel` ; `EventController.IsBusy()`.
   - **Caméra des boss normaux** (choix « plan fixe de côté ») : `CameraFraming.Follow` a un mode `fixed` — la caméra ne suit plus les mouvements des manches, ne change plus d'angle quand un décor passe devant ni quand l'interface se range entre deux manches ; seulement si l'écran tourne ou, une fois, quand l'interface du mini-jeu apparaît. L'entrée en scène ne tourne plus autour du boss : plan en contre-plongée qui avance à peine.
