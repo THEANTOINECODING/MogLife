@@ -4,6 +4,14 @@ Format : date — décision — raison. La plus récente en haut.
 
 ## 2026-11-02 (Retours d'Antoine après test : choix faits par QCM)
 
+- **D104 — Finale du Dieu du Pump : tir à la corde de rayons, jusqu'à la victoire.** Choix d'Antoine : « tir à la corde » à la place de « FLEX en rythme », sans limite de temps.
+  - **Tapoter FLEX le plus vite possible** pousse le choc des rayons vers le dieu (+0,012 par appui, au plus 12 appuis comptés par seconde : l'autoclic ne sert à rien) ; le dieu pousse de plus en plus fort (0,03 par seconde, +0,0015 par seconde, jusqu'à 0,085). Le bouton rebondit à chaque appui, « x10! », « x20! »… s'envolent, petite secousse.
+  - **Contre-attaques** : toutes les 3,2 à 5 s, un éclair est annoncé (cercle rouge qui se remplit, « ⚡ DODGE! ◀ ▶ ») sur le couloir où se tient le joueur ; il **glisse le doigt** à gauche ou à droite (ou ◀ ▶ en bas à gauche, A / D, flèches, croix de la manette) pour changer de couloir (3 couloirs à 3,5 studs). Esquivé : « DODGED! » et le choc avance ; touché : 15 de dégâts et le choc recule. L'annonce raccourcit avec le temps (1,1 s jusqu'à 0,7 s).
+  - Victoire quand le choc atteint le dieu ; si le choc atteint le joueur, il brûle (30) et le choc repart : il gagne ou il tombe.
+  - **Caméra derrière le combattant** pendant la finale (le dieu en face, le choc au milieu) : gauche et droite à l'écran = les couloirs. Elle reste sur le couloir du milieu : on voit le personnage glisser.
+  - Nouveau remote  ; le serveur décide de tout (appuis comptés, couloir, éclairs, dégâts).
+  Vérifié dans Studio (sans le son, par les remotes, Studio en arrière-plan : rien vu à l'écran) : un robot qui tapote à 7-8 appuis par seconde fait avancer le choc ; une rafale de 30 appuis d'un coup ne compte presque pas (+0,003) ; changement de couloir de 3,5 studs, bloqué au bord ; éclairs annoncés sur le couloir du joueur, esquive (+0,04) et coup (15 PV, recul) ; sans tapoter, le choc revient et le joueur perd (Mog de la défaite rendu ensuite) ; aucune erreur. ❓ Réglages (vitesse de poussée du dieu, dégâts) à juger manette en main, surtout au téléphone.
+
 - **D103 — Fenêtre de la semaine « miniature YouTube », qui tient sur téléphone.** Choix d'Antoine : style « carte YouTube », carte compacte centrée.
   - Rayons jaunes qui tournent derrière (CanvasGroup), titre « 🔥 THIS WEEK 🔥 » jaune cerné de noir, penché, qui claque à l'ouverture puis respire ; autocollants 🤑 et 😱 qui se dandinent ; **« UP TO 💵 3.2K CASH!! »** = tout ce qu'il reste à gagner (défis, trophée, coffre) ; compte à rebours dans une pastille rouge.
   - Défis en cartes avec une icône par type (💯 🏋️ ⭐ 🤝 ✨ 🎉 💪 🥇 🗿 🙌), barre épaisse, bouton « CLAIM +560 » vert qui bat quand c'est prêt (sinon « +560 💵 » grisé) ; trophée sur fond doré ; coffre 🎁 avec ses 7 jours. Gros bouton rouge « LET'S GO! ➜ » qui ferme.

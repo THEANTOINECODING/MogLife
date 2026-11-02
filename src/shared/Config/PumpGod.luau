@@ -103,20 +103,36 @@ return {
 	-- 4. Pose sacrée : un cercle doré apparaît de temps en temps ; y rester en maintenant FLEX lance un rayon de Mog
 	Sacred = { First = 14, Every = 18, Life = 8, Radius = 5, Charge = 2.0, Damage = 18 },
 
-	-- Finale « Le dernier pose-off » : son éclair contre le rayon de Mog du joueur, qui ne bouge plus. Le point de
-	-- choc part du milieu (0,5) ; FLEX sur le temps (Beat, fenêtre ±Window) le pousse vers le dieu de Push, à
-	-- contretemps il recule de Miss ; le dieu pousse de Drift par seconde (de plus en plus fort, + DriftGrow par
-	-- seconde). Choc jusqu'au dieu : victoire. Choc jusqu'au joueur : il prend Burn de dégâts et le choc repart de Reset.
+	-- Finale « Le dernier pose-off » (D104, tir à la corde, sans limite de temps) : son éclair contre le rayon de Mog du
+	-- joueur, qui ne bouge plus (sauf de couloir). Le point de choc part du milieu (0,5) ; chaque appui sur FLEX le
+	-- pousse vers le dieu de Push (au plus MaxRate appuis comptés par seconde) ; le dieu pousse de Drift par seconde,
+	-- de plus en plus fort (+ DriftGrow par seconde, jusqu'à DriftMax). Choc jusqu'au dieu : victoire. Choc jusqu'au
+	-- joueur : il prend Burn de dégâts et le choc repart de Reset. Il gagne ou il tombe (vie à zéro).
+	-- Contre-attaques : un éclair annoncé (Warn secondes, de plus en plus court jusqu'à WarnMin) sur le couloir où se
+	-- tient le joueur ; il glisse vers un autre couloir (LaneWidth studs à côté). Esquivé : le choc avance de Dodge ;
+	-- touché : Damage de dégâts et le choc recule de Knock.
 	Finale = {
 		Intro = 2.5,
-		Beat = 0.6,
-		Window = 0.16,
-		Push = 0.04,
-		Miss = 0.015,
-		Drift = 0.02,
-		DriftGrow = 0.0004,
+		Push = 0.012,
+		MaxRate = 12,
+		Drift = 0.03,
+		DriftGrow = 0.0015,
+		DriftMax = 0.085,
 		Burn = 30,
 		Reset = 0.4,
+		LaneWidth = 3.5,
+		LeanGap = 0.12, -- secondes entre deux changements de couloir
+		Counter = {
+			First = 4,
+			Every = { 3.2, 5.0 },
+			Warn = 1.1,
+			WarnMin = 0.7,
+			WarnShrink = 0.01,
+			Damage = 15,
+			Knock = 0.06,
+			Dodge = 0.04,
+		},
+		Swipe = 40, -- pixels de glissement du doigt pour changer de couloir
 	},
 
 	-- Spectateurs : bouton « Encourager » dans les gradins (jamais pour le combattant, qui ne voit pas la jauge).
@@ -150,9 +166,9 @@ return {
 		SpawnDelay = 3, -- secondes après l'apparition (le corps de stade est posé)
 	},
 
-	-- Caméra du combattant : de côté pendant la finale (recul et hauteur en fractions de la distance joueur-dieu) ;
-	-- vers le ciel (la constellation) pendant VictoryLook secondes après la victoire
-	Camera = { FinaleBack = 0.75, FinaleUp = 0.18, VictoryLook = 5.5 },
+	-- Caméra du combattant : derrière lui pendant la finale (studs derrière son couloir du milieu, hauteur) ; vers le
+	-- ciel (la constellation) pendant VictoryLook secondes après la victoire
+	Camera = { FinaleBehind = 11, FinaleHigh = 5.5, VictoryLook = 5.5 },
 	-- Bouton FLEX (D95) : gris s'il ne fait rien, jaune qui gonfle et dégonfle quand une action est possible
 	FlexButton = {
 		Idle = Color3.fromRGB(105, 105, 115),

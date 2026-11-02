@@ -53,7 +53,6 @@ return {
 		PumpGodPunch = { id = "rbxassetid://9113573976", volume = 0.4 }, -- coup porté au dieu (Pro Sound Effects)
 		PumpGodHurt = { id = "rbxassetid://9113573976", volume = 0.35, pitch = 0.7 }, -- le combattant est touché
 		PumpGodCrowd = { id = "rbxassetid://7755719721", volume = 0.25 }, -- la foule acclame
-		PumpGodBeat = { id = "rbxassetid://140323850218372", volume = 0.18 }, -- finale : chaque temps (aide au rythme)
 		-- Événements de ville (D100) : sons déjà vérifiés ci-dessus, réutilisés ❓ volumes à régler à l'oreille
 		EventStart = { id = "rbxassetid://9042409054", volume = 0.14, pitch = 1.15 }, -- fanfare courte
 		EventPickup = { id = "rbxassetid://134810204798705", volume = 0.3 }, -- haltère doré ramassé (cha-ching)
