@@ -6,6 +6,7 @@ local GuiService = game:GetService("GuiService")
 local Players = game:GetService("Players")
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StarterPlayer = game:GetService("StarterPlayer")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
@@ -37,7 +38,8 @@ local player = Players.LocalPlayer
 
 local UIController
 -- Vitesse et saut d'origine, mémorisés pendant qu'un run bloque le personnage
-local savedMovement: { walkSpeed: number, jumpHeight: number, jumpPower: number }? = nil
+-- Valeurs de déplacement d'avant le blocage, pour CE personnage-là (un nouveau personnage a les siennes)
+local savedMovement: { humanoid: Humanoid, walkSpeed: number, jumpHeight: number, jumpPower: number }? = nil
 
 local gui: ScreenGui
 local endPanel: Frame
@@ -113,6 +115,36 @@ local function setWorldTagsHidden(hidden: boolean)
 end
 
 local lockReasons: { [string]: boolean } = {}
+
+-- Fige le personnage (une seule fois par personnage) en retenant ses valeurs
+local function freeze(humanoid: Humanoid?)
+	if not humanoid or (savedMovement and savedMovement.humanoid == humanoid) then
+		return
+	end
+	savedMovement = {
+		humanoid = humanoid,
+		walkSpeed = humanoid.WalkSpeed,
+		jumpHeight = humanoid.JumpHeight,
+		jumpPower = humanoid.JumpPower,
+	}
+	humanoid.WalkSpeed = 0
+	humanoid.JumpHeight = 0
+	humanoid.JumpPower = 0
+end
+
+-- Rend ses valeurs au personnage figé. Jamais 0 : une valeur retenue alors qu'il était déjà figé (deux blocages
+-- qui se chevauchent à l'arrivée) le laissait immobile pour de bon ; on reprend alors les valeurs par défaut.
+local function unfreeze()
+	local saved = savedMovement
+	savedMovement = nil
+	if not saved or not saved.humanoid.Parent then
+		return
+	end
+	local humanoid = saved.humanoid
+	humanoid.WalkSpeed = if saved.walkSpeed > 0 then saved.walkSpeed else Balance.Movement.WalkSpeed
+	humanoid.JumpHeight = if saved.jumpHeight > 0 then saved.jumpHeight else StarterPlayer.CharacterJumpHeight
+	humanoid.JumpPower = if saved.jumpPower > 0 then saved.jumpPower else StarterPlayer.CharacterJumpPower
+end
 local savedTouchGuiEnabled: boolean? = nil
 function MinigameController.SetGameplayLocked(locked: boolean, reason: string?)
 	lockReasons[reason or "Series"] = if locked then true else nil
@@ -139,23 +171,9 @@ function MinigameController.SetGameplayLocked(locked: boolean, reason: string?)
 	local character = player.Character
 	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
 	if active then
-		if humanoid and not savedMovement then
-			savedMovement = {
-				walkSpeed = humanoid.WalkSpeed,
-				jumpHeight = humanoid.JumpHeight,
-				jumpPower = humanoid.JumpPower,
-			}
-			humanoid.WalkSpeed = 0
-			humanoid.JumpHeight = 0
-			humanoid.JumpPower = 0
-		end
-	elseif savedMovement then
-		if humanoid then
-			humanoid.WalkSpeed = savedMovement.walkSpeed
-			humanoid.JumpHeight = savedMovement.jumpHeight
-			humanoid.JumpPower = savedMovement.jumpPower
-		end
-		savedMovement = nil
+		freeze(humanoid)
+	else
+		unfreeze()
 	end
 	if not active then
 		SprintController.SetLocked(false)
@@ -769,9 +787,15 @@ function MinigameController.Start()
 	CameraFraming.SetFreeArea(freeArea)
 	buildGui()
 
-	-- Un nouveau personnage (mort, respawn) repart avec ses valeurs par défaut
-	player.CharacterAdded:Connect(function()
+	-- Un nouveau personnage (mort, respawn) repart avec ses valeurs par défaut ; si un blocage est en cours (fenêtre,
+	-- cinématique à l'arrivée), il est figé à son tour (avant : l'ancien souvenir était effacé et le personnage
+	-- restait figé à 0 après la fermeture)
+	player.CharacterAdded:Connect(function(character)
 		savedMovement = nil
+		local humanoid = character:WaitForChild("Humanoid", 10) :: Humanoid?
+		if humanoid and player.Character == character and next(lockReasons) ~= nil then
+			freeze(humanoid)
+		end
 	end)
 
 	Remotes.SeriesUpdate.OnClientEvent:Connect(function(update)
