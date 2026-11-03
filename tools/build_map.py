@@ -1986,10 +1986,18 @@ def wall_outline():
     return out
 
 
+def wall_local(v):
+    """Point du manifest (repère Blender : x, y vers l'arrière, z en haut) -> repère local du module.
+    L'import FBX de Studio inverse l'axe X (vérifié à l'import du 2026-11-03 : la torche, à -x dans Blender,
+    arrive à +x) : on fait pareil pour que statue, or, lueurs et effets restent alignés."""
+    x, y, z = v
+    return (-x, z, y)
+
+
 def wall_piece(F, name, prop, collide=False):
     m = WALL["pieces"][prop]
     cx, cy = m["center"]
-    return prop_slot(F, name, (cx, m["bottom"], cy), prop, collide=collide)
+    return prop_slot(F, name, wall_local((cx, cy, m["bottom"])), prop, collide=collide)
 
 
 def statue_wall():
@@ -2019,20 +2027,18 @@ def statue_wall():
         # effets (manifest en repère Blender : x, y vers l'arrière, z vers le haut -> repère local x, y, z)
         fx = WALL["statues"][pose]
         if "Flame" in fx:
-            x, y, z = fx["Flame"]
-            c.append(P(F, f"Wall{i}Flame", (x, z, y), (1, 1, 1), WHITE, transparency=1, collide=False,
+            c.append(P(F, f"Wall{i}Flame", wall_local(fx["Flame"]), (1, 1, 1), WHITE, transparency=1, collide=False,
                        tags=["ColosseumFire"], attributes={"FireSize": 6, "FireRange": WALL_FIRE_RANGE},
                        extra=INVISIBLE))
         if glow:
             gx, gy, gz = fx["Gaze"]
-            gaze = apply(rot(yaw), [gx, gz, gy])
-            for k, (x, y, z) in enumerate(fx["Eyes"]):
-                c.append(P(F, f"Wall{i}Eye{k}", (x, z, y), (0.5, 0.5, 0.5), WHITE, transparency=1, collide=False,
+            gaze = apply(rot(yaw), list(wall_local((gx, gy, gz))))
+            for k, eye in enumerate(fx["Eyes"]):
+                c.append(P(F, f"Wall{i}Eye{k}", wall_local(eye), (0.5, 0.5, 0.5), WHITE, transparency=1, collide=False,
                            tags=["ColossusGlow"], attributes={"Kind": "Eye", "Gaze": {"Vector3": [round(v, 3) for v in gaze]}},
                            extra=INVISIBLE))
             if "Scepter" in fx:
-                x, y, z = fx["Scepter"]
-                c.append(P(F, f"Wall{i}Scepter", (x, z, y), (1, 1, 1), WHITE, transparency=1, collide=False,
+                c.append(P(F, f"Wall{i}Scepter", wall_local(fx["Scepter"]), (1, 1, 1), WHITE, transparency=1, collide=False,
                            tags=["ColossusGlow"], attributes={"Kind": "Scepter"}, extra=INVISIBLE))
         # pilier sur la jonction de départ (le contour est fermé : chaque jonction est le départ d'un module)
         for j, (px, pz) in enumerate((p0,)):
