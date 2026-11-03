@@ -14,6 +14,7 @@ local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Npc = require(script.Parent.Parent.Npc)
 local Throttle = require(script.Parent.Parent.Throttle)
+local Analytics = require(script.Parent.Parent.Analytics)
 
 local SPOT_TAG = "HelperSpot"
 local HELPER_TAG = "Helper"
@@ -98,6 +99,8 @@ local function finish(player: Player, helpId: string, reason: string): { [string
 			end
 		end
 		times[helpId] = now + Balance.Helps.Cooldown
+		Analytics.Step(player, data, "FirstHelp")
+		Analytics.Event(player, "HelpPaid", cash, helpId)
 		sendState(player)
 	end
 

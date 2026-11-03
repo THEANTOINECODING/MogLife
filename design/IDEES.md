@@ -3,6 +3,22 @@
 Toute nouvelle idée arrive ici. Elle passe dans le design seulement après une décision dans `DECISIONS.md`.
 Test de la vision : l'idée tient-elle dans les trois briques (mini-jeux, contenu en données, personnage) ?
 
+## Propositions du 03/11/2026 (Claude, à décider par Antoine)
+
+Détails et raisons : `PROPOSITION_CORPS_V2.md` et `ANALYSE_VIRALE_2026-11-03.md`. Rien n'est codé.
+- **Corps « Bro v2 »** : formes rondes en metaballs, tête qui ne grandit jamais, visage expressif, un trait nouveau
+  par stade, GOD MOGGER absurde. Prototype : `tools/blender/proto_body_v2.py`, images dans `assets/concepts/`.
+  ❓ Style, technique (A même pipeline / B skinned mesh + vêtements superposés / C artiste), jambes fines ou non.
+- **T-shirt qui craque** quand le corps dépasse son haut ; **carte avant/après** à chaque nouveau stade.
+- **Ascension** après le GOD MOGGER : le corps continue de grossir par crans absurdes (sans rebirth), badge et titre
+  à chaque cran.
+- **Amis** : bouton « Invite a bro », bonus d'équipe par ami présent (plafonné), objet exclusif pour une invitation
+  réussie, défis à deux.
+- **Badges** (stades, boss, badges drôles) et **classement mondial** du Mog sur la place ; statues des meilleurs
+  avec le bro du jeu au lieu de l'avatar Roblox.
+- **Objets de prestige** très chers pour le Cash en surplus ; mode photo au miroir.
+- **Page du jeu** : icône avant/après, miniatures, description ; bouton « Random & GO! » au créateur.
+
 ## Le Dieu du Pump : un vrai combat (demande d'Antoine du 22/10/2026, à faire plus tard)
 
 Pour le dernier boss, Antoine veut **un vrai combat** et non un mini-jeu : se battre contre le Dieu du Pump,

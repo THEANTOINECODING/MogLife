@@ -7,6 +7,7 @@ local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Throttle = require(script.Parent.Parent.Throttle)
+local Analytics = require(script.Parent.Parent.Analytics)
 
 local DataService
 local BodyService
@@ -71,6 +72,7 @@ local function sync(player: Player)
 end
 
 local function onPlayerLoaded(player: Player)
+	Analytics.Step(player, DataService.Get(player), "Joined")
 	local leaderstats = Instance.new("Folder")
 	leaderstats.Name = "leaderstats"
 

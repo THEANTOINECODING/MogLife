@@ -16,6 +16,7 @@ local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Tutorial = require(ReplicatedStorage.Shared.Config.Tutorial)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Throttle = require(script.Parent.Parent.Throttle)
+local Analytics = require(script.Parent.Parent.Analytics)
 
 local DataService
 
@@ -106,6 +107,7 @@ function TutorialService.OnEvent(player: Player, event: string, arg: any)
 			data.Tutorial.Step += 1
 			if data.Tutorial.Step > #Tutorial.Steps then
 				data.Tutorial.Done = true
+				Analytics.Step(player, data, "TutorialDone")
 				say(player, "Tutorial.Done")
 				send(player)
 			else
@@ -138,6 +140,7 @@ local function onAction(player: Player, action: unknown)
 	end
 	if action == "Skip" and not data.Tutorial.Done then
 		data.Tutorial.Done = true
+		Analytics.Event(player, "TutorialSkipped", data.Tutorial.Step)
 		send(player)
 	end
 end

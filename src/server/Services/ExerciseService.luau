@@ -9,6 +9,7 @@ local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Throttle = require(script.Parent.Parent.Throttle)
+local Analytics = require(script.Parent.Parent.Analytics)
 
 local STATION_TAG = "Station"
 
@@ -84,6 +85,7 @@ local function startSeries(player: Player, exerciseId: unknown)
 				* BoostService.Multiplier(p)
 				* SocialService.LifterMultiplier(p)
 			StatsService.Add(p, "Mog", gain)
+			Analytics.Step(p, DataService.Get(p), "FirstRep")
 			SocialService.OnLifterRep(p, gain, quality)
 			-- Les muscles travaillés gonflent (D40)
 			BodyService.Pump(p, exerciseId, quality)
@@ -99,6 +101,7 @@ local function startSeries(player: Player, exerciseId: unknown)
 			end
 			TutorialService.OnEvent(p, "SeriesCompleted", exerciseId)
 			WeeklyService.Track(p, "SeriesDone")
+			Analytics.Event(p, "SeriesCompleted", score or 0, exerciseId)
 			if score and MinigameService.Grade(score) == "S" then
 				WeeklyService.Track(p, "GradeS")
 				SocialService.Celebrate(p)

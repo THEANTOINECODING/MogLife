@@ -15,6 +15,7 @@ local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Look = require(ReplicatedStorage.Shared.Look)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Throttle = require(script.Parent.Parent.Throttle)
+local Analytics = require(script.Parent.Parent.Analytics)
 
 local MIRROR_TAG = "Mirror"
 local VISUALS_NAME = "StyleVisuals"
@@ -179,6 +180,8 @@ local function onBuy(player: Player, itemId: unknown)
 
 	StatsService.Add(player, "Cash", -item.price)
 	data.StyleOwned[itemId] = true
+	Analytics.Step(player, data, "FirstStylePurchase")
+	Analytics.Event(player, "StyleBought", item.price, itemId)
 	data.StyleEquipped[item.category] = itemId
 	buildVisuals(player)
 	sendState(player)
@@ -223,6 +226,8 @@ local function onBuySet(player: Player, setId: unknown)
 		return
 	end
 	StatsService.Add(player, "Cash", -set.price)
+	Analytics.Step(player, data, "FirstStylePurchase")
+	Analytics.Event(player, "StyleBought", set.price, set.id)
 	data.StyleOwned[set.top] = true
 	data.StyleOwned[set.bottom] = true
 	data.StyleEquipped.Top = set.top

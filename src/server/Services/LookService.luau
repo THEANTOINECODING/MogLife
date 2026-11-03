@@ -15,6 +15,7 @@ local StyleItems = require(ReplicatedStorage.Shared.Config.StyleItems)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Look = require(ReplicatedStorage.Shared.Look)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Analytics = require(script.Parent.Parent.Analytics)
 
 local PLOT_TAG = "Plot"
 local MIRROR_NAME = "HomeMirror"
@@ -109,6 +110,7 @@ local function onSetLook(player: Player, raw: unknown, hair: unknown)
 	applyNickname(player)
 	Remotes.Notify:FireClient(player, { key = "Creator.Saved" })
 	if firstTime then
+		Analytics.Step(player, data, "LookCreated")
 		TutorialService.LookCreated(player)
 	end
 end

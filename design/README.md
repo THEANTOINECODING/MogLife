@@ -18,6 +18,8 @@ Ce dossier est la source de vérité du jeu. Un fichier = un sujet.
 | [07_ROADMAP.md](07_ROADMAP.md) | Étapes de construction | Avant de commencer un lot de travail |
 | [08_TESTS_ET_MESURES.md](08_TESTS_ET_MESURES.md) | Tests joueurs, analytics, vérifications | Avant une alpha ou une mise à jour |
 | [ALPHA_PREPARATION.md](ALPHA_PREPARATION.md) | État vérifié, essais à faire et fiche testeur | Pour préparer l'étape 8 |
+| [PROPOSITION_CORPS_V2.md](PROPOSITION_CORPS_V2.md) | Nouveau corps du joueur proposé (prototype, ❓ à choisir) | Avant de toucher aux corps |
+| [ANALYSE_VIRALE_2026-11-03.md](ANALYSE_VIRALE_2026-11-03.md) | Bons et mauvais points pour un jeu viral, solutions proposées | Avant de choisir les prochaines étapes |
 | [DECISIONS.md](DECISIONS.md) | Journal des décisions et de leurs raisons | On se demande « pourquoi on a fait ça ? » |
 | [IDEES.md](IDEES.md) | Idées en attente | On a une nouvelle idée |
 

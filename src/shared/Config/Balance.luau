@@ -12,6 +12,7 @@ return {
 		PumpGodWins = 0, -- victoires contre le Dieu du Pump au Colisée (titre, laurier, statue dorée, D93)
 		HelpsDone = {}, -- aides déjà réussies au moins une fois (réplique unique la première fois)
 		HelpReadyAt = {}, -- heure serveur où chaque aide redevient disponible (délai Helps.Cooldown, D108)
+		Funnel = {}, -- étapes du funnel des premières minutes déjà envoyées aux mesures Roblox (Config/Analytics, D109)
 		StyleOwned = {},
 		StyleEquipped = {},
 		FurnitureOwned = {}, -- meubles achetés

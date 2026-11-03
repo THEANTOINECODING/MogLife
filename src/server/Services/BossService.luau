@@ -13,6 +13,7 @@ local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Npc = require(script.Parent.Parent.Npc)
+local Analytics = require(script.Parent.Parent.Analytics)
 
 local SPOT_TAG = "BossSpot"
 local BOSS = Balance.Boss
@@ -103,6 +104,7 @@ local function finishFight(player: Player, fight: Fight)
 		won = won,
 	})
 
+	Analytics.Event(player, if won then "BossWon" else "BossLost", fight.wins, fight.bossId)
 	if not won then
 		if fight.stakes > 0 then
 			StatsService.Add(player, "Cash", -fight.stakes)
@@ -135,6 +137,11 @@ local function finishFight(player: Player, fight: Fight)
 	-- Première victoire : récompenses idempotentes (BossesBeaten est vérifié juste au-dessus)
 	data.BossesBeaten[fight.bossId] = true
 	data.Stage = stageIndex + 1
+	Analytics.Step(player, data, "FirstBossWin")
+	if data.Stage >= 3 then
+		Analytics.Step(player, data, "SecondStage")
+	end
+	Analytics.Event(player, "StageReached", data.Stage, Stages.List[data.Stage].id)
 	data.Cash += boss.firstWinCash
 	if boss.styleReward then
 		data.StyleOwned[boss.styleReward] = true
