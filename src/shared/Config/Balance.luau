@@ -431,7 +431,7 @@ return {
 		EyeBeamWidth = { 0.9, 7 }, -- largeur du rayon à l'œil, puis au bout
 		EyeFlicker = 0.6, -- battements par seconde de l'intensité des rayons
 		ScepterPulse = 0.8, -- battements par seconde de la lumière des sceptres
-		ScepterLight = { Range = 40, Brightness = { 1, 3.5 } },
+		ScepterLight = { Range = 22, Brightness = { 0.3, 1 } }, -- lumière autour du sceptre (réduite à la demande d'Antoine)
 	},
 
 	-- Cycle jour / nuit (heure de Lighting.ClockTime, de 0 à 24)
