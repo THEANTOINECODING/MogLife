@@ -1,5 +1,6 @@
 -- Repères pour s'orienter :
 -- - une grande icône flottante au-dessus de chaque bâtiment (tag "Landmark" + attribut Icon), visible de loin ;
+-- - la même icône 🏠 au-dessus de sa propre maison (tag "HomeIcon"), seulement chez son propriétaire ;
 -- - quand le joueur a assez de Mog pour son prochain boss, un repère discret indique sa position proche
 --   (pour Kevin : celui du garage de sa propre maison).
 
@@ -13,9 +14,12 @@ local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Ui = require(script.Parent.Parent.Ui)
 
 local LANDMARK_TAG = "Landmark"
+local HOME_ICON_TAG = "HomeIcon"
 local BOSS_SPOT_TAG = "BossSpot"
 local PLOT_TAG = "Plot"
 local GUIDE_COLOR = Color3.fromRGB(255, 210, 60)
+local LANDMARK_STROKE = Color3.fromRGB(255, 220, 120)
+local HOME_STROKE = Color3.fromRGB(120, 235, 140) -- vert : « chez moi », à part des magasins
 
 local player = Players.LocalPlayer
 
@@ -25,16 +29,10 @@ local marker: BillboardGui
 
 local WayfindingController = {}
 
-local function addLandmark(part: Instance)
-	if not part:IsA("BasePart") or part:FindFirstChild("LandmarkIcon") then
-		return
-	end
-	local icon = part:GetAttribute("Icon")
-	if typeof(icon) ~= "string" then
-		return
-	end
+-- Grande icône ronde flottante au-dessus d'un point invisible
+local function makeIcon(part: BasePart, name: string, icon: string, stroke: Color3): BillboardGui
 	local billboard = Ui.create("BillboardGui", {
-		Name = "LandmarkIcon",
+		Name = name,
 		Size = UDim2.fromScale(9, 9),
 		LightInfluence = 0,
 		MaxDistance = 600,
@@ -46,7 +44,7 @@ local function addLandmark(part: Instance)
 		BackgroundColor3 = Color3.fromRGB(30, 25, 45),
 		BackgroundTransparency = 0.2,
 		Parent = billboard,
-	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.fromRGB(255, 220, 120), 3, 0) })
+	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(stroke, 3, 0) })
 	Ui.label({
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.5),
@@ -54,6 +52,18 @@ local function addLandmark(part: Instance)
 		Text = Texts.Get(`Icon.{icon}`),
 		Parent = billboard,
 	})
+	return billboard
+end
+
+local function addLandmark(part: Instance)
+	if not part:IsA("BasePart") or part:FindFirstChild("LandmarkIcon") then
+		return
+	end
+	local icon = part:GetAttribute("Icon")
+	if typeof(icon) ~= "string" then
+		return
+	end
+	makeIcon(part, "LandmarkIcon", icon, LANDMARK_STROKE)
 end
 
 -- La maison (tag Plot) qui contient cet objet, s'il y en a une
@@ -66,6 +76,23 @@ local function plotOf(instance: Instance): Instance?
 		current = current.Parent
 	end
 	return nil
+end
+
+-- Icône 🏠 d'une maison : visible seulement quand la maison est la nôtre (attribut OwnerUserId du serveur)
+local function addHomeIcon(part: Instance)
+	if not part:IsA("BasePart") or part:FindFirstChild("HomeIcon") then
+		return
+	end
+	local plot = plotOf(part)
+	if not plot then
+		return
+	end
+	local billboard = makeIcon(part, "HomeIcon", "Home", HOME_STROKE)
+	local function refresh()
+		billboard.Enabled = plot:GetAttribute("OwnerUserId") == player.UserId
+	end
+	refresh()
+	plot:GetAttributeChangedSignal("OwnerUserId"):Connect(refresh)
 end
 
 -- Emplacement du boss à suivre : celui de sa propre maison si le boss vit dans les maisons, sinon le plus proche
@@ -128,6 +155,10 @@ function WayfindingController.Start()
 		addLandmark(part)
 	end
 	CollectionService:GetInstanceAddedSignal(LANDMARK_TAG):Connect(addLandmark)
+	for _, part in CollectionService:GetTagged(HOME_ICON_TAG) do
+		addHomeIcon(part)
+	end
+	CollectionService:GetInstanceAddedSignal(HOME_ICON_TAG):Connect(addHomeIcon)
 
 	buildGuide()
 

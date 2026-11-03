@@ -94,7 +94,7 @@ MinigameController.LastCombo = 1
 -- Pendant un mini-jeu ou une fenêtre, les étiquettes flottantes du décor (noms des PNJ, icônes des lieux, repères)
 -- sont masquées : elles passaient devant les textes du mini-jeu
 local hiddenTags: { BillboardGui } = {}
-local TAG_NAMES = { NameTag = true, LandmarkIcon = true, EventMarker = true }
+local TAG_NAMES = { NameTag = true, LandmarkIcon = true, HomeIcon = true, EventMarker = true }
 local function setWorldTagsHidden(hidden: boolean)
 	if hidden then
 		if #hiddenTags > 0 then

@@ -490,6 +490,7 @@ local STRINGS: { [string]: string } = {
 	["Icon.Park"] = "🌳",
 	["Icon.Arena"] = "🏆",
 	["Icon.Colosseum"] = "🏛️",
+	["Icon.Home"] = "🏠",
 	["Guide.Marker"] = "⬇",
 
 	-- Statues des meilleurs moggers

@@ -2179,6 +2179,61 @@
    ]
   },
   {
+   "name": "HomeIcon",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     1,
+     1,
+     1
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       168.0,
+       30.1,
+       -70.0
+      ],
+      "orientation": [
+       [
+        0.0,
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -1.0,
+        0.0,
+        0.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "HomeIcon"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
    "name": "WindowBox0",
    "className": "Part",
    "properties": {

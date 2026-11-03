@@ -879,6 +879,10 @@ def plot(index, side, offset):
     c.append(piece(H, "HouseTrim", "House_Trim", collide=False))
     c.append(piece(H, "HouseInterior", "House_Interior_" + ("Cream", "Mint", "Rose", "Blue")[index % 4],
                    collide=False))
+    # Icône 🏠 au-dessus du toit, affichée seulement chez le propriétaire (WayfindingController), comme celles des
+    # magasins : on retrouve sa maison de loin
+    c.append(P(H, "HomeIcon", (0, 30, 16), (1, 1, 1), WHITE, transparency=1, collide=False, tags=["HomeIcon"],
+               extra={"CanQuery": False, "CanTouch": False}))
     # Jardinières fleuries sous les deux fenêtres de la façade (D97)
     for k, wx in enumerate((-8, 8)):
         c.append(P(H, f"WindowBox{k}", (wx, 3.3, -0.75), (5.6, 0.9, 1.0), (150, 96, 70), "WoodPlanks",
