@@ -9,6 +9,7 @@ local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Furniture = require(ReplicatedStorage.Shared.Config.Furniture)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Throttle = require(script.Parent.Parent.Throttle)
 
 local SHOP_TAG = "FurnitureShop"
 local SLOT_TAG = "FurnitureSlot"
@@ -222,7 +223,7 @@ function FurnitureService.Start()
 	DataService.PlayerLoaded:Connect(sendState)
 	Remotes.BuyFurniture.OnServerEvent:Connect(onBuy)
 	Remotes.PlaceFurniture.OnServerEvent:Connect(onPlace)
-	Remotes.RequestStats.OnServerEvent:Connect(sendState)
+	Remotes.RequestStats.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.RequestStats, sendState))
 end
 
 return FurnitureService

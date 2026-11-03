@@ -8,6 +8,7 @@ local Exercises = require(ReplicatedStorage.Shared.Config.Exercises)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Throttle = require(script.Parent.Parent.Throttle)
 
 local STATION_TAG = "Station"
 
@@ -169,7 +170,7 @@ function ExerciseService.Start()
 		end
 	end
 	DataService.PlayerLoaded:Connect(sendRecords)
-	Remotes.RequestStats.OnServerEvent:Connect(sendRecords)
+	Remotes.RequestStats.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.RequestStats, sendRecords))
 end
 
 return ExerciseService

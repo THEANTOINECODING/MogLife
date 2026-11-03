@@ -8,8 +8,10 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Weekly = require(ReplicatedStorage.Shared.Config.Weekly)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Throttle = require(script.Parent.Parent.Throttle)
 
 local DAY = 86_400
 local WEEK = 7 * DAY
@@ -335,7 +337,7 @@ function WeeklyService.Start()
 		send(player)
 	end)
 	Remotes.WeeklyClaim.OnServerEvent:Connect(onClaim)
-	Remotes.RequestStats.OnServerEvent:Connect(send)
+	Remotes.RequestStats.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.RequestStats, send))
 	task.spawn(function()
 		while true do
 			task.wait(Weekly.TickSeconds)

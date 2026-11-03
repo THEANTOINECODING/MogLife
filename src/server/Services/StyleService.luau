@@ -14,6 +14,7 @@ local StylePieces = require(ReplicatedStorage.Shared.Config.StylePieces)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Look = require(ReplicatedStorage.Shared.Look)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Throttle = require(script.Parent.Parent.Throttle)
 
 local MIRROR_TAG = "Mirror"
 local VISUALS_NAME = "StyleVisuals"
@@ -340,11 +341,11 @@ function StyleService.Start()
 
 	DataService.PlayerLoaded:Connect(onPlayerLoaded)
 	Remotes.BuyStyle.OnServerEvent:Connect(onBuy)
-	Remotes.EquipStyle.OnServerEvent:Connect(onEquip)
+	Remotes.EquipStyle.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.Style, onEquip))
 	Remotes.BuyStyleSet.OnServerEvent:Connect(onBuySet)
-	Remotes.EquipStyleSet.OnServerEvent:Connect(onEquipSet)
-	Remotes.SetHairDye.OnServerEvent:Connect(onSetDye)
-	Remotes.RequestStats.OnServerEvent:Connect(sendState)
+	Remotes.EquipStyleSet.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.Style, onEquipSet))
+	Remotes.SetHairDye.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.Style, onSetDye))
+	Remotes.RequestStats.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.RequestStats, sendState))
 end
 
 return StyleService

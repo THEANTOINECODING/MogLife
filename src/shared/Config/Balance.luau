@@ -11,6 +11,7 @@ return {
 		BossesBeaten = {},
 		PumpGodWins = 0, -- victoires contre le Dieu du Pump au Colisée (titre, laurier, statue dorée, D93)
 		HelpsDone = {}, -- aides déjà réussies au moins une fois (réplique unique la première fois)
+		HelpReadyAt = {}, -- heure serveur où chaque aide redevient disponible (délai Helps.Cooldown, D108)
 		StyleOwned = {},
 		StyleEquipped = {},
 		FurnitureOwned = {}, -- meubles achetés
@@ -117,6 +118,12 @@ return {
 		CheerPose = 1, -- pose d'encouragement du pareur (double biceps)
 	},
 
+	-- Délai minimum (secondes) entre deux appels d'un même remote par un joueur (D108, src/server/Throttle.luau)
+	RemoteThrottle = {
+		RequestStats = 0.5, -- l'interface redemande tout l'état (ouverture d'un menu)
+		Style = 0.2, -- équiper une pièce, une tenue ou une teinture
+	},
+
 	-- Création de personnage (D55)
 	Look = {
 		OpenDelay = 2, -- secondes après l'arrivée avant d'ouvrir le menu de création (le temps que l'interface charge)
@@ -144,6 +151,15 @@ return {
 			{ letter = "B", min = 70, stars = 1 },
 			{ letter = "C", min = 0, stars = 0 },
 		},
+	},
+
+	-- Plafond discret contre la triche (D108) : le client note ses répétitions, le serveur vérifie que le taux
+	-- de « Perfect » reste humain sur les dernières répétitions jouées à la main (toutes activités confondues).
+	-- Au-delà, un Perfect compte comme Good, sans message. La note S (95) reste atteignable sous ce plafond.
+	RepPlausibility = {
+		Window = 60, -- répétitions gardées en mémoire
+		MinSamples = 30, -- pas de plafond avant ce nombre de répétitions
+		MaxPerfectShare = 0.92,
 	},
 
 	-- Multiplicateur de Mog selon la qualité de la répétition

@@ -28,6 +28,9 @@ local TutorialService
 local PlotService
 
 local lastRequest: { [Player]: number } = {}
+-- Joueurs à qui le serveur a ouvert le créateur (arrivée ou miroir de leur maison) : seuls eux peuvent valider
+-- une apparence, une seule fois par ouverture (D108)
+local creatorOpen: { [Player]: boolean } = {}
 
 local LookService = {}
 
@@ -56,6 +59,7 @@ local function openCreator(player: Player, mode: string)
 	if not data then
 		return
 	end
+	creatorOpen[player] = true
 	Remotes.OpenCreator:FireClient(player, {
 		mode = mode,
 		look = Look.Sanitize(data.Look, nil),
@@ -84,10 +88,11 @@ end
 local function onSetLook(player: Player, raw: unknown, hair: unknown)
 	local data = DataService.Get(player)
 	local now = os.clock()
-	if not data or now - (lastRequest[player] or 0) < Balance.Look.RequestCooldown then
+	if not data or not creatorOpen[player] or now - (lastRequest[player] or 0) < Balance.Look.RequestCooldown then
 		return
 	end
 	lastRequest[player] = now
+	creatorOpen[player] = nil
 	local firstTime = not data.Look.Created
 	local look = Look.Sanitize(raw, Look.Sanitize(data.Look, nil), unlockedTitles(data))
 	-- Nouvelle couleur de cheveux choisie au créateur : la teinture du coiffeur (D106) l'aurait cachée, on la retire
@@ -236,6 +241,7 @@ function LookService.Start()
 	Remotes.SetLook.OnServerEvent:Connect(onSetLook)
 	Players.PlayerRemoving:Connect(function(player)
 		lastRequest[player] = nil
+		creatorOpen[player] = nil
 	end)
 end
 

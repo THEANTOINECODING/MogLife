@@ -26,7 +26,7 @@ local COLOSSEUM_PALETTE = "rbxassetid://121502714741030" -- assets/export/props/
 local STATUE_WALL = {
 	Gold = { Material = Enum.Material.Foil, Color = Color3.fromRGB(214, 164, 52) },
 	Glow = { Material = Enum.Material.Neon, Color = Color3.fromRGB(255, 196, 70) },
-	Marble = { Material = Enum.Material.Marble, Color = Color3.fromRGB(232, 228, 218) },
+	Marble = { Material = Enum.Material.Marble, Color = Color3.fromRGB(240, 226, 196) }, -- ivoire (D108)
 }
 
 local imported = workspace:FindFirstChild("Props_StatueWall")
@@ -75,6 +75,8 @@ for _, part in imported:GetDescendants() do
 			part.Material = look.Material
 			part.Color = look.Color
 			part.CastShadow = look ~= STATUE_WALL.Glow
+			-- Des blocs invisibles font la collision du mur (build_map) : pas de calcul de collision sur ces meshes
+			part.CollisionFidelity = Enum.CollisionFidelity.Box
 		elseif imported.Name == "Props_Colosseum" or imported.Name == "Props_Colosseum_Portal" then
 			part.TextureID = COLOSSEUM_PALETTE
 		elseif part.TextureID == "" then

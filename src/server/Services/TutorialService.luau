@@ -9,11 +9,13 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Exercises = require(ReplicatedStorage.Shared.Config.Exercises)
 local Helps = require(ReplicatedStorage.Shared.Config.Helps)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Tutorial = require(ReplicatedStorage.Shared.Config.Tutorial)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Throttle = require(script.Parent.Parent.Throttle)
 
 local DataService
 
@@ -213,7 +215,7 @@ function TutorialService.Start()
 	Players.PlayerRemoving:Connect(function(player)
 		waitingIntro[player] = nil
 	end)
-	Remotes.RequestStats.OnServerEvent:Connect(send)
+	Remotes.RequestStats.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.RequestStats, send))
 	for _, player in Players:GetPlayers() do
 		if DataService.Get(player) then
 			task.spawn(onPlayerLoaded, player)

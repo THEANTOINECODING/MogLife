@@ -6,6 +6,7 @@ local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Throttle = require(script.Parent.Parent.Throttle)
 
 local DataService
 local BodyService
@@ -129,7 +130,7 @@ end
 function StatsService.Start()
 	DataService.PlayerLoaded:Connect(onPlayerLoaded)
 	-- Le client redemande ses stats au démarrage, au cas où il aurait raté le premier envoi
-	Remotes.RequestStats.OnServerEvent:Connect(sync)
+	Remotes.RequestStats.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.RequestStats, sync))
 end
 
 return StatsService

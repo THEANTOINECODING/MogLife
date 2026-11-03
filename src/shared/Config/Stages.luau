@@ -5,15 +5,16 @@
 -- skill : comment le boss joue en direct (probabilité de Perfect et de Good à chaque répétition).
 -- firstWinCash / styleReward : récompenses de la première victoire.
 -- comingSoon : boss annoncé mais pas encore présent dans le jeu (prochaine mise à jour).
--- arena : pas de Mog-off ; le défi emmène au Colisée du Pump (PumpGodService, D94). minigame/interval/skill inutilisés.
+-- arena : pas de Mog-off ; le défi emmène au Colisée du Pump (PumpGodService, D94), d'où l'absence de
+-- minigame / interval / skill (obligatoires pour tous les autres boss).
 -- ❓ Toutes les valeurs sont des hypothèses de départ (voir tools/simulate_economy.luau).
 
 export type Boss = {
 	id: string,
 	mogRequired: number,
-	minigame: string,
-	interval: number,
-	skill: { perfect: number, good: number },
+	minigame: string?,
+	interval: number?,
+	skill: { perfect: number, good: number }?,
 	firstWinCash: number,
 	styleReward: string?,
 	comingSoon: boolean?,
@@ -91,9 +92,6 @@ local List: { Stage } = {
 		boss = {
 			id = "PumpGod",
 			mogRequired = 45_000,
-			minigame = "Combo",
-			interval = 2.2,
-			skill = { perfect = 0.55, good = 0.4 },
 			firstWinCash = 800,
 			arena = true,
 		},

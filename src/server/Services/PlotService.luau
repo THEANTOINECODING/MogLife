@@ -1,6 +1,7 @@
 -- Maisons des joueurs : chaque joueur reçoit une maison de maman libre (tag "Plot") en arrivant,
 -- apparaît chez lui, et son nom s'affiche sur le panneau devant la maison.
 -- Le serveur accueille 20 joueurs max (réglage de la place sur Roblox) : une maison par joueur.
+-- Si un serveur est plus grand que le nombre de maisons, les joueurs en trop attendent la prochaine maison libérée.
 
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
@@ -15,6 +16,7 @@ local OWNER_ATTRIBUTE = "OwnerUserId"
 local DataService
 
 local owners: { [Player]: Model } = {}
+local waiting: { Player } = {} -- joueurs chargés sans maison, par ordre d'arrivée
 local assignedCallbacks: { (Player, Model) -> () } = {}
 local releasedCallbacks: { (Player, Model) -> () } = {}
 
@@ -101,10 +103,17 @@ local function assign(player: Player)
 			return
 		end
 	end
+	if not table.find(waiting, player) then
+		table.insert(waiting, player)
+	end
 	warn(`[PlotService] No free house for {player.Name}`)
 end
 
 local function release(player: Player)
+	local index = table.find(waiting, player)
+	if index then
+		table.remove(waiting, index)
+	end
 	local plot = owners[player]
 	if not plot then
 		return
@@ -115,6 +124,10 @@ local function release(player: Player)
 	end
 	plot:SetAttribute(OWNER_ATTRIBUTE, nil)
 	setSign(plot, nil)
+	local heir = table.remove(waiting, 1)
+	if heir then
+		assign(heir)
+	end
 end
 
 -- Maison du joueur (nil s'il n'en a pas)

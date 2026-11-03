@@ -32,7 +32,7 @@ MODULE = {
 }
 STATUE_SCALE = 26.0  # une statue fait 2 unités « corps » de haut -> 52 studs
 PIER = {"size": 7.5, "height": 80.0}
-STATUE_TRIS = 7600
+STATUE_TRIS = 4000  # D108 : allégé pour les iPhone (91 statues visibles en même temps)
 GOLD_TRIS = 1800
 
 

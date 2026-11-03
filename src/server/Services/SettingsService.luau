@@ -4,8 +4,10 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Settings = require(ReplicatedStorage.Shared.Config.Settings)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Throttle = require(script.Parent.Parent.Throttle)
 
 local DataService
 
@@ -58,7 +60,7 @@ function SettingsService.Start()
 		send(player)
 	end)
 	Remotes.SetSetting.OnServerEvent:Connect(onSet)
-	Remotes.RequestStats.OnServerEvent:Connect(send)
+	Remotes.RequestStats.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.RequestStats, send))
 	Players.PlayerRemoving:Connect(function(player)
 		lastChange[player] = nil
 	end)

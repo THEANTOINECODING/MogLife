@@ -34,6 +34,8 @@ local ASSUME = {
 	EventDetour = 8,
 	ShopDetour = 6,
 	MaxMinutes = 150,
+	-- Le Dieu du Pump (arène, D94) n'a pas de Mog-off : on l'approxime par un Mog-off de ce niveau
+	ArenaBoss = { interval = 2.2, skill = { perfect = 0.55, good = 0.4 } },
 }
 
 -- Profils : répartition Perfect / Good en jeu actif, et comportement
@@ -127,7 +129,8 @@ local function winsFight(profile, boss): (boolean, number)
 		local good = profile.good * scale + profile.perfect * (1 - scale)
 		local player = expectedScore(perfect, good)
 		local bonus = (round - 1) * BOSS.BossSkillBonusPerRound
-		local opponent = expectedScore(boss.skill.perfect + bonus, boss.skill.good)
+		local skill = boss.skill or ASSUME.ArenaBoss.skill
+		local opponent = expectedScore(skill.perfect + bonus, skill.good)
 		if player > opponent then
 			wins += 1
 		end
@@ -271,7 +274,7 @@ local function simulate(baseProfile)
 			local won, rounds = winsFight(profile, boss)
 			local fightTime = ASSUME.WalkBetweenSpots + ASSUME.BossOverhead + BOSS.IntroTime
 			for round = 1, rounds do
-				fightTime += BOSS.RepsPerRound * boss.interval * (BOSS.SpeedByRound[round] or 1)
+				fightTime += BOSS.RepsPerRound * (boss.interval or ASSUME.ArenaBoss.interval) * (BOSS.SpeedByRound[round] or 1)
 			end
 			t += fightTime + (rounds - 1) * BOSS.PauseBetweenRounds
 			if won then

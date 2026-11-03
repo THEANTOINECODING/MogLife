@@ -47,6 +47,8 @@ type Run = {
 local MIN_GAP = 0.15
 
 local runs: { [Player]: Run } = {}
+-- Dernières répétitions jouées à la main (true = Perfect), pour le plafond discret (Balance.RepPlausibility)
+local recentPerfect: { [Player]: { boolean } } = {}
 
 local SeatService
 
@@ -169,6 +171,33 @@ function MinigameService.EndRun(player: Player, reason: EndReason)
 	end
 end
 
+-- Le client note lui-même ses répétitions : un taux de Perfect inhumain fait compter les Perfect en trop comme
+-- des Good. Le joueur n'en est pas averti (un vrai joueur n'atteint jamais ce plafond).
+local function plausibleQuality(player: Player, quality: string): string
+	local rules = Balance.RepPlausibility
+	local history = recentPerfect[player]
+	if not history then
+		history = {}
+		recentPerfect[player] = history
+	end
+	if quality == "Perfect" and #history >= rules.MinSamples then
+		local perfect = 0
+		for _, wasPerfect in history do
+			if wasPerfect then
+				perfect += 1
+			end
+		end
+		if (perfect + 1) / (#history + 1) > rules.MaxPerfectShare then
+			quality = "Good"
+		end
+	end
+	table.insert(history, quality == "Perfect")
+	if #history > rules.Window then
+		table.remove(history, 1)
+	end
+	return quality
+end
+
 local function onRep(player: Player, quality: unknown)
 	local run = runs[player]
 	if not run then
@@ -191,6 +220,7 @@ local function onRep(player: Player, quality: unknown)
 		return
 	end
 
+	quality = plausibleQuality(player, quality)
 	run.lastRepAt = now
 	run.reps += 1
 	run.manual += 1
@@ -239,6 +269,7 @@ function MinigameService.Start()
 	end)
 	Players.PlayerRemoving:Connect(function(player)
 		MinigameService.EndRun(player, "Left")
+		recentPerfect[player] = nil
 	end)
 end
 

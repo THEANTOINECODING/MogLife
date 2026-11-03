@@ -13,6 +13,7 @@ local Helps = require(ReplicatedStorage.Shared.Config.Helps)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Npc = require(script.Parent.Parent.Npc)
+local Throttle = require(script.Parent.Parent.Throttle)
 
 local SPOT_TAG = "HelperSpot"
 local HELPER_TAG = "Helper"
@@ -24,8 +25,6 @@ local ExerciseService
 local TutorialService
 local WeeklyService
 
--- Heure serveur (workspace:GetServerTimeNow) où chaque aide redevient disponible, par joueur
-local readyAt: { [Player]: { [string]: number } } = {}
 -- Une même aide peut avoir plusieurs habitants (la maman de chaque maison)
 local anchors: { [string]: { BasePart } } = {}
 -- Aide en cours de chaque joueur : Cash gagné jusqu'ici, Perfect d'affilée, ratés
@@ -34,8 +33,15 @@ local progress: { [Player]: Progress } = {}
 
 local HelpService = {}
 
+-- Heure serveur (workspace:GetServerTimeNow, la même sur tous les serveurs) où chaque aide redevient disponible.
+-- Gardée dans la sauvegarde (D108) : changer de serveur ne remet pas les délais à zéro.
+local function readyTimes(player: Player): { [string]: number }
+	local data = DataService.Get(player)
+	return if data then data.HelpReadyAt else {}
+end
+
 local function sendState(player: Player)
-	Remotes.HelpState:FireClient(player, readyAt[player] or {})
+	Remotes.HelpState:FireClient(player, readyTimes(player))
 end
 
 local REWARD = Balance.Helps.Reward
@@ -84,8 +90,14 @@ local function finish(player: Player, helpId: string, reason: string): { [string
 		StatsService.Add(player, "Cash", cash)
 		-- Le délai part dès qu'une aide a rapporté, même arrêtée avant la fin : sinon on referait la même aide en
 		-- boucle (arrêter juste avant la dernière répétition) sans jamais attendre
-		readyAt[player] = readyAt[player] or {}
-		readyAt[player][helpId] = workspace:GetServerTimeNow() + Balance.Helps.Cooldown
+		local now = workspace:GetServerTimeNow()
+		local times = data.HelpReadyAt
+		for id, ready in times do
+			if ready <= now then
+				times[id] = nil -- délai écoulé : inutile de le garder dans la sauvegarde
+			end
+		end
+		times[helpId] = now + Balance.Helps.Cooldown
 		sendState(player)
 	end
 
@@ -138,7 +150,7 @@ local function startHelp(player: Player, helpId: string)
 		return
 	end
 
-	local remaining = ((readyAt[player] or {})[helpId] or 0) - workspace:GetServerTimeNow()
+	local remaining = (readyTimes(player)[helpId] or 0) - workspace:GetServerTimeNow()
 	if remaining > 0 then
 		Remotes.Notify:FireClient(player, {
 			key = "Help.Cooldown",
@@ -217,9 +229,8 @@ function HelpService.Start()
 	CollectionService:GetInstanceAddedSignal(SPOT_TAG):Connect(setupSpot)
 
 	DataService.PlayerLoaded:Connect(sendState)
-	Remotes.RequestStats.OnServerEvent:Connect(sendState)
+	Remotes.RequestStats.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.RequestStats, sendState))
 	Players.PlayerRemoving:Connect(function(player)
-		readyAt[player] = nil
 		progress[player] = nil
 	end)
 end

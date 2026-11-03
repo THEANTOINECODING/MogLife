@@ -2052,7 +2052,10 @@ def statue_wall():
                 c.append(P(G, f"Wall{i}PierFire{j}", (fx_, fz_, -3.2 + fy_), (1, 1, 1), WHITE, transparency=1,
                            collide=False, tags=["ColosseumFire"],
                            attributes={"FireSize": 9, "FireRange": WALL_FIRE_RANGE}, extra=INVISIBLE))
-    return model("StatueWall", c)
+    wall = model("StatueWall", c)
+    # Toujours chargé chez tous les joueurs (D108) : il ferme l'horizon même au-delà du rayon de streaming
+    wall["properties"] = {"ModelStreamingMode": "Persistent"}
+    return wall
 
 
 # ------------------------------------------------------------------ écriture

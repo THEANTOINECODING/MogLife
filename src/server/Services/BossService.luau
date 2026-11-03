@@ -239,6 +239,7 @@ local function playBoss(player: Player, fight: Fight, interval: number, token: n
 	end
 	-- Le boss devient aussi plus précis à chaque manche
 	local bonus = (fight.round - 1) * BOSS.BossSkillBonusPerRound
+	local skill = boss.skill :: { perfect: number, good: number } -- Mog-off : jamais un boss d'arène
 	for rep = 1, BOSS.RepsPerRound do
 		task.wait(interval)
 		if fights[player] ~= fight or fight.token ~= token then
@@ -246,9 +247,9 @@ local function playBoss(player: Player, fight: Fight, interval: number, token: n
 		end
 		local roll = math.random()
 		local quality = "Miss"
-		if roll < boss.skill.perfect + bonus then
+		if roll < skill.perfect + bonus then
 			quality = "Perfect"
-		elseif roll < boss.skill.perfect + boss.skill.good + bonus then
+		elseif roll < skill.perfect + skill.good + bonus then
 			quality = "Good"
 		end
 		fight.bossScore += BOSS.QualityScore[quality]
@@ -287,7 +288,7 @@ function startRound(player: Player, fight: Fight)
 	fight.bossDone = false
 	fight.token += 1
 	local token = fight.token
-	local interval = boss.interval * (BOSS.SpeedByRound[fight.round] or 1)
+	local interval = (boss.interval :: number) * (BOSS.SpeedByRound[fight.round] or 1)
 	Remotes.BossUpdate:FireClient(player, {
 		state = "RoundStart",
 		bossId = fight.bossId,
@@ -300,7 +301,7 @@ function startRound(player: Player, fight: Fight)
 	local started = MinigameService.StartRun(player, {
 		kind = "Boss",
 		id = fight.bossId,
-		minigame = boss.minigame,
+		minigame = boss.minigame :: string,
 		interval = interval,
 		total = BOSS.RepsPerRound,
 		anchor = fight.spot,

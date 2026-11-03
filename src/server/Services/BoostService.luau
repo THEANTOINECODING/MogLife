@@ -12,6 +12,7 @@ local Boosts = require(ReplicatedStorage.Shared.Config.Boosts)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Throttle = require(script.Parent.Parent.Throttle)
 
 local SHOP_TAG = "BoostShop"
 
@@ -141,7 +142,7 @@ function BoostService.Start()
 	end
 	CollectionService:GetInstanceAddedSignal(SHOP_TAG):Connect(setupShop)
 	Remotes.BuyBoost.OnServerEvent:Connect(onBuy)
-	Remotes.RequestStats.OnServerEvent:Connect(sendState)
+	Remotes.RequestStats.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.RequestStats, sendState))
 	DataService.PlayerLoaded:Connect(sendState)
 end
 
