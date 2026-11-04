@@ -5,12 +5,12 @@
 -- - le dieu animé (PumpGod/God) : glissades, poses d'attaque, essoufflement, recul, éjection, moquerie ;
 -- - pour le combattant : vie du joueur et du dieu en bas de l'écran, bouton FLEX (F / Y à la manette) dont le texte
 --   dit ce qu'il va faire, bouton ROULADE (Q / Ctrl gauche / X), conseils la première fois, flash rouge et petite
---   secousse quand il est touché (jamais de zoom) ; boutons ◀ ▶ (et A / D, flèches, glisser le doigt) en finale ;
--- - manches (titre, vie rendue, dieu géant en manche 3), finale (D104, tir à la corde : FLEX le plus vite possible,
---   glisser à gauche ou à droite pour esquiver ses éclairs, la barre du dieu devient celle du choc), victoire en
---   constellation ;
+--   secousse quand il est touché (jamais de zoom) ;
+-- - manches (titre, vie rendue, dieu géant en manche 3), finale « Suplex olympien » (D110 : FLEX le plus vite
+--   possible pour soulever le dieu à genoux, la barre du dieu montre le soulevé ; puis la barre devient la jauge de
+--   lancer : FLEX ou glisser vers le haut quand elle est au sommet), victoire en constellation ;
 -- - sons (Config/Sounds.luau, PumpGod*) et musique de boss pendant le combat (SoundController.SetArena) ; caméra
---   derrière le combattant pendant la finale, puis vers le ciel (la constellation) à la victoire ; carte de récompense (D93) ;
+--   au ralenti autour du combattant pendant la finale, puis vers le ciel (la constellation) à la victoire ; carte de récompense (D93) ;
 -- - pour les spectateurs proches : le même combat, un bandeau avec le nom du combattant, et le bouton ENCOURAGER avec
 --   la jauge de la foule (jamais montrée au combattant) ; ce que fait la foule (amphore, pétales, chant) se voit sur la
 --   piste.
@@ -37,6 +37,7 @@ local ROLL_KEYS = { Enum.KeyCode.Q, Enum.KeyCode.LeftControl, Enum.KeyCode.Butto
 local FLEX_KEYS = { Enum.KeyCode.F, Enum.KeyCode.ButtonY }
 local GOLD = Fx.Gold
 local RED = Color3.fromRGB(255, 80, 60)
+local BOSS_COLOR = Color3.fromRGB(255, 140, 40) -- barre du dieu (et du soulevé en finale)
 -- Barres de vie en bas au centre : le haut de l'écran est pris par le Mog, le Cash et l'objectif ; au téléphone, le
 -- joystick est à gauche et les boutons à droite. Téléphone en portrait : les barres montent au-dessus des boutons
 -- (l'écran est trop étroit pour les mettre entre le joystick et FLEX)
@@ -66,7 +67,18 @@ type Fight = {
 	beatTo: number,
 	tips: { [string]: boolean },
 	round: number,
-	finale: { beatStart: number, base: CFrame?, taps: number, fx: any }?,
+	-- Finale (D110) : phase "Lift", "Aim", "Fall" ou "Throw" ; lift de 0 à 1 ; jauge de lancer (heure du serveur)
+	finale: {
+		beatStart: number,
+		base: CFrame?,
+		taps: number,
+		phase: string,
+		lift: number,
+		aimStart: number,
+		aimEnds: number,
+		period: number,
+		window: number,
+	}?,
 	chantFx: { Destroy: (any) -> () }?,
 	amphora: { id: number, fx: { Destroy: (any) -> () } }?,
 	chant: boolean,
@@ -79,15 +91,9 @@ local fight: Fight? = nil
 local rollReadyAt = 0
 local rolling = false
 local flexHeld: InputObject? = nil
-local LANE_KEYS = {
-	[Enum.KeyCode.A] = -1,
-	[Enum.KeyCode.Left] = -1,
-	[Enum.KeyCode.DPadLeft] = -1,
-	[Enum.KeyCode.D] = 1,
-	[Enum.KeyCode.Right] = 1,
-	[Enum.KeyCode.DPadRight] = 1,
-}
-local swipe: { input: InputObject, x: number, done: boolean }? = nil -- doigt posé (finale : glisser = esquive)
+-- Finale : lancer aussi au clavier avec la flèche du haut (ou W / Z)
+local THROW_KEYS = { Enum.KeyCode.Up, Enum.KeyCode.W, Enum.KeyCode.Z, Enum.KeyCode.DPadUp }
+local swipe: { input: InputObject, y: number, done: boolean }? = nil -- doigt posé (finale : glisser vers le haut = lancer)
 local tapPop = 0 -- dernier appui compté (le bouton FLEX rebondit)
 
 -- Interface
@@ -102,7 +108,6 @@ local rollShade: Frame
 local flexButton: TextButton
 local flexStroke: UIStroke
 local flexScale: UIScale
-local laneButtons: { TextButton } = {}
 local banner: TextLabel
 local flash: Frame
 local cheerButton: TextButton
@@ -284,19 +289,25 @@ local function flex(down: boolean)
 	end
 end
 
--- Finale : changer de couloir (le serveur déplace le personnage ; -1 à gauche, 1 à droite, vu de derrière)
-local function lean(direction: number)
-	if mine() and fight and fight.finale then
-		Remotes.PumpGodLean:FireServer(direction)
-		sfx("PumpGodRoll")
+-- Finale : lancer le dieu au ciel (même message que FLEX : le serveur juge la jauge)
+local function throw()
+	local finale = fight and fight.finale
+	if mine() and finale and finale.phase == "Aim" then
+		Remotes.PumpGodFlex:FireServer(true)
+		Remotes.PumpGodFlex:FireServer(false)
 	end
+end
+
+-- Jauge de lancer (0 en bas, 1 au sommet), comme le serveur
+local function aimMeter(finale, t: number): number
+	return 0.5 - 0.5 * math.cos((t - finale.aimStart) / finale.period * 2 * math.pi)
 end
 
 -- Ce que fera FLEX maintenant (même ordre que le serveur) : texte du bouton, et s'il faut le faire briller
 local function flexContext(current: Fight, root: BasePart): (string, boolean)
 	local now = Zones.ServerNow()
 	if current.finale then
-		return "PumpGod.Mash", true
+		return if current.finale.phase == "Aim" then "PumpGod.SuplexThrow" else "PumpGod.Mash", true
 	end
 	local parry = PumpGod.Parry.Range * 1.6 * (if current.chant then PumpGod.Crowd.ChantRange else 1)
 	for _, shot in current.javelins do
@@ -395,10 +406,6 @@ local function layout()
 	cheerButton.Position = if tall then UDim2.new(1, -190, 1, -70) else UDim2.new(1, -110, 1, -40)
 	rollButton.Position = if tall then UDim2.new(1, -112, 1, -230) else UDim2.new(1, -112, 1, -120)
 	flexButton.Position = if tall then UDim2.new(1, -182, 1, -56) else UDim2.new(1, -110, 1, -22)
-	if laneButtons[2] then
-		laneButtons[1].Position = UDim2.new(0, 24, 1, -24)
-		laneButtons[2].Position = UDim2.new(0, 124, 1, -24)
-	end
 end
 
 local function keyHint(button: TextButton, key: string)
@@ -486,7 +493,7 @@ local function buildGui()
 	}, { Ui.corner(UDim.new(0.5, 0)), Ui.stroke(Color3.fromRGB(255, 120, 60), 2, 0.1) })
 	bossFill = Ui.create("Frame", {
 		Size = UDim2.fromScale(1, 1),
-		BackgroundColor3 = Color3.fromRGB(255, 140, 40),
+		BackgroundColor3 = BOSS_COLOR,
 		BorderSizePixel = 0,
 		Parent = bossBar,
 	}, { Ui.corner(UDim.new(0.5, 0)), Ui.gradient(Color3.fromRGB(255, 200, 80), Color3.fromRGB(255, 110, 30)) })
@@ -543,24 +550,6 @@ local function buildGui()
 	flexStroke.Parent = flexButton
 	flexScale = Ui.create("UIScale", { Parent = flexButton })
 	keyHint(flexButton, "PumpGod.KeyFlex")
-	-- Finale : ◀ ▶ en bas à gauche (à la place du joystick, inutile : il ne marche plus), pouce gauche pour esquiver,
-	-- pouce droit pour FLEX
-	for index, spec in { { "PumpGod.LaneLeft", -1 }, { "PumpGod.LaneRight", 1 } } do
-		local button = Ui.button({
-			Name = "Lane" .. index,
-			AnchorPoint = Vector2.new(0, 1),
-			Size = UDim2.fromOffset(84, 84),
-			BackgroundColor3 = Color3.fromRGB(70, 150, 255),
-			Text = Texts.Get(spec[1]),
-			Visible = false,
-			Parent = gui,
-		})
-		Ui.stroke(Color3.new(1, 1, 1), 3, 0.1).Parent = button
-		button.Activated:Connect(function()
-			lean(spec[2])
-		end)
-		laneButtons[index] = button
-	end
 	rollButton.Activated:Connect(roll)
 	-- FLEX se maintient (pose sacrée) : appui et relâché
 	flexButton.InputBegan:Connect(function(input)
@@ -656,9 +645,6 @@ local function showControls(visible: boolean)
 	bossBar.Visible = visible
 	rollButton.Visible = visible and not (fight and fight.finale)
 	flexButton.Visible = visible
-	for _, button in laneButtons do
-		button.Visible = visible and fight ~= nil and fight.finale ~= nil
-	end
 	if not visible and flexHeld then
 		flexHeld = nil
 	end
@@ -1078,37 +1064,35 @@ function handlers.Round(message)
 	end
 end
 
-local function fighterChest(current: Fight): Vector3?
-	local root = rootOf(current.fighter)
-	return if root then root.Position + Vector3.new(0, 1.5, 0) else nil
-end
-
--- Finale : le combattant ne bouge plus ; rayon contre éclair
+-- Finale (D110) : le dieu, à taille normale, tombe à genoux devant le combattant ; le combattant le soulève
 function handlers.Finale(message)
 	local current = fight
 	if not current or current.ended then
 		return
 	end
 	clearField(current)
-	local god = current.god
-	if god then
-		god:Clash(true)
+	if current.god then
+		current.god:Destroy()
+		current.god = nil
 	end
+	findGod(message)
 	current.finale = {
 		beatStart = message.beatStart,
 		base = message.base,
 		taps = 0,
-		fx = if near(current.center)
-			then Fx.Clash(function()
-				return fighterChest(current)
-			end, function()
-				local g = current.god
-				return if g and g.model.Parent then g:Hand("Right") else nil
-			end)
-			else nil,
+		phase = "Lift",
+		lift = 0,
+		aimStart = 0,
+		aimEnds = 0,
+		period = 1,
+		window = 0,
 	}
-	if current.finale.fx then
-		table.insert(current.effects, current.finale.fx)
+	local god = current.god
+	if god then
+		god:Suplex(0, function()
+			local root = rootOf(current.fighter)
+			return if root then root.Position else nil
+		end)
 	end
 	if near(current.center) then
 		showBanner(Texts.Get("PumpGod.Finale"), 2.5)
@@ -1116,26 +1100,25 @@ function handlers.Finale(message)
 	sfx("PumpGodCrowd")
 	if current.fighter == player then
 		rollButton.Visible = false
-		for _, button in laneButtons do
-			button.Visible = true
-		end
-		bossFill.Size = UDim2.fromScale(message.k, 1)
+		bossFill.Size = UDim2.fromScale(0, 1)
 		task.delay(2.5, function()
 			tip("Finale")
 		end)
 	end
 end
 
+-- Soulevé en cours (il glisse si l'on ralentit)
 function handlers.Clash(message)
 	local current = fight
 	local finale = current and current.finale
 	if not current or not finale then
 		return
 	end
-	if finale.fx then
-		finale.fx:Set(message.k)
+	finale.lift = message.k
+	if current.god then
+		current.god:SetLift(message.k)
 	end
-	if current.fighter == player then
+	if current.fighter == player and finale.phase == "Lift" then
 		setBar(bossFill, message.k)
 	end
 end
@@ -1146,9 +1129,9 @@ function handlers.Pulse(message)
 	if not current or not finale then
 		return
 	end
-	if finale.fx then
-		finale.fx:Set(message.k)
-		finale.fx:Pulse()
+	finale.lift = message.k
+	if current.god then
+		current.god:SetLift(message.k)
 	end
 	finale.taps += 1
 	if current.fighter == player then
@@ -1173,45 +1156,49 @@ function handlers.Pulse(message)
 	end
 end
 
--- Finale : éclair annoncé sur un couloir (cercle rouge qui se remplit)
-function handlers.Counter(message)
-	local current = fight
-	if not current or not current.finale or not near(current.center) then
-		return
-	end
-	local zone = Zones.Circle(message.at, PumpGod.Finale.LaneWidth * 0.55, message.start, message.impact)
-	task.delay(math.max(message.impact - Zones.ServerNow(), 0) + 0.1, function()
-		zone.Destroy()
-	end)
-	if current.fighter == player then
-		showBanner(Texts.Get("PumpGod.Dodge"), math.max(message.impact - Zones.ServerNow(), 0.6))
-		sfx("PumpGodWarn")
-	end
-end
-
--- Finale : l'éclair tombe ; esquivé, le choc avance
-function handlers.CounterHit(message)
+-- Étapes du suplex : au-dessus de la tête (jauge de lancer), raté (il retombe), lancé
+function handlers.Suplex(message)
 	local current = fight
 	local finale = current and current.finale
 	if not current or not finale then
 		return
 	end
-	if near(current.center) then
-		local god = current.god
-		Fx.Bolt(message.at, PumpGod.Finale.LaneWidth * 0.5, if god then god:Chest() else message.at)
-		sfx("PumpGodBolt")
-	end
-	if finale.fx then
-		finale.fx:Set(message.k)
-	end
-	if current.fighter == player then
-		setBar(bossFill, message.k)
-		if message.dodged then
-			local root = rootOf(player)
-			if root then
-				Fx.Float(root.Position + Vector3.new(0, 5, 0), Texts.Get("PumpGod.Dodged"), GOLD, 130)
-			end
+	finale.phase = message.phase
+	finale.lift = message.lift
+	finale.aimStart, finale.aimEnds = message.aimStart, message.aimEnds
+	finale.period, finale.window = message.period, message.window
+	local god = current.god
+	if god then
+		god:SetLift(if message.phase == "Lift" then message.lift elseif message.phase == "Fall" then 0 else 1)
+		if message.phase == "Fall" then
+			god:Drop()
 		end
+	end
+	local mineNow = current.fighter == player
+	if message.phase == "Aim" then
+		if mineNow then
+			showBanner(Texts.Get("PumpGod.SuplexAim"), 1.5)
+			sfx("PumpGodWarn")
+		end
+	elseif message.phase == "Fall" then
+		if near(current.center) and god then
+			Fx.Impact(god:Chest(), 2)
+			sfx("PumpGodBolt")
+		end
+		if mineNow then
+			showBanner(Texts.Get("PumpGod.SuplexMiss"), 1.6)
+			shake(0.3, 0.25)
+			bossFill.Size = UDim2.fromScale(0, 1)
+		end
+	elseif message.phase == "Throw" then
+		if god then
+			god:Eject()
+		end
+		if mineNow then
+			showBanner(Texts.Get("PumpGod.SuplexThrown"), 2)
+			shake(0.2, 0.2)
+		end
+		sfx("PumpGodCrowd")
 	end
 end
 
@@ -1694,8 +1681,8 @@ function PumpGodController.Start()
 		if processed then
 			return
 		end
-		if fight and fight.finale and LANE_KEYS[input.KeyCode] then
-			lean(LANE_KEYS[input.KeyCode])
+		if fight and fight.finale and table.find(THROW_KEYS, input.KeyCode) then
+			throw()
 		elseif table.find(ROLL_KEYS, input.KeyCode) then
 			roll()
 		elseif table.find(FLEX_KEYS, input.KeyCode) and not flexHeld then
@@ -1707,10 +1694,10 @@ function PumpGodController.Start()
 			end
 		end
 	end)
-	-- Finale, téléphone : glisser le doigt à gauche ou à droite (hors boutons) change de couloir, une fois par geste
+	-- Finale, téléphone : glisser le doigt vers le haut (hors boutons) lance le dieu, une fois par geste
 	UserInputService.InputBegan:Connect(function(input, processed)
 		if input.UserInputType == Enum.UserInputType.Touch and not processed then
-			swipe = { input = input, x = input.Position.X, done = false }
+			swipe = { input = input, y = input.Position.Y, done = false }
 		end
 	end)
 	UserInputService.InputChanged:Connect(function(input)
@@ -1718,10 +1705,9 @@ function PumpGodController.Start()
 		if not current or current.input ~= input or current.done or not (fight and fight.finale) then
 			return
 		end
-		local dx = input.Position.X - current.x
-		if math.abs(dx) >= PumpGod.Finale.Swipe then
+		if current.y - input.Position.Y >= PumpGod.Finale.Swipe then
 			current.done = true
-			lean(if dx > 0 then 1 else -1)
+			throw()
 		end
 	end)
 	UserInputService.InputEnded:Connect(function(input)
@@ -1745,21 +1731,31 @@ function PumpGodController.Start()
 				god:Step(Zones.ServerNow(), if root then root.Position else nil)
 			end
 		end
-		-- Finale : caméra derrière le combattant, au-dessus de son couloir du milieu (elle ne suit pas ses esquives : on
-		-- le voit glisser à gauche et à droite), le dieu en face et le choc des rayons au milieu de l'écran
+		-- Finale (D110) : caméra au ralenti autour du combattant, de côté, qui tourne lentement et se resserre à mesure
+		-- qu'il soulève le dieu ; au-dessus de la tête, elle lève les yeux vers lui. La barre du dieu devient la jauge
+		-- de lancer (dorée au sommet : c'est le moment).
 		local finale = current.finale
 		if finale and current.fighter == player and not current.ended then
 			local camera = workspace.CurrentCamera
 			local base = finale.base
-			if base and camera and current.god then
-				local godAt = current.god:Chest()
-				local back = flat(godAt - base.Position)
-				back = if back.Magnitude > 0.1 then back.Unit else base.LookVector
-				local eye = base.Position
-					- back * PumpGod.Camera.FinaleBehind
-					+ Vector3.new(0, PumpGod.Camera.FinaleHigh, 0)
+			local root = rootOf(player)
+			if base and camera and root then
+				local cam = PumpGod.Camera
+				local lifted = if finale.phase == "Aim" or finale.phase == "Throw" then 1 else finale.lift
+				local angle = math.rad(cam.SuplexAngle) + os.clock() * cam.SuplexSpin
+				local around = base:VectorToWorldSpace(Vector3.new(math.sin(angle), 0, -math.cos(angle)))
+				local distance = cam.SuplexDistance * (1 - 0.2 * lifted)
+				local eye = root.Position + around * distance + Vector3.new(0, cam.SuplexHigh - lifted * 1.5, 0)
+				local aim = root.Position + Vector3.new(0, 1 + lifted * cam.SuplexLook, 0)
 				camera.CameraType = Enum.CameraType.Scriptable
-				camera.CFrame = camera.CFrame:Lerp(CFrame.lookAt(eye, base.Position:Lerp(godAt, 0.55)), 0.08)
+				camera.CFrame = camera.CFrame:Lerp(CFrame.lookAt(eye, aim), 0.06)
+			end
+			if finale.phase == "Aim" then
+				local meter = aimMeter(finale, Zones.ServerNow())
+				bossFill.Size = UDim2.fromScale(meter, 1)
+				bossFill.BackgroundColor3 = if meter >= 1 - finale.window then GOLD else Color3.fromRGB(255, 255, 255)
+			else
+				bossFill.BackgroundColor3 = BOSS_COLOR
 			end
 		end
 		-- Spectateur : bouton ENCOURAGER (il gonfle un instant à chaque appui ; gris quand il n'en reste plus)

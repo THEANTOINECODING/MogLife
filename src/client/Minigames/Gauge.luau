@@ -21,6 +21,8 @@ local Gauge = {}
 function Gauge.new(parent: GuiObject, interval: number, onRep: (string) -> (), options)
 	local self = Kit.new(parent, interval, onRep, options)
 	local panel = self:Panel(UDim2.fromOffset(420, 250))
+	-- Même taille relative sur téléphone et tablette (D110)
+	self:GrowToScreen(Duels.PanelScreenShare, Duels.PanelMaxScale)
 
 	local seed = (options and options.seed) or math.floor(os.clock() * 1000)
 	local rng = Random.new(seed)

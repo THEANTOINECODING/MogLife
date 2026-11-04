@@ -141,7 +141,8 @@ end
 
 local function showInvite(from: Player, timeout: number)
 	inviteToken += 1
-	inviteLabel.Text = Texts.Get("Duel.InviteFrom", { name = nickname(from) })
+	inviteLabel.Text =
+		Texts.Get("Duel.InviteFrom", { name = nickname(from), percent = math.floor(Duels.LossMogShare * 100 + 0.5) })
 	invitePanel.Visible = true
 	inviteBar.Size = UDim2.fromScale(1, 1)
 	TweenService:Create(inviteBar, TweenInfo.new(timeout, Enum.EasingStyle.Linear), { Size = UDim2.fromScale(0, 1) })
@@ -349,6 +350,9 @@ local function showResult(update)
 		table.insert(lines, Texts.Get("Duel.Capped", { count = Duels.RewardsPerPairPerDay }))
 	elseif update.result ~= "Cancelled" and update.result ~= "Forfeit" and not update.valid then
 		table.insert(lines, Texts.Get("Duel.NotValid", { hits = update.minHits }))
+	end
+	if (update.mogLost or 0) > 0 then
+		table.insert(lines, Texts.Get("Duel.LostMog", { mog = Format.Short(update.mogLost) }))
 	end
 	table.insert(lines, Texts.Get("Duel.TotalWins", { wins = update.totalWins }))
 	resultInfo.Text = table.concat(lines, "\n")

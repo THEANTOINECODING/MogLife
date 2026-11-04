@@ -237,8 +237,10 @@ return {
 		},
 		-- Tractions : la main indiquée, à gauche ou à droite, sur le temps
 		Alternate = {
-			BothLevel = 1, -- « les deux mains » : toucher les deux côtés ensemble
-			BothChance = 0.2,
+			-- D110 : main tirée au hasard à chaque temps (gauche, droite ou les deux), toujours sur le temps
+			BothLevel = 0, -- « les deux mains » dès le début : toucher les deux côtés ensemble
+			BothChance = 0.25,
+			MaxSameInRow = 2, -- jamais plus de 2 fois la même main de suite
 			BothWindow = 0.18, -- secondes entre les deux appuis
 			SwingLevel = 2, -- rythme irrégulier (jamais plus rapide que l'intervalle)
 			SwingMax = 0.35, -- un temps peut durer jusqu'à 1,35 intervalle
@@ -377,6 +379,26 @@ return {
 			DoubleChance = 0.2,
 			UpLevel = 1, -- coups venant aussi d'en haut
 		},
+		-- Monsieur Pas-Les-Jambes (D110) : tracer la pose (coordonnées en part de la zone de dessin)
+		Trace = {
+			TimeFactor = 1.0, -- temps pour tracer une pose (× intervalle), manche 1
+			TimePerLevel = 0.12, -- moins de temps à chaque manche
+			MinTime = 0.7,
+			Checkpoints = 22, -- points du tracé à parcourir
+			Reach = 0.07, -- distance pour « attraper » un point du tracé
+			Skip = 2, -- points qu'on peut sauter d'un coup (doigt rapide)
+			StartRadius = 0.07, -- taille du point de départ
+			PerfectCoverage = 0.95, -- part du tracé parcourue
+			PerfectError = 0.032, -- écart moyen avec le tracé
+			GoodCoverage = 0.75,
+			GoodError = 0.065,
+			Pause = 0.25, -- secondes entre deux poses
+			HardLevel = 1, -- éclair, double biceps, étoile, zigzag
+			HardChance = 0.6,
+			MirrorLevel = 2, -- poses en miroir et tournées
+			MaxTurn = 25, -- degrés
+			CursorSpeed = 0.9, -- clavier et manette : part de la zone par seconde
+		},
 		-- Roi du Quartier : glisser la combinaison avant que le ventilateur l'efface
 		Combo = {
 			Length = 4,
@@ -493,6 +515,9 @@ return {
 		DefeatCashLossCap = { 50, 120, 300, 600, 1_200, 2_500 }, -- par stade du joueur ❓
 		-- Mog-off perdu (avec assez de Mog) : perte plus faible, annoncée aussi ❓
 		MogOffLossPercent = 0.05,
+		-- Mog perdu en cas de défaite (Mog-off perdu ou défaite automatique, D110 : « il faut perdre beaucoup »).
+		-- Jamais sous le Mog qu'il fallait pour atteindre le stade du joueur (StatsService.MogFloor).
+		DefeatMogShare = 0.15,
 		MogOffLossCap = { 20, 50, 120, 250, 500, 1_000 },
 		PauseBetweenRounds = 3, -- secondes entre deux manches (annonce de la manche suivante)
 		VictoryLaunchDelay = 3.2, -- le boss vaincu s'envole après la fin du duel (BossFights.FinishTime, D85)
@@ -500,10 +525,22 @@ return {
 		MeetDistance = 24, -- studs : la première fois qu'on s'approche d'un boss, il est présenté (cinématique)
 	},
 
+	-- Prendre la place d'un joueur sur une machine en payant (D110) : produit développeur à créer dans le Creator Hub
+	-- (Monétisation > Produits développeur, 15 Robux), puis coller son numéro dans ProductId. À 0, l'invite est cachée.
+	StealSpot = {
+		ProductId = 0,
+		PriceRobux = 15, -- affiché sur l'invite ; le prix réel est celui du produit dans le Creator Hub
+		ProtectSeconds = 60, -- l'acheteur et le joueur délogé ne peuvent plus être délogés pendant ce temps
+		HoldSeconds = 0.5, -- appui long sur l'invite, contre les achats par erreur
+		EjectSpeed = 45, -- éjection drôle de l'occupant : studs/s vers l'arrière, vers le haut, rotation
+		EjectLift = 35,
+		EjectSpin = 18,
+	},
+
 	-- Boutique de boosts (camion à shakes, distributeur)
 	BoostShop = {
 		Distance = 14, -- distance max (studs) au comptoir pour acheter
-		MaxDuration = 900, -- un boost prolongé ne dépasse jamais 15 minutes
+		MaxDuration = 300, -- un boost prolongé ne dépasse jamais 5 minutes (D110)
 		MinExtension = 0.5, -- refusé (sans payer) si l'achat ajouterait moins de cette part de sa durée
 	},
 
@@ -524,6 +561,9 @@ return {
 		-- Le squelette n'est redimensionné que si la progression a bougé d'au moins ce pas (évite de le recalculer à
 		-- chaque petite répétition)
 		SkeletonStep = 0.01,
+		-- Personnage invisible à son apparition jusqu'à ce que son corps du jeu soit posé (D110) ; au plus tant de
+		-- secondes (sauvegarde très lente : l'avatar Roblox se montre plutôt qu'un joueur invisible)
+		VeilTimeout = 12,
 		-- Part de la croissance (et du pump) que prend chaque pièce
 		Weights = {
 			UpperArm = 1,

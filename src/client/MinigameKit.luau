@@ -187,6 +187,31 @@ function Kit:Panel(size: UDim2, tappable: boolean?): GuiObject
 	return panel
 end
 
+-- Agrandit le panneau pour qu'il occupe la même part de la hauteur d'écran sur tous les appareils (D110 : sur
+-- tablette, le duel était minuscule et le téléphone gagnait plus souvent). Jamais plus que maxScale, jamais plus haut
+-- que l'écran. Sans effet en portrait (le panneau y prend déjà toute la largeur).
+function Kit:GrowToScreen(heightShare: number, maxScale: number)
+	local panel = self.root
+	if not panel or Ui.isPhonePortrait() then
+		return
+	end
+	local scale = panel:FindFirstChildOfClass("UIScale") or Ui.create("UIScale", { Parent = panel })
+	local function fit()
+		local parentHeight = self.parent.AbsoluteSize.Y
+		local requested = parentHeight * panel.Size.Y.Scale + panel.Size.Y.Offset
+		if requested <= 0 or parentHeight <= 0 then
+			return
+		end
+		local wanted = math.clamp(parentHeight * heightShare / requested, 1, maxScale)
+		scale.Scale = math.min(wanted, math.max(1, parentHeight - 24) / requested)
+	end
+	-- Après le réglage de Panel (qui ne fait que rétrécir), à chaque changement de taille
+	self:Connect(self.parent:GetPropertyChangedSignal("AbsoluteSize"), function()
+		task.defer(fit)
+	end)
+	fit()
+end
+
 -- Panneau large et bas, pour jouer à deux pouces (D82) : en paysage, il prend toute la largeur à droite de la colonne
 -- d'infos, en bas de l'écran, sur `heightScale` de la hauteur ; la scène 3D (joueur, boss) reste visible au-dessus.
 -- En portrait, même placement que Panel.

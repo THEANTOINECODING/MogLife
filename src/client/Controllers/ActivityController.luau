@@ -448,6 +448,8 @@ end
 -- Geste du joueur dans son mini-jeu (appelé par MinigameKit au moment même du geste) : son personnage fait la
 -- répétition tout de suite, au lieu d'attendre la confirmation du serveur (qui peut arriver un peu plus tard)
 function ActivityController.LocalRep(quality: string)
+	-- Petit coup de caméra (D110), aussi pendant les duels et les combats
+	CameraFraming.Kick(quality)
 	local animator = animators[localPlayer]
 	local look = QUALITY[quality]
 	-- Duel : les deux bras sont animés ensemble par le serveur (ArmWrestle)

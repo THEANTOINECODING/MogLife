@@ -31,6 +31,7 @@ type Fight = {
 	bossDone: boolean,
 	token: number, -- change à chaque manche, pour ignorer les minuteurs périmés
 	stakes: number, -- Cash perdu en cas de défaite (annoncé avant le combat)
+	mogStakes: number, -- part de Mog perdue en cas de défaite (0 en revanche, D110)
 }
 
 local DataService
@@ -75,7 +76,12 @@ local function assess(player: Player, bossId: string)
 		fightLoss = if beaten or boss.arena
 			then 0
 			else cashLoss(data.Cash, data.Stage, BOSS.MogOffLossPercent, BOSS.MogOffLossCap),
-		mogLoss = if boss.arena then math.floor(data.Mog * PumpGod.DefeatMogShare) else 0,
+		-- Mog perdu (D110 : 15 %, jamais sous le Mog du stade atteint) ; aucun en revanche. Au Colisée : PumpGod.
+		mogLoss = if boss.arena
+			then math.floor(data.Mog * PumpGod.DefeatMogShare)
+			elseif beaten then 0
+			else StatsService.MogLoss(data, BOSS.DefeatMogShare),
+		autoMogLoss = StatsService.MogLoss(data, BOSS.DefeatMogShare),
 		blockingBossId = if not isCurrent and not beaten and currentStage.boss then currentStage.boss.id else nil,
 		mog = data.Mog,
 	}
@@ -109,11 +115,16 @@ local function finishFight(player: Player, fight: Fight)
 		if fight.stakes > 0 then
 			StatsService.Add(player, "Cash", -fight.stakes)
 		end
+		-- Recalculée à la fin (le Mog a pu changer), avec le plancher du stade
+		local mogLost = if fight.mogStakes > 0 then StatsService.LoseMog(player, fight.mogStakes) else 0
 		local model = models[fight.spot]
 		if model then
 			Npc.Pose(model)
 		end
-		Remotes.BossUpdate:FireClient(player, { state = "Defeat", bossId = fight.bossId, cash = fight.stakes })
+		Remotes.BossUpdate:FireClient(
+			player,
+			{ state = "Defeat", bossId = fight.bossId, cash = fight.stakes, mog = mogLost }
+		)
 		return
 	end
 
@@ -376,11 +387,15 @@ local function onChallenge(player: Player, bossId: unknown)
 	if not state.ready then
 		-- Défaite automatique et comique, avec la perte annoncée dans la fenêtre de défi
 		StatsService.Add(player, "Cash", -state.autoLoss)
+		local mogLost = StatsService.LoseMog(player, BOSS.DefeatMogShare)
 		local model = models[spot]
 		if model then
 			Npc.Pose(model)
 		end
-		Remotes.BossUpdate:FireClient(player, { state = "Mogged", bossId = bossId, cash = state.autoLoss })
+		Remotes.BossUpdate:FireClient(
+			player,
+			{ state = "Mogged", bossId = bossId, cash = state.autoLoss, mog = mogLost }
+		)
 		return
 	end
 
@@ -404,6 +419,7 @@ local function onChallenge(player: Player, bossId: unknown)
 		bossDone = false,
 		token = 0,
 		stakes = state.fightLoss,
+		mogStakes = if state.beaten then 0 else BOSS.DefeatMogShare,
 	}
 	fights[player] = fight
 	player:SetAttribute("InFight", true) -- tout le combat, manches et entractes compris (le client range les événements)
@@ -478,7 +494,7 @@ function BossService.ShowChallenge(player: Player, bossId: string)
 		beaten = state.beaten,
 		cashLoss = if state.ready then state.fightLoss else state.autoLoss,
 		arena = state.boss.arena == true,
-		mogLoss = state.mogLoss,
+		mogLoss = if state.ready or state.boss.arena then state.mogLoss else state.autoMogLoss,
 		blockingBossId = state.blockingBossId,
 	})
 end

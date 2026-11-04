@@ -56,6 +56,76 @@ local DataService
 
 local states: { [Player]: State } = {}
 
+-- Voile d'arrivée (D110) : un personnage qui vient d'apparaître reste invisible jusqu'à ce que son corps du jeu soit
+-- posé ; sans lui, on voyait l'avatar Roblox le temps que la sauvegarde et l'apparence se chargent. Si le stade n'a
+-- pas de corps importé (ou après Balance.Growth.VeilTimeout secondes), l'avatar redevient visible tel quel.
+type Veil = { saved: { [Instance]: number }, connection: RBXScriptConnection }
+local veils: { [Model]: Veil } = {}
+
+local function hideThing(veil: Veil, thing: Instance)
+	if (thing:IsA("BasePart") and thing.Name ~= "HumanoidRootPart") or thing:IsA("Decal") then
+		local object = thing :: any
+		if veil.saved[thing] == nil then
+			veil.saved[thing] = object.Transparency
+		end
+		object.Transparency = 1
+	end
+end
+
+local function veilCharacter(character: Model)
+	if veils[character] then
+		return
+	end
+	local veil: Veil = { saved = {}, connection = nil :: any }
+	veil.connection = character.DescendantAdded:Connect(function(thing)
+		-- Les pièces du corps du jeu (BodyShell) ne sont jamais voilées
+		local shell = character:FindFirstChild(SHELL_NAME)
+		if not (shell and thing:IsDescendantOf(shell)) then
+			hideThing(veil, thing)
+		end
+	end)
+	veils[character] = veil
+	for _, thing in character:GetDescendants() do
+		hideThing(veil, thing)
+	end
+	task.delay(GROWTH.VeilTimeout, function()
+		local current = veils[character]
+		if current == veil then
+			veils[character] = nil
+			veil.connection:Disconnect()
+			for thing, value in veil.saved do
+				if thing.Parent then
+					(thing :: any).Transparency = value
+				end
+			end
+		end
+	end)
+end
+
+-- withBody : le corps du jeu est posé (les parties d'origine restent cachées par hideOriginalBody) ; sinon l'avatar
+-- Roblox redevient visible
+local function unveil(character: Model, withBody: boolean)
+	local veil = veils[character]
+	if not veil then
+		return
+	end
+	veils[character] = nil
+	veil.connection:Disconnect()
+	for thing, value in veil.saved do
+		if not thing.Parent then
+			continue
+		end
+		-- Avec le corps du jeu, les parties d'origine (et leurs décalques) et les accessoires Roblox restent cachés ;
+		-- le reste ajouté pendant le voile (objets de style de secours, outils) réapparaît
+		local original = thing.Parent == character
+			or (thing:IsA("Decal") and thing.Parent and thing.Parent.Parent == character)
+			or thing:FindFirstAncestorOfClass("Accessory") ~= nil
+		if not withBody or not original then
+			(thing :: any).Transparency = value
+		end
+	end
+end
+
 local BodyService = {}
 
 -- Corps prévu pour le stade du joueur (et l'id du stade), seulement si ses pièces sont importées
@@ -225,21 +295,35 @@ local function bodyGrowthRatio(bodyKey: string, nextKey: string, part: string): 
 	if not folder then
 		return nil
 	end
-	local function template(key: string): BasePart?
-		for _, suffix in { "", "_Shorts", "_Top" } do
-			local candidate = folder:FindFirstChild(`{key}_{part}{suffix}`)
+	-- Encombrement de toute la partie : toutes ses pièces de base ensemble (peau, haut, short…). D110 : comparer une
+	-- seule pièce faussait tout quand un stade porte un haut et le suivant est torse nu (au Bro, la peau du torse n'est
+	-- qu'un col sous le t-shirt ; le torse nu de l'Alpha est 3 fois plus haut : tout le torse s'étirait au-dessus de la
+	-- tête)
+	local function extent(key: string): Vector3?
+		local offsets = BodyPieces[key]
+		if not offsets then
+			return nil
+		end
+		local low, high = nil :: Vector3?, nil :: Vector3?
+		for pieceKey, offset in offsets do
+			if pieceKey ~= part and string.sub(pieceKey, 1, #part + 1) ~= part .. "_" then
+				continue
+			end
+			local candidate = folder:FindFirstChild(`{key}_{pieceKey}`)
 			if candidate and candidate:IsA("BasePart") then
-				return candidate
+				local half = candidate.Size / 2
+				low = if low then low:Min(offset - half) else offset - half
+				high = if high then high:Max(offset + half) else offset + half
 			end
 		end
-		return nil
+		return if low and high then high - low else nil
 	end
-	local current = template(bodyKey)
-	local nextPart = template(nextKey)
+	local current = extent(bodyKey)
+	local nextPart = extent(nextKey)
 	if not current or not nextPart then
 		return nil
 	end
-	return nextPart.Size / current.Size
+	return nextPart / current
 end
 
 local function buildShell(
@@ -388,6 +472,10 @@ function BodyService.Refresh(player: Player, force: boolean?)
 			old:Destroy()
 		end
 		states[player] = nil
+		-- Données chargées et pas de corps pour ce stade : l'avatar Roblox se montre
+		if DataService.Get(player) then
+			unveil(character, false)
+		end
 		return
 	end
 	local look = lookOf(player)
@@ -423,6 +511,7 @@ function BodyService.Refresh(player: Player, force: boolean?)
 		pump = if sameCharacter then previous.pump else {},
 	}
 	applySizes(player)
+	unveil(character, true)
 	-- Nouveau stade sur le même personnage : transformation (effet visuel chez tout le monde)
 	if sameCharacter and previous.stageId ~= stageId then
 		Remotes.BodyTransform:FireAllClients(player, stageId)
@@ -470,6 +559,17 @@ function BodyService.Init(services)
 end
 
 function BodyService.Start()
+	-- Chaque personnage apparaît voilé, avant même le chargement de la sauvegarde
+	local function watch(player: Player)
+		player.CharacterAdded:Connect(veilCharacter)
+		if player.Character and not states[player] then
+			veilCharacter(player.Character)
+		end
+	end
+	Players.PlayerAdded:Connect(watch)
+	for _, player in Players:GetPlayers() do
+		watch(player)
+	end
 	DataService.PlayerLoaded:Connect(function(player)
 		player.CharacterAppearanceLoaded:Connect(function()
 			BodyService.Refresh(player, true)
@@ -480,6 +580,10 @@ function BodyService.Start()
 	end)
 	Players.PlayerRemoving:Connect(function(player)
 		states[player] = nil
+		if player.Character and veils[player.Character] then
+			veils[player.Character].connection:Disconnect()
+			veils[player.Character] = nil
+		end
 	end)
 	task.spawn(function()
 		while true do

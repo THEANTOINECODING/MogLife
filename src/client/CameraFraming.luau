@@ -154,15 +154,18 @@ function CameraFraming.BodyPoints(character: Model): { Vector3 }
 	return points
 end
 
--- Angles par défaut : de face-côté vers profil, puis en plongée. { degrés autour du sujet, part de plongée }
+-- Angles par défaut : de profil d'abord (D110, choix d'Antoine : « une vue sur le joueur de côté »), puis de
+-- trois quarts, de face, en plongée. { degrés autour du sujet, part de plongée }
 local DEFAULT_STEPS = {
-	{ 25, 0 },
-	{ -25, 0 },
-	{ 50, 0 },
-	{ -50, 0 },
+	{ 75, 0.12 },
+	{ -75, 0.12 },
+	{ 60, 0.1 },
+	{ -60, 0.1 },
+	{ 90, 0.15 },
+	{ -90, 0.15 },
+	{ 40, 0 },
+	{ -40, 0 },
 	{ 0, 0 },
-	{ 80, 0 },
-	{ -80, 0 },
 	{ 30, 1 },
 	{ -30, 1 },
 	-- Mur juste devant : plongée raide par-dessus, puis de trois quarts arrière
@@ -297,11 +300,9 @@ function CameraFraming.HasFreeArea(): boolean
 	return false
 end
 
-local FIT_MARGIN = 0.12 -- part de la zone libre gardée vide autour du sujet (mouvements, effets)
--- Zoom très léger (D88) : la caméra d'une activité ne vient pas beaucoup plus près que la caméra du joueur
-local KEEP_DISTANCE = 0.85 -- part de la distance d'origine (caméra du joueur -> personnage) gardée au minimum
-local distanceFloor = 0 -- fixé par Follow pendant une activité
-local MAX_FLOOR = 22 -- studs : au-delà, la caméra se rapproche quand même
+local FIT_MARGIN = 0.18 -- part de la zone libre gardée vide autour du sujet (mouvements, effets)
+-- D110 : la distance ne dépend plus de la caméra du joueur (avant : au moins 85 % de son recul, D88, d'où un gros
+-- dézoom quand il jouait de loin) ; le sujet remplit toujours la zone libre de la même façon.
 
 -- Place la caméra pour que tous les `points` tiennent dans la zone libre de l'écran, le plus près possible : la
 -- caméra regarde dans la direction choisie (de `eye` vers `focus`), recule juste ce qu'il faut et se décale pour
@@ -338,7 +339,7 @@ function CameraFraming.Fit(focus: Vector3, eye: Vector3, points: { Vector3 }, mi
 	local subject = center + right * midX + up * midY
 	-- Recul : la largeur et la hauteur du sujet tiennent dans la zone libre
 	local halfW, halfH = (maxX - minX) / 2, (maxY - minY) / 2
-	local distance = math.max(halfW / (hx * tanX), halfH / (hy * tanY), minDistance or MIN_DISTANCE, distanceFloor)
+	local distance = math.max(halfW / (hx * tanX), halfH / (hy * tanY), minDistance or MIN_DISTANCE)
 	-- La caméra se décale (sans tourner) pour que le sujet tombe au centre de la zone libre
 	local shift = right * (-cx * distance * tanX) + up * (-cy * distance * tanY)
 	local newEye = subject - look * distance + shift
@@ -416,6 +417,27 @@ export type FollowOptions = {
 	fixed: boolean?,
 }
 
+-- Effets légers (D110) : à chaque répétition réussie, petit coup de zoom et petite secousse (plus forts sur un
+-- Perfect) ; une série réussie rapproche très doucement la caméra (élan), un raté la remet en place.
+local KICK_FOV = 3.5 -- degrés de zoom d'un Perfect
+local KICK_LIFT = 0.12 -- studs de secousse vers le haut d'un Perfect
+local KICK_TIME = 0.35 -- secondes pour revenir
+local MOMENTUM_STEP = 0.12 -- élan gagné par répétition réussie (0 à 1)
+local MOMENTUM_PUSH = 0.07 -- part du recul gagnée à plein élan
+local kickAt, kickAmount, momentum = -math.huge, 0, 0
+local smoothMomentum = 0
+
+-- Répétition jouée par le joueur (ActivityController) : effet de caméra si une caméra stable tourne
+function CameraFraming.Kick(quality: string)
+	if quality == "Miss" then
+		momentum = 0
+		return
+	end
+	kickAt = os.clock()
+	kickAmount = if quality == "Perfect" then 1 else 0.45
+	momentum = math.min(1, momentum + MOMENTUM_STEP)
+end
+
 local REPLAN_MOVE = 4 -- studs : le sujet s'est vraiment déplacé, l'angle est recalculé
 local AREA_TOLERANCE = 0.1 -- part de la diagonale de l'écran : en dessous, un changement d'interface est ignoré
 local BLOCK_CHECK = 1.2 -- secondes entre deux contrôles de visibilité
@@ -445,8 +467,6 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 	camera.FieldOfView = FOV
 	local t0 = os.clock()
 	local enter = options.enterTime or ENTER_TIME
-	-- (borné : une caméra du joueur très reculée ne doit pas rendre le personnage minuscule)
-	distanceFloor = math.min((startCF.Position - start).Magnitude * KEEP_DISTANCE, MAX_FLOOR)
 
 	-- Angle choisi : décalages de l'œil et du point visé par rapport au sujet
 	local planned = start
@@ -515,10 +535,16 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 		g = g * g * (3 - 2 * g)
 		local eyeNow = smoothAnchor + fromEye:Lerp(eyeOffset, g)
 		local aimNow = smoothAnchor + fromAim:Lerp(aimOffset, g)
-		local wanted = CFrame.lookAt(eyeNow, aimNow)
+		-- Élan : la caméra s'approche un peu du point visé (lissé, jamais brusque)
+		smoothMomentum += (momentum - smoothMomentum) * math.min(dt * 2, 1)
+		eyeNow = aimNow + (eyeNow - aimNow) * (1 - MOMENTUM_PUSH * smoothMomentum)
+		-- Coup de la répétition : décroissance rapide, une petite oscillation
+		local k = math.clamp((now - kickAt) / KICK_TIME, 0, 1)
+		local kick = if k < 1 then kickAmount * (1 - k) * (1 - k) else 0
+		local wanted = CFrame.lookAt(eyeNow, aimNow) * CFrame.new(0, KICK_LIFT * kick * math.cos(k * 9), 0)
 		local e = math.clamp((now - t0) / enter, 0, 1)
 		camera.CFrame = if e < 1 then startCF:Lerp(wanted, e * e * (3 - 2 * e)) else wanted
-		camera.FieldOfView = math.max(camera.FieldOfView, FOV - 6) -- un « punch » ne peut pas s'accumuler
+		camera.FieldOfView = FOV - KICK_FOV * kick
 		-- Petits obstacles devant le corps : estompés
 		if now >= nextFade then
 			nextFade = now + 0.15
@@ -530,7 +556,7 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 	return function()
 		connection:Disconnect()
 		knownLow, knownHigh = nil, nil
-		distanceFloor = 0
+		kickAt, kickAmount, momentum = -math.huge, 0, 0
 		CameraFraming.ClearFade(fader)
 		local from, fromFov = camera.CFrame, camera.FieldOfView
 		local began = os.clock()

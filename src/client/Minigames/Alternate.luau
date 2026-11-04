@@ -1,5 +1,6 @@
--- Mini-jeu « Alternate » (exercice : tractions, D81) : une main après l'autre, sur le temps. Toucher la moitié
--- gauche ou droite de l'écran (un pouce de chaque côté) quand le cercle de la main allumée se referme.
+-- Mini-jeu « Alternate » (exercice : tractions, D81, D110) : à chaque temps, la main est tirée au hasard (gauche,
+-- droite ou les deux). Toucher la moitié gauche ou droite de l'écran (un pouce de chaque côté), ou les deux, quand
+-- le cercle de la main allumée se referme.
 -- Mauvaise main ou temps sans appui (une fois la série commencée) = raté.
 -- Surprises : « les deux mains » (toucher les deux côtés ensemble, niveau Alternate.BothLevel), rythme irrégulier
 -- (niveau Alternate.SwingLevel, jamais plus rapide que l'intervalle).
@@ -64,9 +65,9 @@ function Alternate.new(parent: GuiObject, interval: number, onRep: (string) -> (
 
 	-- Temps en cours : moment, main attendue ("Left", "Right" ou "Both"), appuis reçus
 	local beatAt = os.clock() + interval * 1.2
-	local expected = "Left"
-	local nextSingle = "Right"
-	self.guideSide = "Left"
+	local expected = if rng:NextNumber() < 0.5 then "Left" else "Right"
+	local lastSide, sameCount = expected, 1
+	self.guideSide = expected
 	local pressed: { [string]: number } = {}
 	local resolved = false
 	local started = false
@@ -78,12 +79,20 @@ function Alternate.new(parent: GuiObject, interval: number, onRep: (string) -> (
 			self:Announce("Minigame.Twist.Alternate.Swing")
 		end
 		beatAt += gap
-		if self.level >= SETTINGS.BothLevel and rng:NextNumber() < SETTINGS.BothChance then
-			expected = "Both"
+		-- Tirage au hasard, sans plus de MaxSameInRow fois la même main de suite
+		local pick
+		repeat
+			if self.level >= SETTINGS.BothLevel and rng:NextNumber() < SETTINGS.BothChance then
+				pick = "Both"
+			else
+				pick = if rng:NextNumber() < 0.5 then "Left" else "Right"
+			end
+		until pick ~= lastSide or sameCount < SETTINGS.MaxSameInRow
+		sameCount = if pick == lastSide then sameCount + 1 else 1
+		lastSide = pick
+		expected = pick
+		if pick == "Both" then
 			self:Announce("Minigame.Twist.Alternate.Both")
-		else
-			expected = nextSingle
-			nextSingle = if nextSingle == "Left" then "Right" else "Left"
 		end
 		pressed = {}
 		resolved = false

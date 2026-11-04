@@ -31,6 +31,7 @@ type Side = {
 	wins: number,
 	hits: number, -- répétitions réussies pendant tout le duel (participation valide)
 	pushed: number, -- poussée de la manche en cours
+	queue: { number }, -- poussées reçues, pas encore appliquées (appliquées par paires, D110)
 	done: boolean, -- a fini sa manche
 }
 
@@ -42,6 +43,7 @@ type Duel = {
 	lean: number, -- de -LeanLimit (B a plaqué le bras de A) à +LeanLimit (A a plaqué le bras de B)
 	token: number, -- change à chaque manche : ignore les minuteurs et les fins de run périmés
 	completed: number, -- manches menées à leur terme
+	pinned: boolean, -- bras plaqué pendant la manche en cours
 	over: boolean,
 }
 
@@ -355,12 +357,19 @@ function finish(duel: Duel, forfeiter: Side?)
 			result = if side.wins > other.wins then "Won" else "Lost"
 		end
 		local cash, counted, valid, mog = reward(side, other, result, forfeiter ~= nil)
+		-- Le perdant (ou celui qui abandonne en cours de duel) perd une part de son Mog (D110), sans descendre sous
+		-- le Mog de son stade. Pas limité par paire : seul le perdant y perd, rien n'est offert à l'autre.
+		local mogLost = 0
+		if side.player and (result == "Lost" or result == "Forfeit") then
+			mogLost = StatsService.LoseMog(side.player, Duels.LossMogShare)
+		end
 		local data = side.player and DataService.Get(side.player)
 		sendTo(side, {
 			state = "Result",
 			result = result,
 			cash = cash,
 			mog = mog,
+			mogLost = mogLost,
 			counted = counted,
 			valid = valid,
 			-- Participation valide mais plus de récompense avec ce joueur aujourd'hui
@@ -428,6 +437,8 @@ local function resolveRound(duel: Duel)
 	end)
 end
 
+local settle
+
 local function onSideEnd(duel: Duel, side: Side, reason: string, token: number)
 	if duel.over or duel.token ~= token or side.done then
 		return
@@ -437,6 +448,8 @@ local function onSideEnd(duel: Duel, side: Side, reason: string, token: number)
 		return
 	end
 	side.done = true
+	-- Les poussées encore en attente de l'autre côté s'appliquent seules
+	settle(duel)
 	resolveRound(duel)
 end
 
@@ -452,21 +465,44 @@ local function pin(duel: Duel)
 	end
 end
 
+-- Équité malgré le décalage réseau (D110) : la n-ième poussée d'un joueur ne s'applique qu'avec la n-ième de
+-- l'autre (chacun note ses poussées sur sa propre horloge). Le joueur au réseau le plus rapide ne peut donc plus
+-- plaquer le bras avant que les poussées de l'autre arrivent. Un côté qui a fini sa manche n'envoie plus rien :
+-- les poussées restantes de l'autre s'appliquent seules.
+function settle(duel: Duel)
+	local a, b = duel.sides[1], duel.sides[2]
+	local justPinned = false
+	while not duel.pinned do
+		local hasA, hasB = #a.queue > 0, #b.queue > 0
+		if not ((hasA and hasB) or (hasA and b.done) or (hasB and a.done)) then
+			break
+		end
+		for _, side in { a, b } do
+			local amount = if #side.queue > 0 then table.remove(side.queue, 1) else 0
+			side.pushed += amount
+			duel.lean = math.clamp(duel.lean + side.sign * amount, -Duels.LeanLimit, Duels.LeanLimit)
+		end
+		if math.abs(duel.lean) >= Duels.LeanLimit then
+			duel.pinned = true
+			justPinned = true
+		end
+	end
+	publishLean(duel)
+	sendLive(duel)
+	if justPinned then
+		pin(duel)
+	end
+end
+
 local function push(duel: Duel, side: Side, quality: string, token: number)
-	if duel.over or duel.token ~= token or side.done then
+	if duel.over or duel.token ~= token or side.done or duel.pinned then
 		return
 	end
-	local amount = Duels.Push[quality] or 0
 	if quality == "Perfect" or quality == "Good" then
 		side.hits += 1
 	end
-	side.pushed += amount
-	duel.lean = math.clamp(duel.lean + side.sign * amount, -Duels.LeanLimit, Duels.LeanLimit)
-	publishLean(duel)
-	sendLive(duel)
-	if math.abs(duel.lean) >= Duels.LeanLimit then
-		pin(duel)
-	end
+	table.insert(side.queue, Duels.Push[quality] or 0)
+	settle(duel)
 end
 
 -- Mannequin d'entraînement (Studio) : pousse au même rythme que le motif du joueur
@@ -495,6 +531,7 @@ function startRound(duel: Duel)
 	duel.round += 1
 	duel.token += 1
 	duel.lean = 0
+	duel.pinned = false
 	publishLean(duel)
 	local token = duel.token
 	local round = duel.round
@@ -504,6 +541,7 @@ function startRound(duel: Duel)
 	for _, side in duel.sides do
 		side.done = false
 		side.pushed = 0
+		side.queue = {}
 	end
 	for _, side in duel.sides do
 		local other = otherSide(duel, side)
@@ -534,6 +572,8 @@ function startRound(duel: Duel)
 			level = round - 1,
 			titleKey = "Duel.RoundTitle",
 			titleArgs = { round = round, rounds = Duels.Rounds, name = other.name },
+			-- Un réseau irrégulier peut livrer deux poussées collées : elles comptent (le quota de rythme reste)
+			lagTolerant = true,
 			onRep = function(_, quality)
 				push(duel, side, quality, token)
 				return nil
@@ -571,6 +611,7 @@ local function newSide(player: Player?, spot: BasePart, sign: number): Side
 		wins = 0,
 		hits = 0,
 		pushed = 0,
+		queue = {},
 		done = false,
 	}
 end
@@ -606,6 +647,7 @@ local function startDuel(a: Player, b: Player?, botSkill: { perfect: number, goo
 		lean = 0,
 		token = 0,
 		completed = 0,
+		pinned = false,
 		over = false,
 	}
 	publishLean(duel)
@@ -693,7 +735,7 @@ local function onInvite(player: Player, target: unknown)
 	local invite = { from = player }
 	invites[invited] = invite
 	Remotes.DuelUpdate:FireClient(invited, { state = "Invited", from = player, timeout = Duels.InviteTimeout })
-	notify(player, "Duel.InviteSent", { name = name })
+	notify(player, "Duel.InviteSent", { name = name, percent = math.floor(Duels.LossMogShare * 100 + 0.5) })
 	task.delay(Duels.InviteTimeout, function()
 		if invites[invited] == invite then
 			invites[invited] = nil

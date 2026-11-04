@@ -421,13 +421,16 @@ local function onBossPrompt(info)
 		local ready = Texts.Get("Boss.ReadyArena", { mog = mogLoss })
 		showPanel(name, line, `{required}\n{ready}`, Texts.Get("Boss.Fight"), Texts.Get("Boss.Later"))
 	elseif info.ready then
-		local ready = Texts.Get("Boss.Ready", { cash = info.cashLoss })
+		local ready = Texts.Get("Boss.Ready", { mog = mogLoss, cash = info.cashLoss })
 		showPanel(name, line, `{required}\n{ready}`, Texts.Get("Boss.Fight"), Texts.Get("Boss.Later"))
 	elseif info.blockingBossId then
-		local warning = Texts.Get("Boss.NotReadyFuture", { boss = bossName(info.blockingBossId), cash = info.cashLoss })
+		local warning = Texts.Get(
+			"Boss.NotReadyFuture",
+			{ boss = bossName(info.blockingBossId), mog = mogLoss, cash = info.cashLoss }
+		)
 		showPanel(name, line, `{required}\n{warning}`, Texts.Get("Boss.FightAnyway"), Texts.Get("Boss.Later"))
 	else
-		local warning = Texts.Get("Boss.NotReady", { cash = info.cashLoss })
+		local warning = Texts.Get("Boss.NotReady", { mog = mogLoss, cash = info.cashLoss })
 		showPanel(name, line, `{required}\n{warning}`, Texts.Get("Boss.FightAnyway"), Texts.Get("Boss.Later"))
 	end
 	onPrimary = confirm
@@ -573,7 +576,7 @@ local function onBossUpdate(update)
 		hidePanel()
 		MinigameController.SetGameplayLocked(false, "Boss")
 		launchPlayer()
-		UIController.Toast(Texts.Get("Boss.Mogged", { cash = update.cash }), 3.5)
+		UIController.Toast(Texts.Get("Boss.Mogged", { mog = Format.Short(update.mog or 0), cash = update.cash }), 3.5)
 	elseif update.state == "Victory" then
 		-- Results are informational: movement resumes without waiting for the OK button.
 		MinigameController.SetGameplayLocked(false, "Series")
@@ -617,8 +620,11 @@ local function onBossUpdate(update)
 		MinigameController.SetGameplayLocked(false, "Series")
 		MinigameController.SetGameplayLocked(false, "Boss")
 		bossSays(update.bossId, `BossTaunt.{update.bossId}.Ahead`)
-		local text = if (update.cash or 0) > 0
-			then Texts.Get("Boss.Defeat", { boss = bossName(update.bossId), cash = update.cash })
+		local text = if (update.cash or 0) > 0 or (update.mog or 0) > 0
+			then Texts.Get(
+				"Boss.Defeat",
+				{ boss = bossName(update.bossId), mog = Format.Short(update.mog or 0), cash = update.cash }
+			)
 			else Texts.Get("Boss.DefeatRematch", { boss = bossName(update.bossId) })
 		-- La caméra du duel filme d'abord la fin du duel (BossFights, D85)
 		task.delay(BossFights.FinishTime, function()

@@ -54,7 +54,7 @@ Dieu du Pump en attendant son vrai combat (voir `IDEES.md`). Tous sont construit
 | Pompes | `Ring` | Toucher quand l'anneau touche le cercle | Anneau double : deux appuis (1) ; anneau rouge : ne pas toucher (2) | 2 |
 | Développé couché | `HoldRelease` | Maintenir pour pousser, relâcher dans la zone verte (qui change de place) | La zone bouge pendant qu'on pousse (2) | 4 |
 | Squat | `Tilt` | Glisser vers le bas jusqu'à la ligne, lever le doigt pour remonter | Squat avec pause en bas (1) | 8 |
-| Tractions | `Alternate` | Toucher le côté de la main allumée, sur le temps | Les deux mains ensemble (1) ; rythme irrégulier (2) | 14 |
+| Tractions | `Alternate` | Toucher le côté de la main allumée, sur le temps ; la main (gauche, droite ou les deux) est tirée au hasard à chaque temps (D110) | Rythme irrégulier (2) | 14 |
 | Corde à sauter | `Rope` | Toucher pour sauter quand la corde passe sous les pieds | Tours rapides (1) ; fausses accélérations (2) | 24 |
 
 Au développé couché, la barre tremble au-dessus de la zone et retombe tout en haut (raté). La zone dessinée est
@@ -80,9 +80,9 @@ exactement la zone notée.
 | Kevin | `Reaction` | Glisser dans le sens de son bras, le plus vite possible (trop tôt = raté) ; un cercle montre le temps qui reste, Kevin encaisse quand on réussit (D82) | Manche 1 : gauche/droite ; manche 2 : 4 directions ; manche 3 : feintes |
 | Brayan le Bronzé | `Spotlight` | Garder sa crème dans le soleil, qui saute (sa prochaine place est annoncée) | Nuages qui cachent le soleil (2) |
 | Coach Turbo | `Beats` | Toucher le côté de la note quand elle touche la ligne ; panneau large en bas de l'écran, un pouce par piste, le joueur et le coach visibles au-dessus (D82) | Notes longues à maintenir (2) ; notes plus rapides à chaque manche |
-| Monsieur Pas-Les-Jambes | `Wobble` | Glisser vers son poing au moment du choc pour le bloquer (D82 : poing plus lent, fenêtre plus large, boss un peu moins fort) | Coups d'en haut (2) ; deux poings à la suite (3) |
+| Monsieur Pas-Les-Jambes | `Trace` | « Tracer la pose » (D110, remplace Wobble, trop proche du jeu de Kevin) : partir du point vert et suivre la pose en pointillés (V, cercle, triangle, L…) avant la fin du temps ; fidèle et complet = Perfect | Poses dures : éclair, double biceps, étoile, zigzag (2) ; poses en miroir et tournées, moins de temps (3) |
 | Le Roi du Quartier | `Combo` | Glisser la combinaison de flèches avant que le ventilateur l'efface (D82 : plus de temps, boss un peu moins fort) | 5 flèches (3) |
-| Le Dieu du Pump | `Combo` (provisoire) | — | ❓ vrai combat à concevoir plus tard (`IDEES.md`) |
+| Le Dieu du Pump | Combat au Colisée (`PumpGodService`) | Trois manches, puis la finale « Suplex olympien » (D110) : FLEX à toute vitesse pour le soulever, puis glisser vers le haut au sommet de la jauge pour l'envoyer au ciel | Raté : il retombe, on recommence plus vite |
 
 Chaque manche est aussi plus rapide et plus serrée (`Balance.Boss.SpeedByRound`, `TimingScaleByRound`).
 
@@ -90,7 +90,7 @@ Chaque manche est aussi plus rapide et plus serrée (`Balance.Boss.SpeedByRound`
 
 | Activité | Module | Geste |
 |---|---|---|
-| Bras de fer | `Gauge` | Toucher quand l'aiguille est dans la zone verte (doré = pleine puissance). Même motif pour les deux joueurs. (Le « dernier effort » à 3 zones de D81 est retiré en D88.) |
+| Bras de fer | `Gauge` | Toucher quand l'aiguille est dans la zone verte (doré = pleine puissance). Même motif pour les deux joueurs. (Le « dernier effort » à 3 zones de D81 est retiré en D88.) Jauge à la même taille relative sur téléphone et tablette ; poussées appliquées par paires contre le décalage réseau (D110). |
 
 ## Réglages
 

@@ -103,36 +103,34 @@ return {
 	-- 4. Pose sacrée : un cercle doré apparaît de temps en temps ; y rester en maintenant FLEX lance un rayon de Mog
 	Sacred = { First = 14, Every = 18, Life = 8, Radius = 5, Charge = 2.0, Damage = 18 },
 
-	-- Finale « Le dernier pose-off » (D104, tir à la corde, sans limite de temps) : son éclair contre le rayon de Mog du
-	-- joueur, qui ne bouge plus (sauf de couloir). Le point de choc part du milieu (0,5) ; chaque appui sur FLEX le
-	-- pousse vers le dieu de Push (au plus MaxRate appuis comptés par seconde) ; le dieu pousse de Drift par seconde,
-	-- de plus en plus fort (+ DriftGrow par seconde, jusqu'à DriftMax). Choc jusqu'au dieu : victoire. Choc jusqu'au
-	-- joueur : il prend Burn de dégâts et le choc repart de Reset. Il gagne ou il tombe (vie à zéro).
-	-- Contre-attaques : un éclair annoncé (Warn secondes, de plus en plus court jusqu'à WarnMin) sur le couloir où se
-	-- tient le joueur ; il glisse vers un autre couloir (LaneWidth studs à côté). Esquivé : le choc avance de Dodge ;
-	-- touché : Damage de dégâts et le choc recule de Knock.
+	-- Finale « Suplex olympien » (D110, choix d'Antoine ; remplace le tir à la corde de D104). Le dieu est à genoux à
+	-- Distance studs devant le joueur, qui ne bouge plus. 1. Soulever : chaque appui sur FLEX le monte de Push (au plus
+	-- MaxRate appuis comptés par seconde) ; il glisse de Drift par seconde (+ DriftPerAttempt par essai raté).
+	-- 2. Au-dessus de la tête, la jauge de lancer oscille (Period secondes, plus rapide de Faster par essai raté) :
+	-- FLEX ou glisser vers le haut quand elle est dans le haut (Window, de plus en plus étroite jusqu'à WindowMin),
+	-- avant Time secondes. Réussi : il part au ciel (constellation). Raté : il retombe (MissDamage de dégâts), se relève
+	-- (FallTime), on recommence. Il gagne ou il tombe (vie à zéro).
 	Finale = {
 		Intro = 2.5,
-		Push = 0.012,
+		Distance = 4.5,
+		Push = 0.05,
 		MaxRate = 12,
-		Drift = 0.03,
-		DriftGrow = 0.0015,
-		DriftMax = 0.085,
-		Burn = 30,
-		Reset = 0.4,
-		LaneWidth = 3.5,
-		LeanGap = 0.12, -- secondes entre deux changements de couloir
-		Counter = {
-			First = 4,
-			Every = { 3.2, 5.0 },
-			Warn = 1.1,
-			WarnMin = 0.7,
-			WarnShrink = 0.01,
-			Damage = 15,
-			Knock = 0.06,
-			Dodge = 0.04,
+		Drift = 0.16,
+		DriftPerAttempt = 0.06,
+		Aim = {
+			Grace = 0.3, -- secondes après le soulevé où FLEX ne lance pas encore (fin du mitraillage)
+			Period = 1.2,
+			Faster = 0.25,
+			Window = 0.12, -- part du haut de la jauge qui réussit
+			WindowShrink = 0.02,
+			WindowMin = 0.06,
+			Time = 3.5,
+			MissDamage = 20,
 		},
-		Swipe = 40, -- pixels de glissement du doigt pour changer de couloir
+		FallTime = 1.6,
+		HoldHeight = 3.5, -- studs au-dessus de la racine du joueur où il est tenu (plus une part de sa taille)
+		ThrowTime = 0.9, -- le dieu monte au ciel avant la fin du combat
+		Swipe = 45, -- pixels de glissement du doigt vers le haut pour lancer
 	},
 
 	-- Spectateurs : bouton « Encourager » dans les gradins (jamais pour le combattant, qui ne voit pas la jauge).
@@ -168,7 +166,15 @@ return {
 
 	-- Caméra du combattant : derrière lui pendant la finale (studs derrière son couloir du milieu, hauteur) ; vers le
 	-- ciel (la constellation) pendant VictoryLook secondes après la victoire
-	Camera = { FinaleBehind = 11, FinaleHigh = 5.5, VictoryLook = 5.5 },
+	-- Finale (D110) : caméra de côté à SuplexDistance studs, qui tourne de SuplexSpin radians par seconde (ralenti)
+	Camera = {
+		SuplexDistance = 10,
+		SuplexHigh = 2.5,
+		SuplexAngle = 70, -- degrés depuis l'axe joueur -> dieu
+		SuplexSpin = 0.12,
+		SuplexLook = 4, -- studs : le regard monte vers le dieu soulevé
+		VictoryLook = 5.5,
+	},
 	-- Bouton FLEX (D95) : gris s'il ne fait rien, jaune qui gonfle et dégonfle quand une action est possible
 	FlexButton = {
 		Idle = Color3.fromRGB(105, 105, 115),

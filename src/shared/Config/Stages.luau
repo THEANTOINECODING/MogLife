@@ -57,7 +57,7 @@ local List: { Stage } = {
 			id = "CoachTurbo",
 			mogRequired = 2_500,
 			minigame = "Beats",
-			interval = 0.9,
+			interval = 0.67, -- D110 : +35 % de vitesse (0,9 avant), notes et boss plus rapides
 			skill = { perfect = 0.25, good = 0.5 },
 			firstWinCash = 100,
 			styleReward = "CoachWhistle",
@@ -68,9 +68,9 @@ local List: { Stage } = {
 		boss = {
 			id = "NoLegs",
 			mogRequired = 7_500,
-			minigame = "Wobble",
-			interval = 1.5,
-			skill = { perfect = 0.25, good = 0.5 }, -- ~65 points par répétition (D82 : un peu plus facile)
+			minigame = "Trace", -- D110 : « Tracer la pose » remplace Wobble (trop proche du jeu de Kevin)
+			interval = 2.2, -- une pose à tracer par répétition
+			skill = { perfect = 0.38, good = 0.47 }, -- D110 : plus dur (« trop facile » ; 0,25 / 0,5 avant)
 			firstWinCash = 200,
 			styleReward = "TinySocks",
 		},

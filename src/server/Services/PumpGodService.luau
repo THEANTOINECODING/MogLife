@@ -9,8 +9,10 @@
 -- au bord de la piste : Storm (toute la piste sauf des cercles sûrs), Rings (anneaux à sauter), Gaze (regard qui
 -- balaie : se cacher derrière les colonnes).
 -- Chaque manche a sa jauge de vie du dieu ; à zéro, transition (le jeton du combat change : les attaques en cours
--- s'arrêtent), puis manche suivante ; après la 3e, la finale (choc de rayons en tir à la corde : FLEX le plus vite
--- possible, changer de couloir pour esquiver ses éclairs, D104).
+-- s'arrêtent), puis manche suivante ; après la 3e, la finale « Suplex olympien » (D110, remplace le tir à la corde
+-- de D104) : le dieu est à genoux devant le joueur ; FLEX le plus vite possible pour le soulever au-dessus de la tête
+-- (il glisse si l'on ralentit), puis FLEX (glisser vers le haut) au sommet de la jauge de lancer pour l'envoyer au ciel,
+-- où il devient une constellation. Raté : il retombe sur le joueur (dégâts), se relève, et on recommence plus vite.
 -- Spectateurs (Remotes.PumpGodCheer) : leurs encouragements remplissent la jauge de la foule (envoyée à tous sauf au
 -- combattant) ; à chaque palier, la foule agit (amphore de shake, pétales, chant).
 -- FLEX (Remotes.PumpGodFlex, appuyé / relâché), par ordre de priorité : renvoyer le javelot qui arrive, frapper le dieu
@@ -45,19 +47,23 @@ local TutorialService
 
 type Javelin = { from: Vector3, dir: Vector3, start: number, length: number, parried: boolean }
 type Disc = { at: Vector3, born: number }
--- Finale (D104) : k = position du choc (0 au joueur, 1 au dieu) ; lane = couloir du joueur (-1, 0, 1) ;
--- counter = éclair annoncé sur un couloir (il frappe à hitsAt)
+-- Finale (D110, suplex) : phase "Lift" (lift de 0 au sol à 1 au-dessus de la tête), "Aim" (jauge de lancer qui
+-- oscille de aimStart à aimEnds, période period), "Fall" (raté : il retombe, jusqu'à fallUntil), "Throw" (lancé) ;
+-- attempt : essais ratés (chaque essai est plus rapide)
 type Finale = {
-	k: number,
+	phase: string,
+	lift: number,
 	beatStart: number,
 	sentAt: number,
 	calmUntil: number,
 	taps: { number },
-	lane: number,
-	leanAt: number,
 	base: CFrame,
-	counter: { lane: number, hitsAt: number }?,
-	nextCounter: number,
+	attempt: number,
+	aimStart: number,
+	aimEnds: number,
+	period: number,
+	window: number,
+	fallUntil: number,
 }
 
 type Fight = {
@@ -1024,58 +1030,90 @@ local function stopCharge(fight: Fight)
 	end
 end
 
--- Finale (D104, tir à la corde) : chaque appui sur FLEX pousse le choc vers le dieu. Au-delà de MaxRate appuis
--- par seconde, les appuis ne comptent plus (autoclic, appuis envoyés en rafale).
+-- Finale (D110) : jauge de lancer à l'instant t (0 en bas, 1 au sommet), la même que celle dessinée par les clients
+local function aimMeter(finale: Finale, t: number): number
+	return 0.5 - 0.5 * math.cos((t - finale.aimStart) / finale.period * 2 * math.pi)
+end
+
+local function broadcastSuplex(fight: Fight, finale: Finale)
+	broadcast({
+		state = "Suplex",
+		player = fight.player,
+		phase = finale.phase,
+		lift = finale.lift,
+		attempt = finale.attempt,
+		aimStart = finale.aimStart,
+		aimEnds = finale.aimEnds,
+		period = finale.period,
+		window = finale.window,
+		fallUntil = finale.fallUntil,
+	})
+end
+
+-- Raté (lancer hors du sommet, ou trop tard) : il retombe sur le joueur, se relève, et l'essai suivant va plus vite
+local function suplexMiss(fight: Fight, finale: Finale)
+	finale.phase = "Fall"
+	finale.lift = 0
+	finale.attempt += 1
+	finale.fallUntil = now() + FINALE.FallTime
+	broadcastSuplex(fight, finale)
+	fight.invulnUntil = 0
+	hit(fight, "Suplex", FINALE.Aim.MissDamage)
+	task.delay(FINALE.FallTime, function()
+		if fight.finale == finale and not fight.ended then
+			finale.phase = "Lift"
+			finale.taps = {}
+			broadcastSuplex(fight, finale)
+		end
+	end)
+end
+
+-- Appui sur FLEX pendant la finale : soulever (le plus vite possible, au plus MaxRate appuis comptés par seconde,
+-- contre l'autoclic), puis lancer au sommet de la jauge
 local function finaleFlex(fight: Fight, finale: Finale)
 	local t = now()
 	if t < finale.beatStart then
 		return
 	end
-	local taps = finale.taps
-	while taps[1] and t - taps[1] > 1 do
-		table.remove(taps, 1)
+	if finale.phase == "Lift" then
+		local taps = finale.taps
+		while taps[1] and t - taps[1] > 1 do
+			table.remove(taps, 1)
+		end
+		if #taps >= FINALE.MaxRate then
+			return
+		end
+		table.insert(taps, t)
+		finale.lift = math.min(finale.lift + FINALE.Push, 1)
+		broadcast({ state = "Pulse", player = fight.player, good = true, k = finale.lift })
+		if finale.lift >= 1 then
+			-- Au-dessus de la tête : la jauge de lancer démarre (plus rapide et plus étroite à chaque essai raté)
+			local AIM = FINALE.Aim
+			finale.phase = "Aim"
+			finale.aimStart = t
+			finale.aimEnds = t + AIM.Time
+			finale.period = AIM.Period / (1 + AIM.Faster * finale.attempt)
+			finale.window = math.max(AIM.Window - AIM.WindowShrink * finale.attempt, AIM.WindowMin)
+			broadcastSuplex(fight, finale)
+		end
+	elseif finale.phase == "Aim" then
+		-- Les appuis de la fin du soulevé (mitraillage) ne lancent pas par erreur
+		if t - finale.aimStart < FINALE.Aim.Grace then
+			return
+		end
+		-- Jugé un peu avant la réception : le temps que le geste du joueur arrive (même marge que les attaques)
+		if aimMeter(finale, t - PumpGod.Latency) >= 1 - finale.window then
+			finale.phase = "Throw"
+			broadcastSuplex(fight, finale)
+			task.delay(FINALE.ThrowTime, function()
+				if fight.finale == finale then
+					finish(fight, "Victory")
+				end
+			end)
+		else
+			suplexMiss(fight, finale)
+		end
 	end
-	if #taps >= FINALE.MaxRate then
-		return
-	end
-	table.insert(taps, t)
-	finale.k = math.min(finale.k + FINALE.Push, 1)
-	broadcast({ state = "Pulse", player = fight.player, good = true, k = finale.k })
-	if finale.k >= 1 then
-		finish(fight, "Victory")
-	end
-end
-
--- Finale : le combattant change de couloir (glisser le doigt, flèches) pour esquiver les éclairs du dieu
-local function lanePosition(finale: Finale, index: number): CFrame
-	return finale.base * CFrame.new(index * FINALE.LaneWidth, 0, 0)
-end
-
-local function onLean(player: Player, direction: unknown)
-	local fight = fights[player]
-	local finale = fight and fight.finale
-	local t = now()
-	if
-		not fight
-		or not finale
-		or fight.ended
-		or typeof(direction) ~= "number"
-		or (direction ~= 1 and direction ~= -1)
-		or t - finale.leanAt < FINALE.LeanGap
-	then
-		return
-	end
-	local target = math.clamp(finale.lane + direction, -1, 1)
-	if target == finale.lane then
-		return
-	end
-	finale.lane = target
-	finale.leanAt = t
-	local root = rootOf(player)
-	if root then
-		(root.Parent :: Model):PivotTo(lanePosition(finale, target))
-	end
-	broadcast({ state = "Lean", player = player, lane = target })
 end
 
 local function onFlex(player: Player, down: unknown)
@@ -1123,64 +1161,23 @@ local function stepCharge(fight: Fight)
 	end
 end
 
--- Finale : le dieu pousse le choc vers le joueur, de plus en plus fort (sauf pendant les pétales de la foule)
+-- Finale : le dieu glisse des mains si l'on ralentit (plus vite à chaque essai, sauf pendant les pétales de la
+-- foule) ; trop tard pour lancer = raté
 local function stepFinale(fight: Fight, dt: number)
 	local finale = fight.finale
 	local t = now()
 	if not finale or fight.ended or t < finale.beatStart then
 		return
 	end
-	if t >= finale.calmUntil then
-		local drift = math.min(FINALE.Drift + FINALE.DriftGrow * (t - finale.beatStart), FINALE.DriftMax)
-		finale.k -= drift * dt
+	if finale.phase == "Lift" and t >= finale.calmUntil and finale.lift > 0 then
+		finale.lift = math.max(finale.lift - (FINALE.Drift + FINALE.DriftPerAttempt * finale.attempt) * dt, 0)
+	elseif finale.phase == "Aim" and t >= finale.aimEnds then
+		suplexMiss(fight, finale)
+		return
 	end
-	-- Contre-attaque : un éclair annoncé sur le couloir où il se tient ; il doit en changer avant l'impact
-	local COUNTER = FINALE.Counter
-	local counter = finale.counter
-	if not counter and t >= finale.nextCounter then
-		local warn = math.max(COUNTER.Warn - COUNTER.WarnShrink * (t - finale.beatStart), COUNTER.WarnMin)
-		counter = { lane = finale.lane, hitsAt = t + warn }
-		finale.counter = counter
-		broadcast({
-			state = "Counter",
-			player = fight.player,
-			lane = counter.lane,
-			at = lanePosition(finale, counter.lane).Position,
-			start = t,
-			impact = counter.hitsAt,
-		})
-	elseif counter and t >= counter.hitsAt then
-		finale.counter = nil
-		finale.nextCounter = t + COUNTER.Every[1] + math.random() * (COUNTER.Every[2] - COUNTER.Every[1])
-		local dodged = finale.lane ~= counter.lane
-		if dodged then
-			finale.k = math.min(finale.k + COUNTER.Dodge, 1)
-		else
-			finale.k = math.max(finale.k - COUNTER.Knock, 0)
-			fight.invulnUntil = 0
-			hit(fight, "Bolt", COUNTER.Damage)
-		end
-		broadcast({
-			state = "CounterHit",
-			player = fight.player,
-			dodged = dodged,
-			at = lanePosition(finale, counter.lane).Position,
-			k = finale.k,
-		})
-		if finale.k >= 1 then
-			finish(fight, "Victory")
-			return
-		end
-	end
-	if finale.k <= 0 then
-		-- L'éclair l'atteint : il prend des dégâts, le choc repart
-		finale.k = FINALE.Reset
-		fight.invulnUntil = 0
-		hit(fight, "Clash", FINALE.Burn)
-	end
-	if t - finale.sentAt > 0.15 and not fight.ended then
+	if finale.phase == "Lift" and t - finale.sentAt > 0.15 then
 		finale.sentAt = t
-		broadcast({ state = "Clash", player = fight.player, k = finale.k })
+		broadcast({ state = "Clash", player = fight.player, k = finale.lift })
 	end
 end
 
@@ -1367,7 +1364,8 @@ local function clearField(fight: Fight)
 	fight.amphora = nil
 end
 
--- Finale : il ne bouge plus ; son rayon de Mog contre l'éclair du dieu
+-- Finale (D110) : le dieu tombe à genoux devant le joueur (taille normale, même après la manche du géant) ; le joueur
+-- ne bouge plus
 local function startFinale(fight: Fight)
 	tokens += 1
 	fight.token = tokens
@@ -1379,17 +1377,32 @@ local function startFinale(fight: Fight)
 	local base = if root
 		then CFrame.lookAt(root.Position, Vector3.new(boss.X, root.Position.Y, boss.Z))
 		else CFrame.new(fight.center)
+	-- Le dieu à genoux, à quelques pas devant lui
+	local ground = onFloor(fight, (base * CFrame.new(0, 0, -FINALE.Distance)).Position)
+	if fight.boss then
+		fight.boss:Destroy()
+	end
+	fight.boss = spawnBoss(ground, base.Position, 1)
+	fight.giant = 1
+	fight.bossFrom, fight.bossTo, fight.moveStart, fight.moveEnd = ground, ground, 0, 0
+	if fight.pillarFolder then
+		fight.pillarFolder:Destroy()
+		fight.pillarFolder = nil
+	end
 	fight.finale = {
-		k = 0.5,
+		phase = "Lift",
+		lift = 0,
 		beatStart = t + FINALE.Intro,
 		sentAt = 0,
 		calmUntil = 0,
 		taps = {},
-		lane = 0,
-		leanAt = 0,
 		base = base,
-		counter = nil,
-		nextCounter = t + FINALE.Intro + FINALE.Counter.First,
+		attempt = 0,
+		aimStart = 0,
+		aimEnds = 0,
+		period = FINALE.Aim.Period,
+		window = FINALE.Aim.Window,
+		fallUntil = 0,
 	}
 	if root then
 		local character = root.Parent :: Model
@@ -1406,9 +1419,10 @@ local function startFinale(fight: Fight)
 		player = fight.player,
 		start = t,
 		beatStart = fight.finale.beatStart,
-		k = fight.finale.k,
+		k = 0,
 		base = base,
-		bossAt = boss,
+		boss = fight.boss,
+		bossAt = ground,
 	})
 end
 
@@ -1819,7 +1833,6 @@ end
 function PumpGodService.Start()
 	Remotes.PumpGodRoll.OnServerEvent:Connect(onRoll)
 	Remotes.PumpGodFlex.OnServerEvent:Connect(onFlex)
-	Remotes.PumpGodLean.OnServerEvent:Connect(onLean)
 	Remotes.PumpGodCheer.OnServerEvent:Connect(onCheer)
 	-- Sauts (dernier instant où les pieds étaient assez haut), charge de la pose sacrée, finale, amphore
 	RunService.Heartbeat:Connect(function(dt)

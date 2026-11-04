@@ -4,6 +4,7 @@
 -- Un seul boost actif à la fois ; racheter le même prolonge sa durée (plafonnée), un autre le remplace.
 -- Rien de suggestif ni de « drogue » (règles Roblox, tous publics) : uniquement des aliments absurdes.
 -- ❓ Prix, effets et durées : hypothèses de départ, à régler pendant l'alpha. Prix relevés en D99 (×2 à ×2,25).
+-- Durées divisées par 3 en D110 (retour d'Antoine : trop longs), prix inchangés.
 
 export type Boost = {
 	price: number,
@@ -19,7 +20,7 @@ local Boosts: { [string]: Boost } = {
 		price = 40,
 		requiredStage = 1,
 		mogMultiplier = 1.25,
-		duration = 180,
+		duration = 60,
 		color = Color3.fromRGB(240, 200, 230),
 		order = 1,
 	},
@@ -27,7 +28,7 @@ local Boosts: { [string]: Boost } = {
 		price = 120,
 		requiredStage = 2,
 		mogMultiplier = 1.5,
-		duration = 240,
+		duration = 80,
 		color = Color3.fromRGB(120, 230, 90),
 		order = 2,
 	},
@@ -35,7 +36,7 @@ local Boosts: { [string]: Boost } = {
 		price = 350,
 		requiredStage = 3,
 		mogMultiplier = 1.75,
-		duration = 300,
+		duration = 100,
 		color = Color3.fromRGB(200, 90, 70),
 		order = 3,
 	},
@@ -43,7 +44,7 @@ local Boosts: { [string]: Boost } = {
 		price = 900,
 		requiredStage = 4,
 		mogMultiplier = 2,
-		duration = 300,
+		duration = 100,
 		color = Color3.fromRGB(255, 210, 60),
 		order = 4,
 	},

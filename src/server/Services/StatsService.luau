@@ -117,6 +117,30 @@ function StatsService.Add(player: Player, stat: "Mog" | "Cash", amount: number)
 	end
 end
 
+-- Mog qu'un joueur ne perd jamais : celui qu'il fallait pour atteindre son stade (D110)
+function StatsService.MogFloor(data): number
+	local previous = Stages.List[data.Stage - 1]
+	return if previous and previous.boss then previous.boss.mogRequired else 0
+end
+
+-- Perte de Mog d'une défaite (D110) : une part du Mog, sans descendre sous le plancher du stade. Renvoie la perte.
+function StatsService.MogLoss(data, share: number): number
+	local above = math.max(0, data.Mog - StatsService.MogFloor(data))
+	return math.min(above, math.floor(data.Mog * share))
+end
+
+function StatsService.LoseMog(player: Player, share: number): number
+	local data = DataService.Get(player)
+	if not data then
+		return 0
+	end
+	local loss = StatsService.MogLoss(data, share)
+	if loss > 0 then
+		StatsService.Add(player, "Mog", -loss)
+	end
+	return loss
+end
+
 -- Renvoie les stats au client et met à jour l'apparence (après une modification directe des données).
 function StatsService.Refresh(player: Player)
 	sync(player)

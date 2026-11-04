@@ -13,6 +13,8 @@ return {
 	Interval = 0.95, -- secondes d'un balayage de l'aiguille (manche 1)
 	SpeedByRound = { 1, 0.88, 0.78 }, -- chaque manche est plus rapide…
 	TimingScaleByRound = { 1, 0.85, 0.7 }, -- … et sa zone de force plus étroite
+	PanelScreenShare = 0.5, -- la jauge occupe la moitié de la hauteur d'écran sur tous les appareils (D110)
+	PanelMaxScale = 1.8,
 	Lead = 0.6, -- balayages d'attente avant le premier (le temps de voir la jauge)
 	MinRepGap = 0.25, -- secondes minimum entre deux poussées envoyées
 	-- Jauge (fractions de sa largeur) : la zone verte change de place à chaque balayage
@@ -46,7 +48,11 @@ return {
 	InviteCooldown = 20, -- secondes entre deux invitations d'un même joueur
 	DeclineBlock = 300, -- après un refus, le même joueur ne peut plus inviter celui-ci pendant 5 min
 
-	-- Récompenses (Cash, selon le stade de chaque joueur) : rien n'est jamais perdu.
+	-- Le perdant perd une part de son Mog (D110, choix d'Antoine : « il faut perdre beaucoup »), jamais sous le Mog
+	-- qu'il fallait pour atteindre son stade. Annoncé dans l'invitation.
+	LossMogShare = 0.15,
+
+	-- Récompenses (Cash, selon le stade de chaque joueur).
 	-- Participation valide = au moins MinHits répétitions réussies (Good ou Perfect) pendant le duel.
 	-- Récompenses limitées aux RewardsPerPairPerDay premiers duels de chaque paire de joueurs par jour (UTC) ;
 	-- au-delà, le duel reste possible « pour l'honneur » (sans Cash ni victoire comptée).

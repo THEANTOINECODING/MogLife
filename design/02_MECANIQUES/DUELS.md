@@ -37,8 +37,13 @@ contre les boss sans le remplacer.
 
 - Le vainqueur gagne aussi du Mog (D88) : 0,6 % de son propre Mog, entre 5 et 1 500, mêmes conditions que le Cash
   (participation valide, limite par paire et par jour) ; rien pour une victoire par abandon.
-- Cash selon le stade de chaque joueur : victoire > égalité > défaite (Config/Duels.luau). **Rien n'est jamais
-  perdu.**
+- Cash selon le stade de chaque joueur : victoire > égalité > défaite (Config/Duels.luau).
+- **Le perdant perd 15 % de son Mog** (D110, choix d'Antoine : « il faut perdre beaucoup »), jamais sous le Mog qu'il
+  fallait pour atteindre son stade ; aussi en cas d'abandon en cours de duel. Annoncé dans l'invitation.
+- Équité (D110) : la n-ième poussée d'un joueur ne compte qu'avec la n-ième de l'autre (chacun juge sur sa propre
+  horloge) : le joueur au meilleur réseau ne peut plus plaquer le bras avant que les poussées de l'autre arrivent ;
+  deux poussées collées par le réseau comptent toutes les deux. La jauge occupe la même part de l'écran sur tous les
+  appareils (elle était minuscule sur tablette).
 - Participation valide : au moins 4 poussées réussies (Good ou Perfect) pendant le duel. Un joueur inactif ne gagne
   rien.
 - Plafond : les 3 premiers duels de la journée (UTC) avec le même joueur sont récompensés ; ensuite, duel « pour la

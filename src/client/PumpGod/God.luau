@@ -10,7 +10,9 @@
 --   Tiles    : bras levés, puis les deux poings frappent le sol (les dalles jaillissent)
 --   Chariot  : bras droit tendu, il appelle le char ; Leap : bras au ciel, il saute très haut puis retombe poings
 --   en avant ; Storm : les deux bras en V au ciel ; Gaze : penché en avant, mains aux tempes
---   Clash    : finale, bras droit tendu vers le combattant (l'éclair part de sa main)
+--   Clash    : (ancienne finale D104, plus utilisée) bras droit tendu vers le combattant
+-- Finale « Suplex olympien » (D110) : à genoux devant le combattant, il est soulevé (god:Suplex, god:SetLift) jusqu'au-
+-- dessus de sa tête, couché à l'horizontale ; raté (god:Drop), il retombe vite ; lancé, il s'envole (god:Eject).
 -- États : essoufflé (il tombe à genoux, tête basse), touché (recul qui s'amortit), victoire du joueur (éjecté vers le
 -- ciel en tournoyant), défaite du joueur (il nargue en double biceps).
 -- Qualité (D95) : chaque coup a son élan (il se ramasse, tremble de puissance juste avant l'impact), un coup sec qui
@@ -130,6 +132,7 @@ function God.new(model: Model, ground: Vector3)
 		highlight = nil :: Highlight?,
 		calmSince = os.clock(), -- depuis quand il ne fait rien (frime)
 		flourishAt = nil :: number?,
+		suplex = nil :: { holder: () -> Vector3?, lift: number, shown: number, at: number }?,
 	}, God)
 	return self
 end
@@ -158,7 +161,31 @@ function God.Hurt(self, power: number)
 	self.hurtTwist = (if math.random() < 0.5 then -1 else 1) * (0.2 + 0.1 * math.random())
 end
 
+-- Finale (D110) : holder() donne la position du combattant (racine) ; lift de 0 (à genoux) à 1 (au-dessus de sa tête)
+function God.Suplex(self, lift: number, holder: () -> Vector3?)
+	self.suplex = { holder = holder, lift = lift, shown = lift, at = os.clock() }
+	self.action = nil
+	self.clashing = false
+end
+
+function God.SetLift(self, lift: number)
+	if self.suplex then
+		self.suplex.lift = lift
+	end
+end
+
+-- Raté : il retombe d'un coup (la position affichée suit vite)
+function God.Drop(self)
+	if self.suplex then
+		self.suplex.lift = 0
+	end
+end
+
 function God.Eject(self)
+	-- Déjà lancé (suplex réussi, D110) : la fin du combat ne le fait pas repartir d'en bas
+	if self.ejectAt then
+		return
+	end
 	self.ejectAt = os.clock()
 end
 
@@ -333,6 +360,15 @@ function God.Step(self, now: number, target: Vector3?)
 			self.winded = nil
 		end
 	end
+	-- Suplex : la hauteur affichée suit celle du serveur en douceur (vite quand il retombe) ; au sol, il est à genoux
+	local suplex = self.suplex
+	if suplex then
+		local step = math.min(clock - suplex.at, 0.1)
+		suplex.at = clock
+		local speed = if suplex.lift < suplex.shown then 9 else 7
+		suplex.shown += (suplex.lift - suplex.shown) * math.min(step * speed, 1)
+		winded = math.max(winded, 1 - suplex.shown)
+	end
 	-- Touché : recul qui s'amortit
 	local hurt = math.max(1 - (clock - self.hurtAt) / HURT_TIME, 0) ^ 2 * self.hurtPower
 
@@ -411,6 +447,18 @@ function God.Step(self, now: number, target: Vector3?)
 	local facing = CFrame.new(ground) * CFrame.Angles(0, self.yaw, 0) * CFrame.new(self.lift)
 	-- Recul : poussé un peu en arrière
 	facing *= CFrame.new(0, 0, 1.2 * hurt)
+	-- Suplex : de ses genoux jusqu'au-dessus de la tête du combattant, en arc, couché à l'horizontale ; il se débat
+	if suplex then
+		local holder = suplex.holder()
+		local k = smooth(suplex.shown)
+		if holder and k > 0.005 then
+			local over = holder + Vector3.new(0, PumpGod.Finale.HoldHeight + h * 0.2, 0)
+			local at = facing.Position:Lerp(over, k) + Vector3.new(0, math.sin(k * math.pi) * h * 0.2, 0)
+			local struggle = math.sin(t * 9) * 0.08 * k
+			facing = CFrame.new(at) * CFrame.Angles(0, self.yaw, 0) * CFrame.Angles(-k * math.pi * 0.5, 0, struggle)
+			bob, sway = 0, 0
+		end
+	end
 	-- Éjecté : il s'envole en tournoyant
 	if self.ejectAt then
 		local e = clock - self.ejectAt

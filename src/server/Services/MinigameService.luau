@@ -25,6 +25,7 @@ export type RunSpec = {
 	level: number?, -- difficulté du mini-jeu (0, 1, 2… : débloque ses surprises, Balance.Minigames, D81)
 	titleKey: string?, -- texte affiché en haut du run (clé Texts)
 	titleArgs: { [string]: any }?,
+	lagTolerant: boolean?, -- deux répétitions collées (réseau irrégulier) comptent toutes les deux (duels, D110)
 	-- Appelé pour chaque répétition validée ; renvoie le gain à afficher (ou nil).
 	-- combo : multiplicateur du combo en cours (Balance.Combo), à appliquer au gain si le run en profite
 	onRep: ((player: Player, quality: string, combo: number) -> number?)?,
@@ -212,7 +213,7 @@ local function onRep(player: Player, quality: unknown)
 	-- Les jeux de réaction peuvent ainsi envoyer deux répétitions rapprochées, sans dépasser le rythme moyen.
 	local now = os.clock()
 	local allowed = math.floor((now - run.startedAt) / (spec.interval * Balance.RepIntervalTolerance)) + 1
-	if run.reps >= allowed or now - run.lastRepAt < MIN_GAP then
+	if run.reps >= allowed or (not spec.lagTolerant and now - run.lastRepAt < MIN_GAP) then
 		return
 	end
 	if not MinigameService.IsNear(player, spec.anchor) then
