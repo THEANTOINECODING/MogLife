@@ -567,6 +567,7 @@ local STRINGS: { [string]: string } = {
 	["Statue.Champion"] = "👑 {name}: GOD MOGGER",
 
 	-- Maisons
+	["Guard.Kicked"] = "Too many requests from your device. Please rejoin!",
 	["Plot.Free"] = "Free house",
 	["Plot.Owner"] = "{name}'s house",
 	["Plot.OwnerLikes"] = "{name}'s house  ❤ {likes}",

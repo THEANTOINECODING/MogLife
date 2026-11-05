@@ -98,16 +98,21 @@ local function onPlayerLoaded(player: Player)
 end
 
 -- Ajoute (ou retire si négatif) une quantité à une stat numérique. Serveur uniquement.
--- Le Cash ne descend jamais sous 0.
+-- Le Mog et le Cash ne descendent jamais sous 0.
 function StatsService.Add(player: Player, stat: "Mog" | "Cash", amount: number)
 	local data = DataService.Get(player)
 	if not data or typeof(data[stat]) ~= "number" then
 		return
 	end
+	-- Garde-fou : une quantité invalide (NaN, infini) corromprait la sauvegarde pour toujours
+	if typeof(amount) ~= "number" or amount ~= amount or math.abs(amount) == math.huge then
+		warn(`[StatsService] Ignored invalid {stat} amount for {player.Name}: {amount}`)
+		return
+	end
 
 	data[stat] += amount
-	if stat == "Cash" and data.Cash < 0 then
-		data.Cash = 0
+	if data[stat] < 0 then
+		data[stat] = 0
 	end
 	sync(player)
 

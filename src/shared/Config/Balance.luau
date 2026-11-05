@@ -122,6 +122,14 @@ return {
 	},
 
 	-- Délai minimum (secondes) entre deux appels d'un même remote par un joueur (D108, src/server/Throttle.luau)
+	-- Garde anti-inondation (GuardService) : un client qui envoie bien plus de demandes qu'un joueur humain (scripts
+	-- de triche) est exclu. Les seuils sont très larges : le jeu normal en reste loin (≈ 3 demandes par seconde).
+	Guard = {
+		Window = 5, -- secondes de la fenêtre de comptage
+		PerRemote = 200, -- demandes max sur un même remote dans la fenêtre (40 par seconde)
+		Total = 400, -- demandes max, tous remotes confondus, dans la fenêtre
+	},
+
 	RemoteThrottle = {
 		RequestStats = 0.5, -- l'interface redemande tout l'état (ouverture d'un menu)
 		Style = 0.2, -- équiper une pièce, une tenue ou une teinture
