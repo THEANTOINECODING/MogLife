@@ -73,6 +73,8 @@ return {
 	SeriesLength = 20,
 	-- Le serveur refuse une répétition arrivée avant repInterval × cette tolérance
 	RepIntervalTolerance = 0.85,
+	-- Un run sans répétition pendant Intervals × sa cadence + Extra secondes s'arrête (client figé, D113)
+	RunIdle = { Intervals = 6, Extra = 20 },
 	GamepadDeadzone = 0.2,
 	-- Distance max (studs) entre le joueur et la station pendant une série
 	MaxStationDistance = 12,

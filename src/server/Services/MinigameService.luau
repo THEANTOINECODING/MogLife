@@ -154,7 +154,16 @@ function MinigameService.EndRun(player: Player, reason: EndReason)
 	if reason == "Completed" and run.manual > 0 and run.manual >= run.reps * Balance.Grade.MinManualShare then
 		score = math.floor(run.points / run.manual + 0.5)
 	end
-	local extra = if run.spec.onEnd then run.spec.onEnd(player, reason, run.reps, score) else nil
+	-- Une erreur dans le service qui a lancé le run ne doit pas laisser le mini-jeu ouvert chez le joueur
+	local extra = nil
+	if run.spec.onEnd then
+		local ok, result = pcall(run.spec.onEnd, player, reason, run.reps, score)
+		if ok then
+			extra = result
+		else
+			warn(`[MinigameService] onEnd failed ({run.spec.kind} {run.spec.id}): {result}`)
+		end
+	end
 	if reason ~= "Left" then
 		local message = {
 			state = "Ended",
@@ -233,7 +242,15 @@ local function onRep(player: Player, quality: unknown)
 		run.streak += 1
 	end
 	local combo = MinigameService.ComboMultiplier(run.streak)
-	local gain = if spec.onRep then spec.onRep(player, quality, combo) else nil
+	local gain = nil
+	if spec.onRep then
+		local ok, result = pcall(spec.onRep, player, quality, combo)
+		if ok then
+			gain = result
+		else
+			warn(`[MinigameService] onRep failed ({spec.kind} {spec.id}): {result}`)
+		end
+	end
 
 	-- Le run a pu être terminé par onRep
 	if runs[player] ~= run then
@@ -271,6 +288,38 @@ function MinigameService.Start()
 	Players.PlayerRemoving:Connect(function(player)
 		MinigameService.EndRun(player, "Left")
 		recentPerfect[player] = nil
+	end)
+	-- Mort ou réapparition pendant un run : il s'arrête (sinon le joueur resterait « occupé » pour toujours)
+	local function watchCharacter(player: Player)
+		player.CharacterRemoving:Connect(function()
+			MinigameService.EndRun(player, "TooFar")
+		end)
+		player.CharacterAdded:Connect(function(character)
+			local humanoid = character:WaitForChild("Humanoid", 10)
+			if humanoid and humanoid:IsA("Humanoid") then
+				humanoid.Died:Connect(function()
+					MinigameService.EndRun(player, "TooFar")
+				end)
+			end
+		end)
+	end
+	Players.PlayerAdded:Connect(watchCharacter)
+	for _, player in Players:GetPlayers() do
+		watchCharacter(player)
+	end
+	-- Filet de sécurité : un run sans aucune répétition depuis longtemps (client figé, fenêtre fermée par un bug)
+	-- s'arrête de lui-même. Les manches de boss se terminent déjà seules (D17).
+	task.spawn(function()
+		while true do
+			task.wait(1)
+			local now = os.clock()
+			for player, run in runs do
+				local last = math.max(run.startedAt, run.lastRepAt)
+				if now - last > run.spec.interval * Balance.RunIdle.Intervals + Balance.RunIdle.Extra then
+					MinigameService.EndRun(player, "Stopped")
+				end
+			end
+		end
 	end)
 end
 

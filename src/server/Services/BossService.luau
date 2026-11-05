@@ -244,6 +244,13 @@ local function onPlayerRoundEnd(player: Player, fight: Fight, reason: string)
 		return
 	end
 	if reason ~= "Completed" then
+		-- Abandon en plein combat (réinitialisation du personnage, fuite) : c'est une défaite s'il y avait un enjeu,
+		-- sinon on éviterait la perte en se réinitialisant juste avant de perdre (D113). Le joueur qui quitte le jeu
+		-- n'a plus de données à modifier : le combat s'arrête simplement.
+		if reason ~= "Left" and (fight.stakes > 0 or fight.mogStakes > 0) then
+			finishFight(player, fight)
+			return
+		end
 		endFight(player)
 		Remotes.BossUpdate:FireClient(player, { state = "Aborted", bossId = fight.bossId })
 		return
