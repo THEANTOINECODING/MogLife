@@ -17,6 +17,8 @@ return {
 		StyleEquipped = {},
 		FurnitureOwned = {}, -- meubles achetés
 		FurniturePlaced = {}, -- emplacement de la maison -> meuble posé
+		HouseLikes = 0, -- « J'aime » reçus par sa maison (D112)
+		HousesLiked = {}, -- UserId (texte) des maisons déjà aimées -> true (une fois par maison, D112)
 		Tutorial = { Step = 1, Done = false }, -- tutoriel des 5 premières minutes (TutorialService)
 		Boost = { Id = "", EndsAt = 0 }, -- boost temporaire en cours (BoostService), EndsAt en os.time()
 		Records = {}, -- meilleure note de série par exercice (0 à 100)
@@ -439,6 +441,13 @@ return {
 		MaxBonus = 0.05, -- +5 % au maximum
 		FullValue = 12_000, -- valeur de tenue (Cash) pour le bonus maximum
 		BossItemValue = 400, -- valeur d'une récompense de boss (article sans prix)
+		-- Habitants (D112) : pourboire à la fin d'une aide selon le Drip, « dress code » de certaines aides,
+		-- compliments selon le palier de Drip (paliers en part de FullValue)
+		TipMax = 0.3, -- pourboire : jusqu'à +30 % du Cash de l'aide
+		DressCodeBonus = 0.5, -- +50 % du Cash de l'aide si l'on respecte son dress code
+		Tiers = { 0.08, 0.3, 0.65 },
+		ComplimentDistance = 14, -- studs : un habitant commente le look du joueur qui passe près de lui
+		ComplimentCooldown = 90, -- secondes avant que le même habitant commente à nouveau
 	},
 	-- Bien reposé (D111) : rester chez soi donne un bonus de Mog temporaire, selon le confort des meubles posés
 	-- (somme de leurs prix). Le minuteur reste plein tant qu'on est chez soi et file dès qu'on sort. ❓ à calibrer
@@ -452,6 +461,22 @@ return {
 	},
 
 	-- Déplacements : bouton « Maison » et arrêts de bus
+	-- Maisons visitables (D112) : un visiteur reste un peu dans une maison avant de pouvoir l'aimer, une fois par
+	-- maison ; le propriétaire gagne un peu de Cash. Classement du serveur et classement mondial.
+	House = {
+		VisitSeconds = 6, -- secondes dans la maison avant de pouvoir l'aimer
+		VisitMemory = 300, -- secondes pendant lesquelles la visite reste valable après la sortie
+		LikeCash = 40, -- Cash reçu par le propriétaire pour chaque « J'aime »
+		LikeCooldown = 2, -- secondes entre deux « J'aime » d'un même visiteur
+		MaxRemembered = 2_000, -- nombre max de maisons aimées gardées dans la sauvegarde
+		VisitCooldown = 5, -- secondes entre deux visites par le classement
+		RankingCooldown = 2, -- secondes entre deux demandes de classement
+		GlobalSize = 10, -- taille du classement mondial
+		GlobalRefresh = 300, -- secondes entre deux lectures du classement mondial
+		GlobalWrite = 60, -- secondes entre deux écritures des « J'aime » d'un propriétaire
+		CheckInterval = 1, -- secondes entre deux vérifications des visites
+	},
+
 	Travel = {
 		HomeCooldown = 5, -- secondes entre deux retours à la maison
 		BusCooldown = 3, -- secondes entre deux trajets en bus

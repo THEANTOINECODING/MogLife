@@ -7,6 +7,7 @@ local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Format = require(ReplicatedStorage.Shared.Format)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 
 local PLOT_TAG = "Plot"
@@ -16,7 +17,9 @@ local OWNER_ATTRIBUTE = "OwnerUserId"
 local DataService
 
 local owners: { [Player]: Model } = {}
+local boxes: { [Model]: { cframe: CFrame, half: Vector3 } } = {} -- encombrement de chaque parcelle (fixe)
 local waiting: { Player } = {} -- joueurs chargés sans maison, par ordre d'arrivée
+local likesProvider: ((Player) -> number)? = nil -- « J'aime » de la maison (HouseService, D112)
 local assignedCallbacks: { (Player, Model) -> () } = {}
 local releasedCallbacks: { (Player, Model) -> () } = {}
 
@@ -61,7 +64,14 @@ local function setSign(plot: Model, player: Player?)
 		gui = created
 	end
 	local label = (gui :: SurfaceGui):FindFirstChild("Text") :: TextLabel
-	label.Text = if player then Texts.Get("Plot.Owner", { name = player.DisplayName }) else Texts.Get("Plot.Free")
+	if not player then
+		label.Text = Texts.Get("Plot.Free")
+		return
+	end
+	local likes = if likesProvider then likesProvider(player) else 0
+	label.Text = if likes > 0
+		then Texts.Get("Plot.OwnerLikes", { name = player.DisplayName, likes = Format.Short(likes) })
+		else Texts.Get("Plot.Owner", { name = player.DisplayName })
 end
 
 local function spawnCFrame(plot: Model): CFrame?
@@ -141,6 +151,49 @@ function PlotService.GetPlot(player: Player): Model?
 	return owners[player]
 end
 
+-- Propriétaire actuel d'une maison (nil si libre)
+function PlotService.GetOwner(plot: Model): Player?
+	for player, owned in owners do
+		if owned == plot then
+			return player
+		end
+	end
+	return nil
+end
+
+-- Maison d'un joueur du serveur, d'après son UserId
+function PlotService.GetPlotOfUserId(userId: number): (Model?, Player?)
+	for player, plot in owners do
+		if player.UserId == userId then
+			return plot, player
+		end
+	end
+	return nil, nil
+end
+
+-- La position est-elle dans la parcelle (maison et jardin), avec une marge en studs ?
+function PlotService.Contains(plot: Model, position: Vector3, margin: number): boolean
+	local box = boxes[plot]
+	if not box then
+		local cframe, size = plot:GetBoundingBox()
+		box = { cframe = cframe, half = size / 2 }
+		boxes[plot] = box
+	end
+	local offset = box.cframe:PointToObjectSpace(position)
+	local half = box.half + Vector3.one * margin
+	return math.abs(offset.X) <= half.X and math.abs(offset.Y) <= half.Y and math.abs(offset.Z) <= half.Z
+end
+
+-- Maison où se trouve cette position (nil hors des parcelles)
+function PlotService.PlotAt(position: Vector3, margin: number): Model?
+	for _, plot in sortedPlots() do
+		if PlotService.Contains(plot, position, margin) then
+			return plot
+		end
+	end
+	return nil
+end
+
 -- Emplacements de meubles d'une maison, par nom d'emplacement
 function PlotService.GetSlots(plot: Model): { [string]: BasePart }
 	local slots = {}
@@ -153,6 +206,19 @@ function PlotService.GetSlots(plot: Model): { [string]: BasePart }
 		end
 	end
 	return slots
+end
+
+-- Compteur de « J'aime » affiché sur le panneau (HouseService)
+function PlotService.SetLikesProvider(provider: (Player) -> number)
+	likesProvider = provider
+end
+
+-- Remet à jour le panneau de la maison d'un joueur
+function PlotService.RefreshSign(player: Player)
+	local plot = owners[player]
+	if plot then
+		setSign(plot, player)
+	end
 end
 
 -- Appelé quand un joueur reçoit sa maison / la libère en partant

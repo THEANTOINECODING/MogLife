@@ -20,11 +20,12 @@ local Outfit = require(ReplicatedStorage.Shared.Outfit)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Format = require(ReplicatedStorage.Shared.Format)
 local Drip = require(ReplicatedStorage.Shared.Drip)
+local Luxury = require(ReplicatedStorage.Shared.Config.Luxury)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Ui = require(script.Parent.Parent.Ui)
 
 local MIRROR_TAG = "Mirror"
-local ALL_CATEGORIES = { "Hair", "Beard", "Face", "Top", "Bottom", "Accessory" }
+local ALL_CATEGORIES = { "Hair", "Beard", "Face", "Top", "Bottom", "Accessory", "Trail", "Aura", "Entrance" }
 
 local player = Players.LocalPlayer
 
@@ -87,8 +88,11 @@ local function refreshPreview()
 		outfit.Bottom = set.bottom
 		name = Texts.Get("Shop.TryingOn", { item = Texts.Get(`StyleSet.{previewSet}`) })
 	elseif previewing then
-		outfit[StyleItems[previewing].category] = previewing
-		name = Texts.Get("Shop.TryingOn", { item = Texts.Get(`Style.{previewing}`) })
+		local itemCategory = StyleItems[previewing].category
+		outfit[itemCategory] = previewing
+		name = if Luxury.ById[previewing]
+			then Texts.Get(`Luxury.Desc.{itemCategory}`, { item = Texts.Get(`Style.{previewing}`) })
+			else Texts.Get("Shop.TryingOn", { item = Texts.Get(`Style.{previewing}`) })
 	end
 	previewLabel.Text = name
 	local stage = Stages.List[stageIndex]
@@ -447,7 +451,7 @@ local function open(mirror: Instance)
 		categories = ALL_CATEGORIES
 	end
 	if StyleSets.Active and store == "Clothes" then
-		categories = { "Sets" }
+		categories = { "Sets", "Trail", "Aura", "Entrance" } -- luxe à effets (D112)
 	end
 	category = categories[1]
 	previewing = nil
@@ -594,7 +598,7 @@ end
 function ShopController.OpenWardrobe()
 	wardrobe = true
 	categories = if StyleSets.Active
-		then { "Sets", "Top", "Bottom", "Hair", "Beard", "Face", "Accessory" }
+		then { "Sets", "Top", "Bottom", "Hair", "Beard", "Face", "Accessory", "Trail", "Aura", "Entrance" }
 		else ALL_CATEGORIES
 	category = categories[1]
 	previewing = nil

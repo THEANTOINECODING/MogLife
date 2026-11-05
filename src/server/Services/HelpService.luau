@@ -10,6 +10,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Helps = require(ReplicatedStorage.Shared.Config.Helps)
+local Drip = require(ReplicatedStorage.Shared.Drip)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Npc = require(script.Parent.Parent.Npc)
@@ -87,6 +88,16 @@ local function finish(player: Player, helpId: string, reason: string): { [string
 	if firstTime and help.firstCash then
 		cash = math.max(cash, help.firstCash)
 	end
+	-- Habitants (D112) : pourboire selon le Drip et bonus du « dress code », sur une aide terminée qui a rapporté
+	local tip, dressBonus = 0, 0
+	if completed and cash > 0 then
+		tip = math.floor(cash * Balance.Drip.TipMax * Drip.Ratio(data.StyleEquipped) + 0.5)
+		if Drip.MeetsDressCode(help.dressCode, data.StyleEquipped) then
+			dressBonus = math.floor(cash * Balance.Drip.DressCodeBonus + 0.5)
+		end
+	end
+	local base = cash
+	cash += tip + dressBonus
 	if cash > 0 then
 		StatsService.Add(player, "Cash", cash)
 		-- Le délai part dès qu'une aide a rapporté, même arrêtée avant la fin : sinon on referait la même aide en
@@ -117,9 +128,18 @@ local function finish(player: Player, helpId: string, reason: string): { [string
 			args = {
 				npc = { key = `Npc.{help.npc}` },
 				line = { key = `HelpLine.{helpId}` },
-				cash = cash,
+				cash = base,
 			},
 		})
+		if dressBonus > 0 then
+			Remotes.Notify:FireClient(player, {
+				key = "Help.DressCodeBonus",
+				args = { npc = { key = `Npc.{help.npc}` }, cash = dressBonus },
+			})
+		end
+		if tip > 0 then
+			Remotes.Notify:FireClient(player, { key = "Help.DripTip", args = { cash = tip } })
+		end
 		TutorialService.OnEvent(player, "HelpCompleted", helpId)
 	end
 	return { cash = cash, flawless = flawless }

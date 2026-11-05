@@ -36,7 +36,6 @@ type Rest = {
 }
 
 local rests: { [Player]: Rest } = {}
-local plotBoxes: { [Model]: { cframe: CFrame, half: Vector3 } } = {}
 
 local FurnitureService = {}
 
@@ -81,14 +80,7 @@ local function isHome(player: Player): boolean
 	if not plot or not root then
 		return false
 	end
-	local box = plotBoxes[plot]
-	if not box then
-		local cframe, size = plot:GetBoundingBox()
-		box = { cframe = cframe, half = size / 2 + Vector3.one * REST.HomeMargin }
-		plotBoxes[plot] = box
-	end
-	local offset = box.cframe:PointToObjectSpace(root.Position)
-	return math.abs(offset.X) <= box.half.X and math.abs(offset.Y) <= box.half.Y and math.abs(offset.Z) <= box.half.Z
+	return PlotService.Contains(plot, root.Position, REST.HomeMargin)
 end
 
 -- Une vérification par joueur : chez soi (hors mini-jeu) assez longtemps -> bien reposé ; le minuteur reste plein
@@ -293,6 +285,12 @@ local function setupSlot(slotPart: Instance)
 end
 
 -- Rafraîchit meubles et état (après une modification directe des données, ex. commandes de test)
+-- Confort de la maison d'un joueur (Cash de meubles posés)
+function FurnitureService.Comfort(player: Player): number
+	local data = DataService.Get(player)
+	return if data then comfortOf(data) else 0
+end
+
 function FurnitureService.Refresh(player: Player)
 	render(player)
 	sendState(player)

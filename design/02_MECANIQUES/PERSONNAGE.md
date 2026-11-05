@@ -64,3 +64,7 @@ Les 20 ensembles sont construits dans Blender pour les 14 corps. La refonte D73 
 **Pourquoi un joueur pourrait choisir une tenue :** une étude expérimentale sur les cosmétiques a trouvé que choisir son apparence renforçait l'identification à son avatar ; elle n'a pas montré d'effet significatif sur le plaisir ou la performance, et ne prouve pas une hausse des achats. On privilégie donc les silhouettes reconnaissables, la liberté de mélanger les pièces et l'essayage sur son propre corps. La documentation Roblox recommande une présentation claire des produits et déconseille les fausses urgences ou promotions trompeuses, particulièrement dans un jeu tous publics. Les prix et l'attrait réel des looks seront évalués auprès de testeurs, pas déduits de ces sources.
 
 Sources : [étude expérimentale sur la personnalisation](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2021.770139/full) ; [Roblox Creator Hub, monétisation](https://create.roblox.com/docs/production/monetization).
+
+## Articles de luxe à effets (D112)
+
+Chez Swole Threads, onglets Traînées, Auras, Entrées (`Config/Luxury.luau`) : 2 000 à 10 000 Cash, vus par tous les joueurs, coupés chez soi par le réglage « Outfit effects ». L'entrée se joue au début d'un duel, d'un Mog-off ou du combat du Colisée. Leur prix compte dans le Drip (D111). ❓ Prix à calibrer pendant l'alpha.

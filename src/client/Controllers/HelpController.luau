@@ -1,15 +1,29 @@
 -- Badges au-dessus des habitants : « ! » si l'aide est disponible, cadenas si le stade est trop bas,
 -- sablier avec le temps restant si le délai n'est pas écoulé. Le « ! » flotte et s'agite pour attirer l'œil (D84).
+-- Habitants qui réagissent (D112) : quand on passe près d'un habitant, il commente le look (selon le palier de Drip)
+-- et rappelle son « dress code » (bonus de Cash si on le respecte). Purement visuel : le bonus est décidé par le
+-- serveur à la fin de l'aide (HelpService).
 
 local CollectionService = game:GetService("CollectionService")
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local Drip = require(ReplicatedStorage.Shared.Drip)
 local Helps = require(ReplicatedStorage.Shared.Config.Helps)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Ui = require(script.Parent.Parent.Ui)
 
 local HELPER_TAG = "Helper"
+local DRIP = Balance.Drip
+local LINES_PER_TIER = 3
+
+local player = Players.LocalPlayer
+local MinigameController
+local equipped: { [string]: string } = {}
+local lastCompliment: { [Model]: number } = {}
+local bubbles: { [Model]: BillboardGui } = {}
 
 local stage = 1
 local readyAt: { [string]: number } = {}
@@ -103,6 +117,86 @@ local function refresh()
 	end
 end
 
+-- Bulle au-dessus de l'habitant : un compliment sur le look, puis son dress code
+local function say(model: Model, body: BasePart, offset: number, helpId: string)
+	local old = bubbles[model]
+	if old then
+		old:Destroy()
+	end
+	local help = Helps[helpId]
+	local tier = Drip.Tier(equipped)
+	local line = Texts.Get(`Compliment.T{tier}.{math.random(1, LINES_PER_TIER)}`)
+	local text = line
+	if help.dressCode then
+		local code = Texts.Get(`DressCode.{help.dressCode}`)
+		local percent = math.floor(DRIP.DressCodeBonus * 100 + 0.5)
+		text = Texts.Get(
+			if Drip.MeetsDressCode(help.dressCode, equipped) then "DressCode.Met" else "DressCode.Ask",
+			{ line = line, code = code, percent = percent }
+		)
+	end
+	local bubble = Ui.create("BillboardGui", {
+		Name = "Compliment",
+		Size = UDim2.fromOffset(230, 70),
+		StudsOffset = Vector3.new(0, offset + 2.4, 0),
+		AlwaysOnTop = true,
+		LightInfluence = 0,
+		MaxDistance = 60,
+		Adornee = body,
+		Parent = player:WaitForChild("PlayerGui"),
+	})
+	Ui.create("Frame", {
+		Size = UDim2.fromScale(1, 1),
+		BackgroundColor3 = Color3.new(1, 1, 1),
+		Parent = bubble,
+	}, {
+		Ui.corner(UDim.new(0.3, 0)),
+		Ui.stroke(Color3.fromRGB(30, 30, 30), 2, 0),
+		Ui.label({
+			Position = UDim2.fromScale(0.05, 0.08),
+			Size = UDim2.fromScale(0.9, 0.84),
+			TextColor3 = Color3.fromRGB(30, 30, 30),
+			TextStrokeTransparency = 1,
+			TextWrapped = true,
+			Text = text,
+		}),
+	})
+	bubbles[model] = bubble
+	task.delay(4, function()
+		if bubbles[model] == bubble then
+			bubbles[model] = nil
+		end
+		bubble:Destroy()
+	end)
+end
+
+local function checkCompliments()
+	local character = player.Character
+	local root = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
+	if not root or (MinigameController and MinigameController.IsGameplayLocked()) then
+		return
+	end
+	local now = os.clock()
+	for model, billboard in billboards do
+		local body = billboard.Adornee :: BasePart?
+		local helpId = model:GetAttribute("HelpId")
+		if not body or typeof(helpId) ~= "string" or not Helps[helpId] then
+			continue
+		end
+		if (body.Position - root.Position).Magnitude > DRIP.ComplimentDistance then
+			continue
+		end
+		if now - (lastCompliment[model] or -math.huge) >= DRIP.ComplimentCooldown then
+			lastCompliment[model] = now
+			say(model, body, baseOffsets[model] or 3, helpId)
+		end
+	end
+end
+
+function HelpController.Init(controllers)
+	MinigameController = controllers.MinigameController
+end
+
 function HelpController.Start()
 	game:GetService("RunService").RenderStepped:Connect(animateBadges)
 	for _, model in CollectionService:GetTagged(HELPER_TAG) do
@@ -120,10 +214,16 @@ function HelpController.Start()
 		readyAt = state
 		refresh()
 	end)
+	Remotes.StyleState.OnClientEvent:Connect(function(state)
+		if typeof(state) == "table" and typeof(state.equipped) == "table" then
+			equipped = state.equipped
+		end
+	end)
 
 	task.spawn(function()
 		while true do
 			refresh()
+			checkCompliments()
 			task.wait(0.5)
 		end
 	end)

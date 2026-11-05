@@ -434,6 +434,7 @@ local function onChallenge(player: Player, bossId: unknown)
 		intro = BOSS.IntroTime,
 		rounds = BOSS.Rounds,
 	})
+	StyleService.PlayEntrance(player) -- entrée de luxe (D112)
 	task.delay(BOSS.IntroTime, function()
 		if fights[player] == fight then
 			startRound(player, fight)

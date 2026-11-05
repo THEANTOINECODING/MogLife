@@ -55,6 +55,7 @@ local MinigameService
 local BossService
 local WeeklyService
 local LookService
+local StyleService
 
 local folder: Folder
 local nextId = 0
@@ -692,6 +693,12 @@ local function startDuel(a: Player, b: Player?, botSkill: { perfect: number, goo
 			limit = Duels.LeanLimit,
 		})
 	end
+	-- Entrées de luxe (D112) des joueurs du duel
+	for _, side in duel.sides do
+		if side.player then
+			StyleService.PlayEntrance(side.player)
+		end
+	end
 	task.delay(Duels.IntroTime, function()
 		if not duel.over and duel.round == 0 then
 			startRound(duel)
@@ -809,6 +816,7 @@ function DuelService.Init(services)
 	BossService = services.BossService
 	WeeklyService = services.WeeklyService
 	LookService = services.LookService
+	StyleService = services.StyleService
 end
 
 function DuelService.Start()

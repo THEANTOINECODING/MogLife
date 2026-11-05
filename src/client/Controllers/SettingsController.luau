@@ -1,4 +1,4 @@
--- Menu (D96) : un rond ☰ ouvre un petit tiroir de 4 cases (Maison, Flex, Style, Settings). Le tiroir se ferme d'un
+-- Menu (D96) : un rond ☰ ouvre un petit tiroir de cases (Maison, Flex, Style, Maisons, Settings). Le tiroir se ferme d'un
 -- toucher ailleurs, quand on choisit une case, quand le personnage se met à bouger ou quand une activité commence.
 -- Les boutons Maison (TravelController) et Flex (EmoteController) sont rangés dans le tiroir.
 -- - Style : la garde-robe (ShopController.OpenWardrobe) pour porter ou retirer ce qu'on possède, n'importe où.
@@ -28,6 +28,8 @@ local MinigameController
 local UIController
 local OutfitFxController
 local ObjectiveController
+local HouseController
+local LuxuryController
 
 local values: { [string]: boolean } = {}
 local panel: Frame
@@ -48,7 +50,15 @@ local function layoutMenu()
 	drawer.AnchorPoint = slots.drawerAnchor
 	drawer.Position = slots.drawerPosition
 	drawerGrid.CellSize = UDim2.fromOffset(slots.tileSize.X, slots.tileSize.Y)
-	drawer.Size = UDim2.fromOffset(slots.tileSize.X * 2 + 6 + 16, slots.tileSize.Y * 2 + 6 + 16)
+	-- 3 colonnes, autant de rangées que nécessaire
+	local tiles = 0
+	for _, child in drawer:GetChildren() do
+		if child:IsA("GuiButton") then
+			tiles += 1
+		end
+	end
+	local rows = math.max(math.ceil(tiles / 3), 1)
+	drawer.Size = UDim2.fromOffset(slots.tileSize.X * 3 + 12 + 16, slots.tileSize.Y * rows + 6 * (rows - 1) + 16)
 	panel.Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 1, -20) else UDim2.new(0, 460, 1, -20)
 end
 
@@ -141,6 +151,7 @@ local function toggle(key: string)
 	renderSwitch(key)
 	applyAll()
 	OutfitFxController.Refresh()
+	LuxuryController.Refresh()
 	Remotes.SetSetting:FireServer(key, values[key])
 end
 
@@ -164,13 +175,23 @@ local function buildGui()
 			ShopController.OpenWardrobe()
 		end
 	end)
+	local housesButton = Ui.button({
+		Name = "Houses",
+		BackgroundColor3 = Color3.fromRGB(200, 70, 110),
+		Text = Texts.Get("Menu.Houses"),
+	})
+	housesButton.Activated:Connect(function()
+		if not panel.Visible then
+			HouseController.Open()
+		end
+	end)
 	local settingsButton = Ui.button({
 		Name = "Settings",
 		BackgroundColor3 = Color3.fromRGB(80, 80, 95),
 		Text = Texts.Get("Menu.Settings"),
 	})
 	settingsButton.Activated:Connect(function()
-		if not ShopController.IsOpen() then
+		if not ShopController.IsOpen() and not HouseController.IsOpen() then
 			setPanel(not panel.Visible)
 		end
 	end)
@@ -219,6 +240,7 @@ local function buildGui()
 			name = "Emote.Button",
 		},
 		{ button = styleButton, icon = "Menu.IconStyle", name = "Menu.Style" },
+		{ button = housesButton, icon = "Menu.IconHouses", name = "Menu.Houses" },
 		{ button = settingsButton, icon = "Menu.IconSettings", name = "Menu.Settings" },
 	}
 	for index, tile in tiles do
@@ -390,6 +412,8 @@ function SettingsController.Init(controllers)
 	UIController = controllers.UIController
 	OutfitFxController = controllers.OutfitFxController
 	ObjectiveController = controllers.ObjectiveController
+	HouseController = controllers.HouseController
+	LuxuryController = controllers.LuxuryController
 end
 
 function SettingsController.Start()

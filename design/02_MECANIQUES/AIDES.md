@@ -37,3 +37,9 @@ Le Cash d'une aide augmente avec le stade requis. Les anciennes aides restent fa
 - Maman : « Ça fait trois ans que ce bocal me nargue. »
 - Mme Do-Ré, quand on porte son piano avec un doigt : « Faites attention, il est accordé ! »
 - Le voisin : « Normalement elle démarre. Normalement. »
+
+## Habitants qui réagissent au look (D112)
+
+- En passant près d'un habitant, il commente la tenue selon le palier de Drip (`Balance.Drip.Tiers`) et rappelle son dress code.
+- Pourboire à la fin d'une aide réussie : jusqu'à `Balance.Drip.TipMax` (+30 %) du Cash, proportionnel au Drip.
+- Dress code (`Helps.luau`, champ `dressCode`) : +50 % (`Balance.Drip.DressCodeBonus`) si l'on porte ce que l'habitant aime. ❓ Choix des dress codes à valider.

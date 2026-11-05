@@ -2,6 +2,15 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-06 (Nuit autonome : suite choisie par Antoine en D111 — choix de détail PROVISOIRES, à valider)
+
+- **D112 — Envie d'acheter : maisons à « J'aime », habitants qui réagissent au look, articles de luxe à effets.**
+  - **Maisons visitables** (`HouseService`, `HouseController`) : dans la maison d'un autre joueur, une pastille en bas de l'écran montre à qui elle est et ses ❤ ; après 6 s de visite (valable 5 min), bouton « ❤ Like » (touche L, flèche haut de la manette). Une seule fois par maison et par joueur (sauvegardé, `HousesLiked`, 2 000 au plus). Le propriétaire reçoit 40 Cash par « J'aime » (`Balance.House`) ; le compteur s'affiche sur son panneau. Nouvelle case « Houses » 🏆 dans le menu : classement du serveur (bouton « Visit » qui téléporte devant la maison) et classement mondial (OrderedDataStore `HouseLikesV1`, lu toutes les 5 min, écrit au plus une fois par minute).
+  - **Habitants qui réagissent** (`HelpController`, `HelpService`, `Drip`) : en passant près d'un habitant, une bulle commente le look selon le palier de Drip (4 paliers, 3 répliques chacun, gentiment moqueuses en pyjama) et rappelle son dress code. **Pourboire** à la fin d'une aide réussie : jusqu'à +30 % du Cash selon le Drip. **Dress code** (+50 %) : Petit voisin = visage, Le voisin = barbe, Mme Do-Ré = ensemble complet assorti, Maître-nageur = accessoire, Touriste = coupe payante. Maman, le livreur et l'épicier n'en ont pas (premières aides, simples).
+  - **Luxe à effets** (`Config/Luxury.luau`, `StyleService`, `LuxuryController`) : 12 articles chez Swole Threads, 3 nouveaux onglets : traînées (2 000 à 9 000), auras (2 500 à 10 000), entrées (2 000 à 9 500, explosion d'effets au début d'un duel, d'un Mog-off ou du combat du Colisée). Vus par tous ; le réglage « Outfit effects » les coupe chez soi. Leur prix compte dans le Drip. Textures de particules de Roblox, aucun texte.
+  - ❓ À valider par Antoine : les montants (40 Cash par « J'aime », +30 % / +50 %, prix du luxe) et le choix des dress codes.
+  - Vérifié dans Studio (seul joueur) : classement du serveur, panneau, traînée et aura posées, entrée jouée puis nettoyée, règles du dress code. **Pas vérifié** : un « J'aime » réel (il faut 2 joueurs), le pourboire sur une vraie aide, l'aspect visuel (Studio réduit, pas de capture).
+
 ## 2026-11-04 (Demande d'Antoine : jeu plus long, envie d'acheter ; choix faits par QCM)
 
 - **D111 — 2 h minimum pour un joueur précis, et le style sert enfin à quelque chose.**

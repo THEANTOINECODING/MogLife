@@ -14,17 +14,43 @@ export type Help = {
 	cash: number,
 	firstCash: number?,
 	reps: number?,
+	-- « Dress code » (D112) : l'habitant paie Balance.Drip.DressCodeBonus en plus si l'on porte ce qu'il aime :
+	-- "FullSet" (haut et bas du même ensemble), ou une catégorie (un article payant de "Hair", "Beard", "Face",
+	-- "Accessory")
+	dressCode: string?,
 }
 
 local Helps: { [string]: Help } = {
 	OpenJar = { npc = "Mom", minigame = "Twist", interval = 1.6, requiredStage = 1, cash = 5, firstCash = 25, reps = 8 },
 	PumpTire = { npc = "Courier", minigame = "Pressure", interval = 1.2, requiredStage = 1, cash = 8 },
-	Nails = { npc = "Kid", minigame = "Hammer", interval = 1.4, requiredStage = 2, cash = 15 },
-	PushCar = { npc = "Neighbor", minigame = "Steer", interval = 1.0, requiredStage = 3, cash = 30 },
-	Piano = { npc = "MrsDoRe", minigame = "Lanes", interval = 1.1, requiredStage = 3, cash = 50 },
-	BeachChairs = { npc = "Lifeguard", minigame = "Stack", interval = 1.4, requiredStage = 4, cash = 80 },
+	Nails = { npc = "Kid", minigame = "Hammer", interval = 1.4, requiredStage = 2, cash = 15, dressCode = "Face" },
+	PushCar = {
+		npc = "Neighbor",
+		minigame = "Steer",
+		interval = 1.0,
+		requiredStage = 3,
+		cash = 30,
+		dressCode = "Beard",
+	},
+	Piano = { npc = "MrsDoRe", minigame = "Lanes", interval = 1.1, requiredStage = 3, cash = 50, dressCode = "FullSet" },
+	BeachChairs = {
+		npc = "Lifeguard",
+		minigame = "Stack",
+		interval = 1.4,
+		requiredStage = 4,
+		cash = 80,
+		dressCode = "Accessory",
+	},
 	Groceries = { npc = "Grocer", minigame = "Catch", interval = 1.1, requiredStage = 5, cash = 120 },
-	Directions = { npc = "Tourist", minigame = "Sequence", interval = 3.5, requiredStage = 6, cash = 180, reps = 6 },
+	Directions = {
+		npc = "Tourist",
+		minigame = "Sequence",
+		interval = 3.5,
+		requiredStage = 6,
+		cash = 180,
+		reps = 6,
+		dressCode = "Hair",
+	},
 }
 
 return Helps

@@ -13,13 +13,25 @@ local StyleSets = require(ReplicatedStorage.Shared.Config.StyleSets)
 local StylePieces = require(ReplicatedStorage.Shared.Config.StylePieces)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Look = require(ReplicatedStorage.Shared.Look)
+local Luxury = require(ReplicatedStorage.Shared.Config.Luxury)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Throttle = require(script.Parent.Parent.Throttle)
 local Analytics = require(script.Parent.Parent.Analytics)
 
 local MIRROR_TAG = "Mirror"
 local VISUALS_NAME = "StyleVisuals"
-local CATEGORIES = { Hair = true, Beard = true, Face = true, Top = true, Bottom = true, Accessory = true }
+local CATEGORIES = {
+	Hair = true,
+	Beard = true,
+	Face = true,
+	Top = true,
+	Bottom = true,
+	Accessory = true,
+	Trail = true,
+	Aura = true,
+	Entrance = true,
+}
+local LUXURY_NAME = "LuxuryFx"
 
 local DataService
 local StatsService
@@ -72,12 +84,109 @@ local function setAvatarHairHidden(character: Model, hidden: boolean)
 	end
 end
 
+local function colorSequence(colors: { Color3 }): ColorSequence
+	if #colors == 1 then
+		return ColorSequence.new(colors[1])
+	end
+	local keys = {}
+	for index, color in colors do
+		table.insert(keys, ColorSequenceKeypoint.new((index - 1) / (#colors - 1), color))
+	end
+	return ColorSequence.new(keys)
+end
+
+-- Effets de luxe (D112) : traînée et aura posées sur le personnage côté serveur, vues par tous. Le client les coupe
+-- chez lui si le réglage « Outfit effects » est désactivé (LuxuryController).
+local function buildLuxury(character: Model, equipped: { [string]: string })
+	local old = character:FindFirstChild(LUXURY_NAME)
+	if old then
+		old:Destroy()
+	end
+	local root = character:FindFirstChild("HumanoidRootPart")
+	if not root or not root:IsA("BasePart") then
+		return
+	end
+	local folder = Instance.new("Folder")
+	folder.Name = LUXURY_NAME
+	local trail = equipped.Trail and Luxury.ById[equipped.Trail]
+	if trail and trail.category == "Trail" then
+		local fx = trail.fx
+		local width = fx.width or 1
+		local top = Instance.new("Attachment")
+		top.Name = "LuxuryTrailTop"
+		top.Position = Vector3.new(0, width / 2, 0.6)
+		top.Parent = root
+		local bottom = Instance.new("Attachment")
+		bottom.Name = "LuxuryTrailBottom"
+		bottom.Position = Vector3.new(0, -width / 2, 0.6)
+		bottom.Parent = root
+		local effect = Instance.new("Trail")
+		effect.Name = "LuxuryTrail"
+		effect.Attachment0 = top
+		effect.Attachment1 = bottom
+		effect.Lifetime = fx.lifetime
+		effect.Color = colorSequence(fx.colors)
+		effect.LightEmission = fx.light or 0
+		effect.Transparency = NumberSequence.new(0.2, 1)
+		effect.FaceCamera = true
+		effect.MinLength = 0.2
+		effect.Parent = folder
+		-- Les points d'attache appartiennent à l'effet : ils partent avec lui
+		top:SetAttribute("Luxury", true)
+		bottom:SetAttribute("Luxury", true)
+	end
+	local aura = equipped.Aura and Luxury.ById[equipped.Aura]
+	if aura and aura.category == "Aura" then
+		local fx = aura.fx
+		local emitter = Instance.new("ParticleEmitter")
+		emitter.Name = "LuxuryAura"
+		emitter.Texture = fx.texture
+		emitter.Color = colorSequence(fx.colors)
+		emitter.Size = NumberSequence.new({
+			NumberSequenceKeypoint.new(0, fx.size * 0.6),
+			NumberSequenceKeypoint.new(1, fx.size),
+		})
+		emitter.Transparency = NumberSequence.new({
+			NumberSequenceKeypoint.new(0, 0.3),
+			NumberSequenceKeypoint.new(1, 1),
+		})
+		emitter.Rate = fx.rate
+		emitter.Lifetime = NumberRange.new(fx.lifetime * 0.7, fx.lifetime)
+		emitter.Speed = NumberRange.new(fx.speed * 0.5, fx.speed)
+		emitter.SpreadAngle = Vector2.new(fx.spread or 30, fx.spread or 30)
+		emitter.LightEmission = fx.light or 0
+		emitter.RotSpeed = NumberRange.new(-(fx.rotSpeed or 0), fx.rotSpeed or 0)
+		emitter.Rotation = NumberRange.new(0, 360)
+		emitter.EmissionDirection = Enum.NormalId.Top
+		-- Dans le volume du HumanoidRootPart : particules réparties autour du torse
+		emitter.Shape = Enum.ParticleEmitterShape.Box
+		emitter.ShapeStyle = Enum.ParticleEmitterShapeStyle.Volume
+		emitter:SetAttribute("Luxury", true)
+		emitter.Parent = root
+	end
+	folder.Parent = character
+end
+
+local function clearLuxuryAttachments(character: Model)
+	local root = character:FindFirstChild("HumanoidRootPart")
+	if not root then
+		return
+	end
+	for _, child in root:GetChildren() do
+		if child:GetAttribute("Luxury") then
+			child:Destroy()
+		end
+	end
+end
+
 local function buildVisuals(player: Player)
 	local data = DataService.Get(player)
 	local character = player.Character
 	if not data or not character then
 		return
 	end
+	clearLuxuryAttachments(character)
+	buildLuxury(character, data.StyleEquipped)
 	local old = character:FindFirstChild(VISUALS_NAME)
 	if old then
 		old:Destroy()
@@ -323,6 +432,16 @@ local function onPlayerLoaded(player: Player)
 		task.spawn(onCharacter, player.Character)
 	end
 	sendState(player)
+end
+
+-- Entrée de luxe (D112) : au début d'un duel ou d'un combat de boss, chaque client joue l'effet autour du joueur
+function StyleService.PlayEntrance(player: Player)
+	local data = DataService.Get(player)
+	local entranceId = data and data.StyleEquipped.Entrance
+	local entry = entranceId and Luxury.ById[entranceId]
+	if entry and entry.category == "Entrance" then
+		Remotes.LuxuryEntrance:FireAllClients(player, entry.id)
+	end
 end
 
 -- Rafraîchit visuels et état (après une modification directe des données, ex. récompense de boss)

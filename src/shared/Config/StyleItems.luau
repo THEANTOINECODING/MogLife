@@ -18,7 +18,7 @@ export type Piece = {
 }
 
 export type Item = {
-	category: "Hair" | "Beard" | "Face" | "Top" | "Bottom" | "Accessory",
+	category: "Hair" | "Beard" | "Face" | "Top" | "Bottom" | "Accessory" | "Trail" | "Aura" | "Entrance",
 	price: number?,
 	bossId: string?,
 	starter: boolean?,
@@ -29,6 +29,7 @@ export type Item = {
 }
 
 local StyleSets = require(script.Parent.StyleSets)
+local Luxury = require(script.Parent.Luxury)
 local V = Vector3.new
 local function rgb(r: number, g: number, b: number): Color3
 	return Color3.fromRGB(r, g, b)
@@ -361,6 +362,17 @@ for _, set in StyleSets.List do
 		pieces = {},
 		swatch = set.color,
 		setId = set.id,
+	}
+end
+
+-- Articles de luxe à effets (D112) : pas de pièce 3D, leurs effets sont décrits dans Luxury.luau
+for order, entry in Luxury.List do
+	StyleItems[entry.id] = {
+		category = entry.category,
+		price = entry.price,
+		order = order,
+		pieces = {},
+		swatch = entry.fx.colors[1],
 	}
 end
 

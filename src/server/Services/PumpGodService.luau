@@ -45,6 +45,7 @@ local MinigameService
 local StatsService
 local StatueService
 local TutorialService
+local StyleService
 
 type Javelin = { from: Vector3, dir: Vector3, start: number, length: number, parried: boolean }
 type Disc = { at: Vector3, born: number }
@@ -1749,6 +1750,7 @@ function PumpGodService.Begin(player: Player): boolean
 	character:PivotTo(CFrame.lookAt(fighterSpot.Position + inward + Vector3.new(0, 3, 0), look))
 	fight.boss = spawnBoss(bossStart, middle, 1)
 	broadcast(startMessage(fight))
+	StyleService.PlayEntrance(player) -- entrée de luxe (D112)
 	task.spawn(loop, fight, fight.token, 2.5)
 	task.spawn(sacredLoop, fight, fight.token)
 	sendCrowd(fight)
@@ -1833,6 +1835,7 @@ function PumpGodService.Init(services)
 	StatsService = services.StatsService
 	StatueService = services.StatueService
 	TutorialService = services.TutorialService
+	StyleService = services.StyleService
 end
 
 function PumpGodService.Start()

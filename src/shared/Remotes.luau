@@ -22,11 +22,18 @@ local NAMES = {
 	"BuyStyleSet", -- client -> serveur : (setId: string), achète haut + bas en une transaction
 	"EquipStyleSet",
 	"SetHairDye", -- client -> serveur : (dye: string) teinture du coiffeur, "" = couleur d'origine (D106) -- client -> serveur : (setId: string), équipe haut + bas possédés
+	"LuxuryEntrance", -- serveur -> tous : (player, entranceId) jouer l'entrée de luxe de ce joueur (D112)
 	"StyleState", -- serveur -> client : ({ owned: { [itemId]: true }, equipped: { [category]: itemId } })
 	"BuyFurniture", -- client -> serveur : (itemId: string) au comptoir du magasin de meubles
 	"PlaceFurniture", -- client -> serveur : (slot: string, itemId: string?) nil = vider l'emplacement
 	"FurnitureState", -- serveur -> client : ({ owned: { [itemId]: true }, placed: { [slot]: itemId } })
 	"GoHome", -- client -> serveur : retour à sa maison
+	"LikeHouse", -- client -> serveur : (ownerUserId: number) aimer la maison où l'on est (D112)
+	"VisitHouse", -- client -> serveur : (ownerUserId: number) aller devant la maison d'un joueur du serveur
+	"HouseRankingRequest", -- client -> serveur : demander les classements des maisons
+	-- serveur -> client : ({ server: { {userId, name, likes, comfort, liked} }, global: { {userId, name, likes} } })
+	"HouseRanking",
+	"HouseState", -- serveur -> client : ({ visiting: number?, canLike: boolean, liked: boolean, likes: number })
 	"TakeBus", -- client -> serveur : (stopId: string) depuis un arrêt de bus, vers un autre arrêt
 	-- serveur -> tous les clients : ({ player, state: "Started" | "Rep" | "OpponentRep" | "Ended", kind, id, anchor,
 	-- interval, quality }) pour que chacun voie l'activité se réaliser vraiment (D37) ; OpponentRep = le boss joue
@@ -109,11 +116,17 @@ return remotes :: {
 	BuyStyleSet: RemoteEvent,
 	EquipStyleSet: RemoteEvent,
 	SetHairDye: RemoteEvent,
+	LuxuryEntrance: RemoteEvent,
 	StyleState: RemoteEvent,
 	BuyFurniture: RemoteEvent,
 	PlaceFurniture: RemoteEvent,
 	FurnitureState: RemoteEvent,
 	GoHome: RemoteEvent,
+	LikeHouse: RemoteEvent,
+	VisitHouse: RemoteEvent,
+	HouseRankingRequest: RemoteEvent,
+	HouseRanking: RemoteEvent,
+	HouseState: RemoteEvent,
 	TakeBus: RemoteEvent,
 	Activity: RemoteEvent,
 	BodyTransform: RemoteEvent,
