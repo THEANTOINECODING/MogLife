@@ -258,6 +258,9 @@ local function readGlobal()
 	globalTop = top
 end
 
+-- Accès pour les tests unitaires dans Studio (tools/test_house_likes.luau) : rien n'est exposé au client
+HouseService._test = { visits = visits, checkVisit = checkVisit, onLike = onLike }
+
 -- ------------------------------------------------------------------ cycle
 
 function HouseService.Init(services)
