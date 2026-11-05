@@ -186,8 +186,8 @@ end
 
 -- Maison où se trouve cette position (nil hors des parcelles)
 function PlotService.PlotAt(position: Vector3, margin: number): Model?
-	for _, plot in sortedPlots() do
-		if PlotService.Contains(plot, position, margin) then
+	for _, plot in CollectionService:GetTagged(PLOT_TAG) do
+		if plot:IsA("Model") and PlotService.Contains(plot, position, margin) then
 			return plot
 		end
 	end

@@ -87,8 +87,9 @@ local function onPlayerLoaded(player: Player)
 	leaderstats.Parent = player
 
 	player.CharacterAdded:Connect(function(character)
-		character:WaitForChild("Humanoid")
-		applyBodyScale(player)
+		if character:WaitForChild("Humanoid", 10) and player.Character == character then
+			applyBodyScale(player)
+		end
 	end)
 	if player.Character then
 		applyBodyScale(player)
