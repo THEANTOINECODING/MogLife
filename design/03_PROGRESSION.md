@@ -4,8 +4,8 @@
 
 | Ressource | Gagnée par | Sert à | Règles |
 |---|---|---|---|
-| **Mog** 🗿 | Les exercices (mini-jeux) | Défier les boss, débloquer les aides (seuils) | Ne fait qu'augmenter. N'est jamais dépensé ni perdu. |
-| **Cash** 💵 | Les aides en ville, les premières victoires de boss | Coupes, habits, accessoires (purement esthétiques) | Peut baisser : achats, défaite contre un boss trop fort. Jamais négatif. |
+| **Mog** 🗿 | Les exercices (mini-jeux) | Défier les boss, débloquer les aides (seuils) | Jamais dépensé. Perdu en partie en cas de défaite (15 %, D110), jamais sous le seuil du stade atteint. |
+| **Cash** 💵 | Les aides en ville, les premières victoires de boss | Coupes, habits, accessoires et meubles ; la tenue donne un petit bonus de Drip et les meubles un bonus « bien reposé » (D111) | Peut baisser : achats, défaite contre un boss trop fort. Jamais négatif. |
 | Stade | Dérivé des boss battus | Corps, déblocages | Jamais choisi par le client |
 
 Pas d'énergie, pas de kits d'équipement, pas de rebirth dans le MVP.
@@ -37,7 +37,19 @@ Perte de 10 % du Cash, plafonnée ❓ (plafond qui augmente avec les stades). To
 
 Les récompenses ne sont pas toutes des nombres : nouveau mini-jeu, nouveau boss, nouvelle zone, nouveau corps, nouvel objet de style.
 
-## Dernière simulation (14 octobre 2026, `tools/simulate_economy.luau`)
+## Simulation du 4 novembre 2026 (D111)
+
+Seuils : Kevin 50, Brayan 600, Coach Turbo 3 800, Pas-Les-Jambes 13 000, Roi du Quartier 36 000, Dieu du Pump 85 000.
+
+| Profil | Brayan prêt | Coach Turbo | Pas-Les-Jambes | Roi du Quartier | Dieu du Pump prêt |
+|---|---|---|---|---|---|
+| Joueur précis | 6:04 | 23:32 | 51:01 | 84:55 | 122:47 |
+| Joueur moyen qui progresse | 8:57 | 31:44 | 68:05 | 118:36 | 153:35 |
+| Joueur moyen, boosts + pareur | 7:19 | 27:03 | 56:13 | 94:54 | 116:25 |
+
+Objectif d'Antoine : 2 h minimum pour un joueur précis. Le Cash s'accumule (≈ 7 000 au seuil du Dieu du Pump) : articles de luxe prévus (D111). Le Drip et le bonus « bien reposé » (D111) ne sont pas encore dans la simulation.
+
+## Simulation du 14 octobre 2026 (ancienne)
 
 | Profil | Kevin | Brayan | Coach Turbo | Pas-Les-Jambes | Roi du Quartier | Défaites |
 |---|---|---|---|---|---|---:|

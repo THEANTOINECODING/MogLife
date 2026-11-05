@@ -33,7 +33,7 @@ local ASSUME = {
 	SeriesBetweenHelps = 2, -- le joueur fait 2 séries d'entraînement entre deux aides
 	EventDetour = 8,
 	ShopDetour = 6,
-	MaxMinutes = 150,
+	MaxMinutes = 240,
 	-- Le Dieu du Pump (arène, D94) n'a pas de Mog-off : on l'approxime par un Mog-off de ce niveau
 	ArenaBoss = { interval = 2.2, skill = { perfect = 0.55, good = 0.4 } },
 }
@@ -217,7 +217,7 @@ local function simulate(baseProfile)
 	local longestTraining, trainingStreak, seriesSinceHelp, seriesCount = 0, 0, 0, 0
 	local nextEvent, eventNumber, eventsCaught = Events.FirstDelay, 0, 0
 	local boostId, boostEnds = nil, 0
-	local partnerMog, boughtBoosts, defeats = 0, 0, 0
+	local partnerMog, boughtBoosts, defeats, mogLost = 0, 0, 0, 0
 	local blocked
 
 	local function mark(name)
@@ -288,6 +288,12 @@ local function simulate(baseProfile)
 				local loss = math.min(math.floor(cash * BOSS.MogOffLossPercent), BOSS.MogOffLossCap[stage])
 				cash -= loss
 				cashLost += loss
+				-- D110 : perte de 15 % du Mog, jamais sous le Mog qu'il fallait pour atteindre ce stade
+				local previous = Stages.List[stage - 1] and Stages.List[stage - 1].boss
+				local floorMog = if previous then previous.mogRequired else 0
+				local mogLoss = math.max(math.min(mog * BOSS.DefeatMogShare, mog - floorMog), 0)
+				mog -= mogLoss
+				mogLost += mogLoss
 				if profile.improves then
 					profile.perfect = math.min(profile.perfect + 0.05, 0.9)
 					profile.good = math.min(profile.good, 0.95 - profile.perfect)
@@ -428,6 +434,7 @@ local function simulate(baseProfile)
 		eventsCaught = eventsCaught,
 		partnerMog = partnerMog,
 		defeats = defeats,
+		mogLost = mogLost,
 		blocked = blocked,
 		items = count,
 		longestTraining = longestTraining,
@@ -438,7 +445,7 @@ local lines = {
 	"Hypothèses : serveur neuf, événements toutes les 10 min 30 (types alternés), 2 séries entre aides.",
 	"Le profil moyen gagne 5 points de Perfect après chaque défaite ; le pareur aide une série sur deux.",
 	"Profils 2, 6, 7 et 8 : mêmes tirages aléatoires pour comparer séparément boosts et pareur.",
-	"Les coûts de style sont affichés sans achat sauf dans le profil 5 ; Pump God reste coming soon.",
+	"Les coûts de style sont affichés sans achat sauf dans le profil 5 ; Pump God approximé par un Mog-off.",
 }
 for _, profile in PROFILES do
 	local r = simulate(profile)
@@ -470,8 +477,9 @@ for _, profile in PROFILES do
 	table.insert(
 		lines,
 		string.format(
-			"  Défaites %d | événements saisis %d | boosts achetés %d | Mog du pareur %.0f | entraînement seul max %s",
+			"  Défaites %d (Mog perdu %d) | événements saisis %d | boosts achetés %d | Mog du pareur %.0f | entraînement seul max %s",
 			r.defeats,
+			math.floor(r.mogLost),
 			r.eventsCaught,
 			r.boughtBoosts,
 			r.partnerMog,

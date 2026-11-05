@@ -12,6 +12,7 @@ local PumpGod = require(ReplicatedStorage.Shared.Config.PumpGod)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Drip = require(ReplicatedStorage.Shared.Drip)
 local Npc = require(script.Parent.Parent.Npc)
 local Analytics = require(script.Parent.Parent.Analytics)
 
@@ -32,6 +33,7 @@ type Fight = {
 	token: number, -- change à chaque manche, pour ignorer les minuteurs périmés
 	stakes: number, -- Cash perdu en cas de défaite (annoncé avant le combat)
 	mogStakes: number, -- part de Mog perdue en cas de défaite (0 en revanche, D110)
+	drip: number, -- bonus de Drip de la tenue portée au début du combat (D111)
 }
 
 local DataService
@@ -84,6 +86,7 @@ local function assess(player: Player, bossId: string)
 		autoMogLoss = StatsService.MogLoss(data, BOSS.DefeatMogShare),
 		blockingBossId = if not isCurrent and not beaten and currentStage.boss then currentStage.boss.id else nil,
 		mog = data.Mog,
+		drip = Drip.Bonus(data.StyleEquipped), -- D111
 	}
 end
 
@@ -328,7 +331,7 @@ function startRound(player: Player, fight: Fight)
 		titleKey = "Boss.RoundTitle",
 		titleArgs = { round = fight.round, rounds = BOSS.Rounds, boss = { key = `Boss.{fight.bossId}` } },
 		onRep = function(p, quality)
-			fight.score += BOSS.QualityScore[quality] or 0
+			fight.score += (BOSS.QualityScore[quality] or 0) * (1 + fight.drip)
 			Remotes.BossUpdate:FireClient(p, {
 				state = "Live",
 				bossId = fight.bossId,
@@ -415,6 +418,7 @@ local function onChallenge(player: Player, bossId: unknown)
 		score = 0,
 		bossScore = 0,
 		bossReps = 0,
+		drip = state.drip,
 		playerDone = false,
 		bossDone = false,
 		token = 0,
@@ -496,6 +500,7 @@ function BossService.ShowChallenge(player: Player, bossId: string)
 		arena = state.boss.arena == true,
 		mogLoss = if state.ready or state.boss.arena then state.mogLoss else state.autoMogLoss,
 		blockingBossId = state.blockingBossId,
+		drip = state.drip,
 	})
 end
 

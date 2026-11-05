@@ -34,6 +34,7 @@ local BodyService
 local TutorialService
 local BoostService
 local SocialService
+local FurnitureService
 local WeeklyService
 
 local ExerciseService = {}
@@ -106,11 +107,13 @@ local function startSeries(player: Player, exerciseId: unknown, wanted: BasePart
 		titleKey = `Exercise.{exerciseId}`,
 		onRep = function(p, quality, combo)
 			-- Gain = base × qualité × combo × boost en cours × pareur (+20 % si un autre joueur le pare)
+			-- × bien reposé (meubles de la maison, D111)
 			local gain = exercise.mogPerRep
 				* Balance.Quality[quality]
 				* combo
 				* BoostService.Multiplier(p)
 				* SocialService.LifterMultiplier(p)
+				* FurnitureService.RestMultiplier(p)
 			StatsService.Add(p, "Mog", gain)
 			Analytics.Step(p, DataService.Get(p), "FirstRep")
 			SocialService.OnLifterRep(p, gain, quality)
@@ -277,6 +280,7 @@ function ExerciseService.Init(services)
 	TutorialService = services.TutorialService
 	BoostService = services.BoostService
 	SocialService = services.SocialService
+	FurnitureService = services.FurnitureService
 	WeeklyService = services.WeeklyService
 end
 

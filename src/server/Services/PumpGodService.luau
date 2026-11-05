@@ -29,6 +29,7 @@ local TweenService = game:GetService("TweenService")
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local PumpGod = require(ReplicatedStorage.Shared.Config.PumpGod)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Drip = require(ReplicatedStorage.Shared.Drip)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 
 local SPOT_TAG = "ColosseumSpot"
@@ -68,6 +69,7 @@ type Finale = {
 
 type Fight = {
 	player: Player,
+	drip: number, -- bonus de Drip de la tenue (D111), multiplie les dégâts infligés au dieu
 	hp: number,
 	bossHp: number,
 	token: number,
@@ -207,6 +209,7 @@ local function hurtBoss(fight: Fight, kind: string, damage: number)
 	if fight.ended or fight.phase ~= "Round" then
 		return
 	end
+	damage *= 1 + fight.drip
 	fight.bossHp = math.max(fight.bossHp - damage, 0)
 	broadcast({
 		state = "BossHit",
@@ -1695,8 +1698,10 @@ function PumpGodService.Begin(player: Player): boolean
 	local middle = Vector3.new(center.Position.X, floor, center.Position.Z)
 	local bossStart = Vector3.new(bossSpot.Position.X, floor, bossSpot.Position.Z)
 	local first = ROUNDS[1]
+	local data = DataService.Get(player)
 	local fight: Fight = {
 		player = player,
+		drip = if data then Drip.Bonus(data.StyleEquipped) else 0,
 		hp = PumpGod.Health,
 		bossHp = first.BossHealth,
 		token = tokens,

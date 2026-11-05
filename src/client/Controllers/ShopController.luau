@@ -19,6 +19,7 @@ local Look = require(ReplicatedStorage.Shared.Look)
 local Outfit = require(ReplicatedStorage.Shared.Outfit)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Format = require(ReplicatedStorage.Shared.Format)
+local Drip = require(ReplicatedStorage.Shared.Drip)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Ui = require(script.Parent.Parent.Ui)
 
@@ -33,6 +34,7 @@ local UIController
 local panel: Frame
 local titleLabel: TextLabel
 local cashLabel: TextLabel
+local dripLabel: TextLabel
 local list: ScrollingFrame
 local tabArea: ScrollingFrame
 local tabs: { [string]: TextButton } = {}
@@ -243,6 +245,7 @@ end
 
 function render()
 	cashLabel.Text = Texts.Get("Shop.Cash", { value = Format.Short(cash) })
+	dripLabel.Text = Texts.Get("Style.Drip", { percent = Format.Gain(Drip.Bonus(equipped) * 100) })
 	for cat, tab in tabs do
 		tab.BackgroundColor3 = if cat == category then Color3.fromRGB(220, 120, 30) else Color3.fromRGB(70, 70, 80)
 	end
@@ -493,12 +496,12 @@ local function buildGui()
 		TextColor3 = Color3.fromRGB(140, 255, 140),
 		Parent = panel,
 	})
-	Ui.label({
+	-- Drip de la tenue portée (D111) : ce que le style apporte contre les boss et au bras de fer
+	dripLabel = Ui.label({
 		Position = UDim2.fromOffset(16, 50),
 		Size = UDim2.new(1, -32, 0, 20),
 		Font = Enum.Font.GothamMedium,
-		TextColor3 = Color3.fromRGB(200, 200, 210),
-		Text = Texts.Get("Shop.Cosmetic"),
+		TextColor3 = Color3.fromRGB(255, 200, 120),
 		Parent = panel,
 	})
 

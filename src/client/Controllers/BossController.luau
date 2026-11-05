@@ -396,7 +396,12 @@ end
 
 local function onBossPrompt(info)
 	local name = bossName(info.bossId)
-	local required = Texts.Get("Boss.Required", { required = info.mogRequired, mog = math.floor(info.mog) })
+	local required =
+		Texts.Get("Boss.Required", { required = Format.Short(info.mogRequired), mog = Format.Short(info.mog) })
+	-- Drip de la tenue portée (D111) : rappelé seulement s'il compte
+	if (info.drip or 0) > 0 then
+		required = `{required}\n{Texts.Get("Boss.Drip", { percent = Format.Gain(info.drip * 100) })}`
+	end
 	local line = Texts.Get(`BossLine.{info.bossId}`)
 	MinigameController.SetGameplayLocked(true, "Boss")
 

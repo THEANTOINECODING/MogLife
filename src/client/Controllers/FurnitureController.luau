@@ -7,6 +7,7 @@ local Players = game:GetService("Players")
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Furniture = require(ReplicatedStorage.Shared.Config.Furniture)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
@@ -37,6 +38,7 @@ local stage = 1
 local owned: { [string]: boolean } = {}
 local placed: { [string]: string } = {}
 local confirming: string? = nil
+local comfort = { value = 0, bonus = 0 }
 
 local FurnitureController = {}
 
@@ -161,6 +163,15 @@ function render()
 	end
 end
 
+-- Au magasin : le confort de la maison et le bonus « bien reposé » qu'il donne (D111)
+local function comfortText(): string
+	return Texts.Get("Furniture.Comfort", {
+		comfort = Format.Short(comfort.value),
+		percent = Format.Gain(comfort.bonus * 100),
+		minutes = Format.Gain(Balance.Rest.Duration / 60),
+	})
+end
+
 local function open(newMode: "Store" | "Home", slotName: string?)
 	mode = newMode
 	slot = slotName or slot
@@ -168,7 +179,7 @@ local function open(newMode: "Store" | "Home", slotName: string?)
 	tabsFrame.Visible = mode == "Store"
 	if mode == "Store" then
 		titleLabel.Text = Texts.Get("Furniture.Title")
-		hintLabel.Text = Texts.Get("Furniture.Hint")
+		hintLabel.Text = comfortText()
 		list.Position = UDim2.fromOffset(16, 134)
 		list.Size = UDim2.new(1, -32, 1, -150)
 	else
@@ -346,6 +357,10 @@ function FurnitureController.Start()
 	Remotes.FurnitureState.OnClientEvent:Connect(function(state)
 		owned = state.owned or {}
 		placed = state.placed or {}
+		comfort = { value = state.comfort or 0, bonus = state.restBonus or 0 }
+		if panel.Visible and mode == "Store" then
+			hintLabel.Text = comfortText()
+		end
 		if panel.Visible then
 			render()
 		end

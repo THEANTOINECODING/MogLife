@@ -37,6 +37,7 @@ local NAMES = {
 	"MentorSay", -- serveur -> client : ({ key, args }) le mentor parle (tutoriel, conseils)
 	"BuyBoost", -- client -> serveur : (boostId: string) au camion à shakes ou au distributeur
 	"BoostState", -- serveur -> client : ({ id: string?, endsAt: number }) boost en cours (heure serveur)
+	"RestState", -- serveur -> client : ({ bonus: number, endsAt: number, home: boolean }) bien reposé (D111)
 	"Records", -- serveur -> client : ({ [exerciseId]: score }) meilleures notes de série
 	"Cutscene", -- serveur -> client : ({ kind: "Intro" | "Boss", bossId?, spot? }) jouer une cinématique
 	"CutsceneDone", -- client -> serveur : (kind: string) cinématique finie ou passée
@@ -121,6 +122,7 @@ return remotes :: {
 	MentorSay: RemoteEvent,
 	BuyBoost: RemoteEvent,
 	BoostState: RemoteEvent,
+	RestState: RemoteEvent,
 	Records: RemoteEvent,
 	Cutscene: RemoteEvent,
 	CutsceneDone: RemoteEvent,

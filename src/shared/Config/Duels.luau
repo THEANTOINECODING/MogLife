@@ -1,6 +1,7 @@
 -- Duels entre joueurs : bras de fer (D68, design/02_MECANIQUES/DUELS.md). Contre n'importe quel joueur, n'importe
 -- où : une table apparaît entre les deux. Chances égales : même motif de zones, mêmes fenêtres, mêmes vitesses pour
--- les deux joueurs ; ni le Mog, ni le stade, ni la tenue n'entrent dans le calcul.
+-- les deux joueurs ; ni le Mog ni le stade n'entrent dans le calcul. Seule exception : le Drip de la tenue (D111, au plus +5 %
+-- aux poussées, Balance.Drip).
 -- Les chiffres sont des hypothèses ❓ à régler pendant l'alpha.
 
 return {

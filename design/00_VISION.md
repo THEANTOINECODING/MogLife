@@ -12,7 +12,7 @@
 | L'avatar grossit un peu | Un **personnage cartoon aux traits ultra-exagérés** : torse en V géant, jambes en allumettes, mâchoire carrée |
 | On passe des paliers en silence | **Un boss à chaque stade**, qu'on affronte en Mog-off — ou qui te mogge d'un regard si tu viens trop tôt |
 | Des salles de plus en plus chères | Une **escalade absurde** : garage → rue → plage → montagne → la Lune → l'Olympe |
-| Les gains servent à gagner plus | Le Cash sert à **ton style** : coupes, habits, bronzage, accessoires |
+| Les gains servent à gagner plus | Le Cash sert à **ton style** : coupes, habits, bronzage, accessoires, meubles (avec un petit bonus de Drip et de repos, D111) |
 
 ## Promesse au joueur
 

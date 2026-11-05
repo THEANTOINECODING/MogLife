@@ -12,6 +12,7 @@
 Les objets en Cash restent toujours obtenables gratuitement ; les objets Robux s'y ajoutent, ils ne les remplacent pas.
 
 À ne pas vendre au lancement : x2 Mog, Cash, victoire contre un boss, protection contre la perte de Cash. Il n'y a plus de mode auto du tout (D79).
+Exception en Cash (D111, choix d'Antoine) : la tenue (Drip, au plus +5 % contre les boss et au bras de fer) et les meubles (« bien reposé », au plus +15 % de Mog pendant 4 min) ont un petit effet en jeu. Ils ne s'achètent qu'en Cash, jamais en Robux.
 Un éventuel accélérateur plus tard = décision séparée, parcours gratuit testé, plafonné, et **jamais** pris en compte dans les Mog-off.
 
 ## Règles d'interface

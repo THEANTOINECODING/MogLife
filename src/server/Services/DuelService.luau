@@ -16,6 +16,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Duels = require(ReplicatedStorage.Shared.Config.Duels)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Drip = require(ReplicatedStorage.Shared.Drip)
 local Npc = require(script.Parent.Parent.Npc)
 
 local DAY = 86_400
@@ -33,6 +34,7 @@ type Side = {
 	pushed: number, -- poussée de la manche en cours
 	queue: { number }, -- poussées reçues, pas encore appliquées (appliquées par paires, D110)
 	done: boolean, -- a fini sa manche
+	drip: number, -- bonus de Drip de sa tenue (D111), multiplie ses poussées
 }
 
 type Duel = {
@@ -501,7 +503,7 @@ local function push(duel: Duel, side: Side, quality: string, token: number)
 	if quality == "Perfect" or quality == "Good" then
 		side.hits += 1
 	end
-	table.insert(side.queue, Duels.Push[quality] or 0)
+	table.insert(side.queue, (Duels.Push[quality] or 0) * (1 + side.drip))
 	settle(duel)
 end
 
@@ -600,6 +602,11 @@ function startRound(duel: Duel)
 	end)
 end
 
+local function dripOf(player: Player): number
+	local data = DataService.Get(player)
+	return if data then Drip.Bonus(data.StyleEquipped) else 0
+end
+
 local function newSide(player: Player?, spot: BasePart, sign: number): Side
 	return {
 		player = player,
@@ -613,6 +620,7 @@ local function newSide(player: Player?, spot: BasePart, sign: number): Side
 		pushed = 0,
 		queue = {},
 		done = false,
+		drip = if player then dripOf(player) else 0,
 	}
 end
 

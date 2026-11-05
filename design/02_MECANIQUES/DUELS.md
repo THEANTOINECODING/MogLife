@@ -40,6 +40,7 @@ contre les boss sans le remplacer.
 - Cash selon le stade de chaque joueur : victoire > égalité > défaite (Config/Duels.luau).
 - **Le perdant perd 15 % de son Mog** (D110, choix d'Antoine : « il faut perdre beaucoup »), jamais sous le Mog qu'il
   fallait pour atteindre son stade ; aussi en cas d'abandon en cours de duel. Annoncé dans l'invitation.
+- Drip (D111) : la tenue portée ajoute au plus +5 % à chaque poussée (seule chose qui n'est pas identique pour les deux).
 - Équité (D110) : la n-ième poussée d'un joueur ne compte qu'avec la n-ième de l'autre (chacun juge sur sa propre
   horloge) : le joueur au meilleur réseau ne peut plus plaquer le bras avant que les poussées de l'autre arrivent ;
   deux poussées collées par le réseau comptent toutes les deux. La jauge occupe la même part de l'écran sur tous les

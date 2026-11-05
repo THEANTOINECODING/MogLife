@@ -43,7 +43,7 @@ local List: { Stage } = {
 		id = "GymRat",
 		boss = {
 			id = "Brayan",
-			mogRequired = 400,
+			mogRequired = 600,
 			minigame = "Spotlight",
 			interval = 1.5,
 			skill = { perfect = 0.18, good = 0.5 },
@@ -55,7 +55,7 @@ local List: { Stage } = {
 		id = "Bro",
 		boss = {
 			id = "CoachTurbo",
-			mogRequired = 2_500,
+			mogRequired = 3_800,
 			minigame = "Beats",
 			interval = 0.67, -- D110 : +35 % de vitesse (0,9 avant), notes et boss plus rapides
 			skill = { perfect = 0.25, good = 0.5 },
@@ -67,7 +67,7 @@ local List: { Stage } = {
 		id = "Alpha",
 		boss = {
 			id = "NoLegs",
-			mogRequired = 7_500,
+			mogRequired = 13_000,
 			minigame = "Trace", -- D110 : « Tracer la pose » remplace Wobble (trop proche du jeu de Kevin)
 			interval = 2.2, -- une pose à tracer par répétition
 			skill = { perfect = 0.38, good = 0.47 }, -- D110 : plus dur (« trop facile » ; 0,25 / 0,5 avant)
@@ -79,7 +79,7 @@ local List: { Stage } = {
 		id = "Chad",
 		boss = {
 			id = "BlockKing",
-			mogRequired = 20_000,
+			mogRequired = 36_000,
 			minigame = "Combo",
 			interval = 2.8,
 			skill = { perfect = 0.2, good = 0.52 }, -- ~63 points par répétition (D87 : encore plus facile à battre)
@@ -91,7 +91,7 @@ local List: { Stage } = {
 		id = "Gigachad",
 		boss = {
 			id = "PumpGod",
-			mogRequired = 45_000,
+			mogRequired = 85_000,
 			firstWinCash = 800,
 			arena = true,
 		},

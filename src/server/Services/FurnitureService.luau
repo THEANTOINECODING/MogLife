@@ -1,14 +1,17 @@
 -- Meubles : achat au comptoir du magasin de meubles (Cash + stade requis), pose sur les emplacements fixes
 -- de sa propre maison, affichage pour tout le monde (les maisons se visitent librement).
--- Purement décoratif. Visuel : le modèle 3D « Furniture_<id> » s'il est importé (PropService), sinon des blocs.
+-- Confort (D111) : les meubles posés rendent « bien reposé » quand on reste chez soi (bonus de Mog temporaire,
+-- Balance.Rest). Visuel : le modèle 3D « Furniture_<id> » s'il est importé (PropService), sinon des blocs.
 
 local CollectionService = game:GetService("CollectionService")
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Furniture = require(ReplicatedStorage.Shared.Config.Furniture)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Format = require(ReplicatedStorage.Shared.Format)
 local Throttle = require(script.Parent.Parent.Throttle)
 
 local SHOP_TAG = "FurnitureShop"
@@ -23,13 +26,115 @@ local ExerciseService
 local PropService
 local TutorialService
 
+local REST = Balance.Rest
+
+type Rest = {
+	homeFor: number, -- secondes passées chez soi d'affilée (hors mini-jeu)
+	bonus: number, -- bonus de Mog en cours (0,15 = +15 %)
+	endsAt: number, -- heure serveur de fin du bonus (repoussée tant qu'on est chez soi)
+	home: boolean, -- en train de se reposer chez soi
+}
+
+local rests: { [Player]: Rest } = {}
+local plotBoxes: { [Model]: { cframe: CFrame, half: Vector3 } } = {}
+
 local FurnitureService = {}
+
+-- Confort de la maison : somme des prix des meubles posés
+local function comfortOf(data): number
+	local total = 0
+	for slot, itemId in data.FurniturePlaced do
+		local item = Furniture.Items[itemId]
+		if item and item.slot == slot then
+			total += item.price
+		end
+	end
+	return total
+end
+
+local function restBonus(comfort: number): number
+	return REST.MaxBonus * math.clamp(comfort / REST.FullComfort, 0, 1)
+end
 
 local function sendState(player: Player)
 	local data = DataService.Get(player)
 	if data then
-		Remotes.FurnitureState:FireClient(player, { owned = data.FurnitureOwned, placed = data.FurniturePlaced })
+		local comfort = comfortOf(data)
+		Remotes.FurnitureState:FireClient(player, {
+			owned = data.FurnitureOwned,
+			placed = data.FurniturePlaced,
+			comfort = comfort,
+			restBonus = restBonus(comfort),
+		})
 	end
+end
+
+local function sendRest(player: Player, rest: Rest)
+	Remotes.RestState:FireClient(player, { bonus = rest.bonus, endsAt = rest.endsAt, home = rest.home })
+end
+
+-- Le joueur est-il dans sa parcelle (maison et jardin, avec une petite marge) ?
+local function isHome(player: Player): boolean
+	local plot = PlotService.GetPlot(player)
+	local character = player.Character
+	local root = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
+	if not plot or not root then
+		return false
+	end
+	local box = plotBoxes[plot]
+	if not box then
+		local cframe, size = plot:GetBoundingBox()
+		box = { cframe = cframe, half = size / 2 + Vector3.one * REST.HomeMargin }
+		plotBoxes[plot] = box
+	end
+	local offset = box.cframe:PointToObjectSpace(root.Position)
+	return math.abs(offset.X) <= box.half.X and math.abs(offset.Y) <= box.half.Y and math.abs(offset.Z) <= box.half.Z
+end
+
+-- Une vérification par joueur : chez soi (hors mini-jeu) assez longtemps -> bien reposé ; le minuteur reste plein
+-- tant qu'on y est, et file dès qu'on sort ou qu'on lance un mini-jeu
+local function checkRest(player: Player, rest: Rest)
+	local data = DataService.Get(player)
+	if not data then
+		return
+	end
+	local now = workspace:GetServerTimeNow()
+	if not isHome(player) or MinigameService.IsBusy(player) then
+		rest.homeFor = 0
+		if rest.home then
+			rest.home = false
+			sendRest(player, rest)
+		end
+		return
+	end
+	rest.homeFor += REST.CheckInterval
+	local bonus = restBonus(comfortOf(data))
+	if rest.homeFor < REST.HomeSeconds or bonus <= 0 then
+		return
+	end
+	local fresh = rest.endsAt <= now
+	local changed = not rest.home or rest.bonus ~= bonus
+	rest.bonus = bonus
+	rest.endsAt = now + REST.Duration
+	rest.home = true
+	if changed then
+		sendRest(player, rest)
+	end
+	if fresh then
+		Remotes.Notify:FireClient(player, {
+			key = "Rest.Rested",
+			args = { percent = Format.Gain(bonus * 100), minutes = Format.Gain(REST.Duration / 60) },
+		})
+	end
+end
+
+-- Multiplicateur de Mog « bien reposé » (1 sans bonus)
+function FurnitureService.RestMultiplier(player: Player): number
+	local rest = rests[player]
+	if rest and rest.endsAt > workspace:GetServerTimeNow() then
+		return 1 + rest.bonus
+	end
+	return 1
 end
 
 local function clear(plot: Model)
@@ -219,6 +324,29 @@ function FurnitureService.Start()
 	end)
 	PlotService.OnReleased(function(_, plot)
 		clear(plot)
+	end)
+
+	-- Bien reposé (D111)
+	local function track(player: Player)
+		rests[player] = { homeFor = 0, bonus = 0, endsAt = 0, home = false }
+	end
+	for _, player in Players:GetPlayers() do
+		track(player)
+	end
+	Players.PlayerAdded:Connect(track)
+	Players.PlayerRemoving:Connect(function(player)
+		rests[player] = nil
+	end)
+	task.spawn(function()
+		while true do
+			task.wait(REST.CheckInterval)
+			for player, rest in rests do
+				local ok, err = pcall(checkRest, player, rest)
+				if not ok then
+					warn("[FurnitureService] repos :", err)
+				end
+			end
+		end
 	end)
 	DataService.PlayerLoaded:Connect(sendState)
 	Remotes.BuyFurniture.OnServerEvent:Connect(onBuy)

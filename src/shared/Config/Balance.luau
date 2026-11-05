@@ -433,6 +433,23 @@ return {
 		ShopDistance = 14, -- distance max (studs) au comptoir du magasin pour acheter
 		PlaceDistance = 16, -- distance max à l'emplacement pour poser un meuble
 	},
+	-- Drip (D111) : la tenue portée ajoute un bonus aux points de Mog-off, aux coups contre le Dieu du Pump et aux
+	-- poussées du bras de fer. Valeur de la tenue = prix des articles portés (src/shared/Drip.luau). ❓ à calibrer
+	Drip = {
+		MaxBonus = 0.05, -- +5 % au maximum
+		FullValue = 12_000, -- valeur de tenue (Cash) pour le bonus maximum
+		BossItemValue = 400, -- valeur d'une récompense de boss (article sans prix)
+	},
+	-- Bien reposé (D111) : rester chez soi donne un bonus de Mog temporaire, selon le confort des meubles posés
+	-- (somme de leurs prix). Le minuteur reste plein tant qu'on est chez soi et file dès qu'on sort. ❓ à calibrer
+	Rest = {
+		HomeSeconds = 8, -- secondes chez soi avant d'être reposé
+		Duration = 240, -- secondes de bonus après la sortie
+		MaxBonus = 0.15, -- +15 % de Mog au maximum
+		FullComfort = 10_000, -- confort (Cash de meubles posés) pour le bonus maximum
+		CheckInterval = 1, -- secondes entre deux vérifications de la présence chez soi
+		HomeMargin = 4, -- studs de marge autour de la parcelle
+	},
 
 	-- Déplacements : bouton « Maison » et arrêts de bus
 	Travel = {

@@ -2,6 +2,14 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-04 (Demande d'Antoine : jeu plus long, envie d'acheter ; choix faits par QCM)
+
+- **D111 — 2 h minimum pour un joueur précis, et le style sert enfin à quelque chose.**
+  - **Durée** : « le jeu doit durer 2 h minimum à finir totalement », pour un joueur précis (choix d'Antoine), en demandant seulement plus de Mog (pas de boss plus forts). Seuils : Brayan 400 → 600, Coach Turbo 2 500 → 3 800, Pas-Les-Jambes 7 500 → 13 000, Roi du Quartier 20 000 → 36 000, Dieu du Pump 45 000 → 85 000 (`Stages.luau`). Simulation (`tools/simulate_economy.luau`, qui compte maintenant la perte de 15 % du Mog de D110) : joueur précis prêt pour le Dieu du Pump à 2:03, joueur moyen à 2:34 (victoire vers 3 h 30, estimation grossière du Colisée) ; avant : 1:11 et 1:32. Kevin et Brayan restent dans les 10 premières minutes.
+  - **Drip** (écart assumé avec `00_VISION.md` et `06_MONETISATION.md`, choix explicite d'Antoine) : la valeur de la tenue portée (prix des articles, moitié du prix de l'ensemble par pièce, 400 pour une récompense de boss) donne jusqu'à +5 % (plein à 12 000 Cash) aux points de Mog-off, aux dégâts contre le Dieu du Pump et aux poussées du bras de fer (`src/shared/Drip.luau`, `Balance.Drip`). Le style s'achète en Cash seulement : aucune puissance vendue contre des Robux. Affiché dans la boutique de style (à la place de « Looks only ») et dans la fenêtre de défi.
+  - **Bien reposé** : 8 s chez soi (hors mini-jeu) rendent « bien reposé » : jusqu'à +15 % de Mog (plein à 10 000 Cash de meubles posés) pendant 4 min après la sortie ; le minuteur reste plein tant qu'on est chez soi (`FurnitureService`, `Balance.Rest`, remote `RestState`). Badge sous celui du boost ; confort et bonus affichés au magasin de meubles.
+  - **Suite choisie par Antoine** (pas encore faite) : maisons visitables avec « J'aime » et classement ; habitants qui complimentent le look, pourboires et « dress code » de certaines aides ; articles de luxe à effets (2 000 à 10 000 Cash : traînées, auras, entrées en duel et devant les boss), pour dépenser le Cash qui s'accumule (≈ 7 000 inutilisés au seuil du Dieu du Pump).
+
 ## 2026-11-02 (Retours d'Antoine après test : choix faits par QCM)
 
 - **D110 — Retours de test d'Antoine (2026-11-04), réglés d'après ses réponses au QCM.**

@@ -7,6 +7,7 @@ local ProximityPromptService = game:GetService("ProximityPromptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
+local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Boosts = require(ReplicatedStorage.Shared.Config.Boosts)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
@@ -28,6 +29,11 @@ local badgeBar: Frame
 local cash = 0
 local stage = 1
 local active: { id: string?, endsAt: number } = { id = nil, endsAt = 0 }
+-- Bien reposé (D111, meubles de la maison) : un second badge sous celui du boost
+local rest = { bonus = 0, endsAt = 0, home = false }
+local restBadge: Frame
+local restLabel: TextLabel
+local restBar: Frame
 
 local BoostController = {}
 
@@ -133,6 +139,22 @@ local function updateBadge()
 		badgeBar.Size = UDim2.fromScale(math.clamp(remaining / boost.duration, 0, 1), 1)
 		badgeBar.BackgroundColor3 = boost.color
 	end
+
+	local restLeft = rest.endsAt - workspace:GetServerTimeNow()
+	restBadge.Visible = rest.bonus > 0 and (rest.home or restLeft > 0)
+	if restBadge.Visible then
+		local percent = Format.Gain(rest.bonus * 100)
+		restLabel.Text = if rest.home
+			then Texts.Get("Rest.BadgeHome", { percent = percent })
+			else Texts.Get("Rest.Badge", {
+				percent = percent,
+				time = string.format("%d:%02d", math.floor(restLeft / 60), math.floor(restLeft % 60)),
+			})
+		restBar.Size = UDim2.fromScale(if rest.home then 1 else math.clamp(restLeft / Balance.Rest.Duration, 0, 1), 1)
+		local below = if badge.Visible then badge.Size.Y.Offset + 4 else 0
+		restBadge.Position = badge.Position + UDim2.fromOffset(0, below)
+		restBadge.Size = badge.Size
+	end
 end
 
 local function buildGui()
@@ -161,6 +183,14 @@ local function buildGui()
 		Size = UDim2.new(1, -16, 1, -8),
 		Parent = badge,
 	})
+
+	restBadge = badge:Clone()
+	restBadge.Name = "Rested"
+	restBadge.Parent = gui
+	restLabel = restBadge:FindFirstChildOfClass("TextLabel") :: TextLabel
+	local restTrack = restBadge:FindFirstChildOfClass("Frame") :: Frame
+	restBar = restTrack:FindFirstChildOfClass("Frame") :: Frame
+	restBar.BackgroundColor3 = Color3.fromRGB(120, 200, 255)
 
 	panel = Ui.panel({
 		Name = "Panel",
@@ -228,6 +258,10 @@ function BoostController.Start()
 		if panel.Visible then
 			render()
 		end
+	end)
+	Remotes.RestState.OnClientEvent:Connect(function(state)
+		rest = { bonus = state.bonus or 0, endsAt = state.endsAt or 0, home = state.home == true }
+		updateBadge()
 	end)
 	Remotes.BoostState.OnClientEvent:Connect(function(state)
 		active = { id = state.id, endsAt = state.endsAt or 0 }
