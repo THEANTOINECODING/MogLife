@@ -331,7 +331,9 @@ local function buildGui()
 		ZIndex = 2,
 		Parent = gui,
 	})
-	skipButton.Activated:Connect(finish)
+	-- Manette : le bouton « Passer » est sélectionné pendant la scène (A), B passe aussi
+	Ui.markModal(gui, skipButton)
+	Ui.onBack(skipButton, finish)
 	gui.Parent = player:WaitForChild("PlayerGui")
 end
 

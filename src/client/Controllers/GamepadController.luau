@@ -60,20 +60,6 @@ local function displayOrder(instance: Instance): number
 	return if screen then screen.DisplayOrder else 0
 end
 
--- Fenêtres marquées actuellement affichées, la plus haute d'abord
-local function openModals(): { Instance }
-	local list = {}
-	for _, window in CollectionService:GetTagged(Ui.MODAL_TAG) do
-		if shown(window) then
-			table.insert(list, window)
-		end
-	end
-	table.sort(list, function(a, b)
-		return displayOrder(a) > displayOrder(b)
-	end)
-	return list
-end
-
 local function selectable(button: Instance): boolean
 	return button:IsA("GuiButton") and button.Selectable and button.Active and shown(button)
 end
@@ -105,6 +91,20 @@ local function firstButton(window: Instance): GuiButton?
 		end
 	end
 	return best or back
+end
+
+-- Fenêtres marquées actuellement affichées et qui ont un bouton à choisir, la plus haute d'abord
+local function openModals(): { Instance }
+	local list = {}
+	for _, window in CollectionService:GetTagged(Ui.MODAL_TAG) do
+		if shown(window) and firstButton(window) then
+			table.insert(list, window)
+		end
+	end
+	table.sort(list, function(a, b)
+		return displayOrder(a) > displayOrder(b)
+	end)
+	return list
 end
 
 local function refresh()
