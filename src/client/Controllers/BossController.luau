@@ -787,6 +787,7 @@ local function buildGui()
 		Visible = false,
 		Parent = gui,
 	})
+	Ui.fitToScreen(panel, 40)
 	titleLabel = Ui.label({
 		Name = "Title",
 		Position = UDim2.fromOffset(16, 14),
@@ -830,7 +831,8 @@ local function buildGui()
 			onPrimary()
 		end
 	end)
-	secondaryButton.Activated:Connect(function()
+	Ui.markModal(panel, primaryButton)
+	Ui.onBack(secondaryButton, function()
 		hidePanel()
 		MinigameController.SetGameplayLocked(false, "Boss")
 	end)

@@ -188,4 +188,58 @@ function Ui.closeButton(props: { [string]: any }): TextButton
 	return button
 end
 
+-- Fenêtre de taille fixe : rétrécie (UIScale) si elle dépasse de l'écran, par exemple un téléphone en paysage
+-- (≈ 390 points de haut). Jamais agrandie. `margin` : marge totale en pixels autour de la fenêtre.
+function Ui.fitToScreen(panel: GuiObject, margin: number?)
+	local scale = panel:FindFirstChildOfClass("UIScale") or Ui.create("UIScale", { Parent = panel })
+	local gap = margin or 16
+	local function update()
+		local parent = panel.Parent
+		local area = if parent and parent:IsA("GuiBase2d") then parent.AbsoluteSize else Vector2.zero
+		if area.X < 1 or area.Y < 1 then
+			return
+		end
+		-- Taille demandée, sans l'échelle actuelle
+		local size = panel.Size
+		local width = size.X.Offset + size.X.Scale * area.X
+		local height = size.Y.Offset + size.Y.Scale * area.Y
+		if width < 1 or height < 1 then
+			return
+		end
+		scale.Scale = math.min(1, (area.X - gap) / width, (area.Y - gap) / height)
+	end
+	panel:GetPropertyChangedSignal("Size"):Connect(update)
+	panel:GetPropertyChangedSignal("Parent"):Connect(update)
+	panel:GetPropertyChangedSignal("Visible"):Connect(update)
+	Ui.watchViewport(function()
+		task.defer(update)
+	end)
+end
+
+-- ------------------------------------------------------------------ manette (GamepadController)
+-- Une fenêtre « modale » (boutique, réglages, défi…) est marquée pour la manette : quand elle s'ouvre, son bouton
+-- par défaut est sélectionné (A pour valider, croix directionnelle pour naviguer) ; B déclenche son bouton retour.
+
+local CollectionService = game:GetService("CollectionService")
+
+Ui.MODAL_TAG = "GamepadModal"
+Ui.BACK_TAG = "GamepadBack"
+Ui.DEFAULT_TAG = "GamepadDefault"
+Ui.backHandlers = setmetatable({} :: { [GuiButton]: () -> () }, { __mode = "k" })
+
+-- Marque une fenêtre pour la manette ; `default` est le bouton sélectionné à l'ouverture
+function Ui.markModal(window: Instance, default: GuiButton?)
+	CollectionService:AddTag(window, Ui.MODAL_TAG)
+	if default then
+		CollectionService:AddTag(default, Ui.DEFAULT_TAG)
+	end
+end
+
+-- Bouton retour (fermer, annuler, refuser) : le clic et le bouton B de la manette appellent `handler`
+function Ui.onBack(button: GuiButton, handler: () -> ()): RBXScriptConnection
+	Ui.backHandlers[button] = handler
+	CollectionService:AddTag(button, Ui.BACK_TAG)
+	return button.Activated:Connect(handler)
+end
+
 return Ui

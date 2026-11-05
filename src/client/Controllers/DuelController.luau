@@ -512,7 +512,8 @@ local function buildGui()
 		hideInvite()
 		Remotes.DuelAnswer:FireServer(true)
 	end)
-	decline.Activated:Connect(function()
+	Ui.markModal(invitePanel, accept)
+	Ui.onBack(decline, function()
 		hideInvite()
 		Remotes.DuelAnswer:FireServer(false)
 	end)
@@ -659,6 +660,7 @@ local function buildGui()
 		Parent = gui,
 	})
 	Ui.create("UISizeConstraint", { MaxSize = Vector2.new(480, 270), Parent = resultPanel })
+	Ui.fitToScreen(resultPanel, 40)
 	resultTitle = Ui.label({
 		Position = UDim2.fromOffset(16, 14),
 		Size = UDim2.new(1, -32, 0, 48),
@@ -678,6 +680,7 @@ local function buildGui()
 		Text = Texts.Get("Duel.Ok"),
 		Parent = resultPanel,
 	})
+	Ui.markModal(resultPanel, ok)
 	ok.Activated:Connect(function()
 		resultPanel.Visible = false
 		pendingResult = false

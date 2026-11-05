@@ -267,7 +267,8 @@ local function buildGui()
 		Parent = panel,
 	})
 	local closeButton = Ui.closeButton({ Text = Texts.Get("Shop.Close"), Parent = panel })
-	closeButton.Activated:Connect(HouseController.Close)
+	Ui.markModal(panel)
+	Ui.onBack(closeButton, HouseController.Close)
 
 	gui.Parent = player:WaitForChild("PlayerGui")
 	Ui.watchViewport(function()

@@ -558,7 +558,8 @@ local function buildGui()
 	})
 
 	local closeButton = Ui.closeButton({ Text = Texts.Get("Shop.Close"), Parent = panel })
-	closeButton.Activated:Connect(close)
+	Ui.markModal(panel)
+	Ui.onBack(closeButton, close)
 	Ui.watchViewport(function()
 		local camera = workspace.CurrentCamera
 		local size = camera and camera.ViewportSize or Vector2.zero

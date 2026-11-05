@@ -652,7 +652,8 @@ local function buildGui()
 		Visible = false,
 		Parent = gui,
 	})
-	cancelButton.Activated:Connect(close)
+	Ui.markModal(gui, doneButton)
+	Ui.onBack(cancelButton, close)
 
 	local function updateLayout()
 		if Ui.isPhonePortrait() then

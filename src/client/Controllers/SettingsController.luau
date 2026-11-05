@@ -6,6 +6,7 @@
 --   noms et l'affichage des autres joueurs ; la musique et les effets passent par SoundController ; les autres
 --   systèmes lisent SettingsController.Get (effets d'écran, gros plan des activités).
 
+local ContextActionService = game:GetService("ContextActionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -214,6 +215,7 @@ local function buildGui()
 		Parent = gui,
 	})
 	Ui.create("UIScale", { Parent = drawer })
+	Ui.markModal(drawer) -- manette : la croix choisit une case, A l'ouvre
 	Ui.create("UIPadding", {
 		PaddingTop = UDim.new(0, 8),
 		PaddingBottom = UDim.new(0, 8),
@@ -291,12 +293,20 @@ local function buildGui()
 		end
 		setMenuOpen(false)
 	end)
-	-- Touche M (clavier) et bouton Select (manette)
+	-- Touche M (clavier) ; bouton Select (manette, Vue sur Xbox) lié en priorité haute : Roblox s'en sert sinon
+	-- pour sa propre navigation dans l'interface
 	UserInputService.InputBegan:Connect(function(input, processed)
-		if not processed and (input.KeyCode == Enum.KeyCode.M or input.KeyCode == Enum.KeyCode.ButtonSelect) then
+		if not processed and input.KeyCode == Enum.KeyCode.M then
 			setMenuOpen(not menuOpen)
 		end
 	end)
+	ContextActionService:BindActionAtPriority("MogMenu", function(_, state)
+		if state == Enum.UserInputState.Begin and menuGui.Enabled then
+			setMenuOpen(not menuOpen)
+			return Enum.ContextActionResult.Sink
+		end
+		return Enum.ContextActionResult.Pass
+	end, false, Enum.ContextActionPriority.High.Value, Enum.KeyCode.ButtonSelect)
 	-- Il se referme quand le personnage bouge ou qu'une activité range le menu
 	RunService.Heartbeat:Connect(function()
 		if not menuOpen then
@@ -398,7 +408,8 @@ local function buildGui()
 		renderSwitch(key)
 	end
 	local closeButton = Ui.closeButton({ Text = Texts.Get("Shop.Close"), Parent = panel })
-	closeButton.Activated:Connect(function()
+	Ui.markModal(panel)
+	Ui.onBack(closeButton, function()
 		setPanel(false)
 	end)
 	gui.Parent = player:WaitForChild("PlayerGui")

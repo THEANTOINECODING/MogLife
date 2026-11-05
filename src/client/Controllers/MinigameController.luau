@@ -628,6 +628,7 @@ local function buildGui()
 	Ui.watchViewport(function()
 		endPanel.Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 260) else UDim2.fromOffset(440, 260)
 	end)
+	Ui.fitToScreen(endPanel, 24)
 
 	-- Note (S/A/B/C) à gauche, détails à droite
 	gradeLabel = Ui.label({
@@ -699,7 +700,8 @@ local function buildGui()
 			end
 		end)
 	end)
-	doneButton.Activated:Connect(function()
+	Ui.markModal(endPanel, continueButton)
+	Ui.onBack(doneButton, function()
 		endPanel.Visible = false
 		MinigameController.SetGameplayLocked(false)
 	end)

@@ -81,6 +81,7 @@ local function buildGui()
 		Visible = false,
 		Parent = gui,
 	})
+	Ui.fitToScreen(panel)
 	Ui.label({
 		Position = UDim2.fromOffset(60, 12),
 		Size = UDim2.new(1, -120, 0, 40),
@@ -95,7 +96,8 @@ local function buildGui()
 		Parent = panel,
 	}, { Ui.create("UIListLayout", { Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder }) })
 	local closeButton = Ui.closeButton({ Text = Texts.Get("Shop.Close"), Parent = panel })
-	closeButton.Activated:Connect(close)
+	Ui.markModal(panel)
+	Ui.onBack(closeButton, close)
 
 	gui.Parent = player:WaitForChild("PlayerGui")
 end

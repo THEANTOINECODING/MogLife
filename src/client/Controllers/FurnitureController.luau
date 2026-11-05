@@ -211,6 +211,7 @@ local function buildGui()
 	Ui.watchViewport(function()
 		panel.Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 0, 480) else UDim2.fromOffset(600, 480)
 	end)
+	Ui.fitToScreen(panel)
 	titleLabel = Ui.label({
 		Position = UDim2.fromOffset(16, 12),
 		Size = UDim2.new(0.62, -16, 0, 40),
@@ -281,7 +282,8 @@ local function buildGui()
 	})
 
 	local closeButton = Ui.closeButton({ Text = Texts.Get("Shop.Close"), Parent = panel })
-	closeButton.Activated:Connect(close)
+	Ui.markModal(panel)
+	Ui.onBack(closeButton, close)
 
 	gui.Parent = player:WaitForChild("PlayerGui")
 end

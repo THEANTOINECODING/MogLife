@@ -26,6 +26,7 @@ local ORDER = {
 	"EventFxController",
 	"WeeklyController",
 	"SettingsController",
+	"GamepadController",
 	"OutfitFxController",
 	"LuxuryController",
 	"DuelController",

@@ -227,7 +227,8 @@ local function buildGui()
 		Parent = panel,
 	}, { Ui.create("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }) })
 	local closeButton = Ui.closeButton({ Text = Texts.Get("Shop.Close"), Parent = panel })
-	closeButton.Activated:Connect(close)
+	Ui.markModal(panel)
+	Ui.onBack(closeButton, close)
 	gui.Parent = player:WaitForChild("PlayerGui")
 
 	-- Téléphone et tablette en paysage : le badge monte dans la rangée du haut, juste sous le HUD (D82). Placé sous

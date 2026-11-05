@@ -529,7 +529,8 @@ local function buildGui()
 		Parent = goButton,
 	})
 	goScale = Ui.create("UIScale", { Parent = goButton })
-	goButton.Activated:Connect(function()
+	Ui.markModal(panel, goButton)
+	Ui.onBack(goButton, function()
 		setOpen(false)
 	end)
 
