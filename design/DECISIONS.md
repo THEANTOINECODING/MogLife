@@ -18,7 +18,7 @@ Format : date — décision — raison. La plus récente en haut.
     - Mêmes cases et mêmes pièces : les achats et la croissance entre stades sont inchangés.
   - Validation OK : 14 corps, 74 articles, 3 318 pièces, 0 défaut de couverture.
   - **Testé dans Studio, son coupé**, sur les corps importés : Normie, GOD MOGGER et GOD MOGGER féminine, couleurs de peau, yeux, cheveux et tenues correctes, aucune erreur de script. Passage des portes : 4,14 de large en collision (moins de 5) et 7,46 de haut (moins de 8,2) au GOD MOGGER. Sauvegarde remise à l'identique.
-  - **En attente** : la nouvelle garde-robe (`MogLife_Wardrobe.fbx` et `StylePieces.pending.luau`) n'est pas encore importée. Studio porte encore les manches et barbes de D118.
+  - **Garde-robe importée et activée** : `MogLife_Wardrobe.fbx` est installé (3 318 pièces, toutes en SurfaceAppearance Overlay) et `StylePieces.luau` est activé. Vérifié dans Studio : tous les objets sur les 7 stades et les 2 genres, soit 1 204 tenues montées par `Outfit.Build`, sans pièce manquante ni erreur. En jeu (son coupé), 6 tenues portées du stade 1 au stade 7, en homme et en femme : chaque objet apparaît et la console n'affiche aucune erreur. La sauvegarde a été restaurée à l'identique. Pas encore vérifié à l'œil : les captures de Studio ne répondaient pas.
   - Les en-cas n'ont pas été retestés : il faudrait dépenser du Cash.
 
 ## 2026-11-06 (Demande d'Antoine : trapèzes plus naturels)
