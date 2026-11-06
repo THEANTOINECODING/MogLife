@@ -2,6 +2,16 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-06 (Demande d'Antoine : personnage du joueur refait, Normie « spaghetti »)
+
+- **D115 — Corps du joueur refaits : formes lisses et arrondies, Normie vraiment spaghetti.** Demande d'Antoine : « tout plus qualitatif », plus d'espaces ni de détails dérangeants, corps de base « très très fin », buste trop grand.
+  - **Divergence avec D39 (low poly PS1 à facettes)**, expliquée ici : les corps restent low poly (13 000 à 16 000 triangles par corps, aucune pièce au-dessus de 10 000) mais sont **lissés** (ombrage doux, arêtes vives gardées au-delà de 50°) et faits de formes plus fines. Les facettes laissaient voir chaque raccord. Le dégradé de lumière cuit dans la texture est réduit (`LIT_AMT = 0.08` au lieu de 0.22) : avec la vraie lumière de Roblox, il faisait des bandes là où deux formes se chevauchent. Les boss gardent le style D39.
+  - **Nouvelles formes** (`tools/blender/build_bodies.py`) : membres en fuseaux à bouts en dôme (coudes, genoux, poignets, épaules se fondent même pliés, plus de marches), mains en moufle (paume, doigts repliés, pouce), baskets (semelle galet, empeigne, col, languette), mâchoire en boîte arrondie, nez et oreilles arrondis, bouches et sourcils arrondis, yeux et têtes plus ronds.
+  - **Normie spaghetti** : torse fait d'un seul tronc fin (0,56 stud de large, plus étroit que la tête), épaules en cintre qui tombent vers les bras, tee et manches trop larges, bras, jambes et cou plus fins, petit ventre mou, short moins large. NormieF pareil, poitrine modeste fondue dans le haut (plus de boule à part, tous publics).
+  - **Espaces corrigés** : la cuisse ne perce plus sur les hanches (jambe de short qui monte dans le bassin), plus de peau entre les épaules et le tee, trapèzes qui ne dépassent plus l'épaule.
+  - **Même squelette, mêmes 364 pièces, mêmes noms** : animations, croissance et garde-robe marchent sans changement de code. Les ensembles se sont réajustés sur les nouveaux corps (aisance un peu augmentée dans `outfit_looks.py` pour les hanches et torses féminins très larges). `validate_style.py` passe.
+  - **Activation** : les décalages sont écrits dans `assets/export/characters/BodyPieces.pending.luau` (et `StylePieces.pending.luau`) ; ils ne vont dans `src/shared/Config/` qu'après l'import de `MogLife_Characters.fbx` dans Studio et `tools/install_characters.luau`, sinon les anciens modèles seraient décalés. **Pas encore testé dans Studio.**
+
 ## 2026-11-06 (Demande d'Antoine : sac de boosts, repas animé, garde-robe refaite)
 
 - **D114 — Les boosts se rangent dans un sac et se mangent un à la fois, avec une petite animation ; accessoires, coupes et habits refaits.**

@@ -5,11 +5,15 @@ Texture des « bros » (boss et corps des joueurs) : atlas 256 px peint par case
 import random
 
 ATLAS_SIZE = 256  # 8 x 8 cases de 32 px
+# Force de l'éclairage cuit. Les corps des joueurs (lissés, D115) la baissent : avec la vraie lumière de Roblox, un
+# fort dégradé par forme ferait des bandes là où deux formes se chevauchent (genou, coude, épaule).
+LIT_AMT = 0.22
 
 
 # ------------------------------------------------------------------ texture (éclairage « cuit » façon PS1)
-def lit(rgb, y, amt=0.22):
+def lit(rgb, y, amt=None):
     """Plus clair en haut de chaque pièce, plus sombre en bas : la lumière cuite des jeux PS1."""
+    amt = LIT_AMT if amt is None else amt
     k = 1 - amt + amt * 1.6 * (y / (C - 1))
     return tuple(max(0.0, min(1.0, c * k)) for c in rgb)
 
@@ -30,8 +34,9 @@ def tinge(rgb, a):
     return (rgb[0], rgb[1], rgb[2], a)
 
 
-def lit_k(y, amt=0.22):
+def lit_k(y, amt=None):
     """Facteur de l'éclairage cuit (même courbe que lit) : plus clair en haut de la pièce."""
+    amt = LIT_AMT if amt is None else amt
     return 1 - amt + amt * 1.6 * (y / (C - 1))
 
 
@@ -59,7 +64,7 @@ def paint_tint_cells(a, cfg):
         k = grain()
         if abs(x - 15.5) < 1.0 or (y % 8 in (0, 1) and 7 < x < 25):
             k *= 0.8
-        return veil(k * lit_k(y, 0.15))
+        return veil(k * lit_k(y, LIT_AMT * 0.7))
     a.cell("abs", 3, 0, abs_)
 
     def veiny(x, y):
@@ -75,7 +80,7 @@ def paint_tint_cells(a, cfg):
             return tinge((0.95, 0.25, 0.3), 0.24 if cfg.get("fem") else 0.14)   # joues roses (plus pour les corps féminins)
         if cfg.get("cleft") and 15 <= x <= 16 and y < 6:
             return veil(0.8)
-        return veil(lit_k(y, 0.15) * grain(0.02))
+        return veil(lit_k(y, LIT_AMT * 0.7) * grain(0.02))
     a.cell("face", 5, 0, face)
 
     a.cell("top", 6, 0, lambda x, y: veil(lit_k(y) * grain()))
@@ -122,7 +127,7 @@ def paint_bro_atlas(name, cfg):
         c = noise(skin, 0.025)
         if abs(x - 15.5) < 1.0 or (y % 8 in (0, 1) and 7 < x < 25):
             c = shade
-        return lit(c, y, 0.15)
+        return lit(c, y, LIT_AMT * 0.7)
     a.cell("abs", 3, 0, abs_)
 
     def veiny(x, y):                                  # peau veineuse
@@ -140,7 +145,7 @@ def paint_bro_atlas(name, cfg):
             c = (min(1, c[0] * 1.08), c[1] * 0.9, c[2] * 0.9)
         if cfg.get("cleft") and 15 <= x <= 16 and y < 6:
             c = shade
-        return lit(c, y, 0.15)
+        return lit(c, y, LIT_AMT * 0.7)
     a.cell("face", 5, 0, face)
 
     top = cfg.get("top_color", (0.2, 0.2, 0.2))
@@ -160,7 +165,7 @@ def paint_bro_atlas(name, cfg):
 
     a.cell("shorts", 0, 1, lambda x, y: lit(noise(cfg.get("shorts", (0.15, 0.15, 0.2)), 0.025), y))
     a.cell("hair", 1, 1, lambda x, y: noise(cfg.get("hair", (0.1, 0.07, 0.05)), 0.05))
-    a.cell("white", 2, 1, lambda x, y: lit(noise((0.95, 0.93, 0.88), 0.015), y, 0.12))
+    a.cell("white", 2, 1, lambda x, y: lit(noise((0.95, 0.93, 0.88), 0.015), y, LIT_AMT * 0.55))
     a.cell("iris", 3, 1, lambda x, y: noise(cfg.get("iris", (0.35, 0.22, 0.12)), 0.04))
     a.cell("black", 4, 1, lambda x, y: (0.03, 0.03, 0.03))
     lips = darker((skin[0], skin[1] * 0.8, skin[2] * 0.8), 0.72)

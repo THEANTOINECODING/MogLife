@@ -197,7 +197,7 @@ def _torso(w, body, g, cell, silhouette, name):
             front = max(0, -math.sin(a))
             # Give cloth ease without erasing the hourglass silhouette.
             t = i / 13
-            extra = 0.07 + ease * (0.75 + 0.25 * math.sin(math.pi * t))
+            extra = (0.1 if cfg.get("fem") else 0.085) + ease * (0.75 + 0.25 * math.sin(math.pi * t))
             if silhouette in ("racer", "varsity"):
                 extra += 0.08 * t * t
             elif silhouette in ("blazer", "robe"):
@@ -241,10 +241,12 @@ def _bottom(w, body, g, cell, silhouette, name):
     root = J["Root"]
     height = [root.z - 0.26 + i * 0.075 for i in range(11)]
     radii = _body_radii(body, "LowerTorso", height)
+    # Smoothed bodies (D115): very wide feminine hips need a little more ease to stay covered while growing.
+    ease = 0.075 + (0.02 * g["hip_w"] if cfg.get("fem") else 0)
     rings = []
     for i, z in enumerate(height):
-        rings.append([(math.cos(2 * math.pi * j / 24) * (radii[i][j] + 0.052),
-                       math.sin(2 * math.pi * j / 24) * (radii[i][j] + 0.052), z) for j in range(24)])
+        rings.append([(math.cos(2 * math.pi * j / 24) * (radii[i][j] + ease),
+                       math.sin(2 * math.pi * j / 24) * (radii[i][j] + ease), z) for j in range(24)])
     w.make("LowerTorso", _loft(rings), cell)
     length = "short" if silhouette == "short" else "long"
     t = {"short": 0.10, "taper": 0.115, "straight": 0.15, "cargo": 0.18,
