@@ -107,6 +107,9 @@ for body in BODY_KEYS:
     assert max(tris_by_item.values()) < 10000, f"{body}: article trop détaillé"
     body_col = bpy.data.collections["Body_" + body]
     body_trees = {}
+    head_obj = bpy.data.objects.get(body + "_Head")
+    head_tree = tree(head_obj) if head_obj else None
+    chin_z = bounds(head_obj)[2][0] if head_obj else 0.0
     coverage_samples = 0
     for name, *_ in LOOKS:
         for item in (name + "Top", name + "Bottom"):
@@ -136,6 +139,17 @@ for body in BODY_KEYS:
                             skin = surface(body_trees[key], center, z, angle)
                             if skin is None:
                                 continue
+                            # D120 : le haut s'ouvre sous le menton ; le cou caché derrière la mâchoire ne compte pas
+                            if head_tree and part == "UpperTorso" and math.sin(angle) < 0:
+                                spot = Vector((center[0] + math.cos(angle) * skin, center[1] + math.sin(angle) * skin, z))
+                                if extra:                 # retour dans le corps non gonflé (voir tree)
+                                    mid = Vector(tuple((lo + hi) * 0.5 for lo, hi in reference_box))
+                                    spot = mid + (spot - mid) * Vector((1 / (1 + extra), 1 / (1 + extra),
+                                                                         1 / (1 + extra * 0.25)))
+                                if head_tree.ray_cast(spot, Vector((math.cos(angle), math.sin(angle), 0)), 1.5)[0]:
+                                    continue
+                                if spot.z > chin_z - 0.1:     # ouverture de l'encolure, juste sous le menton
+                                    continue
                             cloth = surface((fabric,), center, z, angle)
                             if cloth is None or cloth < skin - 0.04:
                                 coverage_failures.append((obj.name, part, round(z, 2), direction,

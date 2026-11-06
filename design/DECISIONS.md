@@ -2,6 +2,15 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-06 (Demande d'Antoine : les tenues coupent le visage en deux, jonction du visage plus naturelle)
+
+- **D120 — Le haut des tenues s'ouvre sous le menton ; des joues relient le crâne à la mâchoire.**
+  - **Problème** : au GOD MOGGER, les trapèzes montent derrière la tête jusqu'aux yeux. Les hauts montent avec eux, mais le tissu faisait un anneau tout autour, à la taille du cou. Devant, cet anneau passait entre le crâne et la mâchoire : une bande de tissu coupait le visage à la hauteur de la bouche. Les ensembles (`outfit_looks.py`) et les hauts de la boutique (`clothes.py`) avaient tous ce défaut.
+  - **Col** : `clear_chin` (`faces.py`) est appelé par `build_style.py` sur tout ce qui est porté sur le torse. Devant le visage, et seulement sur sa largeur, le tissu descend sous le menton. On obtient une encolure ronde. Le dos et les côtés restent hauts sur les trapèzes. C'est une déformation continue : boutons, cols et motifs suivent le tissu. Mêmes pièces, mêmes noms.
+  - **Joues** : `cheek_bridge` (`build_bodies.py`) ajoute un volume de la base du crâne, sous les yeux, au milieu de la mâchoire. Il remplace le pli net où la mâchoire, surtout l'enclume des gros stades, ressemblait à un coussin collé sous le visage. Bouches, barbes et sourires s'y posent, car le lancer de rayons tient compte des joues. Les bouches avancent de 0,02 à 0,05 stud.
+  - **Validation** : `validate_style.py` ignore la peau du cou cachée derrière la tête et l'ouverture de l'encolure, juste sous le menton. Résultat : 0 échec de couverture, 3 318 pièces, volumes fermés.
+  - **En attente** : importer `assets/export/characters/MogLife_Characters.fbx` (corps et garde-robe), puis activer `BodyPieces.pending.luau` et `StylePieces.pending.luau`. Rien n'est encore vérifié dans Studio.
+
 ## 2026-11-06 (Demande d'Antoine : activer les nouveaux corps, tester, ajuster habits et accessoires)
 
 - **D119 — Nouveaux corps activés dans Studio ; teinte par SurfaceAppearance ; manches, col, barbes et visages refaits sur le nouveau corps.**

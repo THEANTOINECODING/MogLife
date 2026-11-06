@@ -836,6 +836,7 @@ for i, stage in enumerate(BODY_KEYS):
     build_accessories(w, g)
     build_looks(w, stage, g)
     add_signature_details(w, g)
+    clear_chin(w, g)          # D120 : le haut descend devant, sous le menton (faces.py)
     sk = skeleton(stage)["parts"]
     manifest[stage] = {}
     for item, parts in w.items.items():

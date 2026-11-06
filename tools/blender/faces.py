@@ -20,9 +20,11 @@ def face_frame(g):
     jaw_bm = jaw_shape(*fp["jaw"])
     r = g["head_r"]
     cran_bm = ball((0, g["hy"], g["head_z"]), (r * 0.82, r * 0.95, r), 18, 14)
-    trees = (BVHTree.FromBMesh(jaw_bm), BVHTree.FromBMesh(cran_bm))
+    cheek_bm = cheek_bridge(g, fp["jaw"])             # joues de D120 : la barbe et les sourires s'y posent aussi
+    trees = (BVHTree.FromBMesh(jaw_bm), BVHTree.FromBMesh(cran_bm), BVHTree.FromBMesh(cheek_bm))
     jaw_bm.free()
     cran_bm.free()
+    cheek_bm.free()
     return fp, trees
 
 
@@ -108,6 +110,36 @@ def beard_shell(fp, grow, cut_front, cut_back):
     bmesh.ops.triangulate(bm, faces=filled["faces"])
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     return bm
+
+
+# ------------------------------------------------------------------ col des hauts (D120)
+def clear_chin(w, g):
+    """Les hauts montent avec les trapèzes, qui dépassent le menton chez les gros stades (D118) : le tissu passait
+    devant le visage, entre le crâne et la mâchoire (visage coupé en deux). Tout ce qui est porté sur le torse
+    descend devant, sous le menton. Le dos et les côtés restent hauts sur les trapèzes. C'est une déformation
+    continue de l'espace : les boutons, cols et motifs posés sur le tissu suivent."""
+    fp = face_params(g["stage"], g)
+    jaw_bm = jaw_shape(*fp["jaw"])
+    cap = min(v.co.z for v in jaw_bm.verts) - 0.03     # sous le menton
+    jaw_bm.free()
+    center, jw = fp["jaw"][:2]
+    half = max(jw / 2, g["head_r"] * 0.82) + 0.12     # largeur du visage (mâchoire ou crâne) et un peu d'air
+    for parts in w.items.values():
+        for part, objs in parts.items():
+            if not part.startswith("UpperTorso"):
+                continue
+            for obj in objs:
+                for v in obj.data.vertices:
+                    x, y, z = v.co
+                    r = math.hypot(x, y)
+                    if z <= cap or y >= 0:
+                        continue
+                    # encolure ronde : 1 devant le visage, 0 au-delà de sa largeur (le tissu reste sur les trapèzes)
+                    # et vers l'arrière (la nuque reste couverte)
+                    tx = max(0.0, min(1.0, (half - abs(x)) / (half * 0.45)))
+                    ty = max(0.0, min(1.0, y / (center[1] * 0.6)))
+                    k = tx * tx * (3 - 2 * tx) * ty * ty * (3 - 2 * ty)
+                    v.co.z = cap + (z - cap) * (1 - 0.92 * k)
 
 
 # ------------------------------------------------------------------ barbes

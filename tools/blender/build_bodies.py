@@ -446,6 +446,46 @@ def face_params(name, g):
     }
 
 
+def cheek_bridge(g, jaw, n=7, segs=28):
+    """Joues (D120) : un volume qui relie le bas du crâne au milieu de la mâchoire. Sans lui, la mâchoire (surtout
+    l'enclume des gros stades, plus large que le crâne) faisait un coussin collé sous le visage, avec un pli net.
+    Tranches qui passent de l'ovale du crâne (sous les yeux) à la coupe de la mâchoire, plus larges tôt (joue
+    pleine), sans dépasser l'avant : la bouche, les barbes et les sourires restent posés sur la mâchoire."""
+    center, w, h, d, square = jaw[:5]
+    r, hy, hz = g["head_r"], g["hy"], g["head_z"]
+    lift = 0.3
+    s = math.sqrt(1 - lift * lift) * 0.96             # coupe du crâne, un peu rentrée dans sa surface
+    top = (hy, hz - r * lift, r * 0.82 * s, r * 0.95 * s, 2.0)
+    bot = (center[1], center[2], w / 2 * 0.96, d / 2 * 0.96, 2 + square * 5)
+    bm = bmesh.new()
+    rings = []
+    for i in range(n):
+        t = i / (n - 1)
+        full = 1 - (1 - t) ** 2                       # la largeur arrive vite : joue ronde, pas un cône
+        cy = top[0] + (bot[0] - top[0]) * t
+        z = top[1] + (bot[1] - top[1]) * t
+        hx = top[2] + (bot[2] - top[2]) * full
+        hd = top[3] + (bot[3] - top[3]) * t
+        p = top[4] + (bot[4] - top[4]) * t
+        ring = []
+        for j in range(segs):
+            a = 2 * math.pi * j / segs
+            c, sn = math.cos(a), math.sin(a)
+            k = 1 / (abs(c) ** p + abs(sn) ** p) ** (1 / p)
+            ring.append(bm.verts.new((c * k * hx, cy + sn * k * hd, z)))
+        rings.append(ring)
+    for lo, hi in zip(rings, rings[1:]):
+        for j in range(segs):
+            q = (j + 1) % segs
+            bm.faces.new((lo[j], lo[q], hi[q], hi[j]))
+    for ring in (rings[0], rings[-1]):
+        cen = bm.verts.new(sum((v.co for v in ring), Vector()) / segs)
+        for j in range(segs):
+            bm.faces.new((ring[j], ring[(j + 1) % segs], cen))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return bm
+
+
 class Body:
     """Pièces d'un corps, rangées par partie du squelette."""
 
@@ -785,8 +825,11 @@ def build_body(name):
     face = face_params(name, g)
     grade = face["grade"]
     jaw_bm = jaw_shape(*face["jaw"])
-    face_tree = (BVHTree.FromBMesh(jaw_bm), cran_tree)    # surface du visage = mâchoire + crâne
+    cheek_bm = cheek_bridge(g, face["jaw"])
+    # surface du visage = mâchoire + joues + crâne
+    face_tree = (BVHTree.FromBMesh(jaw_bm), BVHTree.FromBMesh(cheek_bm), cran_tree)
     body.make("Head", jaw_bm, "skin", front_cell="face")
+    body.make("Head", cheek_bm, "skin", front_cell="face")
     if not fem and grade >= 0.5:                      # gros stades : arcade sourcilière de brute
         body.make("Head", ball((0, hy - head_r * 0.8, head_z + head_r * 0.27),
                                (head_r * 0.66, head_r * 0.12 * grade, head_r * 0.09), 16, 8), "skin")
