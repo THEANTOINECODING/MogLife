@@ -2,6 +2,17 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-06 (Demande d'Antoine : sac de boosts, repas animé, garde-robe refaite)
+
+- **D114 — Les boosts se rangent dans un sac et se mangent un à la fois, avec une petite animation ; accessoires, coupes et habits refaits.**
+  - **Sac à en-cas** (`BoostService`, `BoostController`, `Balance.BoostShop`) : acheter un boost ne l'active plus, il va dans le sac (`BoostStock`, sauvegardé), 10 au plus par en-cas ❓. Le badge du boost (en haut) devient un bouton « 🍱 Snacks xN » qui ouvre le sac (touche F, croix bas de la manette, B ferme) ; chaque en-cas a son bouton « Eat ». **Un seul boost à la fois** : manger pendant qu'un boost agit est refusé (« One boost at a time! »), comme pendant une série, une aide ou un combat. Avant : acheter prolongeait ou remplaçait le boost en cours (règle `MinExtension` retirée). Les shakes des événements donnent toujours leur boost tout de suite.
+  - **Repas animé** (`SnackController`, remote `BoostEaten`, vu par les joueurs proches) : 1,4 s, l'en-cas apparaît dans la main (shaker rose, jus vert, steak à os, assiette d'œufs dorés, modèles faits en pièces Roblox, sans texte), le bras le porte à la bouche, deux bouchées (une gorgée pour les boissons) avec miettes, puis l'en-cas disparaît dans un éclat. Sons de la bibliothèque Roblox : croquant, gorgée, carillon (`Sounds.luau`), volumes ❓ (pas écoutés).
+  - **Accessoires refaits au complet** (`tools/blender/accessories.py`) : posés sur la vraie surface du corps (lancer de rayons), plus de pièces qui flottent : bandeau en éponge noué, poignets rayés, lunettes à disques de fonte, sac-shaker gradué à bretelles et boucles, chaîne cubaine à pendentif haltère, médaille sur ruban bicolore, sifflet sur cordon, chaussettes rayées, éventail royal à couronne.
+  - **Coupes refaites** (`tools/blender/hair.py`) : calotte ajustée au vrai crâne (le visage reste dégagé) et mèches à facettes qui dessinent la silhouette de face comme de dos ; banane et pompadour en volume posé sur la tête.
+  - **Habits refaits** (`tools/blender/clothes.py`) : coques mesurées sur le corps de chaque stade (même méthode que les ensembles), emmanchures et encolures découpées, ourlets, poignets, ceintures et cols qui suivent le tissu, boutons, poche, boucle et cordons posés dessus ; manches qui couvrent le deltoïde, tissu qui monte avec les trapèzes des gros stades. Les barres dorées en travers sont supprimées ; l'haltère du débardeur MOG est en relief (dessiné dans la texture, il se lisait comme une lettre).
+  - Chaque objet garde exactement ses pièces : `validate_style.py` passe (14 corps, 74 articles, 3 318 pièces, 0 défaut de couverture, volumes fermés). Habits : 900 à 3 700 triangles par article (avant ≈ 400 à 1 000) ; total par corps +1,5 %.
+  - **Pas encore vérifié dans Studio** : il faut importer `assets/export/characters/MogLife_Wardrobe.fbx`, lancer `tools/install_characters.luau`, puis activer `StylePieces.pending.luau`. Le sac et le repas n'ont pas pu être testés : Rojo n'était pas connecté à Studio.
+
 ## 2026-11-06 (Nuit autonome : suite choisie par Antoine en D111 — choix de détail PROVISOIRES, à valider)
 
 - **D113 — Robustesse technique et « tout terrain » (demande d'Antoine : protections, garde-fous, fluidité, téléphone, iPad, PC, console).**
