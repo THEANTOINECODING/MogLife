@@ -17,6 +17,15 @@ Ce document prépare l'étape 8 de `07_ROADMAP.md`. Les cibles de temps sont des
 4. Refaire les vérifications techniques de `08_TESTS_ET_MESURES.md` : cadence serveur, prérequis et distances, achats et récompenses uniques, sauvegarde après reconnexion, tous les corps et habits, absence de mode Auto, français et allemand. Tout ce qui n'est pas essayé reste « non vérifié ».
 5. Décider comment relever les mesures pendant l'alpha. L'instrumentation prévue par `08_TESTS_ET_MESURES.md` manque actuellement dans le code. En attendant, utiliser la fiche ci-dessous et noter l'heure des étapes, sans supposer que les tableaux Roblox contiennent déjà ces événements.
 
+6. **Ajouts du 06/11 (D112, D113), non vérifiés en conditions réelles :**
+   - Avec 2 clients : visiter la maison de l'autre, attendre 6 s, « ❤ Like » ; +40 Cash et le compteur sur le panneau du propriétaire ; un 2e « J'aime » refusé ; bouton « Visit » du classement. La logique est couverte par `tools/test_house_likes.luau` (9 vérifications, faux joueurs).
+   - Habitants : bulle de compliment en passant, dress code annoncé, pourboire et bonus en fin d'aide réelle (trois messages à la suite).
+   - Luxe : traînée, aura et entrée vues **par l'autre client** ; réglage « Outfit effects » qui les coupe ; lisibilité et FPS sur téléphone avec plusieurs auras.
+   - Manette (Xbox ou manette sur PC) : ouvrir le menu (Select / Vue), naviguer dans chaque fenêtre à la croix, A pour valider, B pour fermer ; vérifier que A reste au mini-jeu quand aucune fenêtre n'est ouverte ; passer une cinématique.
+   - Téléphone en paysage : fenêtre des meubles, du bus, défi de boss, résultat de duel, fin de série entièrement visibles.
+   - Se réinitialiser pendant un Mog-off à enjeu : défaite annoncée (perte de Cash et de Mog) au lieu d'un abandon gratuit.
+   - Régler « Max Players » à 20 dans le Creator Hub (20 maisons).
+
 ## Fiche à remplir pour chaque testeur
 
 Conserver un identifiant de testeur sans son nom réel. Noter appareil, type de commandes, langue du compte et date. Pour chaque étape, relever l'heure depuis l'entrée en jeu : premier Mog, première aide, premier Cash, premier look essayé et acheté, premier boss tenté et battu, chaque nouveau stade. Noter aussi les mini-jeux joués en auto, les échecs de boss, les achats, les bugs, les coupures de texte et les FPS observés.
