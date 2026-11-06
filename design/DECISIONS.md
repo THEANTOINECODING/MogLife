@@ -2,6 +2,15 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-06 (Demande d'Antoine : trapèzes plus naturels)
+
+- **D118 — Trapèzes en une seule nappe de muscle, de la nuque aux épaules.** Raison : aux gros stades, les deux tubes de trapèzes formaient deux blocs hors du corps de chaque côté de la tête.
+  - La nappe est continue au milieu et passe derrière le cou, avec une coupe ovale plus épaisse dans le dos. Ses bouts finissent dans les deltoïdes.
+  - Le dessus descend en pente douce et bombée du cou vers l'épaule, sans bosse ; l'avant est plus bas pour dégager le menton. La boule de nuque est supprimée.
+  - Même hauteur qu'avant au cou et à l'épaule : l'énormité reste au GOD MOGGER.
+  - Les bretelles se posent sur le même profil (`trap_profile` dans `tools/blender/build_bodies.py`).
+  - Validation OK : 14 corps, 74 articles, 0 défaut de couverture. Toujours en attente d'import dans Studio (D115).
+
 ## 2026-11-06 (Demande d'Antoine : Bro moins musclé, têtes refaites qui évoluent)
 
 - **D117 — Bro ramené à un vrai palier ; mâchoires et bouches sculptées qui évoluent avec le stade.** Raison : le Bro ressemblait trop au Chad, et les bouches et mâchoires (blocs arrondis) manquaient de qualité.

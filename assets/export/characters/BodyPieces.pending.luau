@@ -88,7 +88,7 @@ return {
 		RightUpperLeg = Vector3.new(-0, 0.029, -0.03),
 		RightUpperLeg_Shorts = Vector3.new(-0, 0.274, 0),
 		UpperTorso = Vector3.new(-0, 0.1, 0.007),
-		UpperTorso_Top = Vector3.new(-0, -0.027, -0.023),
+		UpperTorso_Top = Vector3.new(-0, -0.028, -0.023),
 	},
 	GymRatF = {
 		Head = Vector3.new(-0, 0.06, -0.104),
@@ -116,7 +116,7 @@ return {
 		RightUpperLeg = Vector3.new(0, 0.034, -0.035),
 		RightUpperLeg_Shorts = Vector3.new(0, 0.266, 0),
 		UpperTorso = Vector3.new(-0, 0.083, 0.007),
-		UpperTorso_Top = Vector3.new(-0, -0.05, -0.056),
+		UpperTorso_Top = Vector3.new(-0, -0.051, -0.055),
 	},
 	Bro = {
 		Head = Vector3.new(-0, 0.009, -0.149),
@@ -254,7 +254,7 @@ return {
 		RightUpperArm = Vector3.new(-0.114, 0.098, -0.056),
 		RightUpperLeg = Vector3.new(0, 0.048, -0.052),
 		RightUpperLeg_Shorts = Vector3.new(0, 0.307, 0),
-		UpperTorso = Vector3.new(-0, 0.138, -0.098),
+		UpperTorso = Vector3.new(-0, 0.138, -0.107),
 	},
 	ChadF = {
 		Head = Vector3.new(-0, -0.011, -0.139),
@@ -282,7 +282,7 @@ return {
 		RightUpperLeg = Vector3.new(-0, 0.058, -0.06),
 		RightUpperLeg_Shorts = Vector3.new(-0, 0.299, 0),
 		UpperTorso = Vector3.new(-0, 0.105, 0.011),
-		UpperTorso_Top = Vector3.new(-0, 0.501, -0.067),
+		UpperTorso_Top = Vector3.new(-0, 0.502, -0.067),
 	},
 	Gigachad = {
 		Head = Vector3.new(-0, -0.067, -0.325),
@@ -337,7 +337,7 @@ return {
 		RightUpperLeg = Vector3.new(-0, 0.067, -0.069),
 		RightUpperLeg_Shorts = Vector3.new(-0, 0.308, 0),
 		UpperTorso = Vector3.new(-0, 0.117, 0.012),
-		UpperTorso_Top = Vector3.new(-0, 0.533, -0.07),
+		UpperTorso_Top = Vector3.new(-0, 0.536, -0.07),
 	},
 	GodMogger = {
 		Head = Vector3.new(-0, -0.127, -0.486),
@@ -364,7 +364,7 @@ return {
 		RightUpperArm = Vector3.new(-0.151, 0.225, -0.071),
 		RightUpperLeg = Vector3.new(0, 0.083, -0.098),
 		RightUpperLeg_Shorts = Vector3.new(-0, 0.398, 0),
-		UpperTorso = Vector3.new(-0, 0.271, -0.177),
+		UpperTorso = Vector3.new(-0, 0.295, -0.177),
 	},
 	GodMoggerF = {
 		Head = Vector3.new(-0, -0.094, -0.249),
@@ -392,6 +392,6 @@ return {
 		RightUpperLeg = Vector3.new(0, 0.102, -0.113),
 		RightUpperLeg_Shorts = Vector3.new(0, 0.384, 0),
 		UpperTorso = Vector3.new(-0, 0.16, 0.018),
-		UpperTorso_Top = Vector3.new(-0, 0.711, -0.081),
+		UpperTorso_Top = Vector3.new(-0, 0.728, -0.081),
 	},
 }

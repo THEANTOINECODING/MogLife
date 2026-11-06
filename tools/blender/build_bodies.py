@@ -267,6 +267,52 @@ def loft2(sections, sides=20):
     return bm
 
 
+def trap_profile(t, z0, zs, r0, r1, depth, trap):
+    """Trapèzes (D118) : coupe de la nappe à t = |x| / épaule (0 au cou, 1 à l'épaule). Renvoie (z du dessus, y du
+    centre, demi-épaisseur avant, demi-épaisseur arrière, demi-hauteur). Le dessus descend du cou vers l'épaule en
+    pente douce, légèrement bombée (le muscle), sans bosse au milieu."""
+    top = zs + (z0 - zs) * (1 - t ** 1.7)
+    rz = r0 * (1 - t) + r1 * t
+    ryb = (depth * 0.3 + trap * 0.1) * (1 - 0.35 * t)
+    return top, 0.1 * (1 - t) + 0.04 * t, ryb * 0.62, ryb, rz
+
+
+def trap_mantle(shx, z0, zs, r0, r1, depth, trap, sides=22, half_rings=12):
+    """Une seule nappe de muscle qui va d'une épaule à l'autre en passant derrière le cou : continue au milieu (pas
+    de pli entre deux formes) ; ses bouts finissent dans les deltoïdes. Coupe ovale, plus épaisse dans le dos."""
+    bm = bmesh.new()
+    loops = []
+    n = half_rings
+    for k in range(-n, n + 1):
+        t = abs(k) / n
+        x = shx * (k / n)
+        top, yc, ryf, ryb, rz = trap_profile(t, z0, zs, r0, r1, depth, trap)
+        shrink = 1 - 0.35 * max(0.0, (t - 0.85) / 0.15)    # le bout s'amincit dans le deltoïde
+        zc = top - rz
+        ring_v = []
+        for i in range(sides):
+            a = 2 * math.pi * i / sides
+            c, sn = math.cos(a), math.sin(a)
+            y = yc + c * (ryb if c > 0 else ryf) * shrink
+            up = sn * rz * shrink
+            if c < 0 and sn > 0:                        # l'avant descend plus bas : il dégage le menton
+                up *= 1 + 0.45 * c
+            ring_v.append(bm.verts.new((x, y, zc + up)))
+        loops.append(ring_v)
+    for lo, hi in zip(loops, loops[1:]):
+        for i in range(sides):
+            j = (i + 1) % sides
+            bm.faces.new((lo[i], lo[j], hi[j], hi[i]))
+    for ring, sx in ((loops[0], -1), (loops[-1], 1)):
+        cen = sum((v.co for v in ring), Vector()) / sides
+        tip = bm.verts.new(cen + Vector((sx * r1 * 0.3, 0, 0)))
+        for i in range(sides):
+            j = (i + 1) % sides
+            bm.faces.new((ring[i], ring[j], tip))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return bm
+
+
 def section_at(sections, z):
     """(rx, ry_avant, ry_arrière) du tronc loft2 à la hauteur z (interpolation entre deux tranches)."""
     if z <= sections[0][0]:
@@ -592,6 +638,10 @@ def build_body(name):
                 thick = (pec * 0.7 + 0.06) * min(1.0, 0.4 + 0.6 * defn)
                 body.make("UpperTorso", pec_slab((x, front_y(S, x, z) + thick * 0.12, z), cw * 0.44, h * 0.17 + pec * 0.07,
                                                  thick, sx), "skin")
+        shx = abs(J["LeftShoulder"].x)
+        tp = (neck.z + 0.05 + trap * 0.12 + neck_r * 0.7 + trap * 0.1,      # dessus au cou
+              J["LeftShoulder"].z + 0.02 + cfg["delt"] * 0.45 * 0.8,         # dessus à l'épaule
+              neck_r * 0.7 + trap * 0.1, cfg["delt"] * 0.45, depth, trap)
         # Haut de départ : coque juste au-dessus de la peau (débardeur ou brassière), avec bretelles
         if clothed:
             ease = 0.03
@@ -629,11 +679,8 @@ def build_body(name):
                 zf = z_hi - 0.02
                 a = Vector((x, front_y(S, x, zf) - ease, zf))
                 # Le haut de la bretelle se pose sur le trapèze (au lieu de flotter en anse au-dessus)
-                shx = abs(J["LeftShoulder"].x)
-                tt = min(1.0, max(0.0, (abs(x) - shx * 0.25) / (shx * 0.75)))
-                axis_z = (neck.z + 0.05 + trap * 0.12) * (1 - tt) + (J["LeftShoulder"].z + 0.02) * tt
-                r_tr = (neck_r * 0.7 + trap * 0.1) * (1 - tt) + (0.12 + trap * 0.32) * tt
-                b = Vector((x * 1.02, 0.05, axis_z + r_tr * 0.9 + strap_pad))
+                top_z, yc_t = trap_profile(min(1.0, abs(x) / shx), *tp)[:2]
+                b = Vector((x * 1.02, yc_t, top_z + strap_pad))
                 rx_f, _, ryb_f = section_at(S, zf)
                 c = Vector((x, ryb_f * math.sqrt(max(0.0, 1 - (x / rx_f) ** 2)) + ease, zf))
                 strap_r = 0.035 + cw * (0.04 if top == "tank" else 0.03)
@@ -641,15 +688,8 @@ def build_body(name):
                           "top")
                 body.make("UpperTorso", spindle(tuple(b), tuple(c), strap_r, strap_r, strap_r, sides=10, rings=2, cap=0.5),
                           "top")
-        # Trapèzes : de la nuque vers les épaules (ils grossissent beaucoup)
-        for side in ("Left", "Right"):
-            sh = J[side + "Shoulder"]
-            body.make("UpperTorso", spindle((sh.x * 0.25, 0.08, neck.z + 0.05 + trap * 0.12), (sh.x, 0.04, sh.z + 0.02),
-                                            neck_r * 0.7 + trap * 0.1, 0.12 + trap * 0.32, cfg["delt"] * 0.45, cap=0.05),
-                      "skin")
-        if trap > 0.6:
-            body.make("UpperTorso", ball((0, 0.25, neck.z), (neck_r + trap * 0.3, 0.2 + trap * 0.2, 0.15 + trap * 0.22)),
-                      "skin")
+        # Trapèzes (D118) : une seule nappe de la nuque aux épaules, qui grossit énormément mais reste dans le corps
+        body.make("UpperTorso", trap_mantle(shx, *tp), "skin")
     # Cou (avec le torse : il ne se décroche pas quand la tête tourne)
     body.make("UpperTorso", spindle((0, 0.03, neck.z - 0.3), (0, -0.02, neck.z + 0.3), neck_r * 1.1, neck_r, neck_r * 0.92),
               "skin")
