@@ -2,6 +2,33 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-06 (Demande d'Antoine : GOD MOGGER démesuré, Normie maigre à l'extrême, anatomie)
+
+- **D116 — GOD MOGGER plus grand et plus énorme, Normie maigre à l'extrême, anatomie sculptée.**
+  - **Proportions** (`Bodies.luau`, en attente dans `assets/export/characters/Bodies.pending.luau`) :
+    - GodMogger : largeur 1,7 → 2,05, hauteur 1,3 → 1,55, profondeur 1,45 → 1,7, tête 0,9 → 0,85 (GodMoggerF : 1,75 / 1,5 / 1,6 / 0,85) ;
+    - Normie : largeur 0,5 → 0,35, hauteur 1,05 → 1,1, profondeur 0,6 → 0,5 (NormieF : 0,3 / 1,07 / 0,46).
+  - **Ça passe partout.** La plus petite porte de la carte (maison ↔ garage) fait 8,2 × 5 studs. Le GOD MOGGER mesure 7,2 studs jusqu'au haut de la tête, et son torse, qui est la partie qui touche les murs, fait 4,1 studs de large.
+    - Ses bras ne touchent pas les murs : ils peuvent traverser visuellement les cadres de porte étroits.
+  - **Squelettes calculés, pas relevés.** Ils sont calculés par `tools/derive_skeleton.py` : le squelette R15 est linéaire dans ces proportions, et recalculer deux corps connus redonne les relevés de Studio à 0,001 stud près.
+    - Les relevés d'origine restent dans `skeletons.json` (`derivedFrom`).
+    - À vérifier dans Studio après l'import.
+  - **Muscles du GOD MOGGER** : deltoïdes 0,9 → 1,3, biceps 0,85 → 1,15, poitrine 3,9 → 5 de large, trapèzes 1,35 → 1,9, cuisses 0,7 → 0,98, et une petite tête perchée au milieu.
+  - **Normie** :
+    - torse 0,4 stud de large (0,56 avant), bras de 0,044 de rayon, cuisses de 0,064 ;
+    - grosse tête sur un fil de fer.
+  - **Anatomie** (`build_bodies.py`) :
+    - torse en V sculpté : taille fine, dorsaux évasés, cage large ;
+    - pectoraux en plaque : bord bas net, ils s'amincissent vers la clavicule et remontent vers l'aisselle ;
+    - six abdos en relief ;
+    - deltoïdes en goutte ;
+    - biceps et triceps, avant-bras galbés, quadriceps (goutte au-dessus du genou et galbe extérieur), mollets à deux chefs.
+  - **Corps féminins** :
+    - poitrine modeste, sculptée dans le tissu de la brassière ou du débardeur : un galbe doux d'une seule forme, jamais deux formes séparées ni de boule (tous publics) ;
+    - hanches moins larges (×1,32 → ×1,12) : avant, elles faisaient un tutu.
+  - **Hauts de départ (débardeurs, brassières)** : ce sont maintenant des coques posées sur le torse, avec des bretelles qui suivent le trapèze.
+  - Activation inchangée (voir D115), avec en plus `Bodies.pending.luau` et `py -3 tools/gen_skeleton.py`. **Pas encore testé dans Studio.**
+
 ## 2026-11-06 (Demande d'Antoine : personnage du joueur refait, Normie « spaghetti »)
 
 - **D115 — Corps du joueur refaits : formes lisses et arrondies, Normie vraiment spaghetti.** Demande d'Antoine : « tout plus qualitatif », plus d'espaces ni de détails dérangeants, corps de base « très très fin », buste trop grand.

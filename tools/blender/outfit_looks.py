@@ -222,7 +222,7 @@ def _torso(w, body, g, cell, silhouette, name):
             if (name == "DiscoDynamo" and side == "Right") or (name == "GarageGremlin" and side == "Left"):
                 sleeve = "short"
             end = el if sleeve == "long" else sh.lerp(el, 0.59)
-            ease_arm = 0.115 if silhouette not in ("puffer", "armor") else 0.21
+            ease_arm = (0.115 if silhouette not in ("puffer", "armor") else 0.21) + cfg["bicep"] * 0.06  # D116: room for huge biceps
             profile = (lambda t: 0.045 * math.sin(math.pi * t) ** 2) if silhouette in ("bomber", "hoodie") else None
             _fitted_limb(w, body, side + "UpperArm", sh, end, cell, ease_arm, profile)
             if sleeve == "long":

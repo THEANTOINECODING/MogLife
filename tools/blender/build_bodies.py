@@ -42,13 +42,13 @@ EXPRESSIONS = ["Confident", "Nervous", "Determined"]
 SKIN = (0.93, 0.72, 0.56)
 # Muscles en studs (rayons), de plus en plus exagérés ; vêtements par défaut (la boutique les changera)
 STAGES = {
-    # Normie « spaghetti » (D55, affiné D115) : torse lofté plus étroit que la tête, épaules en cintre, bras et
-    # jambes comme des spaghettis, coudes et genoux noueux, tee et short trop larges, grosses baskets ; un petit
-    # ventre mou. Squelette très étroit (Bodies.luau).
+    # Normie « spaghetti » (D55, affiné D115 et D116) : maigre à l'extrême, torse lofté bien plus étroit que la
+    # tête, épaules en cintre, bras et jambes comme des spaghettis, coudes et genoux noueux, tee et short trop
+    # larges, grosses baskets ; un petit ventre mou. Squelette très étroit et un peu plus grand (Bodies.luau).
     "Normie": dict(top="tee", top_color=(0.55, 0.57, 0.6), shorts=(0.2, 0.3, 0.62), shoe=(0.95, 0.95, 0.95),
                    hair=(0.25, 0.16, 0.09), mouth="nervous", belly=0.05, knobby=True, baggy=True, spaghetti=True,
-                   delt_bridge=0.5, delt=0.085, bicep=0.062, forearm=0.056, fist=0.2, chest_w=0.56, depth=0.36,
-                   pec=0.0, lat=0.0, trap=0.0, neck=0.08, thigh=0.092, calf=0.07, head_r=0.72, jaw_w=0.52, jaw_h=0.34,
+                   delt_bridge=0.5, delt=0.062, bicep=0.044, forearm=0.04, fist=0.17, chest_w=0.4, depth=0.27,
+                   pec=0.0, lat=0.0, trap=0.0, neck=0.06, thigh=0.064, calf=0.05, head_r=0.72, jaw_w=0.52, jaw_h=0.34,
                    jaw_fwd=0.0, eye_r=0.16),
     "GymRat": dict(top="tank", top_color=(0.86, 0.22, 0.22), shorts=(0.15, 0.15, 0.2), shoe=(0.95, 0.95, 0.95),
                    hair=(0.25, 0.16, 0.09), mouth="grin",
@@ -73,9 +73,11 @@ STAGES = {
                      eye_r=0.15),
     "GodMogger": dict(top="none", shorts=(0.95, 0.95, 0.93), shoe=(0.85, 0.68, 0.18), hair=(0.95, 0.85, 0.5),
                       iris=(0.75, 0.6, 0.1), mouth="smug", stubble=True, cleft=True, veins=True, glow=True,
-                      delt=0.9, bicep=0.85, forearm=0.52, fist=0.52, chest_w=3.9, depth=1.55, pec=0.75, lat=0.9,
-                      trap=1.35, neck=0.58, thigh=0.7, calf=0.4, head_r=0.56, jaw_w=1.18, jaw_h=0.7, jaw_fwd=0.4,
-                      eye_r=0.15),
+                      # Démesuré (D116) : squelette plus grand et plus large, muscles qui débordent de partout,
+                      # petite tête perchée sur des trapèzes énormes
+                      delt=1.3, bicep=1.15, forearm=0.75, fist=0.66, chest_w=5.0, depth=2.0, pec=1.05, lat=1.3,
+                      trap=1.9, neck=0.8, thigh=0.98, calf=0.6, head_r=0.5, jaw_w=1.3, jaw_h=0.74, jaw_fwd=0.45,
+                      eye_r=0.14),
 }
 
 
@@ -92,7 +94,7 @@ def feminine(cfg):
     f = dict(cfg)
     f.update(
         fem=True, stubble=False, cleft=False,
-        hips=1.32, waist=0.7, glutes=True,
+        hips=1.12, waist=0.7, glutes=True,
         delt=cfg["delt"] * 0.85, bicep=cfg["bicep"] * 0.8, forearm=cfg["forearm"] * 0.78, fist=cfg["fist"] * 0.8,
         thigh=cfg["thigh"] * 1.15, calf=cfg["calf"] * 1.02,
         trap=cfg["trap"] * 0.35, neck=cfg["neck"] * 0.72, lat=0.0, pec=cfg["pec"] * 0.4,
@@ -231,6 +233,72 @@ def loft(sections, sides=16):
     return bm
 
 
+def loft2(sections, sides=20):
+    """Tronc à sections ovales asymétriques : [(z, rx, ry_avant, ry_arrière)] de bas en haut (avant = -y). Pour un
+    torse en V : poitrine bombée devant, dos large, taille fine."""
+    bm = bmesh.new()
+    loops = []
+    for z, rx, ryf, ryb in sections:
+        ring_v = []
+        for i in range(sides):
+            a = 2 * math.pi * i / sides
+            s = math.sin(a)
+            ring_v.append(bm.verts.new((math.cos(a) * rx, s * (ryb if s > 0 else ryf), z)))
+        loops.append(ring_v)
+    for lo, hi in zip(loops, loops[1:]):
+        for i in range(sides):
+            j = (i + 1) % sides
+            bm.faces.new((lo[i], lo[j], hi[j], hi[i]))
+    z0, rx0, f0, b0 = sections[0]
+    z1, rx1, f1, b1 = sections[-1]
+    bottom = bm.verts.new((0, (b0 - f0) / 2, z0 - min(rx0, f0, b0) * 0.35))
+    top = bm.verts.new((0, (b1 - f1) / 2, z1 + min(rx1, f1, b1) * 0.35))
+    for i in range(sides):
+        j = (i + 1) % sides
+        bm.faces.new((loops[0][j], loops[0][i], bottom))
+        bm.faces.new((loops[-1][i], loops[-1][j], top))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return bm
+
+
+def section_at(sections, z):
+    """(rx, ry_avant, ry_arrière) du tronc loft2 à la hauteur z (interpolation entre deux tranches)."""
+    if z <= sections[0][0]:
+        return sections[0][1:]
+    for lo, hi in zip(sections, sections[1:]):
+        if lo[0] <= z <= hi[0]:
+            t = (z - lo[0]) / max(hi[0] - lo[0], 1e-6)
+            return tuple(a + (b - a) * t for a, b in zip(lo[1:], hi[1:]))
+    return sections[-1][1:]
+
+
+def front_y(sections, x, z):
+    """Surface avant du tronc (y, négatif) à la position x, hauteur z."""
+    rx, ryf, _ = section_at(sections, z)
+    return -ryf * math.sqrt(max(0.0, 1 - (x / rx) ** 2)) if rx > 0 else 0.0
+
+
+def pec_slab(center, width, height, thick, sx):
+    """Pectoral anatomique : plaque épaisse posée sur la cage, bord inférieur net et bombé, qui s'amincit vers la
+    clavicule et remonte vers l'aisselle (pas une boule)."""
+    bm = bmesh.new()
+    bmesh.ops.create_uvsphere(bm, u_segments=18, v_segments=12, radius=1.0)
+    for v in bm.verts:
+        x, y, z = v.co
+        if y > 0:
+            y *= 0.25                                # dos plat, collé à la cage
+        else:
+            y *= 0.55 + 0.5 * max(0.0, -z) + 0.25 * (1 - abs(z))   # plus épais en bas : la masse tombe
+        z = z * (0.75 if z < 0 else 1.25)             # bord bas court et rond, haut qui s'étire vers la clavicule
+        out = x * sx                                  # côté aisselle : remonte et s'affine
+        z += max(0.0, out) * 0.35
+        if out > 0:
+            y *= 1 - out * 0.75
+        v.co = Vector((center[0] + x * width, center[1] + y * thick, center[2] + z * height))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return bm
+
+
 class Body:
     """Pièces d'un corps, rangées par partie du squelette."""
 
@@ -350,12 +418,24 @@ def build_body(name):
         # Mollet (renflé derrière), genou, cuisse : les bouts en dôme se fondent l'un dans l'autre
         body.make(side + "LowerLeg", spindle((x, 0, ankle.z), (x, 0, knee.z), calf * 0.58, calf, calf * 0.78, mid_t=0.62,
                                              bulge_dir=(0, 1, 0), bulge=calf * 0.25), "skin")
-        knee_r = max(calf * 0.8, 0.085) if cfg.get("knobby") else calf * 0.8    # genoux noueux du Normie
+        knee_r = max(calf * 0.8, 0.068) if cfg.get("knobby") else calf * 0.8    # genoux noueux du Normie
         body.make(side + "LowerLeg", ball((x, -0.02, knee.z), (knee_r, knee_r * 0.96, knee_r * 0.92), 12, 8), "skin")
         body.make(side + "UpperLeg", spindle((x, 0, knee.z), (x, 0, hip.z), calf * 0.8, thigh, thigh * 0.95,
                                              bulge_dir=(0, -1, 0), bulge=thigh * 0.15, cap=0.3), "skin")
+        lx = 1 if x > 0 else -1
+        if thigh > 0.2:
+            tl = hip.z - knee.z
+            body.make(side + "UpperLeg", ball((x - lx * thigh * 0.42, -thigh * 0.22, knee.z + tl * 0.22),
+                                              (thigh * 0.5, thigh * 0.5, tl * 0.2), 12, 10), "skin")
+            body.make(side + "UpperLeg", ball((x + lx * thigh * 0.36, -thigh * 0.08, knee.z + tl * 0.52),
+                                              (thigh * 0.6, thigh * 0.62, tl * 0.36), 12, 10), "skin")
+        if calf > 0.15:
+            ll = knee.z - ankle.z
+            for k in (-1, 1):
+                body.make(side + "LowerLeg", ball((x + k * calf * 0.3, calf * 0.32, ankle.z + ll * (0.68 if k > 0 else 0.64)),
+                                                  (calf * 0.56, calf * 0.58, ll * 0.2), 12, 10), "skin")
         # Jambe de short : tube un peu évasé, ourlet net (la jambe passe dedans)
-        sh_r = max(thigh * 1.14, 0.17) if cfg.get("baggy") else thigh * 1.14
+        sh_r = max(thigh * 1.14, 0.15) if cfg.get("baggy") else thigh * (1.3 if fem else 1.14)
         body.make(side + "UpperLeg", spindle((x, 0, hip.z - (hip.z - knee.z) * 0.45), (x, 0, hip.z + 0.08),
                                              sh_r * 1.06, sh_r, sh_r * 0.95, sides=14, rings=3, cap=0.12), "shorts")
 
@@ -363,7 +443,9 @@ def build_body(name):
     root = J["Root"]
     hip_w = g["hip_w"]
     depth = cfg["depth"]
-    body.make("LowerTorso", ball((0, 0.02, root.z + 0.1), (hip_w * 0.5, max(depth * 0.45, 0.2), 0.38)), "shorts")
+    # Corps féminins : bassin plus haut qui descend dans les cuisses (sinon les hanches larges font un tutu)
+    pz, prz = (root.z + 0.06, 0.42 + thigh * 0.12) if fem else (root.z + 0.1, 0.38)
+    body.make("LowerTorso", ball((0, 0.02, pz), (hip_w * 0.5, max(depth * 0.45, 0.2), prz)), "shorts")
     if cfg.get("glutes"):
         body.make("LowerTorso", ball((0, max(depth * 0.18, 0.07), root.z), (hip_w * 0.46, max(depth * 0.4, 0.18), 0.36)),
                   "shorts")
@@ -387,39 +469,100 @@ def build_body(name):
                                             start_r, start_r * 0.95, start_r * 0.9, sides=14, rings=3, cap=0.3),
                       trunk)
     else:
-        waist_w = g["waist_w"]
-        belly = cfg.get("belly", 0)
-        # Brassière de sport (corps féminins aux stades torse nu) : couvre la poitrine, le ventre reste nu (abdos)
-        sports = top == "sports"
-        belly_depth = depth * (0.36 if fem else 0.45) + belly
-        body.make("UpperTorso", ball((0, -belly, waist.z + h * 0.32), (waist_w / 2, belly_depth, h * 0.42)),
-                  "skin" if sports else trunk, front_cell="abs" if (sports or not clothed) else "top_front")
-        # Habillé : une seule poitrine large et bombée (deux sphères sous un tissu se liraient comme une poitrine)
-        chest_depth = depth * 0.55 + (cfg["pec"] * 0.45 if clothed else 0)
-        rib_w = chest_w * (0.86 if fem else 1.0)
-        # Corps féminins : cage plus haute et plus courte, pour que la taille se voie entre la poitrine et les hanches
-        rib_z, rib_h = (neck.z - h * 0.3, h * 0.36) if fem else (neck.z - h * 0.36, h * 0.44)
-        body.make("UpperTorso", ball((0, 0.02 - (cfg["pec"] * 0.2 if clothed else 0), rib_z),
-                                     (rib_w / 2, chest_depth, rib_h), 16, 12),
-                  trunk, front_cell="top_front" if clothed else "chest")
-        if fem:
-            bust = cfg["bust"]
-            body.make("UpperTorso", ball((0, -chest_depth * 0.55, neck.z - h * 0.36),
-                                         (rib_w * 0.34, chest_depth * 0.45 + bust, h * 0.19), 14, 8),
-                      "top", front_cell="top_front")
-        for sx in (-1, 1):
-            if cfg["lat"] > 0:
-                body.make("UpperTorso", ball((chest_w * 0.38 * sx, 0.1, neck.z - h * 0.45),
-                                             (cfg["lat"], depth * 0.38, h * 0.32)), trunk)
-            if cfg["pec"] > 0 and not clothed:
-                pec = cfg["pec"]
-                body.make("UpperTorso", ball((chest_w * 0.2 * sx, -depth * 0.47, neck.z - h * 0.24),
-                                             (pec, pec * 0.42, pec * 0.62)), "chest")
+        # Torse en V sculpté (D116) : taille fine, dorsaux qui s'évasent, cage large ; pectoraux, abdos et trapèzes
+        # posés dessus comme de vrais muscles (fini les boules empilées)
+        cw = chest_w / 2
+        d = depth
+        lat = cfg["lat"]
+        hipx = abs(J["LeftHip"].x)
+        waist_half = max(hipx + thigh * (0.3 if fem else 0.55), cw * (0.42 if fem else 0.5))
+        rib = cw * (0.88 if fem else 1.0)
+        S = [
+            (waist.z - 0.15, waist_half * 1.03, d * 0.4, d * 0.42),
+            (waist.z + h * 0.12, waist_half * 0.97, d * 0.39, d * 0.4),
+            (waist.z + h * 0.32, waist_half + (rib - waist_half) * 0.35, d * 0.42, d * 0.43),
+            (waist.z + h * 0.52, rib * 0.9 + lat * 0.12, d * 0.45, d * 0.47),
+            (waist.z + h * 0.7, rib + lat * 0.06, d * 0.47, d * 0.49),
+            # Haut des épaules arrondi en plusieurs tranches (un coude net se verrait et percerait les hauts)
+            (neck.z - h * 0.18, rib * 0.96, d * 0.45, d * 0.47),
+            (neck.z - h * 0.1, rib * 0.86, d * 0.4, d * 0.45),
+            (neck.z - h * 0.04, rib * 0.7, d * 0.33, d * 0.42),
+            (neck.z, rib * 0.5, d * 0.26, d * 0.36),
+            (neck.z + 0.05, neck_r * 1.5, neck_r * 1.15, neck_r * 1.35),
+        ]
+        body.make("UpperTorso", loft2(S, 22), "skin")
+        # Abdos en relief (6 plaquettes) et pectoraux, quand ils se voient
+        abs_on = top in ("none", "sports")
+        if abs_on:
+            ab_d = 0.035 + cfg["pec"] * 0.06
+            for row in range(3):
+                z = waist.z + h * (0.1 + row * 0.15)
+                for sx in (-1, 1):
+                    x = sx * (waist_half * 0.17 + 0.01)
+                    pw = waist_half * 0.19
+                    body.make("UpperTorso", ball((x, front_y(S, x, z) + ab_d * 0.45, z), (pw, ab_d, h * 0.068), 12, 8),
+                              "skin")
+        pec = cfg["pec"]
+        if not fem and not clothed and pec > 0:
+            for sx in (-1, 1):
+                x = sx * cw * 0.43
+                z = neck.z - h * 0.3
+                thick = pec * 0.7 + 0.06
+                body.make("UpperTorso", pec_slab((x, front_y(S, x, z) + thick * 0.12, z), cw * 0.44, h * 0.17 + pec * 0.07,
+                                                 thick, sx), "skin")
+        # Haut de départ : coque juste au-dessus de la peau (débardeur ou brassière), avec bretelles
+        if clothed:
+            ease = 0.03
+            strap_pad = 0.01
+            bust = cfg.get("bust", 0) if fem else 0.0
+            z_lo = waist.z - 0.17 if top == "tank" else neck.z - h * 0.52
+            z_hi = neck.z - h * 0.12
+            n = 12 if top == "tank" else 8
+            shell = []
+            for i in range(n):
+                z = z_lo + (z_hi - z_lo) * i / (n - 1)
+                rx, ryf, ryb = section_at(S, z)
+                shell.append((z, rx + ease, ryf + ease, ryb + ease))
+            shell_bm = loft2(shell, 28)
+            if fem:
+                # Poitrine modeste sculptée dans le tissu même : un galbe doux d'une seule forme, sans raccord
+                # (tous publics : jamais deux formes séparées)
+                zb, wx, wz = neck.z - h * 0.36, cw * 0.62, h * 0.17
+                lift = bust * 0.9 + 0.03
+                for v in shell_bm.verts:
+                    if v.co.y < 0:
+                        v.co.y -= lift * math.exp(-(v.co.x / wx) ** 2 - ((v.co.z - zb) / wz) ** 2)
+                shell_bm.normal_update()
+            body.make("UpperTorso", shell_bm, "top", front_cell="top_front")
+            # Sous le tissu du débardeur : les pectoraux
+            for sx in (-1, 1):
+                if not fem and pec > 0:
+                    x, z = sx * cw * 0.43, neck.z - h * 0.3
+                    thick = pec * 0.5 + 0.05
+                    body.make("UpperTorso", pec_slab((x, front_y(shell, x, z) + thick * 0.15, z), cw * 0.48,
+                                                     h * 0.17 + pec * 0.06, thick, sx), "top", front_cell="top_front")
+            for sx in (-1, 1):                        # bretelles qui passent sur l'épaule
+                x = sx * cw * (0.36 if top == "tank" else 0.3)
+                zf = z_hi - 0.02
+                a = Vector((x, front_y(S, x, zf) - ease, zf))
+                # Le haut de la bretelle se pose sur le trapèze (au lieu de flotter en anse au-dessus)
+                shx = abs(J["LeftShoulder"].x)
+                tt = min(1.0, max(0.0, (abs(x) - shx * 0.25) / (shx * 0.75)))
+                axis_z = (neck.z + 0.05 + trap * 0.12) * (1 - tt) + (J["LeftShoulder"].z + 0.02) * tt
+                r_tr = (neck_r * 0.7 + trap * 0.1) * (1 - tt) + (0.12 + trap * 0.32) * tt
+                b = Vector((x * 1.02, 0.05, axis_z + r_tr * 0.9 + strap_pad))
+                rx_f, _, ryb_f = section_at(S, zf)
+                c = Vector((x, ryb_f * math.sqrt(max(0.0, 1 - (x / rx_f) ** 2)) + ease, zf))
+                strap_r = 0.035 + cw * (0.04 if top == "tank" else 0.03)
+                body.make("UpperTorso", spindle(tuple(a), tuple(b), strap_r, strap_r, strap_r, sides=10, rings=2, cap=0.5),
+                          "top")
+                body.make("UpperTorso", spindle(tuple(b), tuple(c), strap_r, strap_r, strap_r, sides=10, rings=2, cap=0.5),
+                          "top")
         # Trapèzes : de la nuque vers les épaules (ils grossissent beaucoup)
         for side in ("Left", "Right"):
             sh = J[side + "Shoulder"]
             body.make("UpperTorso", spindle((sh.x * 0.25, 0.08, neck.z + 0.05 + trap * 0.12), (sh.x, 0.04, sh.z + 0.02),
-                                            neck_r * 0.7 + trap * 0.1, 0.12 + trap * 0.32, cfg["delt"] * 0.6, cap=0.05),
+                                            neck_r * 0.7 + trap * 0.1, 0.12 + trap * 0.32, cfg["delt"] * 0.45, cap=0.05),
                       "skin")
         if trap > 0.6:
             body.make("UpperTorso", ball((0, 0.25, neck.z), (neck_r + trap * 0.3, 0.2 + trap * 0.2, 0.15 + trap * 0.22)),
@@ -448,12 +591,25 @@ def build_body(name):
         else:
             # Deltoïde : fait le pont entre le torse et le bras, quelle que soit la largeur du squelette
             delt_r = max(delt, abs(el.x - sh.x) * cfg.get("delt_bridge", 0.75))
-            body.make(side + "UpperArm", ball((sh.x * 0.4 + el.x * 0.6, 0, sh.z - 0.08), (delt_r, delt * 0.95, delt * 0.9)),
-                      "skin")
+            arm_len = sh.z - el.z
+            top_p = Vector((sh.x * 0.45 + el.x * 0.55, 0, sh.z - delt * 0.1))
+            tip = Vector((el.x + sx * delt * 0.12, -0.01, sh.z - arm_len * 0.58))
+            body.make(side + "UpperArm", spindle(tuple(tip), tuple(top_p), delt_r * 0.42, delt_r * 0.98, delt_r * 0.9,
+                                                 sides=16, rings=6, mid_t=0.62, cap=0.75), "skin")
         body.make(side + "UpperArm", spindle(tuple(arm_top), tuple(el), delt * 0.62, bicep, forearm * 0.95,
                                              bulge_dir=(0, -1, 0), bulge=bicep * 0.25), veiny)
         body.make(side + "LowerArm", spindle(tuple(el), tuple(wr), forearm * 0.88, forearm, forearm * 0.62, mid_t=0.3),
                   veiny)
+        if bicep > 0.15:
+            arm_len = arm_top.z - el.z
+            body.make(side + "UpperArm", ball(tuple(arm_top.lerp(el, 0.56) + Vector((0, -bicep * 0.42, 0))),
+                                              (bicep * 0.8, bicep * 0.72, arm_len * 0.3), 14, 10), veiny)
+            body.make(side + "UpperArm", ball(tuple(arm_top.lerp(el, 0.38) + Vector((sx * bicep * 0.12, bicep * 0.4, 0))),
+                                              (bicep * 0.82, bicep * 0.68, arm_len * 0.36), 14, 10), veiny)
+        if forearm > 0.12:
+            fa_len = el.z - wr.z
+            body.make(side + "LowerArm", ball(tuple(el.lerp(wr, 0.24) + Vector((sx * forearm * 0.28, -forearm * 0.18, 0))),
+                                              (forearm * 0.74, forearm * 0.74, fa_len * 0.26), 12, 10), veiny)
         if cfg.get("knobby"):                         # coudes noueux
             body.make(side + "LowerArm", ball(tuple(el + Vector((0, 0.01, 0))), (forearm * 1.18, forearm * 1.15, forearm * 1.1),
                                               12, 8), "skin")
