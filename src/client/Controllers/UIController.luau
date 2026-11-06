@@ -267,14 +267,22 @@ function UIController.Init(controllers)
 	ObjectiveController = controllers.ObjectiveController
 end
 
--- Affiche un message court au centre de l'écran.
-function UIController.Toast(text: string, duration: number?)
+-- Messages en attente : plusieurs messages arrivés ensemble (fin d'une aide : merci, dress code, pourboire)
+-- s'affichent l'un après l'autre au lieu de s'écraser. Chacun reste au moins TOAST_MIN secondes s'il en reste.
+local TOAST_MIN = 1.6
+local TOAST_QUEUE_MAX = 4
+local toastQueue: { { text: string, duration: number } } = {}
+local toastShownAt = -math.huge
+local toastPumping = false
+
+local function showToast(text: string, duration: number)
 	toastToken += 1
 	local token = toastToken
+	toastShownAt = os.clock()
 	toastLabel.Text = text
 	toastLabel.TextTransparency = 0
 	toastLabel.TextStrokeTransparency = 0.4
-	task.delay(duration or 2.5, function()
+	task.delay(duration, function()
 		if token ~= toastToken then
 			return
 		end
@@ -283,6 +291,43 @@ function UIController.Toast(text: string, duration: number?)
 			TextStrokeTransparency = 1,
 		}):Play()
 	end)
+end
+
+local function pumpToasts()
+	if toastPumping then
+		return
+	end
+	toastPumping = true
+	task.spawn(function()
+		while #toastQueue > 0 do
+			local wait = TOAST_MIN - (os.clock() - toastShownAt)
+			if wait > 0 then
+				task.wait(wait)
+			end
+			local nextToast = table.remove(toastQueue, 1)
+			if nextToast then
+				showToast(nextToast.text, nextToast.duration)
+			end
+		end
+		toastPumping = false
+	end)
+end
+
+-- Affiche un message court au centre de l'écran.
+function UIController.Toast(text: string, duration: number?)
+	-- Le même message répété (deux clics) ne s'empile pas
+	local last = toastQueue[#toastQueue]
+	if
+		(last and last.text == text)
+		or (#toastQueue == 0 and toastLabel.Text == text and toastLabel.TextTransparency < 1)
+	then
+		return
+	end
+	if #toastQueue >= TOAST_QUEUE_MAX then
+		table.remove(toastQueue, 1)
+	end
+	table.insert(toastQueue, { text = text, duration = duration or 2.5 })
+	pumpToasts()
 end
 
 -- Résout un message du serveur : { key, args }. Un argument { key = "..." } est lui-même traduit.
