@@ -128,8 +128,10 @@ return {
 	-- de triche) est exclu. Les seuils sont très larges : le jeu normal en reste loin (≈ 3 demandes par seconde).
 	Guard = {
 		Window = 5, -- secondes de la fenêtre de comptage
-		PerRemote = 200, -- demandes max sur un même remote dans la fenêtre (40 par seconde)
-		Total = 400, -- demandes max, tous remotes confondus, dans la fenêtre
+		-- Demandes max sur un même remote dans la fenêtre : 60 par seconde. Le plus rapide d'un humain : marteler FLEX
+		-- dans la finale du Dieu du Pump (appui + relâche = 2 demandes), environ 15 appuis par seconde = 30
+		PerRemote = 300,
+		Total = 500, -- demandes max, tous remotes confondus, dans la fenêtre
 	},
 
 	RemoteThrottle = {

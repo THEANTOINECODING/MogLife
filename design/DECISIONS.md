@@ -5,7 +5,7 @@ Format : date — décision — raison. La plus récente en haut.
 ## 2026-11-06 (Nuit autonome : suite choisie par Antoine en D111 — choix de détail PROVISOIRES, à valider)
 
 - **D113 — Robustesse technique et « tout terrain » (demande d'Antoine : protections, garde-fous, fluidité, téléphone, iPad, PC, console).**
-  - **Garde anti-inondation** (`GuardService`, `Balance.Guard`) : un client qui envoie plus de 200 demandes sur un même remote (ou 400 au total) en 5 s est exclu (script de triche ; le jeu normal reste vers 3 par seconde). Chaque service garde ses propres validations.
+  - **Garde anti-inondation** (`GuardService`, `Balance.Guard`) : un client qui envoie plus de 300 demandes sur un même remote (ou 500 au total) en 5 s est exclu (script de triche ; le jeu normal reste vers 3 par seconde). Chaque service garde ses propres validations.
   - **Sauvegarde protégée** : `StatsService.Add` refuse NaN et l'infini (une seule valeur invalide corromprait la sauvegarde pour toujours) ; Mog et Cash jamais sous 0.
   - **Runs jamais bloqués** (`MinigameService`) : une mort ou une réapparition arrête le run (avant : le joueur pouvait rester « occupé » pour toujours) ; un run sans répétition depuis 6 cadences + 20 s s'arrête (`Balance.RunIdle`) ; une erreur dans un service n'empêche plus la fin du mini-jeu chez le joueur.
   - **Faille corrigée** : se réinitialiser (ou s'éloigner, arrêter) en plein Mog-off à enjeu évitait la perte annoncée ; c'est maintenant une défaite (`BossService`). Quitter le jeu arrête simplement le combat (plus de données à modifier).
