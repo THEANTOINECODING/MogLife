@@ -1,5 +1,7 @@
 -- Boosts temporaires (D47) côté client : la boutique du camion à shakes / du distributeur, et un badge sous le HUD
 -- avec le boost en cours et son minuteur. Le serveur décide de tout (BoostService) ; ici, on affiche.
+-- Garde-manger (D114) : les achats vont dans le sac du joueur. Le badge (« Snacks » sans boost, minuteur pendant un
+-- boost) ouvre le sac, où l'on mange un aliment, un seul boost à la fois (touche F, croix bas de la manette).
 
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
@@ -23,12 +25,16 @@ local MinigameController
 
 local panel: Frame
 local list: ScrollingFrame
-local badge: Frame
+local badge: TextButton
 local badgeLabel: TextLabel
 local badgeBar: Frame
+local bag: Frame
+local bagList: ScrollingFrame
+local bagHint: TextLabel
 local cash = 0
 local stage = 1
 local active: { id: string?, endsAt: number } = { id = nil, endsAt = 0 }
+local stock: { [string]: number } = {}
 -- Bien reposé (D111, meubles de la maison) : un second badge sous celui du boost
 local rest = { bonus = 0, endsAt = 0, home = false }
 local restBadge: Frame
@@ -48,14 +54,51 @@ local function sortedBoosts(): { string }
 	return ids
 end
 
-local function render()
-	for _, child in list:GetChildren() do
+local function stockTotal(): number
+	local total = 0
+	for _, count in stock do
+		total += count
+	end
+	return total
+end
+
+local function boostRunning(): boolean
+	return active.id ~= nil and Boosts[active.id] ~= nil and active.endsAt > workspace:GetServerTimeNow()
+end
+
+local function clearRows(container: Instance)
+	for _, child in container:GetChildren() do
 		if child:IsA("Frame") then
 			child:Destroy()
 		end
 	end
+end
+
+-- Pastille de couleur de l'aliment, avec un texte optionnel au centre (nombre en réserve)
+local function swatch(color: Color3, text: string?, parent: Instance)
+	local dot = Ui.create("Frame", {
+		AnchorPoint = Vector2.new(0, 0.5),
+		Position = UDim2.new(0, 10, 0.5, 0),
+		Size = UDim2.fromOffset(40, 40),
+		BackgroundColor3 = color,
+		Parent = parent,
+	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 2, 0.3) })
+	if text then
+		Ui.label({ Position = UDim2.fromOffset(4, 6), Size = UDim2.new(1, -8, 1, -12), Text = text, Parent = dot })
+	end
+end
+
+local function effectText(boost): string
+	return Texts.Get("Boost.Effect", { multiplier = boost.mogMultiplier, minutes = math.ceil(boost.duration / 60) })
+end
+
+-- ------------------------------------------------------------------ boutique
+
+local function render()
+	clearRows(list)
 	for index, id in sortedBoosts() do
 		local boost = Boosts[id]
+		local owned = stock[id] or 0
 		local row = Ui.create("Frame", {
 			Name = id,
 			Size = UDim2.new(1, -12, 0, 64),
@@ -64,13 +107,7 @@ local function render()
 			LayoutOrder = index,
 			Parent = list,
 		}, { Ui.corner(UDim.new(0, 10)) })
-		Ui.create("Frame", {
-			AnchorPoint = Vector2.new(0, 0.5),
-			Position = UDim2.new(0, 10, 0.5, 0),
-			Size = UDim2.fromOffset(40, 40),
-			BackgroundColor3 = boost.color,
-			Parent = row,
-		}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 2, 0.3) })
+		swatch(boost.color, if owned > 0 then Texts.Get("Boost.Count", { count = owned }) else nil, row)
 		Ui.label({
 			Position = UDim2.fromOffset(60, 6),
 			Size = UDim2.new(1, -210, 0, 28),
@@ -83,23 +120,20 @@ local function render()
 			Size = UDim2.new(1, -210, 0, 20),
 			TextXAlignment = Enum.TextXAlignment.Left,
 			TextColor3 = Color3.fromRGB(200, 200, 210),
-			Text = Texts.Get(
-				"Boost.Effect",
-				{ multiplier = boost.mogMultiplier, minutes = math.ceil(boost.duration / 60) }
-			),
+			Text = effectText(boost),
 			Parent = row,
 		})
 		local locked = stage < boost.requiredStage
-		local price = Format.Short(boost.price)
+		local full = owned >= Balance.BoostShop.MaxStock
 		local text = if locked
 			then Texts.Get("Boost.Locked", { stage = Texts.Get(`Stage.{Stages.List[boost.requiredStage].id}`) })
-			elseif active.id == id then Texts.Get("Boost.Extend", { price = price })
-			else Texts.Get("Boost.Buy", { price = price })
+			elseif full then Texts.Get("Boost.BagFull")
+			else Texts.Get("Boost.Buy", { price = Format.Short(boost.price) })
 		local button = Ui.button({
 			AnchorPoint = Vector2.new(1, 0.5),
 			Position = UDim2.new(1, -8, 0.5, 0),
 			Size = UDim2.fromOffset(136, 46),
-			BackgroundColor3 = if locked
+			BackgroundColor3 = if locked or full
 				then Color3.fromRGB(60, 60, 60)
 				elseif cash >= boost.price then Color3.fromRGB(60, 150, 70)
 				else Color3.fromRGB(110, 50, 50),
@@ -107,7 +141,7 @@ local function render()
 			Parent = row,
 		})
 		button.Activated:Connect(function()
-			if not locked then
+			if not locked and not full then
 				Remotes.BuyBoost:FireServer(id)
 			end
 		end)
@@ -115,6 +149,7 @@ local function render()
 end
 
 local function open()
+	BoostController.CloseBag()
 	panel.Visible = true
 	MinigameController.SetGameplayLocked(true, "Boost")
 	render()
@@ -125,19 +160,114 @@ local function close()
 	MinigameController.SetGameplayLocked(false, "Boost")
 end
 
+-- ------------------------------------------------------------------ sac à repas
+
+local function renderBag()
+	clearRows(bagList)
+	local running = boostRunning()
+	bagHint.Text = if stockTotal() == 0
+		then Texts.Get("Boost.BagEmpty")
+		elseif running then Texts.Get("Boost.OneAtATime", { boost = Texts.Get(`Boost.{active.id}`) })
+		else Texts.Get("Boost.BagHint")
+	local first: GuiButton? = nil
+	for index, id in sortedBoosts() do
+		local count = stock[id] or 0
+		if count < 1 then
+			continue
+		end
+		local boost = Boosts[id]
+		local row = Ui.create("Frame", {
+			Name = id,
+			Size = UDim2.new(1, -12, 0, 62),
+			BackgroundColor3 = Color3.fromRGB(40, 35, 55),
+			BackgroundTransparency = 0.2,
+			LayoutOrder = index,
+			Parent = bagList,
+		}, { Ui.corner(UDim.new(0, 10)) })
+		swatch(boost.color, Texts.Get("Boost.Count", { count = count }), row)
+		Ui.label({
+			Position = UDim2.fromOffset(60, 6),
+			Size = UDim2.new(1, -176, 0, 28),
+			TextXAlignment = Enum.TextXAlignment.Left,
+			Text = Texts.Get(`Boost.{id}`),
+			Parent = row,
+		})
+		Ui.label({
+			Position = UDim2.fromOffset(60, 36),
+			Size = UDim2.new(1, -176, 0, 18),
+			TextXAlignment = Enum.TextXAlignment.Left,
+			TextColor3 = Color3.fromRGB(200, 200, 210),
+			Text = effectText(boost),
+			Parent = row,
+		})
+		local eat = Ui.button({
+			Name = "Eat",
+			AnchorPoint = Vector2.new(1, 0.5),
+			Position = UDim2.new(1, -8, 0.5, 0),
+			Size = UDim2.fromOffset(104, 46),
+			BackgroundColor3 = if running then Color3.fromRGB(60, 60, 60) else Color3.fromRGB(60, 150, 70),
+			AutoButtonColor = not running,
+			Text = Texts.Get("Boost.Eat"),
+			Parent = row,
+		})
+		first = first or eat
+		eat.Activated:Connect(function()
+			if not boostRunning() then
+				Remotes.EatBoost:FireServer(id)
+				BoostController.CloseBag()
+			end
+		end)
+	end
+	Ui.markModal(bag, first)
+end
+
+function BoostController.OpenBag()
+	if bag.Visible or panel.Visible or MinigameController.IsGameplayLocked() then
+		return
+	end
+	bag.Visible = true
+	MinigameController.SetGameplayLocked(true, "Snacks")
+	renderBag()
+end
+
+function BoostController.CloseBag()
+	if bag and bag.Visible then
+		bag.Visible = false
+		MinigameController.SetGameplayLocked(false, "Snacks")
+	end
+end
+
+function BoostController.IsBagOpen(): boolean
+	return bag ~= nil and bag.Visible
+end
+
+-- ------------------------------------------------------------------ badges
+
+local function clock(seconds: number): string
+	return string.format("%d:%02d", math.floor(seconds / 60), math.floor(seconds % 60))
+end
+
 local function updateBadge()
 	local remaining = active.endsAt - workspace:GetServerTimeNow()
 	local boost = active.id and Boosts[active.id]
-	badge.Visible = boost ~= nil and remaining > 0
-	if boost and remaining > 0 then
-		local minutes = math.floor(remaining / 60)
-		local seconds = math.floor(remaining % 60)
-		badgeLabel.Text = `{Texts.Get("Boost.Active", {
+	local running = boost ~= nil and remaining > 0
+	local total = stockTotal()
+	-- Le sac seul (sans boost) se cache pendant les activités et les fenêtres
+	local locked = MinigameController.IsGameplayLocked() and not bag.Visible
+	badge.Visible = running or (total > 0 and not locked)
+	badge.Active = not locked
+	if running then
+		badgeLabel.Text = Texts.Get(if total > 0 then "Boost.ActiveBag" else "Boost.ActiveTimer", {
 			boost = Texts.Get(`Boost.{active.id}`),
 			multiplier = boost.mogMultiplier,
-		})}  {string.format("%d:%02d", minutes, seconds)}`
+			time = clock(remaining),
+			count = total,
+		})
 		badgeBar.Size = UDim2.fromScale(math.clamp(remaining / boost.duration, 0, 1), 1)
 		badgeBar.BackgroundColor3 = boost.color
+	else
+		badgeLabel.Text = Texts.Get("Boost.Snacks", { count = total })
+		badgeBar.Size = UDim2.fromScale(0, 1)
 	end
 
 	local restLeft = rest.endsAt - workspace:GetServerTimeNow()
@@ -146,10 +276,7 @@ local function updateBadge()
 		local percent = Format.Gain(rest.bonus * 100)
 		restLabel.Text = if rest.home
 			then Texts.Get("Rest.BadgeHome", { percent = percent })
-			else Texts.Get("Rest.Badge", {
-				percent = percent,
-				time = string.format("%d:%02d", math.floor(restLeft / 60), math.floor(restLeft % 60)),
-			})
+			else Texts.Get("Rest.Badge", { percent = percent, time = clock(restLeft) })
 		restBar.Size = UDim2.fromScale(if rest.home then 1 else math.clamp(restLeft / Balance.Rest.Duration, 0, 1), 1)
 		local below = if badge.Visible then badge.Size.Y.Offset + 4 else 0
 		restBadge.Position = badge.Position + UDim2.fromOffset(0, below)
@@ -157,12 +284,32 @@ local function updateBadge()
 	end
 end
 
+-- Contenu commun aux deux badges : jauge en bas et texte
+local function badgeContent(parent: GuiObject): (TextLabel, Frame)
+	local track = Ui.create("Frame", {
+		Name = "Track",
+		Position = UDim2.new(0, 4, 1, -6),
+		Size = UDim2.new(1, -8, 0, 3),
+		BackgroundColor3 = Color3.fromRGB(60, 60, 70),
+		Parent = parent,
+	})
+	local bar = Ui.create("Frame", { Size = UDim2.fromScale(1, 1), Parent = track })
+	local label = Ui.label({
+		Position = UDim2.fromOffset(8, 2),
+		Size = UDim2.new(1, -16, 1, -8),
+		Parent = parent,
+	})
+	return label, bar
+end
+
 local function buildGui()
 	local gui = Ui.create("ScreenGui", { Name = "Boosts", ResetOnSpawn = false, DisplayOrder = 4 })
 
-	-- Badge du boost en cours, juste sous le HUD central
-	badge = Ui.create("Frame", {
+	-- Badge du boost en cours (ou du sac), juste sous le HUD central : un bouton qui ouvre le sac
+	badge = Ui.create("TextButton", {
 		Name = "ActiveBoost",
+		Text = "",
+		AutoButtonColor = true,
 		AnchorPoint = Vector2.new(0.5, 0),
 		Position = UDim2.new(0.5, 0, 0, 118),
 		Size = UDim2.fromOffset(300, 30),
@@ -171,25 +318,24 @@ local function buildGui()
 		Visible = false,
 		Parent = gui,
 	}, { Ui.corner(UDim.new(0, 8)) })
-	local track = Ui.create("Frame", {
-		Position = UDim2.new(0, 4, 1, -6),
-		Size = UDim2.new(1, -8, 0, 3),
-		BackgroundColor3 = Color3.fromRGB(60, 60, 70),
-		Parent = badge,
-	})
-	badgeBar = Ui.create("Frame", { Size = UDim2.fromScale(1, 1), Parent = track })
-	badgeLabel = Ui.label({
-		Position = UDim2.fromOffset(8, 2),
-		Size = UDim2.new(1, -16, 1, -8),
-		Parent = badge,
-	})
+	badgeLabel, badgeBar = badgeContent(badge)
+	badge.Activated:Connect(function()
+		if bag.Visible then
+			BoostController.CloseBag()
+		else
+			BoostController.OpenBag()
+		end
+	end)
 
-	restBadge = badge:Clone()
-	restBadge.Name = "Rested"
-	restBadge.Parent = gui
-	restLabel = restBadge:FindFirstChildOfClass("TextLabel") :: TextLabel
-	local restTrack = restBadge:FindFirstChildOfClass("Frame") :: Frame
-	restBar = restTrack:FindFirstChildOfClass("Frame") :: Frame
+	restBadge = Ui.create("Frame", {
+		Name = "Rested",
+		AnchorPoint = Vector2.new(0.5, 0),
+		BackgroundColor3 = Color3.fromRGB(25, 20, 40),
+		BackgroundTransparency = 0.15,
+		Visible = false,
+		Parent = gui,
+	}, { Ui.corner(UDim.new(0, 8)) })
+	restLabel, restBar = badgeContent(restBadge)
 	restBar.BackgroundColor3 = Color3.fromRGB(120, 200, 255)
 
 	panel = Ui.panel({
@@ -229,6 +375,44 @@ local function buildGui()
 	local closeButton = Ui.closeButton({ Text = Texts.Get("Shop.Close"), Parent = panel })
 	Ui.markModal(panel)
 	Ui.onBack(closeButton, close)
+
+	-- Sac à repas
+	bag = Ui.panel({
+		Name = "Bag",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.53),
+		Size = UDim2.fromScale(0.9, 0.7),
+		Visible = false,
+		Parent = gui,
+	})
+	Ui.create("UISizeConstraint", { MaxSize = Vector2.new(480, 380), Parent = bag })
+	Ui.label({
+		Position = UDim2.fromOffset(60, 12),
+		Size = UDim2.new(1, -120, 0, 36),
+		TextColor3 = Color3.fromRGB(255, 220, 120),
+		Text = Texts.Get("Boost.BagTitle"),
+		Parent = bag,
+	})
+	bagHint = Ui.label({
+		Position = UDim2.fromOffset(16, 50),
+		Size = UDim2.new(1, -32, 0, 22),
+		Font = Enum.Font.GothamMedium,
+		TextColor3 = Color3.fromRGB(200, 200, 210),
+		Parent = bag,
+	})
+	bagList = Ui.create("ScrollingFrame", {
+		Position = UDim2.fromOffset(16, 80),
+		Size = UDim2.new(1, -32, 1, -94),
+		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
+		ScrollBarThickness = 6,
+		AutomaticCanvasSize = Enum.AutomaticSize.Y,
+		CanvasSize = UDim2.new(),
+		Parent = bag,
+	}, { Ui.create("UIListLayout", { Padding = UDim.new(0, 6), SortOrder = Enum.SortOrder.LayoutOrder }) })
+	local bagClose = Ui.closeButton({ Text = Texts.Get("Shop.Close"), Parent = bag })
+	Ui.markModal(bag)
+	Ui.onBack(bagClose, BoostController.CloseBag)
 	gui.Parent = player:WaitForChild("PlayerGui")
 
 	-- Téléphone et tablette en paysage : le badge monte dans la rangée du haut, juste sous le HUD (D82). Placé sous
@@ -237,7 +421,8 @@ local function buildGui()
 		local touchLandscape = UserInputService.TouchEnabled and not Ui.isPhonePortrait()
 		gui.IgnoreGuiInset = touchLandscape
 		badge.Position = if touchLandscape then UDim2.new(0.5, 0, 0, 50) else UDim2.new(0.5, 0, 0, 118)
-		badge.Size = if touchLandscape then UDim2.fromOffset(230, 24) else UDim2.fromOffset(300, 30)
+		-- Au doigt, le badge est un bouton : assez haut pour être touché facilement
+		badge.Size = if touchLandscape then UDim2.fromOffset(250, 32) else UDim2.fromOffset(300, 32)
 	end)
 end
 
@@ -265,15 +450,43 @@ function BoostController.Start()
 		updateBadge()
 	end)
 	Remotes.BoostState.OnClientEvent:Connect(function(state)
+		if typeof(state) ~= "table" then
+			return
+		end
 		active = { id = state.id, endsAt = state.endsAt or 0 }
+		stock = if typeof(state.stock) == "table" then state.stock else {}
 		updateBadge()
 		if panel.Visible then
 			render()
 		end
+		if bag.Visible then
+			renderBag()
+		end
+	end)
+	-- Touche F (clavier) et croix bas (manette) : ouvrir ou fermer le sac
+	UserInputService.InputBegan:Connect(function(input, processed)
+		if processed then
+			return
+		end
+		-- (sac ouvert, la croix sert à choisir un bouton : seul B le ferme à la manette)
+		if input.KeyCode == Enum.KeyCode.F and bag.Visible then
+			BoostController.CloseBag()
+		elseif (input.KeyCode == Enum.KeyCode.F or input.KeyCode == Enum.KeyCode.DPadDown) and stockTotal() > 0 then
+			BoostController.OpenBag()
+		end
 	end)
 	task.spawn(function()
+		local wasRunning = false
 		while true do
 			updateBadge()
+			-- Le boost vient de finir, sac ouvert : les boutons « Manger » se réactivent
+			local running = boostRunning()
+			if running ~= wasRunning then
+				wasRunning = running
+				if bag.Visible then
+					renderBag()
+				end
+			end
 			task.wait(0.5)
 		end
 	end)

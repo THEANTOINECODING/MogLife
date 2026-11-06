@@ -43,7 +43,9 @@ local NAMES = {
 	"TutorialAction", -- client -> serveur : ("Skip") passer le tutoriel
 	"MentorSay", -- serveur -> client : ({ key, args }) le mentor parle (tutoriel, conseils)
 	"BuyBoost", -- client -> serveur : (boostId: string) au camion à shakes ou au distributeur
-	"BoostState", -- serveur -> client : ({ id: string?, endsAt: number }) boost en cours (heure serveur)
+	"BoostState", -- serveur -> client : ({ id: string?, endsAt: number, stock: { [string]: number } }) boost en cours
+	"EatBoost", -- client -> serveur : (boostId: string) manger un aliment de sa réserve (D114)
+	"BoostEaten", -- serveur -> tous : (player: Player, boostId: string) un joueur mange : animation du repas
 	"RestState", -- serveur -> client : ({ bonus: number, endsAt: number, home: boolean }) bien reposé (D111)
 	"Records", -- serveur -> client : ({ [exerciseId]: score }) meilleures notes de série
 	"Cutscene", -- serveur -> client : ({ kind: "Intro" | "Boss", bossId?, spot? }) jouer une cinématique
@@ -135,6 +137,8 @@ return remotes :: {
 	MentorSay: RemoteEvent,
 	BuyBoost: RemoteEvent,
 	BoostState: RemoteEvent,
+	EatBoost: RemoteEvent,
+	BoostEaten: RemoteEvent,
 	RestState: RemoteEvent,
 	Records: RemoteEvent,
 	Cutscene: RemoteEvent,

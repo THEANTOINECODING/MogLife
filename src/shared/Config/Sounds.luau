@@ -62,6 +62,11 @@ return {
 		EventTackle = { id = "rbxassetid://9113573976", volume = 0.35 }, -- plaquage du piano
 		EventWhoosh = { id = "rbxassetid://9120718279", volume = 0.18 }, -- le piano détale
 		EventCheer = { id = "rbxassetid://7755719721", volume = 0.22 }, -- piano arrêté : la foule acclame
+		-- Repas de boost (D114), joués sur la tête de celui qui mange (les joueurs proches l'entendent). Chargement vérifié
+		-- dans Studio ; ❓ volumes de départ, pas encore écoutés ni mesurés (PlaybackLoudness).
+		SnackBite = { id = "rbxassetid://137096768206416", volume = 0.45 }, -- croc croustillant (aliment solide)
+		SnackGulp = { id = "rbxassetid://9114171849", volume = 0.4 }, -- grosse gorgée (Pro Sound Effects, boissons)
+		SnackPower = { id = "rbxassetid://9116394545", volume = 0.3 }, -- scintillement magique : le boost démarre (PSE)
 	},
 	Volume = {
 		Music = 1, -- volume général de la musique (multiplie celui de chaque morceau)

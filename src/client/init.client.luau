@@ -18,6 +18,7 @@ local ORDER = {
 	"TutorialController",
 	"SoundController",
 	"BoostController",
+	"SnackController",
 	"ObjectiveController",
 	"CutsceneController",
 	"CreatorController",

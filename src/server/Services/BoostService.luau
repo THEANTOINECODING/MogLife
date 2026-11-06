@@ -1,7 +1,9 @@
 -- Boosts temporaires (D47) : achetés en Cash au camion à shakes, au distributeur et au caissier de l'épicerie (D98)
 -- (tag "BoostShop"), ils
--- multiplient le Mog des exercices pendant quelques minutes. Un seul actif à la fois : racheter le même prolonge
--- (plafonné à Balance.BoostShop.MaxDuration), en acheter un autre le remplace.
+-- multiplient le Mog des exercices pendant quelques minutes.
+-- Garde-manger (D114) : un achat va dans la réserve du joueur (Balance.BoostShop.MaxStock par aliment) ; il le mange
+-- quand il veut, n'importe où, mais un seul boost à la fois (refusé tant qu'un boost est actif). Tout le monde voit
+-- le repas (Remotes.BoostEaten, animation dans SnackController).
 -- L'heure de fin est enregistrée (os.time) : le boost continue de s'écouler si le joueur se déconnecte.
 
 local CollectionService = game:GetService("CollectionService")
@@ -19,6 +21,10 @@ local SHOP_TAG = "BoostShop"
 local DataService
 local StatsService
 local TutorialService
+local MinigameService
+local BossService
+
+local lastEat: { [Player]: number } = {}
 
 local BoostService = {}
 
@@ -38,9 +44,26 @@ function BoostService.Multiplier(player: Player): number
 	return if id then Boosts[id].mogMultiplier else 1
 end
 
+-- Réserve du joueur (aliment -> nombre), nettoyée des aliments inconnus ou à zéro
+local function stockOf(data): { [string]: number }
+	if typeof(data.BoostStock) ~= "table" then
+		data.BoostStock = {}
+	end
+	for id, count in data.BoostStock do
+		if not Boosts[id] or typeof(count) ~= "number" or count < 1 then
+			data.BoostStock[id] = nil
+		end
+	end
+	return data.BoostStock
+end
+
 local function sendState(player: Player)
+	local data = DataService.Get(player)
+	if not data then
+		return
+	end
 	local id, endsAt = BoostService.Active(player)
-	Remotes.BoostState:FireClient(player, { id = id, endsAt = endsAt })
+	Remotes.BoostState:FireClient(player, { id = id, endsAt = endsAt, stock = table.clone(stockOf(data)) })
 end
 
 local function isNearShop(player: Player): boolean
@@ -76,19 +99,59 @@ local function onBuy(player: Player, boostId: unknown)
 		return
 	end
 
-	local now = os.time()
-	local currentId, endsAt = BoostService.Active(player)
-	-- Même boost : on prolonge ; autre boost : il remplace l'ancien
-	local start = if currentId == boostId then endsAt else now
-	local ends = math.min(start + boost.duration, now + Balance.BoostShop.MaxDuration)
-	-- Déjà presque au maximum : on ne fait pas payer un prolongement qui ne servirait à rien
-	if ends - start < boost.duration * Balance.BoostShop.MinExtension then
-		Remotes.Notify:FireClient(player, { key = "Boost.Full" })
+	local stock = stockOf(data)
+	local count = stock[boostId] or 0
+	if count >= Balance.BoostShop.MaxStock then
+		Remotes.Notify:FireClient(player, { key = "Boost.StockFull", args = { boost = { key = `Boost.{boostId}` } } })
 		return
 	end
 	StatsService.Add(player, "Cash", -boost.price)
-	data.Boost = { Id = boostId, EndsAt = ends }
+	stock[boostId] = count + 1
 	sendState(player)
+	Remotes.Notify:FireClient(player, {
+		key = "Boost.Stored",
+		args = { boost = { key = `Boost.{boostId}` }, count = count + 1 },
+	})
+end
+
+-- Manger un aliment de sa réserve : un seul boost à la fois, jamais pendant une série ou un combat
+local function onEat(player: Player, boostId: unknown)
+	if typeof(boostId) ~= "string" then
+		return
+	end
+	local boost = Boosts[boostId]
+	local data = DataService.Get(player)
+	if not boost or not data then
+		return
+	end
+	local now = os.clock()
+	if now - (lastEat[player] or -math.huge) < Balance.BoostShop.EatCooldown then
+		return
+	end
+	local stock = stockOf(data)
+	if (stock[boostId] or 0) < 1 then
+		return
+	end
+	if MinigameService.IsBusy(player) or BossService.IsFighting(player) then
+		Remotes.Notify:FireClient(player, { key = "Boost.EatBusy" })
+		return
+	end
+	local currentId = BoostService.Active(player)
+	if currentId then
+		Remotes.Notify:FireClient(
+			player,
+			{ key = "Boost.OneAtATime", args = { boost = { key = `Boost.{currentId}` } } }
+		)
+		return
+	end
+	lastEat[player] = now
+	stock[boostId] -= 1
+	if stock[boostId] < 1 then
+		stock[boostId] = nil
+	end
+	data.Boost = { Id = boostId, EndsAt = os.time() + boost.duration }
+	sendState(player)
+	Remotes.BoostEaten:FireAllClients(player, boostId)
 	Remotes.Notify:FireClient(player, {
 		key = "Boost.Bought",
 		args = { boost = { key = `Boost.{boostId}` }, minutes = math.ceil(boost.duration / 60) },
@@ -134,6 +197,8 @@ function BoostService.Init(services)
 	DataService = services.DataService
 	StatsService = services.StatsService
 	TutorialService = services.TutorialService
+	MinigameService = services.MinigameService
+	BossService = services.BossService
 end
 
 function BoostService.Start()
@@ -142,6 +207,10 @@ function BoostService.Start()
 	end
 	CollectionService:GetInstanceAddedSignal(SHOP_TAG):Connect(setupShop)
 	Remotes.BuyBoost.OnServerEvent:Connect(onBuy)
+	Remotes.EatBoost.OnServerEvent:Connect(onEat)
+	game:GetService("Players").PlayerRemoving:Connect(function(player)
+		lastEat[player] = nil
+	end)
 	Remotes.RequestStats.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.RequestStats, sendState))
 	DataService.PlayerLoaded:Connect(sendState)
 end

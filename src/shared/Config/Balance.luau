@@ -21,6 +21,7 @@ return {
 		HousesLiked = {}, -- UserId (texte) des maisons déjà aimées -> true (une fois par maison, D112)
 		Tutorial = { Step = 1, Done = false }, -- tutoriel des 5 premières minutes (TutorialService)
 		Boost = { Id = "", EndsAt = 0 }, -- boost temporaire en cours (BoostService), EndsAt en os.time()
+		BoostStock = {}, -- réserve d'aliments achetés et pas encore mangés : boostId -> nombre (D114)
 		Records = {}, -- meilleure note de série par exercice (0 à 100)
 		Tips = {}, -- conseils du mentor déjà donnés
 		-- Réglages du joueur (Config/Settings.luau), tous activés par défaut
@@ -594,8 +595,10 @@ return {
 	-- Boutique de boosts (camion à shakes, distributeur)
 	BoostShop = {
 		Distance = 14, -- distance max (studs) au comptoir pour acheter
-		MaxDuration = 300, -- un boost prolongé ne dépasse jamais 5 minutes (D110)
-		MinExtension = 0.5, -- refusé (sans payer) si l'achat ajouterait moins de cette part de sa durée
+		MaxDuration = 300, -- un boost offert prolongé ne dépasse jamais 5 minutes (D110)
+		MaxStock = 10, -- aliments d'une même sorte en réserve (D114) ❓
+		EatCooldown = 1.5, -- secondes entre deux repas demandés (le repas lui-même dure EatDuration)
+		EatDuration = 1.4, -- durée de l'animation du repas (SnackController)
 	},
 
 	-- Apparence provisoire (avatar Roblox) en attendant le personnage du jeu

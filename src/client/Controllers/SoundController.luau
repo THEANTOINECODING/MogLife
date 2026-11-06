@@ -50,6 +50,38 @@ function SoundController.Play(name: string, pitch: number?)
 	SoundService:PlayLocalSound(sound)
 end
 
+-- Joue un effet dans le monde, sur une pièce (on l'entend de près, moins de loin) ; même réglage « Sons »
+function SoundController.PlayAt(name: string, part: BasePart, pitch: number?)
+	local entry = Sounds.Sfx[name]
+	if typeof(entry) ~= "table" or typeof(entry.id) ~= "string" or entry.id == "" or not part.Parent then
+		return
+	end
+	if not sfxGroup then
+		sfxGroup = Instance.new("SoundGroup")
+		sfxGroup.Name = "Effects"
+		sfxGroup.Volume = if soundsOn then Sounds.Volume.Sfx else 0
+		sfxGroup.Parent = SoundService
+	end
+	local sound = Instance.new("Sound")
+	sound.Name = name
+	sound.SoundId = entry.id
+	sound.Volume = entry.volume or 0.5
+	sound.PlaybackSpeed = pitch or entry.pitch or 1
+	sound.RollOffMinDistance = 10
+	sound.RollOffMaxDistance = 70
+	sound.SoundGroup = sfxGroup
+	sound.Parent = part
+	sound.Ended:Once(function()
+		sound:Destroy()
+	end)
+	sound:Play()
+	task.delay(6, function()
+		if sound.Parent then
+			sound:Destroy()
+		end
+	end)
+end
+
 -- Musique ------------------------------------------------------------------------------------------------------
 
 type Mood = "Town" | "Workout" | "Boss"
