@@ -50,11 +50,8 @@ local function place(
 	clone.CanTouch = false
 	clone.CanQuery = false
 	clone.CFrame = cframe
-	if color then
-		clone.Color = color
-		if flat and clone:IsA("MeshPart") then
-			clone.TextureID = ""
-		end
+	if color and not whiten then
+		Look.Tint(clone, color, flat) -- voile en Overlay (D119)
 	end
 	if whiten and clone:IsA("MeshPart") then
 		clone.TextureID = ""

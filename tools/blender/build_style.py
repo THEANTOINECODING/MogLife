@@ -770,36 +770,7 @@ def add_signature_details(w, g):
 
     # Coiffures : refaites au complet dans hair.py (D114), plus de détails ajoutés ici
 
-    # Beards, faces and extras also receive a unique readable accent.
-    jaw_front, jaw_z = g["jaw_front"], g["jaw_z"]
-    w.start("LumberBeard")
-    for sx in (-1, 1):
-        w.make("Head", pyramid((sx * cfg["jaw_w"] * 0.3, jaw_front - 0.12, jaw_z - cfg["jaw_h"] * 0.5),
-                                (sx * cfg["jaw_w"] * 0.4, jaw_front - 0.14, jaw_z - cfg["jaw_h"] * 1.25),
-                                0.12, 0.08), "beard_brown")
-    w.start("Goatee")
-    w.make("Head", pyramid((0, jaw_front - 0.15, jaw_z - cfg["jaw_h"] * 0.65),
-                            (0, jaw_front - 0.2, jaw_z - cfg["jaw_h"] * 1.22),
-                            0.1, 0.08), "beard_black")
-    w.start("Handlebar")
-    for sx in (-1, 1):
-        w.make("Head", lowsphere((sx * cfg["jaw_w"] * 0.56, jaw_front - 0.09, jaw_z + cfg["jaw_h"] * 0.8),
-                                  (0.08, 0.07, 0.08), 6, 5), "beard_ginger")
-    w.start("ChinStrap")
-    w.make("Head", prism((-cfg["jaw_w"] * 0.42, jaw_front - 0.05, jaw_z - cfg["jaw_h"] * 0.58),
-                          (cfg["jaw_w"] * 0.42, jaw_front - 0.05, jaw_z - cfg["jaw_h"] * 0.58),
-                          0.04, 0.04, sides=4), "beard_black")
-    w.start("FrownBrows")
-    w.make("Head", prism((-r * 0.16, hy - r - 0.08, head_z + r * 0.3),
-                          (r * 0.16, hy - r - 0.08, head_z + r * 0.3),
-                          0.05, 0.05, sides=4), "brow_dark")
-    w.start("SparkleSmile")
-    w.make("Head", lowsphere((cfg["jaw_w"] * 0.48, jaw_front - 0.1, jaw_z + cfg["jaw_h"] * 0.34),
-                              (0.075, 0.03, 0.075), 6, 5), "gold")
-    w.start("MegaJaw")
-    for sx in (-1, 1):
-        w.make("Head", block((sx * cfg["jaw_w"] * 0.58, jaw_front - 0.03, jaw_z - cfg["jaw_h"] * 0.2),
-                              (0.08, 0.07, cfg["jaw_h"] * 0.55)), "skin")
+    # Barbes et visages : refaits sur la vraie mâchoire dans faces.py (D119), plus de détails ajoutés ici
 
     # Accessoires : plus de détails ajoutés ici, ils sont refaits au complet dans accessories.py (D114)
 
@@ -812,6 +783,9 @@ path = os.path.join(D, "hair.py")
 exec(compile(open(path, encoding="utf-8").read(), path, "exec"), globals())
 # Hauts et bas refaits (D114) : remplace build_tops et build_bottoms ci-dessus
 path = os.path.join(D, "clothes.py")
+exec(compile(open(path, encoding="utf-8").read(), path, "exec"), globals())
+# Barbes et visages posés sur la mâchoire sculptée (D119) : remplace build_beards et build_faces ci-dessus
+path = os.path.join(D, "faces.py")
 exec(compile(open(path, encoding="utf-8").read(), path, "exec"), globals())
 
 

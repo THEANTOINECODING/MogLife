@@ -7,6 +7,7 @@
 	À coller dans la barre de commande de Studio, en mode édition. Ensuite : Ctrl+S.
 	Les dossiers Bodies et Style ne sont pas gérés par Rojo : une reconnexion ne les efface pas.
 	La version D71 vérifie les 3 318 pièces de style et la palette avant de remplacer les anciens modèles.
+	La version D119 range chaque texture dans une SurfaceAppearance en mode Overlay (teinte de la peau, des yeux...).
 ]]
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -77,6 +78,16 @@ for _, part in imported:GetDescendants() do
 		local old = destination:FindFirstChild(part.Name)
 		if old then
 			old:Destroy()
+		end
+		-- D119 : Roblox affiche une TextureID opaque, le voile de l'atlas cachait la couleur choisie (peau noire et
+		-- blanche). La texture passe dans une SurfaceAppearance en Overlay : la couleur de la pièce se voit dessous.
+		-- Seule la barre de commande peut créer cette texture (un script de jeu n'en a pas le droit).
+		if part.TextureID ~= "" and not part:FindFirstChildOfClass("SurfaceAppearance") then
+			local appearance = Instance.new("SurfaceAppearance")
+			appearance.AlphaMode = Enum.AlphaMode.Overlay
+			appearance.ColorMapContent = Content.fromUri(part.TextureID)
+			appearance.Parent = part
+			part.TextureID = ""
 		end
 		part.Size *= scale
 		part.Anchored = true

@@ -424,6 +424,28 @@ def face_curve(tree, x0, x1, z_of, y_fallback, n=11, inset=0.0):
     return out
 
 
+def face_params(name, g):
+    """Mesures du visage (D117), partagées avec la garde-robe (barbes, sourires) : stade 0 -> 1, mâchoire
+    (arguments de jaw_shape), rayon des lèvres, hauteur et demi-ouverture de la bouche."""
+    cfg = g["cfg"]
+    fem = cfg.get("fem")
+    jaw_w, jaw_h = cfg["jaw_w"], cfg["jaw_h"]
+    center = (0, g["jaw_y"], g["jaw_z"])
+    grade = ORDER.index(BASE[name]) / (len(ORDER) - 1)
+    if fem:                                           # mâchoire ronde et fine qui s'affirme un peu au fil des stades
+        jaw = (center, jaw_w * 1.12, jaw_h * 1.24, g["jaw_depth"], 0.05 + 0.2 * grade, -0.05 + 0.15 * grade, 0.45)
+    else:                                             # menton fuyant et rond -> enclume carrée qui avance
+        jaw = (center, jaw_w, jaw_h, g["jaw_depth"], 0.1 + 0.85 * grade, -0.15 + 0.5 * grade, 0.45 - 0.35 * grade)
+    return {
+        "grade": grade,
+        "jaw": jaw,
+        "lip_r": max(0.03, jaw_h * (0.11 if fem else 0.065 + 0.02 * grade)),
+        "mz": g["jaw_z"] + jaw_h * (0.14 if fem else 0.08),   # bouche féminine un peu plus haute (mâchoire ronde)
+        "mh": jaw_h * 0.16,
+        "mouth_half": jaw_w * (0.58 if fem else 0.5 + 0.08 * grade) / 2,
+    }
+
+
 class Body:
     """Pièces d'un corps, rangées par partie du squelette."""
 
@@ -760,13 +782,9 @@ def build_body(name):
     jaw_depth, jaw_y, jaw_z = g["jaw_depth"], g["jaw_y"], g["jaw_z"]
     jaw_front, jaw_top = g["jaw_front"], g["jaw_top"]
     # Progression du visage (D117) : 0 au Normie, 1 au GOD MOGGER
-    grade = ORDER.index(BASE[name]) / (len(ORDER) - 1)
-    if fem:                                           # mâchoire ronde et fine qui s'affirme un peu au fil des stades
-        jaw_bm = jaw_shape((0, jaw_y, jaw_z), jaw_w * 1.12, jaw_h * 1.24, jaw_depth, 0.05 + 0.2 * grade,
-                           -0.05 + 0.15 * grade, 0.45)
-    else:                                             # menton fuyant et rond -> enclume carrée qui avance
-        jaw_bm = jaw_shape((0, jaw_y, jaw_z), jaw_w, jaw_h, jaw_depth, 0.1 + 0.85 * grade, -0.15 + 0.5 * grade,
-                           0.45 - 0.35 * grade)
+    face = face_params(name, g)
+    grade = face["grade"]
+    jaw_bm = jaw_shape(*face["jaw"])
     face_tree = (BVHTree.FromBMesh(jaw_bm), cran_tree)    # surface du visage = mâchoire + crâne
     body.make("Head", jaw_bm, "skin", front_cell="face")
     if not fem and grade >= 0.5:                      # gros stades : arcade sourcilière de brute
@@ -789,16 +807,14 @@ def build_body(name):
     brow_t = 0.042 if fem else 0.055 + 0.05 * grade   # sourcils de plus en plus épais (fins et arqués au féminin)
     brow_y = hy - head_r * 0.86 - ridge * 0.6
     brow_z = head_z + head_r * 0.3
-    lip_r = max(0.03, jaw_h * (0.11 if fem else 0.065 + 0.02 * grade))
-    mz = jaw_z + jaw_h * (0.14 if fem else 0.08)     # bouche féminine un peu plus haute (mâchoire ronde)
-    mh = jaw_h * 0.16
+    lip_r, mz, mh = face["lip_r"], face["mz"], face["mh"]
 
     def stroke(a, b, t0, t1):                         # trait de sourcil : bâtonnet aplati aux bouts ronds
         return spindle(tuple(a), tuple(b), t0, (t0 + t1) / 2, t1, sides=8, rings=2, cap=0.7,
                        squash=((0, 1, 0), 0.6))
 
     def mouth(group, width, curve, gap, teeth=True, gold=False):
-        half = jaw_w * (0.58 if fem else 0.5 + 0.08 * grade) * width / 2
+        half = face["mouth_half"] * width
         mid = face_curve(face_tree, -half, half, lambda u: mz + curve(u) * mh, jaw_front, 13)
         n = len(mid)
         us = [-1 + 2 * i / (n - 1) for i in range(n)]

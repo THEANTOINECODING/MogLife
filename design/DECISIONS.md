@@ -2,6 +2,25 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-06 (Demande d'Antoine : activer les nouveaux corps, tester, ajuster habits et accessoires)
+
+- **D119 — Nouveaux corps activés dans Studio ; teinte par SurfaceAppearance ; manches, col, barbes et visages refaits sur le nouveau corps.**
+  - **Activation (D115 à D118)** : import de `MogLife_Characters.fbx` rangé par `install_characters`. `Bodies.luau`, `BodyPieces.luau` et `StylePieces.luau` sont copiés depuis les fichiers `.pending`, puis `BodySkeleton.luau` est régénéré.
+  - **Peau noire et blanche corrigée.** Roblox affiche opaque la texture d'une MeshPart (`TextureID`). Le voile semi-transparent de l'atlas cachait donc la couleur choisie : peau, yeux et tenues de départ.
+    - C'était déjà le cas des anciens corps (même résultat avec l'atlas d'avant D115), et des habitants qui portent les mêmes modèles.
+    - `install_characters` range maintenant chaque texture dans une `SurfaceAppearance` en mode Overlay, qui laisse voir la couleur de la pièce. Les 3 682 pièces déjà installées ont été converties.
+    - Un script de jeu n'a pas le droit de créer cette texture. `Look.Tint` ne fait que changer la couleur et retirer la texture des cheveux et barbes (couleur unie, comme avant).
+  - **Manches des 20 ensembles** (`outfit_looks.py`) : elles partent au-dessus du deltoïde, qui perçait le tissu, et l'anneau du haut rentre un peu pour arrondir l'épaule. Un col séparé monte sur la nappe des trapèzes. Les 14 tranches du torse sont gardées : les détails des ensembles en dépendent.
+  - **Barbes et visages** (`faces.py`, nouveau) : posés sur la vraie mâchoire sculptée de D117 (`face_params` de `build_bodies.py`), au lieu de blocs qui flottaient devant.
+    - LumberBeard : coque de la mâchoire gonflée, coupée sous la bouche, plus une touffe et une moustache.
+    - Bouc, guidon, collier et sourcils froncés : courbes qui suivent le visage.
+    - SparkleSmile : rangée de dents et une dent en or. MegaJaw : enclume avec sa propre bouche.
+    - Mêmes cases et mêmes pièces : les achats et la croissance entre stades sont inchangés.
+  - Validation OK : 14 corps, 74 articles, 3 318 pièces, 0 défaut de couverture.
+  - **Testé dans Studio, son coupé**, sur les corps importés : Normie, GOD MOGGER et GOD MOGGER féminine, couleurs de peau, yeux, cheveux et tenues correctes, aucune erreur de script. Passage des portes : 4,14 de large en collision (moins de 5) et 7,46 de haut (moins de 8,2) au GOD MOGGER. Sauvegarde remise à l'identique.
+  - **En attente** : la nouvelle garde-robe (`MogLife_Wardrobe.fbx` et `StylePieces.pending.luau`) n'est pas encore importée. Studio porte encore les manches et barbes de D118.
+  - Les en-cas n'ont pas été retestés : il faudrait dépenser du Cash.
+
 ## 2026-11-06 (Demande d'Antoine : trapèzes plus naturels)
 
 - **D118 — Trapèzes en une seule nappe de muscle, de la nuque aux épaules.** Raison : aux gros stades, les deux tubes de trapèzes formaient deux blocs hors du corps de chaque côté de la tête.

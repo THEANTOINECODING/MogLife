@@ -155,7 +155,7 @@ def _body_radii(body, part, z_values, n=24, centers=None):
     return rows
 
 
-def _fitted_limb(w, body, part, top, bottom, cell, ease, profile=None, n=16):
+def _fitted_limb(w, body, part, top, bottom, cell, ease, profile=None, n=16, dome=0.0):
     """A separate R15 garment shell that clears the skin, including deltoid bulges."""
     count = 19 if part.endswith("LowerArm") else 13
     if part.endswith("LowerArm"):
@@ -169,9 +169,12 @@ def _fitted_limb(w, body, part, top, bottom, cell, ease, profile=None, n=16):
         t = i / (count - 1)
         extra = ease + (profile(t) if profile else 0)
         round_envelope = max(radii[i]) if part.endswith("LowerArm") else 0
+        # D119 : haut de manche arrondi au-dessus du deltoïde (sinon une épaulette plate et carrée)
+        # (seul l'anneau du dessus, au-dessus de la peau, rentre : le deltoïde reste large presque jusqu'en haut)
+        k = 0.72 if dome > 0 and i == 0 else 1.0
         # Skin and cloth use the same R15 part, so their clearance scales together.
-        rings.append([(centers[i][0] + math.cos(2 * math.pi * j / n) * (max(r, round_envelope) + extra),
-                       centers[i][1] + math.sin(2 * math.pi * j / n) * (max(r, round_envelope) + extra), z)
+        rings.append([(centers[i][0] + math.cos(2 * math.pi * j / n) * (max(r, round_envelope) + extra) * k,
+                       centers[i][1] + math.sin(2 * math.pi * j / n) * (max(r, round_envelope) + extra) * k, z)
                       for j, r in enumerate(radii[i])])
     w.make(part, _loft(rings), cell)
     return radii, heights, centers
@@ -214,6 +217,17 @@ def _torso(w, body, g, cell, silhouette, name):
         rings.append(ring)
         outer_radii.append(outer_row)
     w.make("UpperTorso", _loft(rings), cell)
+    # D119 : col qui monte avec les trapèzes (nappe au-dessus du cou chez les gros stades), comme clothes.py ;
+    # une pièce à part pour garder les 14 tranches dont dépendent les détails des ensembles
+    skin = bpy.data.objects.get(body + "_UpperTorso")
+    rise = (max(v.co.z for v in skin.data.vertices) - neck.z) * 0.55 if skin else 0.0
+    if rise > 0.04:
+        top_h = [neck.z - 0.1 + (rise + 0.1) * i / 5 for i in range(6)]
+        top_r = _body_radii(body, "UpperTorso", top_h)
+        collar = [[(math.cos(2 * math.pi * j / 24) * (r + 0.085 + ease * 0.75),
+                    math.sin(2 * math.pi * j / 24) * (r + 0.085 + ease * 0.75), z)
+                   for j, r in enumerate(row)] for z, row in zip(top_h, top_r)]
+        w.make("UpperTorso", _loft(collar), cell)
     # Sleeve sections follow their own animated R15 limbs.
     if silhouette != "open":
         for side, _ in sides():
@@ -224,7 +238,12 @@ def _torso(w, body, g, cell, silhouette, name):
             end = el if sleeve == "long" else sh.lerp(el, 0.59)
             ease_arm = (0.115 if silhouette not in ("puffer", "armor") else 0.21) + cfg["bicep"] * 0.06  # D116: room for huge biceps
             profile = (lambda t: 0.045 * math.sin(math.pi * t) ** 2) if silhouette in ("bomber", "hoodie") else None
-            _fitted_limb(w, body, side + "UpperArm", sh, end, cell, ease_arm, profile)
+            # D119 : la manche part au-dessus du deltoïde (il montait plus haut que l'épaule et perçait le tissu)
+            arm = bpy.data.objects.get(body + "_" + side + "UpperArm")
+            arm_top = max(v.co.z for v in arm.data.vertices) if arm else sh.z
+            top = Vector((sh.x, sh.y, max(sh.z + cfg["delt"] * 0.95, arm_top + 0.03)))
+            dome = (top.z - sh.z) / max(0.01, top.z - end.z)
+            _fitted_limb(w, body, side + "UpperArm", top, end, cell, ease_arm, profile, dome=dome)
             if sleeve == "long":
                 cuff_top = Vector((el.x, el.y, el.z + cfg["forearm"] * 0.7))
                 _fitted_limb(w, body, side + "LowerArm", cuff_top, el.lerp(wr, 0.91),

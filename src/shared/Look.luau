@@ -165,6 +165,22 @@ function Look.Color(look: LookData, tint: string): Color3?
 	return swatch and swatch.color
 end
 
+-- Teint une pièce importée (D119). L'atlas des corps est un voile semi-transparent posé sur la couleur choisie.
+-- Roblox affiche la texture d'une MeshPart (TextureID) opaque (la peau sortait noire et blanche) : l'installation
+-- (tools/install_characters.luau) la range dans une SurfaceAppearance en mode Overlay, qui laisse voir la couleur
+-- de la pièce sous le voile. Un script de jeu ne peut pas créer cette texture, il ne fait que changer la couleur.
+-- flat : couleur unie, sans texture (cheveux et barbes).
+function Look.Tint(part: BasePart, color: Color3, flat: boolean?)
+	part.Color = color
+	if flat and part:IsA("MeshPart") then
+		part.TextureID = ""
+		local appearance = part:FindFirstChildOfClass("SurfaceAppearance")
+		if appearance then
+			appearance:Destroy()
+		end
+	end
+end
+
 -- Corps à porter : <Stade> ou <Stade>F. Si le corps féminin n'est pas importé, on garde le masculin.
 function Look.BodyKey(stageId: string, look: LookData?, bodies: Instance?): string
 	if look and look.Gender == "F" then
