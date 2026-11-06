@@ -233,7 +233,7 @@ Déjà fait : plusieurs stations par exercice, bouton Maison et bus, icônes et 
 - **Maman visible seulement chez soi** (ou pour les visiteurs qui entrent) au lieu de 20 mamans dans la ville (Kevin est déjà unique, D34).
 - **Mini-carte** et flèche de guidage vers l'objectif quand le joueur n'est pas encore prêt (vers les stations utiles).
 - **Objet de déplacement** à acheter (trottinette, rollers) : cosmétique et un peu plus rapide.
-- **Maisons** : le panneau affiche le stade et le Mog du propriétaire ; bouton « J'aime » et classement des maisons ; personnalisation de l'extérieur (façade, porte de garage, drapeau, boîte aux lettres) ; garage qui s'équipe à chaque stade ; 3 à 5 modèles de maisons différents.
+- **Maisons** : le panneau affiche le stade et le Mog du propriétaire ; ~~bouton « J'aime » et classement des maisons~~ (fait, D112) ; personnalisation de l'extérieur (façade, porte de garage, drapeau, boîte aux lettres) ; garage qui s'équipe à chaque stade ; 3 à 5 modèles de maisons différents.
 - **Classement mondial** (tous serveurs) en plus des statues du serveur.
 - **Arène avec gradins** pour regarder les combats de boss des autres, projecteurs et ambiance de match.
 - **Haltères dorés cachés** dans la ville (toits, recoins) à collectionner, petite récompense.
@@ -259,7 +259,7 @@ ville, animations (intro de la ville, présentation des boss, entrée en scène 
 - Répétition dorée (x3) ; rythme qui accélère avec le combo ; maîtrise des exercices (bronze/argent/or) ; options d'accessibilité (fenêtres plus larges, daltoniens).
 - Boss en mode difficile (revanche renforcée, objet exclusif) ; indice du mentor avant un boss ; spectateurs et foule qui applaudit.
 - Paliers dans un stade (25/50/75 %) ; titres au-dessus de la tête ; succès Roblox ; livre de collection ; garage qui s'équipe à chaque stade.
-- Bonus de groupe à la salle en plein air ; classement des maisons.
+- Bonus de groupe à la salle en plein air ; ~~classement des maisons~~ (fait, D112).
 - Habitants qui se promènent, voitures qui roulent ; haltères dorés cachés ; histoires en 3 épisodes par habitant ; ambiance de nuit à la salle.
 - Variantes de couleur des vêtements ; tenues enregistrées ; pose de victoire au choix ; aura du God Mogger ; extérieur de maison ; lettres de Maman.
 - Menu de réglages (volumes, effets réduits) ; mini-carte ; relecture du français ; vérification téléphone.
@@ -302,3 +302,10 @@ Rejouabilité :
 
 - ~~Comment déformer légèrement le corps à l'intérieur d'un stade (os, formes) ?~~ → Mise à l'échelle des pièces de la coque (D40).
 - ~~Habits en couches ou accessoires rigides : quelle technique fonctionne sur 7 corps très différents ?~~ → Chaque objet modélisé pour chaque corps (D41).
+
+## Idées notées pendant la nuit du 06/11 (Claude, à valider)
+
+- **Interface plus grande sur console** (`GuiService:IsTenFootInterface()`) : la télé est loin, les textes pourraient être agrandis de 20 à 30 %. À décider après un essai sur Xbox.
+- **Aperçu des articles de luxe** dans la boutique : la vue 3D n'affiche pas les particules ; jouer l'effet sur le vrai personnage pendant l'essayage.
+- **« J'aime » rendu au visiteur** : un petit merci du propriétaire (pose) quand il est présent dans sa maison.
+- **Prendre la place (Robux)** : si l'acheteur s'est éloigné pendant la fenêtre d'achat, sa série ne démarre pas (il garde seulement la protection) ; le ramener devant la machine.
