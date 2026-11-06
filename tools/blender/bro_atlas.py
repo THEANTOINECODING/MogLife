@@ -74,8 +74,8 @@ def paint_tint_cells(a, cfg):
     a.cell("veiny", 4, 0, veiny)
 
     def face(x, y):
-        if cfg.get("stubble") and y < 13 and random.random() < 0.3:
-            return tinge((0.12, 0.08, 0.06), 0.4)
+        if cfg.get("stubble") and y < 13:           # barbe de trois jours : ombre douce, pas de pixels épars
+            return tinge((0.2, 0.13, 0.1), 0.2 * min(1.0, (13 - y) / 6))
         if 13 <= y <= 17 and (3 <= x <= 8 or 23 <= x <= 28):
             return tinge((0.95, 0.25, 0.3), 0.24 if cfg.get("fem") else 0.14)   # joues roses (plus pour les corps féminins)
         if cfg.get("cleft") and 15 <= x <= 16 and y < 6:
@@ -98,7 +98,7 @@ def paint_tint_cells(a, cfg):
     a.cell("hair", 1, 1, lambda x, y: veil(grain(0.12) * (0.8 if (x * 3 + y) % 7 == 0 else 1.0)))
     a.cell("iris", 3, 1, lambda x, y: veil(0.7) if (x - 15.5) ** 2 + (y - 15.5) ** 2 > 200 else veil(grain(0.05)))
     # Lèvres : plus colorées (rose framboise) pour les corps féminins
-    a.cell("lips", 5, 1, lambda x, y: tinge((0.62, 0.06, 0.22), 0.55) if cfg.get("fem") else tinge((0.45, 0.06, 0.1), 0.32))
+    a.cell("lips", 5, 1, lambda x, y: tinge((0.62, 0.06, 0.22), 0.55) if cfg.get("fem") else tinge((0.5, 0.12, 0.14), 0.5))
     a.cell("brow", 4, 2, lambda x, y: veil(0.75 * grain(0.08)))
 
 

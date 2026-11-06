@@ -2,6 +2,24 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-06 (Demande d'Antoine : Bro moins musclé, têtes refaites qui évoluent)
+
+- **D117 — Bro ramené à un vrai palier ; mâchoires et bouches sculptées qui évoluent avec le stade.** Raison : le Bro ressemblait trop au Chad, et les bouches et mâchoires (blocs arrondis) manquaient de qualité.
+  - Bro allégé (épaules, biceps, pecs, dorsaux, trapèzes, cuisses, carrure) dans `tools/blender/build_bodies.py`.
+  - Nouvelle **définition musculaire** par stade (`defn` : Normie 0, GymRat 0,3, Bro 0,5, Alpha 0,75, Chad 0,9, Gigachad 1, GOD MOGGER 1,15). Abdos, biceps, triceps, avant-bras, quadriceps et mollets n'apparaissent qu'à partir du Bro, encore doux, puis se creusent. Pecs plus plats aux petits stades.
+  - **Mâchoire sculptée** (super-ellipse) dans la même boîte qu'avant, donc les barbes et les visages du coiffeur restent en place.
+    - Masculin : menton rond et fuyant au Normie, enclume carrée qui avance au GOD MOGGER, arcade sourcilière à partir de l'Alpha.
+    - Féminin : mâchoire ronde qui s'affirme un peu, et qui avance un peu aux gros stades pour rester visible devant les trapèzes.
+  - **Bouches en courbe** : deux lèvres posées sur le visage par lancer de rayons, et les dents entre elles.
+    - Petite bouche molle et dents de lapin au Normie ; grand sourire carré et dent en or au GOD MOGGER.
+    - Lèvres et sourcils de plus en plus épais avec le stade.
+    - Nervous : moue ondulée. Confident : sourire en coin. Determined : sourire serré qui montre les dents.
+  - Les noms des pièces sont inchangés (`Head_Mouth<Expr>`, `Head_Brow<Expr>`).
+  - Atlas : lèvres masculines plus foncées ; la barbe de trois jours devient une ombre douce, et non plus des pixels épars.
+  - Le haut des corps féminins s'arrête sous le menton.
+  - Validation OK : 14 corps, 74 articles, 0 défaut de couverture.
+  - Toujours en attente d'import dans Studio (fichiers `.pending`, voir D115).
+
 ## 2026-11-06 (Demande d'Antoine : GOD MOGGER démesuré, Normie maigre à l'extrême, anatomie)
 
 - **D116 — GOD MOGGER plus grand et plus énorme, Normie maigre à l'extrême, anatomie sculptée.**

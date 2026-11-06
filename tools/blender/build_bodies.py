@@ -25,6 +25,7 @@ Variable optionnelle ONLY = ["Normie", ...] pour ne reconstruire que certains st
 """
 import bpy, bmesh, json, math, os, random
 from mathutils import Vector
+from mathutils.bvhtree import BVHTree
 
 D = r"C:\Users\antoi\Documents\MogLife\tools\blender"
 ROOT = r"C:\Users\antoi\Documents\MogLife"
@@ -56,8 +57,8 @@ STAGES = {
                    neck=0.21, thigh=0.3, calf=0.2, head_r=0.68, jaw_w=0.6, jaw_h=0.4, jaw_fwd=0.05, eye_r=0.16),
     "Bro": dict(top="tank", top_color=(0.2, 0.62, 0.66), shorts=(0.15, 0.15, 0.2), shoe=(0.95, 0.95, 0.95),
                 hair=(0.2, 0.13, 0.07), mouth="grin", stubble=True,
-                delt=0.37, bicep=0.34, forearm=0.24, fist=0.34, chest_w=2.0, depth=0.9, pec=0.3, lat=0.28, trap=0.3,
-                neck=0.26, thigh=0.37, calf=0.24, head_r=0.64, jaw_w=0.68, jaw_h=0.45, jaw_fwd=0.1, eye_r=0.16),
+                delt=0.33, bicep=0.29, forearm=0.22, fist=0.33, chest_w=1.8, depth=0.84, pec=0.24, lat=0.2, trap=0.22,
+                neck=0.24, thigh=0.34, calf=0.23, head_r=0.64, jaw_w=0.68, jaw_h=0.45, jaw_fwd=0.1, eye_r=0.16),
     "Alpha": dict(top="none", shorts=(0.12, 0.12, 0.16), shoe=(0.15, 0.15, 0.17), hair=(0.15, 0.1, 0.06),
                   mouth="smug", stubble=True,
                   delt=0.48, bicep=0.45, forearm=0.3, fist=0.38, chest_w=2.4, depth=1.05, pec=0.42, lat=0.4, trap=0.5,
@@ -83,6 +84,11 @@ STAGES = {
 
 for _cfg in STAGES.values():
     _cfg["tint"] = True
+# Définition musculaire (D117) : 0 = aucun relief ; les reliefs (abdos, biceps, triceps, quadriceps, mollets) n'arrivent
+# qu'au Bro, encore doux, et se creusent jusqu'au GOD MOGGER
+for _name, _defn in (("Normie", 0.0), ("GymRat", 0.3), ("Bro", 0.5), ("Alpha", 0.75), ("Chad", 0.9),
+                     ("Gigachad", 1.0), ("GodMogger", 1.15)):
+    STAGES[_name]["defn"] = _defn
 
 
 def feminine(cfg):
@@ -99,7 +105,7 @@ def feminine(cfg):
         thigh=cfg["thigh"] * 1.15, calf=cfg["calf"] * 1.02,
         trap=cfg["trap"] * 0.35, neck=cfg["neck"] * 0.72, lat=0.0, pec=cfg["pec"] * 0.4,
         chest_w=cfg["chest_w"] * 0.8, depth=cfg["depth"] * 0.9, belly=cfg.get("belly", 0) * 0.5,
-        jaw_w=cfg["jaw_w"] * 0.7, jaw_h=cfg["jaw_h"] * 0.78, jaw_fwd=0.0,
+        jaw_w=cfg["jaw_w"] * 0.7, jaw_h=cfg["jaw_h"] * 0.78, jaw_fwd=cfg["jaw_fwd"] * 0.6,
         eye_r=cfg["eye_r"] * 1.28, accent=(1.0, 0.38, 0.62),
     )
     f["bust"] = 0.07 + f["depth"] * 0.07
@@ -299,6 +305,79 @@ def pec_slab(center, width, height, thick, sx):
     return bm
 
 
+def jaw_shape(center, w, h, d, square, chin, taper):
+    """Mâchoire sculptée qui évolue avec le stade (D117), dans la même boîte que l'ancienne (barbes et visages du
+    coiffeur s'y appuient). square 0 -> 1 : menton rond et fuyant -> enclume carrée ; chin : menton qui avance
+    (négatif = fuyant) ; taper : rétrécit vers le menton."""
+    bm = bmesh.new()
+    bmesh.ops.create_uvsphere(bm, u_segments=28, v_segments=18, radius=1.0)
+    p = 2 + square * 5
+    for v in bm.verts:
+        x, y, z = v.co
+        r = math.hypot(x, y)
+        if r > 1e-6:
+            a = math.atan2(y, x)
+            k = 1 / (abs(math.cos(a)) ** p + abs(math.sin(a)) ** p) ** (1 / p)
+            x, y = x * k, y * k
+        if z < 0:
+            x *= 1 - taper * (-z) ** 1.5
+            if y < 0:
+                y -= chin * (-z) * (-y)            # le bas de l'avant (menton) avance ou recule
+        else:
+            x *= 1 - 0.18 * z                       # le haut rentre et se fond dans le crâne (pas de rebord)
+            y *= 1 - 0.4 * z
+            z *= 0.75
+        v.co = Vector((center[0] + x * w / 2, center[1] + y * d / 2, center[2] + z * h / 2))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return bm
+
+
+def sweep(points, radii, sides=10, squash=1.0):
+    """Tube qui suit une courbe (lèvres, rangée de dents) ; squash < 1 l'aplatit verticalement. Bouts en pointe
+    douce."""
+    pts = [Vector(q) for q in points]
+    bm = bmesh.new()
+    loops = []
+    for i, c in enumerate(pts):
+        t = (pts[min(i + 1, len(pts) - 1)] - pts[max(i - 1, 0)]).normalized()
+        up = Vector((0, 0, 1))
+        side = t.cross(up).normalized()
+        up = side.cross(t).normalized()
+        r = max(radii[i], 1e-4)
+        loops.append([bm.verts.new(c + (side * math.cos(2 * math.pi * k / sides) +
+                                         up * math.sin(2 * math.pi * k / sides) * squash) * r)
+                      for k in range(sides)])
+    for lo, hi in zip(loops, loops[1:]):
+        for k in range(sides):
+            j = (k + 1) % sides
+            bm.faces.new((lo[k], lo[j], hi[j], hi[k]))
+    t0 = (pts[1] - pts[0]).normalized()
+    t1 = (pts[-1] - pts[-2]).normalized()
+    a = bm.verts.new(pts[0] - t0 * radii[0] * 0.8)
+    b = bm.verts.new(pts[-1] + t1 * radii[-1] * 0.8)
+    for k in range(sides):
+        j = (k + 1) % sides
+        bm.faces.new((loops[0][j], loops[0][k], a))
+        bm.faces.new((loops[-1][k], loops[-1][j], b))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return bm
+
+
+def face_curve(tree, x0, x1, z_of, y_fallback, n=11, inset=0.0):
+    """Points posés sur la surface avant du visage (lancer de rayons sur les volumes de tree, le plus en avant gagne), de x0 à x1, hauteur z_of(u)
+    avec u de -1 à 1."""
+    out = []
+    for i in range(n):
+        u = -1 + 2 * i / (n - 1)
+        x = x0 + (x1 - x0) * (u + 1) / 2
+        z = z_of(u)
+        hits = [t.ray_cast(Vector((x, -20, z)), Vector((0, 1, 0)), 40)[0] for t in tree]
+        hits = [h.y for h in hits if h is not None]
+        y = min(hits) if hits else y_fallback
+        out.append((x, y + inset, z))
+    return out
+
+
 class Body:
     """Pièces d'un corps, rangées par partie du squelette."""
 
@@ -423,17 +502,19 @@ def build_body(name):
         body.make(side + "UpperLeg", spindle((x, 0, knee.z), (x, 0, hip.z), calf * 0.8, thigh, thigh * 0.95,
                                              bulge_dir=(0, -1, 0), bulge=thigh * 0.15, cap=0.3), "skin")
         lx = 1 if x > 0 else -1
-        if thigh > 0.2:
+        defn = cfg.get("defn", 1.0)
+        m = 0.55 + 0.45 * defn
+        if defn >= 0.5:
             tl = hip.z - knee.z
             body.make(side + "UpperLeg", ball((x - lx * thigh * 0.42, -thigh * 0.22, knee.z + tl * 0.22),
-                                              (thigh * 0.5, thigh * 0.5, tl * 0.2), 12, 10), "skin")
+                                              (thigh * 0.5 * m, thigh * 0.5 * m, tl * 0.2), 12, 10), "skin")
             body.make(side + "UpperLeg", ball((x + lx * thigh * 0.36, -thigh * 0.08, knee.z + tl * 0.52),
-                                              (thigh * 0.6, thigh * 0.62, tl * 0.36), 12, 10), "skin")
-        if calf > 0.15:
+                                              (thigh * 0.6 * m, thigh * 0.62 * m, tl * 0.36), 12, 10), "skin")
+        if defn >= 0.5:
             ll = knee.z - ankle.z
             for k in (-1, 1):
                 body.make(side + "LowerLeg", ball((x + k * calf * 0.3, calf * 0.32, ankle.z + ll * (0.68 if k > 0 else 0.64)),
-                                                  (calf * 0.56, calf * 0.58, ll * 0.2), 12, 10), "skin")
+                                                  (calf * 0.56 * m, calf * 0.58 * m, ll * 0.2), 12, 10), "skin")
         # Jambe de short : tube un peu évasé, ourlet net (la jambe passe dedans)
         sh_r = max(thigh * 1.14, 0.15) if cfg.get("baggy") else thigh * (1.3 if fem else 1.14)
         body.make(side + "UpperLeg", spindle((x, 0, hip.z - (hip.z - knee.z) * 0.45), (x, 0, hip.z + 0.08),
@@ -492,9 +573,10 @@ def build_body(name):
         ]
         body.make("UpperTorso", loft2(S, 22), "skin")
         # Abdos en relief (6 plaquettes) et pectoraux, quand ils se voient
-        abs_on = top in ("none", "sports")
+        defn = cfg.get("defn", 1.0)
+        abs_on = top in ("none", "sports") and defn >= 0.5
         if abs_on:
-            ab_d = 0.035 + cfg["pec"] * 0.06
+            ab_d = (0.035 + cfg["pec"] * 0.06) * defn
             for row in range(3):
                 z = waist.z + h * (0.1 + row * 0.15)
                 for sx in (-1, 1):
@@ -507,7 +589,7 @@ def build_body(name):
             for sx in (-1, 1):
                 x = sx * cw * 0.43
                 z = neck.z - h * 0.3
-                thick = pec * 0.7 + 0.06
+                thick = (pec * 0.7 + 0.06) * min(1.0, 0.4 + 0.6 * defn)
                 body.make("UpperTorso", pec_slab((x, front_y(S, x, z) + thick * 0.12, z), cw * 0.44, h * 0.17 + pec * 0.07,
                                                  thick, sx), "skin")
         # Haut de départ : coque juste au-dessus de la peau (débardeur ou brassière), avec bretelles
@@ -516,7 +598,8 @@ def build_body(name):
             strap_pad = 0.01
             bust = cfg.get("bust", 0) if fem else 0.0
             z_lo = waist.z - 0.17 if top == "tank" else neck.z - h * 0.52
-            z_hi = neck.z - h * 0.12
+            # Le bord du haut reste sous le menton (la tête des gros stades s'enfonce dans les trapèzes)
+            z_hi = min(neck.z - h * 0.12, g["jaw_z"] - cfg["jaw_h"] * 0.6)
             n = 12 if top == "tank" else 8
             shell = []
             for i in range(n):
@@ -600,16 +683,18 @@ def build_body(name):
                                              bulge_dir=(0, -1, 0), bulge=bicep * 0.25), veiny)
         body.make(side + "LowerArm", spindle(tuple(el), tuple(wr), forearm * 0.88, forearm, forearm * 0.62, mid_t=0.3),
                   veiny)
-        if bicep > 0.15:
+        defn = cfg.get("defn", 1.0)
+        m = 0.55 + 0.45 * defn
+        if defn >= 0.5:
             arm_len = arm_top.z - el.z
             body.make(side + "UpperArm", ball(tuple(arm_top.lerp(el, 0.56) + Vector((0, -bicep * 0.42, 0))),
-                                              (bicep * 0.8, bicep * 0.72, arm_len * 0.3), 14, 10), veiny)
+                                              (bicep * 0.8 * m, bicep * 0.72 * m, arm_len * 0.3), 14, 10), veiny)
             body.make(side + "UpperArm", ball(tuple(arm_top.lerp(el, 0.38) + Vector((sx * bicep * 0.12, bicep * 0.4, 0))),
-                                              (bicep * 0.82, bicep * 0.68, arm_len * 0.36), 14, 10), veiny)
-        if forearm > 0.12:
+                                              (bicep * 0.82 * m, bicep * 0.68 * m, arm_len * 0.36), 14, 10), veiny)
+        if defn >= 0.5:
             fa_len = el.z - wr.z
             body.make(side + "LowerArm", ball(tuple(el.lerp(wr, 0.24) + Vector((sx * forearm * 0.28, -forearm * 0.18, 0))),
-                                              (forearm * 0.74, forearm * 0.74, fa_len * 0.26), 12, 10), veiny)
+                                              (forearm * 0.74 * m, forearm * 0.74 * m, fa_len * 0.26), 12, 10), veiny)
         if cfg.get("knobby"):                         # coudes noueux
             body.make(side + "LowerArm", ball(tuple(el + Vector((0, 0.01, 0))), (forearm * 1.18, forearm * 1.15, forearm * 1.1),
                                               12, 8), "skin")
@@ -628,16 +713,26 @@ def build_body(name):
     head_r = cfg["head_r"]
     hy = hc.y - 0.05 - trap * 0.1
     head_z = hc.z + 0.05
-    body.make("Head", ball((0, hy, head_z), (head_r * 0.82, head_r * 0.95, head_r), 18, 14), "skin", front_cell="face")
+    cran_bm = ball((0, hy, head_z), (head_r * 0.82, head_r * 0.95, head_r), 18, 14)
+    cran_tree = BVHTree.FromBMesh(cran_bm)
+    body.make("Head", cran_bm, "skin", front_cell="face")
     jaw_w, jaw_h = cfg["jaw_w"], cfg["jaw_h"]
     jaw_depth, jaw_y, jaw_z = g["jaw_depth"], g["jaw_y"], g["jaw_z"]
     jaw_front, jaw_top = g["jaw_front"], g["jaw_top"]
-    if fem:                                           # menton rond (une mâchoire carrée se lit masculine)
-        body.make("Head", ball((0, jaw_y, jaw_z), (jaw_w * 0.56, jaw_depth * 0.5, jaw_h * 0.62), 16, 10), "skin",
-                  front_cell="face")
-    else:
-        body.make("Head", rounded_box((0, jaw_y, jaw_z), (jaw_w, jaw_depth, jaw_h), bevel=0.7, taper_top=0.85, segments=3),
-                  "skin", front_cell="face")
+    # Progression du visage (D117) : 0 au Normie, 1 au GOD MOGGER
+    grade = ORDER.index(BASE[name]) / (len(ORDER) - 1)
+    if fem:                                           # mâchoire ronde et fine qui s'affirme un peu au fil des stades
+        jaw_bm = jaw_shape((0, jaw_y, jaw_z), jaw_w * 1.12, jaw_h * 1.24, jaw_depth, 0.05 + 0.2 * grade,
+                           -0.05 + 0.15 * grade, 0.45)
+    else:                                             # menton fuyant et rond -> enclume carrée qui avance
+        jaw_bm = jaw_shape((0, jaw_y, jaw_z), jaw_w, jaw_h, jaw_depth, 0.1 + 0.85 * grade, -0.15 + 0.5 * grade,
+                           0.45 - 0.35 * grade)
+    face_tree = (BVHTree.FromBMesh(jaw_bm), cran_tree)    # surface du visage = mâchoire + crâne
+    body.make("Head", jaw_bm, "skin", front_cell="face")
+    if not fem and grade >= 0.5:                      # gros stades : arcade sourcilière de brute
+        body.make("Head", ball((0, hy - head_r * 0.8, head_z + head_r * 0.27),
+                               (head_r * 0.66, head_r * 0.12 * grade, head_r * 0.09), 16, 8), "skin")
+    ridge = head_r * 0.12 * grade if (not fem and grade >= 0.5) else 0.0
     # Nez arrondi : arête et bout
     nose_y = min(hy - head_r * 0.88, jaw_front)
     nose_s = head_r * (0.8 if fem else 1.0)
@@ -649,35 +744,55 @@ def build_body(name):
         body.make("Head", ball((head_r * 0.8 * sx, hy + 0.04, head_z - head_r * 0.02), (0.07, head_r * 0.2, head_r * 0.27),
                                10, 8), "skin")
 
-    # Bouche et sourcils : une version par expression (le joueur en choisit une ; les autres pièces sont ignorées)
-    lips_h = jaw_h * (0.32 if fem else 0.2)
-    brow_t = 0.042 if fem else 0.07                   # sourcils fins et arqués pour les corps féminins
-    brow_y = hy - head_r * 0.86
+    # Bouche : deux lèvres en courbe posées sur la mâchoire, les dents entre elles ; une par expression. Elle évolue :
+    # petite bouche molle et dents de lapin au Normie, grand sourire carré (et une dent en or) au GOD MOGGER.
+    brow_t = 0.042 if fem else 0.055 + 0.05 * grade   # sourcils de plus en plus épais (fins et arqués au féminin)
+    brow_y = hy - head_r * 0.86 - ridge * 0.6
     brow_z = head_z + head_r * 0.3
-
-    def lips(center, size):
-        return rounded_box(center, size, bevel=0.9, segments=2)
+    lip_r = max(0.03, jaw_h * (0.11 if fem else 0.065 + 0.02 * grade))
+    mz = jaw_z + jaw_h * (0.14 if fem else 0.08)     # bouche féminine un peu plus haute (mâchoire ronde)
+    mh = jaw_h * 0.16
 
     def stroke(a, b, t0, t1):                         # trait de sourcil : bâtonnet aplati aux bouts ronds
         return spindle(tuple(a), tuple(b), t0, (t0 + t1) / 2, t1, sides=8, rings=2, cap=0.7,
                        squash=((0, 1, 0), 0.6))
 
+    def mouth(group, width, curve, gap, teeth=True, gold=False):
+        half = jaw_w * (0.58 if fem else 0.5 + 0.08 * grade) * width / 2
+        mid = face_curve(face_tree, -half, half, lambda u: mz + curve(u) * mh, jaw_front, 13)
+        n = len(mid)
+        us = [-1 + 2 * i / (n - 1) for i in range(n)]
+        r = [lip_r * (0.35 + 0.65 * math.sqrt(max(0.0, 1 - u * u))) for u in us]
+        upper = [(x, y + r[i] * 0.3, z + gap(us[i]) / 2 + r[i] * 0.55) for i, (x, y, z) in enumerate(mid)]
+        lower = [(x, y + r[i] * 0.25, z - gap(us[i]) / 2 - r[i] * 0.6) for i, (x, y, z) in enumerate(mid)]
+        body.make("Head", sweep(upper, [q * 0.95 for q in r], 10, 0.7), "lips", group=group)
+        body.make("Head", sweep(lower, [q * 1.12 for q in r], 10, 0.75), "lips", group=group)
+        if teeth:
+            tr = [max(0.012, gap(u) * 0.5 + lip_r * 0.25) * (0.5 + 0.5 * math.sqrt(max(0.0, 1 - u * u))) for u in us]
+            row = [(x, y + tr[i] * 0.55, z) for i, (x, y, z) in enumerate(mid)]
+            body.make("Head", sweep(row[1:-1], tr[1:-1], 10, 0.8), "teeth", group=group)
+            if gold:
+                x, y, z = row[n * 2 // 3]
+                body.make("Head", ball((x, y - tr[n * 2 // 3] * 0.5, z), (half * 0.09, 0.02, tr[n * 2 // 3] * 0.8), 8, 6),
+                          "gold", group=group)
+        if not fem and grade == 0:                    # Normie : deux dents de lapin sous la lèvre du haut
+            x, y, z = mid[n // 2]
+            for sx in (-1, 1):
+                body.make("Head", rounded_box((sx * lip_r * 0.75, y - 0.005, z - lip_r * 0.6),
+                                              (lip_r * 1.35, lip_r * 0.9, lip_r * 2.2), bevel=0.6), "teeth", group=group)
+
     for expr in EXPRESSIONS:
-        mouth, brow = "Mouth" + expr, "Brow" + expr
-        if expr == "Nervous":                         # petite bouche de travers, sourcils relevés au milieu
-            body.make("Head", lips((jaw_w * 0.05, jaw_front - 0.03, jaw_z + jaw_h * 0.08), (jaw_w * 0.4, 0.07, lips_h * 0.7)),
-                      "lips", group=mouth)
-            body.make("Head", rounded_box((jaw_w * 0.06, jaw_front - 0.06, jaw_z + jaw_h * 0.1),
-                                          (jaw_w * 0.16, 0.03, lips_h * 0.3), bevel=0.5), "teeth", group=mouth)
+        brow = "Brow" + expr
+        if expr == "Nervous":                         # petite bouche molle et ondulée, coins vers le bas
+            mouth("Mouth" + expr, 0.62, lambda u: -0.35 * u * u + 0.07 * math.sin(2 * math.pi * u), lambda u: lip_r * 0.25,
+                  teeth=False)
             for sx in (-1, 1):
                 inner = Vector((sx * head_r * 0.12, brow_y, brow_z + head_r * 0.1))
                 outer = Vector((sx * head_r * 0.62, brow_y + 0.02, brow_z - head_r * 0.06))
                 body.make("Head", stroke(inner, outer, brow_t, brow_t * 0.8), "brow", group=brow)
-        elif expr == "Confident":                     # sourire en coin, un sourcil levé
-            body.make("Head", lips((0, jaw_front - 0.03, jaw_z + jaw_h * 0.1), (jaw_w * 0.5, 0.07, lips_h)), "lips",
-                      group=mouth)
-            body.make("Head", rounded_box((jaw_w * 0.1, jaw_front - 0.07, jaw_z + jaw_h * 0.11),
-                                          (jaw_w * 0.22, 0.04, jaw_h * 0.08), bevel=0.5), "teeth", group=mouth)
+        elif expr == "Confident":                     # sourire en coin : un côté remonte et montre les dents
+            mouth("Mouth" + expr, 0.85, lambda u: 0.12 * u * u + 0.6 * max(0.0, u) ** 2,
+                  lambda u: lip_r * (0.2 + 1.3 * max(0.0, u) ** 1.5))
             for sx in (-1, 1):
                 lift = head_r * (0.12 if sx > 0 else 0.0)
                 if fem:                               # arc : monte du nez vers le milieu, redescend vers la tempe
@@ -689,12 +804,10 @@ def build_body(name):
                 else:
                     a = Vector((head_r * 0.1 * sx, brow_y, brow_z + lift))
                     b = Vector((head_r * 0.62 * sx, brow_y + 0.02, brow_z + lift))
-                    body.make("Head", stroke(a, b, 0.065, 0.055), "brow", group=brow)
-        else:                                         # Determined : grand sourire serré, sourcils froncés
-            body.make("Head", lips((0, jaw_front - 0.03, jaw_z + jaw_h * 0.1), (jaw_w * 0.55, 0.07, lips_h)), "lips",
-                      group=mouth)
-            body.make("Head", rounded_box((0, jaw_front - 0.07, jaw_z + jaw_h * 0.11), (jaw_w * 0.42, 0.04, jaw_h * 0.08),
-                                          bevel=0.5), "teeth", group=mouth)
+                    body.make("Head", stroke(a, b, brow_t, brow_t * 0.8), "brow", group=brow)
+        else:                                         # Determined : grand sourire serré, toutes les dents
+            mouth("Mouth" + expr, 1.0, lambda u: 0.5 * u * u, lambda u: lip_r * (1.5 + 0.8 * grade) * (1 - 0.6 * u * u),
+                  gold=(grade == 1 and not fem))
             for sx in (-1, 1):
                 inner = Vector((sx * head_r * 0.1, brow_y, brow_z - head_r * 0.06))
                 outer = Vector((sx * head_r * 0.62, brow_y + 0.02, brow_z + head_r * 0.1))
