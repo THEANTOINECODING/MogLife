@@ -15,6 +15,7 @@ local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Format = require(ReplicatedStorage.Shared.Format)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Preview3D = require(script.Parent.Parent.Preview3D)
 local Ui = require(script.Parent.Parent.Ui)
 
 local SHOP_TAG = "BoostShop"
@@ -22,6 +23,7 @@ local SHOP_TAG = "BoostShop"
 local player = Players.LocalPlayer
 
 local MinigameController
+local SnackController
 
 local panel: Frame
 local list: ScrollingFrame
@@ -74,17 +76,31 @@ local function clearRows(container: Instance)
 	end
 end
 
--- Pastille de couleur de l'aliment, avec un texte optionnel au centre (nombre en réserve)
-local function swatch(color: Color3, text: string?, parent: Instance)
-	local dot = Ui.create("Frame", {
+-- Aperçu 3D de l'aliment qui tourne (D121), bordé de sa couleur, avec un texte optionnel (nombre en réserve)
+local function swatch(boostId: string, text: string?, parent: Instance)
+	local view = Preview3D.new(parent, {
+		Name = "Preview",
 		AnchorPoint = Vector2.new(0, 0.5),
-		Position = UDim2.new(0, 10, 0.5, 0),
-		Size = UDim2.fromOffset(40, 40),
-		BackgroundColor3 = color,
-		Parent = parent,
-	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 2, 0.3) })
+		Position = UDim2.new(0, 6, 0.5, 0),
+		Size = UDim2.fromOffset(52, 52),
+	})
+	local stroke = view.frame:FindFirstChildOfClass("UIStroke")
+	if stroke then
+		stroke.Color = Boosts[boostId].color
+		stroke.Transparency = 0.1
+	end
+	Preview3D.Show(view, SnackController.BuildFood(boostId))
 	if text then
-		Ui.label({ Position = UDim2.fromOffset(4, 6), Size = UDim2.new(1, -8, 1, -12), Text = text, Parent = dot })
+		Ui.label({
+			AnchorPoint = Vector2.new(1, 1),
+			Position = UDim2.new(1, 2, 1, 2),
+			Size = UDim2.fromOffset(30, 20),
+			BackgroundTransparency = 0.15,
+			BackgroundColor3 = Color3.fromRGB(20, 18, 30),
+			Text = text,
+			ZIndex = 3,
+			Parent = view.frame,
+		})
 	end
 end
 
@@ -107,17 +123,17 @@ local function render()
 			LayoutOrder = index,
 			Parent = list,
 		}, { Ui.corner(UDim.new(0, 10)) })
-		swatch(boost.color, if owned > 0 then Texts.Get("Boost.Count", { count = owned }) else nil, row)
+		swatch(id, if owned > 0 then Texts.Get("Boost.Count", { count = owned }) else nil, row)
 		Ui.label({
-			Position = UDim2.fromOffset(60, 6),
-			Size = UDim2.new(1, -210, 0, 28),
+			Position = UDim2.fromOffset(66, 6),
+			Size = UDim2.new(1, -216, 0, 28),
 			TextXAlignment = Enum.TextXAlignment.Left,
 			Text = Texts.Get(`Boost.{id}`),
 			Parent = row,
 		})
 		Ui.label({
-			Position = UDim2.fromOffset(60, 36),
-			Size = UDim2.new(1, -210, 0, 20),
+			Position = UDim2.fromOffset(66, 36),
+			Size = UDim2.new(1, -216, 0, 20),
 			TextXAlignment = Enum.TextXAlignment.Left,
 			TextColor3 = Color3.fromRGB(200, 200, 210),
 			Text = effectText(boost),
@@ -184,17 +200,17 @@ local function renderBag()
 			LayoutOrder = index,
 			Parent = bagList,
 		}, { Ui.corner(UDim.new(0, 10)) })
-		swatch(boost.color, Texts.Get("Boost.Count", { count = count }), row)
+		swatch(id, Texts.Get("Boost.Count", { count = count }), row)
 		Ui.label({
-			Position = UDim2.fromOffset(60, 6),
-			Size = UDim2.new(1, -176, 0, 28),
+			Position = UDim2.fromOffset(66, 6),
+			Size = UDim2.new(1, -182, 0, 28),
 			TextXAlignment = Enum.TextXAlignment.Left,
 			Text = Texts.Get(`Boost.{id}`),
 			Parent = row,
 		})
 		Ui.label({
-			Position = UDim2.fromOffset(60, 36),
-			Size = UDim2.new(1, -176, 0, 18),
+			Position = UDim2.fromOffset(66, 36),
+			Size = UDim2.new(1, -182, 0, 18),
 			TextXAlignment = Enum.TextXAlignment.Left,
 			TextColor3 = Color3.fromRGB(200, 200, 210),
 			Text = effectText(boost),
@@ -428,6 +444,7 @@ end
 
 function BoostController.Init(controllers)
 	MinigameController = controllers.MinigameController
+	SnackController = controllers.SnackController
 end
 
 function BoostController.Start()

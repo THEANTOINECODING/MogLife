@@ -20,6 +20,9 @@ CATEGORIES = [
     ("props_zones.py", "build_zones", "Props_Zones"),
     ("props_kit.py", "build_kit", "Props_Kit"),
     ("props_events.py", "build_events", "Props_Events"),
+    # D121 : chargé en dernier, remplace furniture() et bleachers() (meubles refaits, tribunes de stade) et ajoute les
+    # décors des secrets
+    ("props_furniture_v2.py", "build_v2_extras", "Props_Secrets"),
 ]
 
 ns = {}
@@ -36,6 +39,11 @@ for row, (module, build, collection) in enumerate(CATEGORIES):
     for o in P.col.objects:
         o.location.y -= row * 140
     summary.append((collection, len(P.report), P.report))
+
+# D121 : faces superposées (deux surfaces au même endroit qui clignotent) séparées avant l'export
+exec(open(os.path.join(D, "coplanar_fix.py"), encoding="utf-8").read(), ns)
+print("faces superposées séparées :",
+      ns["separate_coplanar"]([o for _, _, col in CATEGORIES for o in bpy.data.collections[col].objects if o.type == "MESH"]))
 
 # Texture partagée en PNG à côté des FBX
 mat = pal.material()

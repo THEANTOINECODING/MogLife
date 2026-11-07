@@ -22,6 +22,8 @@ return {
 		Tutorial = { Step = 1, Done = false }, -- tutoriel des 5 premières minutes (TutorialService)
 		Boost = { Id = "", EndsAt = 0 }, -- boost temporaire en cours (BoostService), EndsAt en os.time()
 		BoostStock = {}, -- réserve d'aliments achetés et pas encore mangés : boostId -> nombre (D114)
+		ShopTours = {}, -- magasins dont la visite guidée a été vue ou passée : store -> true (D121)
+		Secrets = {}, -- secrets de la ville trouvés : secretId -> true (D121, Config/Secrets.luau)
 		Records = {}, -- meilleure note de série par exercice (0 à 100)
 		Tips = {}, -- conseils du mentor déjà donnés
 		-- Réglages du joueur (Config/Settings.luau), tous activés par défaut
@@ -599,6 +601,36 @@ return {
 		MaxStock = 10, -- aliments d'une même sorte en réserve (D114) ❓
 		EatCooldown = 1.5, -- secondes entre deux repas demandés (le repas lui-même dure EatDuration)
 		EatDuration = 1.4, -- durée de l'animation du repas (SnackController)
+	},
+	-- Visite guidée d'un magasin à la première entrée (D121) : durées des plans (secondes, 5 à 8 s au total),
+	-- distances de la caméra (studs), nombre max de comptoirs montrés, miroirs voisins regroupés sous MergeDistance
+	ShopTour = {
+		CheckInterval = 0.5,
+		AnswerTimeout = 30,
+		Overview = 1.4,
+		Vendor = 2.2,
+		Counter = 1.1,
+		Return = 0.7,
+		OverviewHeight = 8,
+		VendorDistance = 7,
+		CounterDistance = 9,
+		MaxCounters = 3,
+		MergeDistance = 14,
+	},
+	-- Aura d'un boost actif (D121) : légère lueur de la couleur de l'aliment (Boosts[id].color) autour du joueur, vue
+	-- par tous, tant que le boost dure. Rate = particules par seconde, Size = taille (studs) au début / à la fin,
+	-- Transparency = transparence au début / à la fin, Lifetime en secondes ; Light = petite lumière autour du torse.
+	BoostAura = {
+		Rate = 6,
+		Size = { 2.2, 3.4 },
+		Transparency = { 0.82, 1 },
+		Lifetime = 1.6,
+		Speed = 0.6,
+		Rise = 1.2, -- vitesse de montée (studs/s)
+		LightBrightness = 0.6,
+		LightRange = 7,
+		MaxDistance = 150, -- au-delà, pas d'aura (personne ne la verrait)
+		FadeTime = 0.6,
 	},
 
 	-- Apparence provisoire (avatar Roblox) en attendant le personnage du jeu

@@ -14820,6 +14820,65 @@
    }
   },
   {
+   "name": "ClothesZone",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     42,
+     16,
+     34
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -78.0,
+       8.1,
+       84.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "ShopZone"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false,
+    "CastShadow": false
+   },
+   "attributes": {
+    "Store": "Clothes"
+   }
+  },
+  {
    "name": "SignShirt",
    "className": "Part",
    "properties": {
@@ -19832,6 +19891,65 @@
     },
     "Material": "Metal",
     "CanCollide": true
+   }
+  },
+  {
+   "name": "BarberZone",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     34,
+     14,
+     28
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -30.0,
+       7.1,
+       87.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "ShopZone"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false,
+    "CastShadow": false
+   },
+   "attributes": {
+    "Store": "Barber"
    }
   },
   {
@@ -26310,6 +26428,65 @@
    }
   },
   {
+   "name": "FurnitureZone",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     46,
+     16,
+     34
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       36.0,
+       8.1,
+       84.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "ShopZone"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false,
+    "CastShadow": false
+   },
+   "attributes": {
+    "Store": "Furniture"
+   }
+  },
+  {
    "name": "SignSeat",
    "className": "Part",
    "properties": {
@@ -31602,6 +31779,65 @@
     },
     "Material": "Metal",
     "CanCollide": true
+   }
+  },
+  {
+   "name": "GroceryZone",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     34,
+     14,
+     28
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       82.0,
+       7.1,
+       87.0
+      ],
+      "orientation": [
+       [
+        -1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        -0.0,
+        0.0,
+        -1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "ShopZone"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false,
+    "CastShadow": false
+   },
+   "attributes": {
+    "Store": "Grocery"
    }
   },
   {
@@ -52136,15 +52372,15 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         -67.555,
+         -102.0,
          0.22,
-         -67.555
+         -64.0
         ],
         "orientation": [
          [
-          -0.707107,
           0.0,
-          -0.707107
+          0.0,
+          -1.0
          ],
          [
           0.0,
@@ -52152,9 +52388,9 @@
           0
          ],
          [
-          0.707107,
+          1.0,
           0.0,
-          -0.707107
+          0.0
          ]
         ]
        }
@@ -52188,15 +52424,15 @@
     "CFrame": {
      "CFrame": {
       "position": [
-       -67.555,
+       -102.0,
        5.05,
-       -67.555
+       -64.0
       ],
       "orientation": [
        [
-        -0.707107,
         0.0,
-        -0.707107
+        0.0,
+        -1.0
        ],
        [
         0.0,
@@ -52204,9 +52440,9 @@
         0
        ],
        [
-        0.707107,
+        1.0,
         0.0,
-        -0.707107
+        0.0
        ]
       ]
      }
@@ -52391,15 +52627,15 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         -102.0,
+         -66.0,
          0.22,
-         -64.0
+         -101.0
         ],
         "orientation": [
          [
+          -1.0,
           0.0,
-          0.0,
-          -1.0
+          0.0
          ],
          [
           0.0,
@@ -52407,9 +52643,9 @@
           0
          ],
          [
-          1.0,
+          -0.0,
           0.0,
-          0.0
+          -1.0
          ]
         ]
        }
@@ -52721,9 +52957,9 @@
       "CFrame": {
        "CFrame": {
         "position": [
-         -60.0,
+         -57.0,
          0.22,
-         -98.0
+         -99.0
         ],
         "orientation": [
          [
@@ -56967,7 +57203,7 @@
     }
    },
    "attributes": {
-    "Prop": "Bleachers"
+    "Prop": "Bleachers_King"
    },
    "children": [
     {
@@ -59930,6 +60166,403 @@
    },
    "attributes": {
     "HelpId": "PushCar"
+   }
+  },
+  {
+   "name": "GhostSpot0",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     0.2,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       0.0,
+       0.3,
+       -22.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "GhostSpot"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "GhostSpot1",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     0.2,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -20.0,
+       0.3,
+       -20.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "GhostSpot"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "GhostSpot2",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     0.2,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -74.0,
+       0.3,
+       44.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "GhostSpot"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "GhostSpot3",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     0.2,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -60.0,
+       0.3,
+       60.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "GhostSpot"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "GhostSpot4",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     2,
+     0.2,
+     2
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       50.0,
+       0.3,
+       36.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "GhostSpot"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
+   }
+  },
+  {
+   "name": "RatManholeRingSlot",
+   "className": "Model",
+   "properties": {
+    "Tags": {
+     "Tags": [
+      "PropSlot"
+     ]
+    }
+   },
+   "attributes": {
+    "Prop": "Secret_ManholeRing",
+    "PropCollide": false
+   },
+   "children": [
+    {
+     "name": "PropAnchor",
+     "className": "Part",
+     "properties": {
+      "Anchored": true,
+      "Size": [
+       1,
+       0.2,
+       1
+      ],
+      "CFrame": {
+       "CFrame": {
+        "position": [
+         -52.0,
+         0.1,
+         80.0
+        ],
+        "orientation": [
+         [
+          1.0,
+          0.0,
+          0.0
+         ],
+         [
+          0.0,
+          1.0,
+          0
+         ],
+         [
+          0.0,
+          0.0,
+          1.0
+         ]
+        ]
+       }
+      },
+      "Color": {
+       "Color3uint8": [
+        240,
+        238,
+        232
+       ]
+      },
+      "Material": "SmoothPlastic",
+      "CanCollide": false,
+      "Transparency": 1,
+      "CanQuery": false,
+      "CanTouch": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "RatManhole",
+   "className": "Part",
+   "properties": {
+    "Anchored": true,
+    "Size": [
+     3,
+     0.2,
+     3
+    ],
+    "CFrame": {
+     "CFrame": {
+      "position": [
+       -52.0,
+       0.2,
+       80.0
+      ],
+      "orientation": [
+       [
+        1.0,
+        0.0,
+        0.0
+       ],
+       [
+        0.0,
+        1.0,
+        0
+       ],
+       [
+        0.0,
+        0.0,
+        1.0
+       ]
+      ]
+     }
+    },
+    "Color": {
+     "Color3uint8": [
+      240,
+      238,
+      232
+     ]
+    },
+    "Material": "SmoothPlastic",
+    "CanCollide": false,
+    "Transparency": 1,
+    "Tags": {
+     "Tags": [
+      "RatManhole"
+     ]
+    },
+    "CanQuery": false,
+    "CanTouch": false
    }
   }
  ]

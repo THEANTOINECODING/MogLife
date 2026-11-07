@@ -19,6 +19,7 @@ local PROMPT_NAME = "SpotPrompt"
 local StatsService
 local MinigameService
 local WeeklyService
+local SecretService
 
 local lastEmote: { [Player]: number } = {}
 -- Parade en cours : pratiquant -> pareur, et Mog gagné par le pareur pendant cette parade
@@ -46,6 +47,8 @@ local function onEmote(player: Player, index: unknown)
 	end
 	lastEmote[player] = now
 	emote(player, index)
+	-- Miroir du passé (D121) : une pose devant un miroir du coiffeur, au dernier stade
+	task.spawn(SecretService.OnEmote, player)
 end
 
 -- ------------------------------------------------------------------ pareur
@@ -171,6 +174,7 @@ function SocialService.Init(services)
 	StatsService = services.StatsService
 	MinigameService = services.MinigameService
 	WeeklyService = services.WeeklyService
+	SecretService = services.SecretService
 end
 
 function SocialService.Start()

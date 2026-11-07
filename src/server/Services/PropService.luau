@@ -176,7 +176,48 @@ function PropService.PlaceAll(): number
 	return count
 end
 
+-- Aperçus 3D des magasins (D121) : les modèles sont dans ServerStorage, invisible des clients. On en publie une
+-- copie dans ReplicatedStorage.PropPreviews (meubles seulement : quelques dizaines de petits maillages).
+local PREVIEW_FOLDER = "PropPreviews"
+local PREVIEW_PREFIXES = { "Furniture_" }
+
+function PropService.PublishPreviews(): number
+	local old = game:GetService("ReplicatedStorage"):FindFirstChild(PREVIEW_FOLDER)
+	if old then
+		old:Destroy()
+	end
+	local folder = Instance.new("Folder")
+	folder.Name = PREVIEW_FOLDER
+	local count = 0
+	local source = ServerStorage:FindFirstChild("Props")
+	if source then
+		for _, item in source:GetDescendants() do
+			if not item:IsA("BasePart") or folder:FindFirstChild(item.Name) then
+				continue
+			end
+			for _, prefix in PREVIEW_PREFIXES do
+				if string.sub(item.Name, 1, #prefix) == prefix then
+					local copy = item:Clone()
+					for _, child in copy:GetChildren() do
+						child:Destroy()
+					end
+					copy.Anchored = true
+					copy.CanCollide = false
+					copy.CanQuery = false
+					copy.CanTouch = false
+					copy.Parent = folder
+					count += 1
+					break
+				end
+			end
+		end
+	end
+	folder.Parent = game:GetService("ReplicatedStorage")
+	return count
+end
+
 function PropService.Start()
+	PropService.PublishPreviews()
 	PropService.PlaceAll()
 	CollectionService:GetInstanceAddedSignal(SLOT_TAG):Connect(setup)
 end

@@ -6,12 +6,15 @@
 -- porter ou retirer ses objets n'importe où.
 
 local CollectionService = game:GetService("CollectionService")
+local MarketplaceService = game:GetService("MarketplaceService")
 local Players = game:GetService("Players")
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
+local GamePasses = require(ReplicatedStorage.Shared.Config.GamePasses)
 local LookConfig = require(ReplicatedStorage.Shared.Config.Look)
+local StylePieces = require(ReplicatedStorage.Shared.Config.StylePieces)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local StyleItems = require(ReplicatedStorage.Shared.Config.StyleItems)
 local StyleSets = require(ReplicatedStorage.Shared.Config.StyleSets)
@@ -59,6 +62,47 @@ local confirming: string? = nil
 local wardrobe = false -- garde-robe : seulement les objets possédés, rien à acheter
 
 local ShopController = {}
+
+local render
+
+-- ------------------------------------------------------------------ tenues Robux (D121)
+local GOLD = Color3.fromRGB(255, 205, 60)
+local passPrices: { [number]: number } = {} -- prix en Robux lus sur Roblox (affichage seulement)
+local pricesAsked: { [number]: boolean } = {}
+
+local function passOf(set): number
+	return if set.robux then GamePasses.StyleSets[set.id] or 0 else 0
+end
+
+-- Une tenue Robux s'affiche quand son Game Pass existe et que ses modèles sont importés (ou qu'on la possède)
+local function premiumVisible(set): boolean
+	if owned[set.top] and owned[set.bottom] then
+		return true
+	end
+	if passOf(set) == 0 then
+		return false
+	end
+	for _, pieces in StylePieces do
+		return pieces[set.top] ~= nil
+	end
+	return false
+end
+
+local function askPrice(passId: number)
+	if pricesAsked[passId] then
+		return
+	end
+	pricesAsked[passId] = true
+	task.spawn(function()
+		local ok, info = pcall(MarketplaceService.GetProductInfo, MarketplaceService, passId, Enum.InfoType.GamePass)
+		if ok and typeof(info) == "table" and typeof(info.PriceInRobux) == "number" then
+			passPrices[passId] = info.PriceInRobux
+			if render then
+				render()
+			end
+		end
+	end)
+end
 
 local function sortedItems(cat: string): { string }
 	local ids = {}
@@ -123,8 +167,6 @@ local function refreshPreview()
 	local camera = viewport.CurrentCamera :: Camera
 	camera.CFrame = CFrame.lookAt(Vector3.new(0, center + 0.4, -distance), Vector3.new(0, center, 0))
 end
-
-local render
 
 -- Teintures du coiffeur (D106) : une rangée de pastilles au-dessus des coupes ; gratuites, la coupe portée prend la
 -- couleur tout de suite (l'aperçu aussi, sans attendre le serveur)
@@ -217,6 +259,12 @@ local function onSetButton(setId: string)
 	end
 	if owned[set.top] and owned[set.bottom] then
 		Remotes.EquipStyleSet:FireServer(setId)
+	elseif set.robux then
+		-- Achat Robux : la fenêtre de Roblox ; le serveur ajoute la tenue quand l'achat est confirmé
+		local passId = passOf(set)
+		if passId ~= 0 then
+			MarketplaceService:PromptGamePassPurchase(player, passId)
+		end
 	elseif set.price then
 		if confirming == setId then
 			confirming = nil
@@ -264,6 +312,9 @@ function render()
 			if wardrobe and not (owned[set.top] and owned[set.bottom]) then
 				continue
 			end
+			if set.robux and not premiumVisible(set) then
+				continue
+			end
 			local row = Ui.create("TextButton", {
 				Text = "",
 				AutoButtonColor = false,
@@ -273,9 +324,13 @@ function render()
 					then Color3.fromRGB(80, 60, 120)
 					else Color3.fromRGB(40, 35, 55),
 				BackgroundTransparency = 0.2,
-				LayoutOrder = index,
+				-- Les tenues Robux en tête de liste, bordées d'or
+				LayoutOrder = if set.robux then index - 1000 else index,
 				Parent = list,
 			}, { Ui.corner(UDim.new(0, 10)) })
+			if set.robux then
+				Ui.stroke(GOLD, 2, 0).Parent = row
+			end
 			row.Activated:Connect(function()
 				previewing = nil
 				previewSet = set.id
@@ -290,17 +345,35 @@ function render()
 				Parent = row,
 			}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 2, 0.3) })
 			Ui.label({
-				Position = UDim2.fromOffset(56, 8),
-				Size = UDim2.new(1, -200, 1, -16),
+				Position = UDim2.fromOffset(56, if set.robux then 4 else 8),
+				Size = UDim2.new(1, -200, if set.robux then 0.6 else 1, if set.robux then -4 else -16),
 				TextXAlignment = Enum.TextXAlignment.Left,
 				Text = Texts.Get(`StyleSet.{set.id}`),
 				Parent = row,
 			})
+			if set.robux then
+				Ui.label({
+					Position = UDim2.new(0, 56, 0.6, 0),
+					Size = UDim2.new(1, -200, 0.4, -4),
+					TextXAlignment = Enum.TextXAlignment.Left,
+					TextColor3 = GOLD,
+					Text = Texts.Get("Shop.PremiumTag"),
+					Parent = row,
+				})
+			end
 			local text, color
 			if equipped.Top == set.top and equipped.Bottom == set.bottom then
 				text, color = Texts.Get("Shop.Equipped"), Color3.fromRGB(60, 170, 80)
 			elseif owned[set.top] and owned[set.bottom] then
 				text, color = Texts.Get("Shop.Equip"), Color3.fromRGB(60, 110, 200)
+			elseif set.robux then
+				local passId = passOf(set)
+				askPrice(passId)
+				local robux = passPrices[passId]
+				text = if robux
+					then Texts.Get("Shop.BuyRobux", { price = Format.Short(robux) })
+					else Texts.Get("Shop.BuyRobuxNoPrice")
+				color = Color3.fromRGB(0, 160, 90)
 			elseif set.price then
 				local price = Format.Short(set.price)
 				text = Texts.Get(if confirming == set.id then "Shop.Confirm" else "Shop.Buy", { price = price })

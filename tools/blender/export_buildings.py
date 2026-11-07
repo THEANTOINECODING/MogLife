@@ -20,6 +20,9 @@ pal = ns["build_palette"]()
 P = ns["Props"](pal, "Props_Buildings", spacing=70, columns=6, mirror_x=True)
 P.clear()
 ns["build_buildings"](P)
+# D121 : faces superposées (enseignes...) séparées avant l'export
+exec(open(os.path.join(D, "coplanar_fix.py"), encoding="utf-8").read(), ns)
+print("faces superposées séparées :", ns["separate_coplanar"](list(P.col.objects)))
 
 with open(os.path.join(OUT, "buildings_manifest.json"), "w", encoding="utf-8") as f:
     json.dump(P.meta, f, indent=1, sort_keys=True)

@@ -22,6 +22,10 @@ P = ns["Props"](pal, "Props_Colosseum", spacing=200, columns=4, mirror_x=True)
 P.clear()
 ns["build_colosseum"](P)
 
+# D121 : faces superposées (deux surfaces au même endroit qui clignotent) séparées avant l'export
+exec(open(os.path.join(D, "coplanar_fix.py"), encoding="utf-8").read(), ns)
+print("faces superposées séparées :", ns["separate_coplanar"](list(P.col.objects)))
+
 # Les arches sont des faces concaves : on triangule nous-mêmes (oreilles) pour que l'import ne les déforme pas
 for obj in P.col.objects:
     bm = bmesh.new()

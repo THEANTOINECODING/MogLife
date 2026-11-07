@@ -69,6 +69,10 @@ local NAMES = {
 	"PumpGodRoll", -- client -> serveur : roulade pendant le combat du Dieu du Pump
 	"PumpGodFlex", -- client -> serveur : bouton FLEX appuyé (true) ou relâché (false) pendant ce combat
 	"PumpGodCheer", -- client -> serveur : un spectateur encourage le combattant (bouton des gradins)
+	"ShopTour", -- serveur -> client : (store: string) jouer la visite guidée de ce magasin (première entrée, D121)
+	"ShopTourDone", -- client -> serveur : (store: string, played: boolean) visite vue ou passée (false = pas jouée)
+	"SecretFound", -- serveur -> client : (secretId: string) annonce « SECRET FOUND » et titre secret débloqué (D121)
+	"SecretFx", -- serveur -> tous : (secretId: string, data: { [string]: any }) scène d'un secret, vue par tous
 }
 
 local isServer = RunService:IsServer()
@@ -160,4 +164,8 @@ return remotes :: {
 	PumpGodRoll: RemoteEvent,
 	PumpGodFlex: RemoteEvent,
 	PumpGodCheer: RemoteEvent,
+	ShopTour: RemoteEvent,
+	ShopTourDone: RemoteEvent,
+	SecretFound: RemoteEvent,
+	SecretFx: RemoteEvent,
 }

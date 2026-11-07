@@ -319,6 +319,10 @@ local function fillContent()
 		local frame = grid(6, UDim2.new(1, -8, 0, 54))
 		for index, entry in LookConfig.RewardTitles do
 			local unlocked = unlockedTitles[entry.id] == true
+			-- Titre secret (D121) : invisible tant qu'il n'est pas trouvé, aucun indice
+			if entry.secret and not unlocked then
+				continue
+			end
 			local name = Texts.Get(`Nick.Title.{entry.id}`)
 			local text = if unlocked
 				then name

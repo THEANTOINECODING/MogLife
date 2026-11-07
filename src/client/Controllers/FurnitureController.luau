@@ -13,6 +13,7 @@ local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Format = require(ReplicatedStorage.Shared.Format)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local Preview3D = require(script.Parent.Parent.Preview3D)
 local Ui = require(script.Parent.Parent.Ui)
 
 local SHOP_TAG = "FurnitureShop"
@@ -41,6 +42,30 @@ local confirming: string? = nil
 local comfort = { value = 0, bonus = 0 }
 
 local FurnitureController = {}
+
+-- Objet à montrer dans l'aperçu 3D d'un meuble (D121) : le modèle importé (publié par le serveur dans
+-- ReplicatedStorage.PropPreviews), sinon les blocs provisoires du meuble
+local function previewOf(itemId: string): Instance
+	local folder = ReplicatedStorage:FindFirstChild("PropPreviews")
+	local mesh = folder and folder:FindFirstChild(`Furniture_{itemId}`)
+	if mesh then
+		return mesh
+	end
+	local model = Instance.new("Model")
+	for _, piece in Furniture.Items[itemId].pieces do
+		local rotation = piece.rotation or Vector3.zero
+		local part = Instance.new("Part")
+		part.Anchored = true
+		part.Size = piece.size
+		part.CFrame = CFrame.new(piece.offset)
+			* CFrame.Angles(math.rad(rotation.X), math.rad(rotation.Y), math.rad(rotation.Z))
+		part.Color = piece.color
+		part.Material = piece.material or Enum.Material.SmoothPlastic
+		part.Shape = piece.shape or Enum.PartType.Block
+		part.Parent = model
+	end
+	return model
+end
 
 local function itemsFor(slotName: string): { string }
 	local ids = {}
@@ -122,27 +147,26 @@ function render()
 	end
 
 	for index, itemId in itemsFor(slot) do
-		local item = Furniture.Items[itemId]
 		local compact = Ui.isPhonePortrait()
 		local row = Ui.create("Frame", {
 			Name = itemId,
-			Size = UDim2.new(1, -12, 0, 58),
+			Size = UDim2.new(1, -12, 0, 76),
 			BackgroundColor3 = Color3.fromRGB(40, 35, 55),
 			BackgroundTransparency = 0.2,
 			LayoutOrder = index,
 			Parent = list,
 		}, { Ui.corner(UDim.new(0, 10)) })
-		-- Pastille de couleur : aperçu simple du meuble
-		Ui.create("Frame", {
+		-- Aperçu 3D du meuble, qui tourne lentement (D121)
+		local view = Preview3D.new(row, {
+			Name = "Preview",
 			AnchorPoint = Vector2.new(0, 0.5),
-			Position = UDim2.new(0, 10, 0.5, 0),
-			Size = UDim2.fromOffset(36, 36),
-			BackgroundColor3 = item.pieces[1].color,
-			Parent = row,
-		}, { Ui.corner(UDim.new(0, 8)), Ui.stroke(Color3.new(1, 1, 1), 2, 0.3) })
+			Position = UDim2.new(0, 6, 0.5, 0),
+			Size = UDim2.fromOffset(66, 66),
+		})
+		Preview3D.Show(view, previewOf(itemId))
 		Ui.label({
-			Position = UDim2.fromOffset(56, 8),
-			Size = UDim2.new(1, if compact then -200 else -250, 1, -16),
+			Position = UDim2.fromOffset(80, 8),
+			Size = UDim2.new(1, if compact then -224 else -274, 1, -16),
 			TextXAlignment = Enum.TextXAlignment.Left,
 			Text = Texts.Get(`Furniture.{itemId}`),
 			Parent = row,

@@ -1,6 +1,6 @@
 -- Drip (D111) : la valeur de la tenue portée donne un petit bonus contre les boss (Mog-off et Colisée) et au bras
--- de fer. « Mogger », c'est aussi le look. Le style s'achète en Cash seulement : ce n'est pas de la puissance vendue
--- contre des Robux. Partagé : le serveur calcule le bonus, le client l'affiche.
+-- de fer. « Mogger », c'est aussi le look. Le style s'achète en Cash, sauf les 3 tenues Robux (D121) qui donnent le
+-- Drip maximal (divergence assumée avec D15). Partagé : le serveur calcule le bonus, le client l'affiche.
 
 local Balance = require(script.Parent.Config.Balance)
 local StyleItems = require(script.Parent.Config.StyleItems)
@@ -22,7 +22,8 @@ function Drip.ItemValue(itemId: string): number
 	end
 	local set = item.setId and StyleSets.ById[item.setId]
 	if set then
-		return set.price / 2
+		-- Tenue Robux (D121) : sa valeur de Drip ; sinon le prix de l'ensemble
+		return (set.dripValue or set.price or 0) / 2
 	end
 	return if item.bossId then DRIP.BossItemValue else 0
 end

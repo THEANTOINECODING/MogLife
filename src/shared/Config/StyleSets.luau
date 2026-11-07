@@ -9,9 +9,11 @@ export type Set = {
 	top: string,
 	bottom: string,
 	order: number,
-	price: number,
+	price: number?, -- prix en Cash ; nil pour une tenue Robux
 	color: Color3,
 	effect: string?,
+	robux: boolean?, -- tenue Robux (D121) : Game Pass (Config/GamePasses.luau), jamais vendue en Cash
+	dripValue: number?, -- valeur de Drip de l'ensemble (sinon son prix)
 }
 
 local definitions = {
@@ -38,8 +40,32 @@ local definitions = {
 	{ "GoldenHour", 239, 194, 79, 6250, "Glint" },
 }
 
+-- Tenues Robux (D121, demande d'Antoine : « Drip au maximum ») : chacune vaut une tenue à 12 000 Cash pour le Drip
+-- (le bonus maximal de Balance.Drip), avec un effet spectaculaire vu par tous. Achat par Game Pass uniquement.
+-- id, couleur RGB, valeur de Drip, effet
+local premium = {
+	{ "CosmicEmperor", 120, 60, 230, 12_000, "Galaxy" },
+	{ "GoldenTitan", 245, 190, 50, 12_000, "Molten" },
+	{ "NeonPhantom", 20, 240, 255, 12_000, "Neon" },
+}
+
 local list: { Set } = {}
 local byId: { [string]: Set } = {}
+for _, entry in premium do
+	local id = entry[1] :: string
+	local set: Set = {
+		id = id,
+		top = id .. "Top",
+		bottom = id .. "Bottom",
+		order = #definitions + #list + 1,
+		price = nil,
+		color = Color3.fromRGB(entry[2] :: number, entry[3] :: number, entry[4] :: number),
+		effect = entry[6] :: string?,
+		robux = true,
+		dripValue = entry[5] :: number,
+	}
+	byId[id] = set
+end
 for order, entry in definitions do
 	local id = entry[1] :: string
 	local set: Set = {
@@ -54,6 +80,10 @@ for order, entry in definitions do
 	table.insert(list, set)
 	byId[id] = set
 end
+-- Les tenues Robux après les 20 ensembles (même ordre que tools/blender/outfit_looks.py LOOKS)
+for _, entry in premium do
+	table.insert(list, byId[entry[1] :: string])
+end
 
 return {
 	Active = true,
@@ -64,5 +94,36 @@ return {
 		Stardust = { rate = 1.8, lifetime = 0.75, size = 0.07, speed = 0.18 },
 		Glint = { rate = 1.2, lifetime = 0.30, size = 0.11, speed = 0.09 },
 		Snow = { rate = 1.8, lifetime = 0.90, size = 0.07, speed = 0.16 },
+	},
+	-- Effets des tenues Robux (D121), vus par tous : particules plus nombreuses, deux couleurs et une lueur.
+	-- colors : début et fin des particules ; light : couleur de la lumière autour du torse
+	PremiumEffects = {
+		Galaxy = {
+			rate = 9,
+			lifetime = 1.6,
+			size = 0.32,
+			speed = 0.7,
+			colors = { Color3.fromRGB(150, 110, 255), Color3.fromRGB(255, 220, 120) },
+			light = Color3.fromRGB(150, 110, 255),
+			texture = "rbxasset://textures/particles/sparkles_main.dds",
+		},
+		Molten = {
+			rate = 8,
+			lifetime = 1.2,
+			size = 0.28,
+			speed = 1.1,
+			colors = { Color3.fromRGB(255, 220, 90), Color3.fromRGB(255, 110, 30) },
+			light = Color3.fromRGB(255, 180, 60),
+			texture = "rbxasset://textures/particles/fire_sparks_main.dds",
+		},
+		Neon = {
+			rate = 10,
+			lifetime = 1.0,
+			size = 0.26,
+			speed = 0.9,
+			colors = { Color3.fromRGB(30, 245, 255), Color3.fromRGB(255, 40, 200) },
+			light = Color3.fromRGB(30, 245, 255),
+			texture = "rbxasset://textures/particles/sparkles_main.dds",
+		},
 	},
 }

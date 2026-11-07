@@ -2,6 +2,28 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-07 (Demande d'Antoine : tribunes, portail, aperçus 3D, aura, faces doublées, visite des magasins, secrets, meubles, tenues Robux)
+
+- **D121 — Grande passe qualité et contenu : tribunes de stade, portail déplacé, faces superposées corrigées, meubles refaits, aperçus 3D, aura de boost, visite guidée des magasins, 4 secrets, 3 tenues Robux.** Choix d'Antoine (QCM) : tribunes « vraie tribune de stade » aux couleurs des boss ; visite guidée de 5 à 8 s, une seule fois, passable ; secrets « proposer puis construire » (haltère fantôme, statue qui cligne, rat coach, miroir du passé) ; tenues Robux « Drip au maximum ».
+  - **Tribunes** (`props_furniture_v2.py`, `fv2_stadium_stand`) : 4 rangées de sièges baquets, allée centrale avec marches à nez jaune, joues biseautées, parapet rembourré, rambardes chromées, mâts à drapeaux. « Bleachers » rouge (Pas-Les-Jambes) et « Bleachers_King » violet et or (King of the Block). 9 348 triangles chacune.
+  - **Colisée** (`build_map.py`) : le portail ne cache plus le Dieu du Pump. Il est à la place du gong, en (-102, -64). Le gong est à droite, en (-66, -101), et la couronne en (-57, -99).
+  - **Faces superposées** (clignotement : panneaux au-dessus des portes, sol des gradins) : `coplanar_fix.py` sépare avant l'export les faces confondues de deux pièces (bâtiments, Colisée, décors) ; `build_map.py` fait de même sur la carte (904 faces).
+  - **Meubles** : les 21 refaits (`props_furniture_v2.py`), arrondis, biseautés et capitonnés, sans faces superposées.
+  - **Aperçus 3D** (`Preview3D.luau`) : une vue 3D qui tourne pour chaque meuble (`PropService.PublishPreviews` copie les modèles dans `ReplicatedStorage.PropPreviews`) et chaque aliment (`SnackController.BuildFood`).
+  - **Aura de boost** (`AuraController`, `Balance.BoostAura`) : une légère fumée et une lumière de la couleur de l'aliment, visibles par tous tant que le boost dure.
+  - **Visite guidée** (`ShopTourService`, `ShopTourController`, `Balance.ShopTour`) : à la première entrée dans un magasin (zones `ShopZone` posées par `build_map.py`), vue d'ensemble, vendeur qui réagit avec une bulle, puis comptoirs surlignés en or (le vendeur s'il n'y a pas de comptoir, comme à l'épicerie). Bouton « Passer » des cinématiques. Une visite vue ou passée est enregistrée (`ShopTours`) ; refusée car le joueur est occupé, elle revient à la prochaine entrée.
+  - **Secrets** (`Config/Secrets.luau`, `SecretService`, `SecretController`) : récompense = un titre secret caché tant qu'il n'est pas trouvé, plus l'annonce « SECRET FOUND » ; aucun Mog ni avantage. Sauvegarde : `Secrets`.
+  - **Tenues Robux** (`Config/GamePasses.luau`, `StyleSets`, `StyleService`, `OutfitFxController`, `ShopController`) : CosmicEmperor (cape géante, haut col, épaulettes frangées), GoldenTitan (spalières, plastron rayonnant, genouillères) et NeonPhantom (coutures néon, capuche). Chacune a des effets visibles par tous (Galaxy, Molten, Neon). Achat par Game Pass ; une tenue n'apparaît en boutique que si son id de pass est renseigné et ses modèles importés. Les passes déjà achetés sont rendus à l'arrivée.
+  - **Divergence assumée avec D15 et `06_MONETISATION.md`**, choisie par Antoine : chaque tenue Robux vaut 12 000 pour le Drip, soit le plafond de +5 % à elle seule. En Cash, il faut cumuler plusieurs articles chers. C'est un raccourci payant vers le plafond, jamais au-delà. `06_MONETISATION.md` est mis à jour.
+  - **Garde-robe** : `validate_style.py` OK (14 corps, 80 articles, 3 738 pièces, 0 défaut de couverture) ; `install_characters` attend désormais 3 738 pièces.
+  - **Testé dans Studio** (son coupé), avec les modèles pas encore importés :
+    - Aura : apparaît en mangeant un boost (particules et lumière).
+    - Visite guidée : proposée à l'entrée des 4 magasins. Contenu vérifié avec le contrôleur chargé à part : 5,4 s chacune, vendeur, bulle, surlignage nettoyé à la fin. La visite réelle n'a pas pu se jouer en entier, car le panneau hebdomadaire ouvert à l'arrivée verrouille le jeu ; c'est le refus prévu.
+    - Secrets : haltère fantôme (la nuit), rat coach et miroir du passé (au stade 7) déclenchés, titres enregistrés. Pour la statue, le détecteur de clics est en place mais le clic n'a pas pu être simulé.
+    - Aperçus 3D : un meuble et un aliment cadrés et en rotation.
+    - Sauvegarde restaurée à l'identique.
+  - **Pas encore testé** : les nouveaux modèles (import à faire), la boutique Robux (passes à créer), l'aspect visuel en jeu (les captures de Studio ne répondaient pas).
+
 ## 2026-11-06 (Demande d'Antoine : les tenues coupent le visage en deux, jonction du visage plus naturelle)
 
 - **D120 — Le haut des tenues s'ouvre sous le menton ; des joues relient le crâne à la mâchoire.**

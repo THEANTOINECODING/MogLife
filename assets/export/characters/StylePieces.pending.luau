@@ -104,6 +104,20 @@ return {
 			RightUpperArm = Vector3.new(-0.057, 0.227, -0),
 			UpperTorso = Vector3.new(0, 0.065, -0.088),
 		},
+		CosmicEmperorBottom = {
+			LeftLowerLeg = Vector3.new(-0.027, -0.032, -0.012),
+			LeftUpperLeg = Vector3.new(-0.013, 0.036, 0),
+			LowerTorso = Vector3.new(0, -0.105, 0.019),
+			RightLowerLeg = Vector3.new(0.027, -0.032, -0.012),
+			RightUpperLeg = Vector3.new(0.013, 0.036, 0),
+		},
+		CosmicEmperorTop = {
+			LeftLowerArm = Vector3.new(0, -0.082, 0),
+			LeftUpperArm = Vector3.new(0.144, 0.093, 0),
+			RightLowerArm = Vector3.new(-0, -0.082, 0),
+			RightUpperArm = Vector3.new(-0.144, 0.093, 0),
+			UpperTorso = Vector3.new(0, -0.184, 0.034),
+		},
 		Curly = {
 			Head_Hair = Vector3.new(0.009, 0.379, 0.056),
 		},
@@ -175,6 +189,20 @@ return {
 			LeftUpperArm = Vector3.new(0.057, 0.227, 0),
 			RightUpperArm = Vector3.new(-0.057, 0.227, -0),
 			UpperTorso = Vector3.new(0, 0.065, -0.071),
+		},
+		GoldenTitanBottom = {
+			LeftLowerLeg = Vector3.new(0, -0.032, -0.012),
+			LeftUpperLeg = Vector3.new(-0.013, 0.036, 0),
+			LowerTorso = Vector3.new(0, -0.105, 0.019),
+			RightLowerLeg = Vector3.new(-0, -0.032, -0.012),
+			RightUpperLeg = Vector3.new(0.013, 0.036, 0),
+		},
+		GoldenTitanTop = {
+			LeftLowerArm = Vector3.new(0, -0.082, 0),
+			LeftUpperArm = Vector3.new(0.06, 0.181, 0),
+			RightLowerArm = Vector3.new(-0, -0.082, 0),
+			RightUpperArm = Vector3.new(-0.06, 0.181, 0),
+			UpperTorso = Vector3.new(0, 0.065, -0.074),
 		},
 		Handlebar = {
 			Head_Hair = Vector3.new(-0, -0.342, -0.595),
@@ -263,6 +291,20 @@ return {
 		},
 		Mullet = {
 			Head_Hair = Vector3.new(-0.003, 0.087, 0.155),
+		},
+		NeonPhantomBottom = {
+			LeftLowerLeg = Vector3.new(-0.027, -0.032, -0.012),
+			LeftUpperLeg = Vector3.new(-0.013, 0.036, 0),
+			LowerTorso = Vector3.new(0, -0.105, 0.019),
+			RightLowerLeg = Vector3.new(0.027, -0.032, -0.012),
+			RightUpperLeg = Vector3.new(0.013, 0.036, 0),
+		},
+		NeonPhantomTop = {
+			LeftLowerArm = Vector3.new(0, -0.082, 0),
+			LeftUpperArm = Vector3.new(-0.021, 0.062, 0),
+			RightLowerArm = Vector3.new(-0, -0.082, 0),
+			RightUpperArm = Vector3.new(0.021, 0.062, -0),
+			UpperTorso = Vector3.new(0, 0.065, -0.04),
 		},
 		PajamaTop = {
 			LeftLowerArm = Vector3.new(0, -0.07, 0),
@@ -491,6 +533,20 @@ return {
 			RightUpperArm = Vector3.new(-0.048, 0.217, 0),
 			UpperTorso = Vector3.new(-0, 0.061, -0.087),
 		},
+		CosmicEmperorBottom = {
+			LeftLowerLeg = Vector3.new(-0.028, -0.03, -0.011),
+			LeftUpperLeg = Vector3.new(-0.018, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.099, 0.034),
+			RightLowerLeg = Vector3.new(0.028, -0.03, -0.011),
+			RightUpperLeg = Vector3.new(0.018, 0.035, 0),
+		},
+		CosmicEmperorTop = {
+			LeftLowerArm = Vector3.new(0, -0.082, 0),
+			LeftUpperArm = Vector3.new(0.122, 0.085, 0),
+			RightLowerArm = Vector3.new(-0, -0.082, 0),
+			RightUpperArm = Vector3.new(-0.122, 0.085, 0),
+			UpperTorso = Vector3.new(-0, -0.185, 0.032),
+		},
 		Curly = {
 			Head_Hair = Vector3.new(0.009, 0.379, 0.056),
 		},
@@ -562,6 +618,20 @@ return {
 			LeftUpperArm = Vector3.new(0.048, 0.217, -0),
 			RightUpperArm = Vector3.new(-0.048, 0.217, 0),
 			UpperTorso = Vector3.new(-0, 0.061, -0.07),
+		},
+		GoldenTitanBottom = {
+			LeftLowerLeg = Vector3.new(-0, -0.03, -0.011),
+			LeftUpperLeg = Vector3.new(-0.018, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.099, 0.034),
+			RightLowerLeg = Vector3.new(0, -0.03, -0.011),
+			RightUpperLeg = Vector3.new(0.018, 0.035, 0),
+		},
+		GoldenTitanTop = {
+			LeftLowerArm = Vector3.new(-0, -0.082, 0),
+			LeftUpperArm = Vector3.new(0.046, 0.165, 0),
+			RightLowerArm = Vector3.new(0, -0.082, 0),
+			RightUpperArm = Vector3.new(-0.046, 0.165, 0),
+			UpperTorso = Vector3.new(-0, 0.061, -0.092),
 		},
 		Handlebar = {
 			Head_Hair = Vector3.new(-0, -0.316, -0.613),
@@ -650,6 +720,20 @@ return {
 		},
 		Mullet = {
 			Head_Hair = Vector3.new(-0.003, 0.087, 0.155),
+		},
+		NeonPhantomBottom = {
+			LeftLowerLeg = Vector3.new(-0.028, -0.03, -0.011),
+			LeftUpperLeg = Vector3.new(-0.018, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.099, 0.034),
+			RightLowerLeg = Vector3.new(0.028, -0.03, -0.011),
+			RightUpperLeg = Vector3.new(0.018, 0.035, 0),
+		},
+		NeonPhantomTop = {
+			LeftLowerArm = Vector3.new(0, -0.082, 0),
+			LeftUpperArm = Vector3.new(-0.019, 0.057, -0),
+			RightLowerArm = Vector3.new(-0, -0.082, 0),
+			RightUpperArm = Vector3.new(0.019, 0.057, 0),
+			UpperTorso = Vector3.new(-0, 0.061, -0.052),
 		},
 		PajamaTop = {
 			LeftLowerArm = Vector3.new(0, -0.07, 0),
@@ -878,6 +962,20 @@ return {
 			RightUpperArm = Vector3.new(-0.125, 0.312, -0.005),
 			UpperTorso = Vector3.new(-0, 0.095, -0.086),
 		},
+		CosmicEmperorBottom = {
+			LeftLowerLeg = Vector3.new(-0.045, -0.024, 0.036),
+			LeftUpperLeg = Vector3.new(-0.034, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.085, 0.02),
+			RightLowerLeg = Vector3.new(0.045, -0.024, 0.036),
+			RightUpperLeg = Vector3.new(0.034, 0.035, 0),
+		},
+		CosmicEmperorTop = {
+			LeftLowerArm = Vector3.new(-0, -0.02, 0),
+			LeftUpperArm = Vector3.new(0.396, 0.217, 0),
+			RightLowerArm = Vector3.new(0, -0.02, 0),
+			RightUpperArm = Vector3.new(-0.396, 0.217, 0),
+			UpperTorso = Vector3.new(-0, -0.116, 0.043),
+		},
 		Curly = {
 			Head_Hair = Vector3.new(0.008, 0.361, 0.035),
 		},
@@ -949,6 +1047,20 @@ return {
 			LeftUpperArm = Vector3.new(0.125, 0.312, -0.005),
 			RightUpperArm = Vector3.new(-0.125, 0.312, -0.005),
 			UpperTorso = Vector3.new(-0, 0.095, -0.039),
+		},
+		GoldenTitanBottom = {
+			LeftLowerLeg = Vector3.new(0, 0.005, 0.009),
+			LeftUpperLeg = Vector3.new(-0.034, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.085, 0.02),
+			RightLowerLeg = Vector3.new(0, 0.005, 0.009),
+			RightUpperLeg = Vector3.new(0.034, 0.035, 0),
+		},
+		GoldenTitanTop = {
+			LeftLowerArm = Vector3.new(0, -0.02, 0),
+			LeftUpperArm = Vector3.new(0.248, 0.372, 0),
+			RightLowerArm = Vector3.new(-0, -0.02, 0),
+			RightUpperArm = Vector3.new(-0.248, 0.372, 0),
+			UpperTorso = Vector3.new(-0, 0.095, -0.067),
 		},
 		Handlebar = {
 			Head_Hair = Vector3.new(-0, -0.313, -0.605),
@@ -1037,6 +1149,20 @@ return {
 		},
 		Mullet = {
 			Head_Hair = Vector3.new(-0.003, 0.085, 0.129),
+		},
+		NeonPhantomBottom = {
+			LeftLowerLeg = Vector3.new(-0.045, -0.024, 0.036),
+			LeftUpperLeg = Vector3.new(-0.034, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.085, 0.02),
+			RightLowerLeg = Vector3.new(0.045, -0.024, 0.036),
+			RightUpperLeg = Vector3.new(0.034, 0.035, 0),
+		},
+		NeonPhantomTop = {
+			LeftLowerArm = Vector3.new(-0, -0.02, 0),
+			LeftUpperArm = Vector3.new(-0.011, 0.163, -0.004),
+			RightLowerArm = Vector3.new(0, -0.02, 0),
+			RightUpperArm = Vector3.new(0.011, 0.163, -0.004),
+			UpperTorso = Vector3.new(-0, 0.095, 0.108),
 		},
 		PajamaTop = {
 			LeftLowerArm = Vector3.new(-0, -0.009, 0),
@@ -1265,6 +1391,20 @@ return {
 			RightUpperArm = Vector3.new(-0.115, 0.287, -0.005),
 			UpperTorso = Vector3.new(0, 0.083, -0.121),
 		},
+		CosmicEmperorBottom = {
+			LeftLowerLeg = Vector3.new(-0.046, -0.021, 0.037),
+			LeftUpperLeg = Vector3.new(-0.003, 0.034, 0),
+			LowerTorso = Vector3.new(-0, -0.079, 0.053),
+			RightLowerLeg = Vector3.new(0.046, -0.021, 0.037),
+			RightUpperLeg = Vector3.new(0.003, 0.034, -0),
+		},
+		CosmicEmperorTop = {
+			LeftLowerArm = Vector3.new(0, -0.032, 0),
+			LeftUpperArm = Vector3.new(0.337, 0.19, 0),
+			RightLowerArm = Vector3.new(-0, -0.032, 0),
+			RightUpperArm = Vector3.new(-0.337, 0.19, 0),
+			UpperTorso = Vector3.new(-0, -0.128, 0.021),
+		},
 		Curly = {
 			Head_Hair = Vector3.new(0.008, 0.361, 0.045),
 		},
@@ -1336,6 +1476,20 @@ return {
 			LeftUpperArm = Vector3.new(0.115, 0.287, -0.005),
 			RightUpperArm = Vector3.new(-0.115, 0.287, -0.005),
 			UpperTorso = Vector3.new(0, 0.083, -0.072),
+		},
+		GoldenTitanBottom = {
+			LeftLowerLeg = Vector3.new(0, 0.01, 0.009),
+			LeftUpperLeg = Vector3.new(-0.003, 0.034, 0),
+			LowerTorso = Vector3.new(-0, -0.079, 0.053),
+			RightLowerLeg = Vector3.new(-0, 0.01, 0.009),
+			RightUpperLeg = Vector3.new(0.003, 0.034, -0),
+		},
+		GoldenTitanTop = {
+			LeftLowerArm = Vector3.new(0, -0.032, 0),
+			LeftUpperArm = Vector3.new(0.206, 0.327, 0),
+			RightLowerArm = Vector3.new(-0, -0.032, 0),
+			RightUpperArm = Vector3.new(-0.206, 0.327, 0),
+			UpperTorso = Vector3.new(0, 0.083, -0.133),
 		},
 		Handlebar = {
 			Head_Hair = Vector3.new(-0, -0.281, -0.594),
@@ -1424,6 +1578,20 @@ return {
 		},
 		Mullet = {
 			Head_Hair = Vector3.new(-0.003, 0.085, 0.138),
+		},
+		NeonPhantomBottom = {
+			LeftLowerLeg = Vector3.new(-0.046, -0.021, 0.037),
+			LeftUpperLeg = Vector3.new(-0.003, 0.034, 0),
+			LowerTorso = Vector3.new(-0, -0.079, 0.053),
+			RightLowerLeg = Vector3.new(0.046, -0.021, 0.037),
+			RightUpperLeg = Vector3.new(0.003, 0.034, -0),
+		},
+		NeonPhantomTop = {
+			LeftLowerArm = Vector3.new(0, -0.032, 0),
+			LeftUpperArm = Vector3.new(-0.013, 0.142, -0.004),
+			RightLowerArm = Vector3.new(-0, -0.032, 0),
+			RightUpperArm = Vector3.new(0.013, 0.142, -0.004),
+			UpperTorso = Vector3.new(0, 0.083, 0.022),
 		},
 		PajamaTop = {
 			LeftLowerArm = Vector3.new(0, -0.021, 0),
@@ -1652,6 +1820,20 @@ return {
 			RightUpperArm = Vector3.new(-0.143, 0.345, -0.004),
 			UpperTorso = Vector3.new(-0, 0.101, -0.086),
 		},
+		CosmicEmperorBottom = {
+			LeftLowerLeg = Vector3.new(-0.045, -0.028, 0.042),
+			LeftUpperLeg = Vector3.new(-0.031, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.095, 0.02),
+			RightLowerLeg = Vector3.new(0.045, -0.028, 0.042),
+			RightUpperLeg = Vector3.new(0.031, 0.035, 0),
+		},
+		CosmicEmperorTop = {
+			LeftLowerArm = Vector3.new(0.001, -0.015, 0),
+			LeftUpperArm = Vector3.new(0.464, 0.249, 0),
+			RightLowerArm = Vector3.new(0, -0.015, 0),
+			RightUpperArm = Vector3.new(-0.464, 0.249, 0),
+			UpperTorso = Vector3.new(-0, -0.103, 0.043),
+		},
 		Curly = {
 			Head_Hair = Vector3.new(0.008, 0.343, 0.022),
 		},
@@ -1723,6 +1905,20 @@ return {
 			LeftUpperArm = Vector3.new(0.144, 0.345, -0.004),
 			RightUpperArm = Vector3.new(-0.143, 0.345, -0.004),
 			UpperTorso = Vector3.new(-0, 0.101, -0.042),
+		},
+		GoldenTitanBottom = {
+			LeftLowerLeg = Vector3.new(-0, 0.01, 0.01),
+			LeftUpperLeg = Vector3.new(-0.031, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.095, 0.02),
+			RightLowerLeg = Vector3.new(-0, 0.01, 0.01),
+			RightUpperLeg = Vector3.new(0.031, 0.035, 0),
+		},
+		GoldenTitanTop = {
+			LeftLowerArm = Vector3.new(0.001, -0.015, 0),
+			LeftUpperArm = Vector3.new(0.297, 0.424, 0),
+			RightLowerArm = Vector3.new(0, -0.015, 0),
+			RightUpperArm = Vector3.new(-0.297, 0.424, 0),
+			UpperTorso = Vector3.new(-0, 0.101, -0.066),
 		},
 		Handlebar = {
 			Head_Hair = Vector3.new(-0, -0.283, -0.621),
@@ -1811,6 +2007,20 @@ return {
 		},
 		Mullet = {
 			Head_Hair = Vector3.new(-0.003, 0.083, 0.11),
+		},
+		NeonPhantomBottom = {
+			LeftLowerLeg = Vector3.new(-0.045, -0.028, 0.042),
+			LeftUpperLeg = Vector3.new(-0.031, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.095, 0.02),
+			RightLowerLeg = Vector3.new(0.045, -0.028, 0.042),
+			RightUpperLeg = Vector3.new(0.031, 0.035, 0),
+		},
+		NeonPhantomTop = {
+			LeftLowerArm = Vector3.new(0.001, -0.015, 0),
+			LeftUpperArm = Vector3.new(-0.007, 0.188, -0.003),
+			RightLowerArm = Vector3.new(0, -0.015, 0),
+			RightUpperArm = Vector3.new(0.015, 0.188, -0.003),
+			UpperTorso = Vector3.new(-0, 0.101, 0.136),
 		},
 		PajamaTop = {
 			LeftLowerArm = Vector3.new(0.001, -0.003, 0),
@@ -2039,6 +2249,20 @@ return {
 			RightUpperArm = Vector3.new(-0.13, 0.316, -0.005),
 			UpperTorso = Vector3.new(-0, 0.087, -0.122),
 		},
+		CosmicEmperorBottom = {
+			LeftLowerLeg = Vector3.new(-0.046, -0.025, 0.043),
+			LeftUpperLeg = Vector3.new(-0, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.089, 0.058),
+			RightLowerLeg = Vector3.new(0.046, -0.025, 0.043),
+			RightUpperLeg = Vector3.new(0, 0.035, -0),
+		},
+		CosmicEmperorTop = {
+			LeftLowerArm = Vector3.new(-0, -0.029, 0),
+			LeftUpperArm = Vector3.new(0.392, 0.217, 0),
+			RightLowerArm = Vector3.new(0, -0.029, 0),
+			RightUpperArm = Vector3.new(-0.392, 0.217, 0),
+			UpperTorso = Vector3.new(-0, -0.119, 0.02),
+		},
 		Curly = {
 			Head_Hair = Vector3.new(0.008, 0.343, 0.036),
 		},
@@ -2110,6 +2334,20 @@ return {
 			LeftUpperArm = Vector3.new(0.13, 0.316, -0.005),
 			RightUpperArm = Vector3.new(-0.13, 0.316, -0.005),
 			UpperTorso = Vector3.new(-0, 0.087, -0.073),
+		},
+		GoldenTitanBottom = {
+			LeftLowerLeg = Vector3.new(0, 0.015, 0.01),
+			LeftUpperLeg = Vector3.new(-0, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.089, 0.058),
+			RightLowerLeg = Vector3.new(-0, 0.015, 0.01),
+			RightUpperLeg = Vector3.new(0, 0.035, -0),
+		},
+		GoldenTitanTop = {
+			LeftLowerArm = Vector3.new(-0, -0.029, 0),
+			LeftUpperArm = Vector3.new(0.245, 0.37, 0),
+			RightLowerArm = Vector3.new(0, -0.029, 0),
+			RightUpperArm = Vector3.new(-0.245, 0.37, 0),
+			UpperTorso = Vector3.new(-0, 0.087, -0.134),
 		},
 		Handlebar = {
 			Head_Hair = Vector3.new(-0, -0.243, -0.583),
@@ -2198,6 +2436,20 @@ return {
 		},
 		Mullet = {
 			Head_Hair = Vector3.new(-0.003, 0.083, 0.125),
+		},
+		NeonPhantomBottom = {
+			LeftLowerLeg = Vector3.new(-0.046, -0.025, 0.043),
+			LeftUpperLeg = Vector3.new(-0, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.089, 0.058),
+			RightLowerLeg = Vector3.new(0.046, -0.025, 0.043),
+			RightUpperLeg = Vector3.new(0, 0.035, -0),
+		},
+		NeonPhantomTop = {
+			LeftLowerArm = Vector3.new(-0, -0.029, 0),
+			LeftUpperArm = Vector3.new(-0.011, 0.164, -0.004),
+			RightLowerArm = Vector3.new(0, -0.029, 0),
+			RightUpperArm = Vector3.new(0.011, 0.164, -0.004),
+			UpperTorso = Vector3.new(-0, 0.087, 0.042),
 		},
 		PajamaTop = {
 			LeftLowerArm = Vector3.new(-0, -0.017, 0),
@@ -2426,6 +2678,20 @@ return {
 			RightUpperArm = Vector3.new(-0.121, 0.425, -0.041),
 			UpperTorso = Vector3.new(-0, 0.119, -0.083),
 		},
+		CosmicEmperorBottom = {
+			LeftLowerLeg = Vector3.new(-0.045, -0.032, 0.054),
+			LeftUpperLeg = Vector3.new(-0.022, 0.036, -0),
+			LowerTorso = Vector3.new(-0, -0.103, 0.02),
+			RightLowerLeg = Vector3.new(0.045, -0.032, 0.054),
+			RightUpperLeg = Vector3.new(0.022, 0.036, 0),
+		},
+		CosmicEmperorTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.009, 0),
+			LeftUpperArm = Vector3.new(0.457, 0.324, 0),
+			RightLowerArm = Vector3.new(-0, 0.009, 0),
+			RightUpperArm = Vector3.new(-0.457, 0.324, 0),
+			UpperTorso = Vector3.new(-0, -0.091, 0.025),
+		},
 		Curly = {
 			Head_Hair = Vector3.new(0.007, 0.333, -0.009),
 		},
@@ -2497,6 +2763,20 @@ return {
 			LeftUpperArm = Vector3.new(0.122, 0.425, -0.041),
 			RightUpperArm = Vector3.new(-0.121, 0.425, -0.041),
 			UpperTorso = Vector3.new(-0, 0.119, -0.071),
+		},
+		GoldenTitanBottom = {
+			LeftLowerLeg = Vector3.new(0, 0.022, 0.012),
+			LeftUpperLeg = Vector3.new(-0.022, 0.036, -0),
+			LowerTorso = Vector3.new(-0, -0.103, 0.02),
+			RightLowerLeg = Vector3.new(-0, 0.022, 0.012),
+			RightUpperLeg = Vector3.new(0.022, 0.036, 0),
+		},
+		GoldenTitanTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.009, 0),
+			LeftUpperArm = Vector3.new(0.331, 0.506, 0),
+			RightLowerArm = Vector3.new(0, 0.009, 0),
+			RightUpperArm = Vector3.new(-0.331, 0.506, 0),
+			UpperTorso = Vector3.new(-0, 0.119, -0.103),
 		},
 		Handlebar = {
 			Head_Hair = Vector3.new(-0, -0.259, -0.67),
@@ -2585,6 +2865,20 @@ return {
 		},
 		Mullet = {
 			Head_Hair = Vector3.new(-0.002, 0.082, 0.077),
+		},
+		NeonPhantomBottom = {
+			LeftLowerLeg = Vector3.new(-0.045, -0.032, 0.054),
+			LeftUpperLeg = Vector3.new(-0.022, 0.036, -0),
+			LowerTorso = Vector3.new(-0, -0.103, 0.02),
+			RightLowerLeg = Vector3.new(0.045, -0.032, 0.054),
+			RightUpperLeg = Vector3.new(0.022, 0.036, 0),
+		},
+		NeonPhantomTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.009, 0),
+			LeftUpperArm = Vector3.new(0.029, 0.26, -0.038),
+			RightLowerArm = Vector3.new(-0, 0.009, 0),
+			RightUpperArm = Vector3.new(-0.027, 0.26, -0.038),
+			UpperTorso = Vector3.new(-0, 0.119, 0.16),
 		},
 		PajamaTop = {
 			LeftLowerArm = Vector3.new(0.001, 0.021, 0),
@@ -2813,6 +3107,20 @@ return {
 			RightUpperArm = Vector3.new(-0.117, 0.386, -0.02),
 			UpperTorso = Vector3.new(-0, 0.1, -0.124),
 		},
+		CosmicEmperorBottom = {
+			LeftLowerLeg = Vector3.new(-0.047, -0.029, 0.055),
+			LeftUpperLeg = Vector3.new(0, 0.036, 0),
+			LowerTorso = Vector3.new(0, -0.099, 0.07),
+			RightLowerLeg = Vector3.new(0.047, -0.029, 0.055),
+			RightUpperLeg = Vector3.new(-0, 0.036, -0),
+		},
+		CosmicEmperorTop = {
+			LeftLowerArm = Vector3.new(0, -0.011, 0),
+			LeftUpperArm = Vector3.new(0.405, 0.282, 0),
+			RightLowerArm = Vector3.new(-0, -0.011, 0),
+			RightUpperArm = Vector3.new(-0.405, 0.282, 0),
+			UpperTorso = Vector3.new(-0, -0.109, 0.019),
+		},
 		Curly = {
 			Head_Hair = Vector3.new(0.007, 0.333, 0.024),
 		},
@@ -2884,6 +3192,20 @@ return {
 			LeftUpperArm = Vector3.new(0.117, 0.386, -0.02),
 			RightUpperArm = Vector3.new(-0.117, 0.386, -0.02),
 			UpperTorso = Vector3.new(-0, 0.1, -0.074),
+		},
+		GoldenTitanBottom = {
+			LeftLowerLeg = Vector3.new(0, 0.028, 0.013),
+			LeftUpperLeg = Vector3.new(0, 0.036, 0),
+			LowerTorso = Vector3.new(0, -0.099, 0.07),
+			RightLowerLeg = Vector3.new(-0, 0.028, 0.013),
+			RightUpperLeg = Vector3.new(-0, 0.036, -0),
+		},
+		GoldenTitanTop = {
+			LeftLowerArm = Vector3.new(0, -0.011, 0),
+			LeftUpperArm = Vector3.new(0.288, 0.444, 0),
+			RightLowerArm = Vector3.new(-0, -0.011, 0),
+			RightUpperArm = Vector3.new(-0.288, 0.444, 0),
+			UpperTorso = Vector3.new(-0, 0.1, -0.137),
 		},
 		Handlebar = {
 			Head_Hair = Vector3.new(-0, -0.218, -0.598),
@@ -2972,6 +3294,20 @@ return {
 		},
 		Mullet = {
 			Head_Hair = Vector3.new(-0.002, 0.082, 0.109),
+		},
+		NeonPhantomBottom = {
+			LeftLowerLeg = Vector3.new(-0.047, -0.029, 0.055),
+			LeftUpperLeg = Vector3.new(0, 0.036, 0),
+			LowerTorso = Vector3.new(0, -0.099, 0.07),
+			RightLowerLeg = Vector3.new(0.047, -0.029, 0.055),
+			RightUpperLeg = Vector3.new(-0, 0.036, -0),
+		},
+		NeonPhantomTop = {
+			LeftLowerArm = Vector3.new(0, -0.011, 0),
+			LeftUpperArm = Vector3.new(0.023, 0.226, -0.021),
+			RightLowerArm = Vector3.new(-0, -0.011, 0),
+			RightUpperArm = Vector3.new(-0.023, 0.226, -0.021),
+			UpperTorso = Vector3.new(-0, 0.1, 0.063),
 		},
 		PajamaTop = {
 			LeftLowerArm = Vector3.new(0, 0.001, 0),
@@ -3200,6 +3536,20 @@ return {
 			RightUpperArm = Vector3.new(-0.133, 0.491, -0.052),
 			UpperTorso = Vector3.new(0, 0.133, -0.087),
 		},
+		CosmicEmperorBottom = {
+			LeftLowerLeg = Vector3.new(-0.044, -0.036, 0.061),
+			LeftUpperLeg = Vector3.new(-0.017, 0.036, 0),
+			LowerTorso = Vector3.new(-0, -0.111, 0.02),
+			RightLowerLeg = Vector3.new(0.044, -0.036, 0.061),
+			RightUpperLeg = Vector3.new(0.017, 0.036, 0),
+		},
+		CosmicEmperorTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.026, 0),
+			LeftUpperArm = Vector3.new(0.493, 0.39, 0),
+			RightLowerArm = Vector3.new(0, 0.026, 0),
+			RightUpperArm = Vector3.new(-0.493, 0.39, 0),
+			UpperTorso = Vector3.new(-0, -0.078, 0.011),
+		},
 		Curly = {
 			Head_Hair = Vector3.new(0.007, 0.324, -0.037),
 		},
@@ -3271,6 +3621,20 @@ return {
 			LeftUpperArm = Vector3.new(0.133, 0.491, -0.052),
 			RightUpperArm = Vector3.new(-0.133, 0.491, -0.052),
 			UpperTorso = Vector3.new(0, 0.133, -0.087),
+		},
+		GoldenTitanBottom = {
+			LeftLowerLeg = Vector3.new(0, 0.027, 0.014),
+			LeftUpperLeg = Vector3.new(-0.017, 0.036, 0),
+			LowerTorso = Vector3.new(-0, -0.111, 0.02),
+			RightLowerLeg = Vector3.new(0, 0.027, 0.014),
+			RightUpperLeg = Vector3.new(0.017, 0.036, 0),
+		},
+		GoldenTitanTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.026, 0),
+			LeftUpperArm = Vector3.new(0.357, 0.594, 0),
+			RightLowerArm = Vector3.new(0, 0.026, 0),
+			RightUpperArm = Vector3.new(-0.357, 0.594, 0),
+			UpperTorso = Vector3.new(0, 0.133, -0.132),
 		},
 		Handlebar = {
 			Head_Hair = Vector3.new(-0, -0.233, -0.719),
@@ -3359,6 +3723,20 @@ return {
 		},
 		Mullet = {
 			Head_Hair = Vector3.new(-0.002, 0.081, 0.046),
+		},
+		NeonPhantomBottom = {
+			LeftLowerLeg = Vector3.new(-0.044, -0.036, 0.061),
+			LeftUpperLeg = Vector3.new(-0.017, 0.036, 0),
+			LowerTorso = Vector3.new(-0, -0.111, 0.02),
+			RightLowerLeg = Vector3.new(0.044, -0.036, 0.061),
+			RightUpperLeg = Vector3.new(0.017, 0.036, 0),
+		},
+		NeonPhantomTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.026, 0),
+			LeftUpperArm = Vector3.new(0.042, 0.32, -0.042),
+			RightLowerArm = Vector3.new(0, 0.026, 0),
+			RightUpperArm = Vector3.new(-0.041, 0.32, -0.042),
+			UpperTorso = Vector3.new(0, 0.133, 0.161),
 		},
 		PajamaTop = {
 			LeftLowerArm = Vector3.new(0.001, 0.039, 0),
@@ -3587,6 +3965,20 @@ return {
 			RightUpperArm = Vector3.new(-0.13, 0.444, -0.027),
 			UpperTorso = Vector3.new(-0, 0.111, -0.125),
 		},
+		CosmicEmperorBottom = {
+			LeftLowerLeg = Vector3.new(-0.046, -0.034, 0.062),
+			LeftUpperLeg = Vector3.new(-0, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.108, 0.078),
+			RightLowerLeg = Vector3.new(0.046, -0.034, 0.062),
+			RightUpperLeg = Vector3.new(0, 0.036, -0),
+		},
+		CosmicEmperorTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.001, 0),
+			LeftUpperArm = Vector3.new(0.441, 0.339, 0),
+			RightLowerArm = Vector3.new(0, 0.001, 0),
+			RightUpperArm = Vector3.new(-0.441, 0.339, 0),
+			UpperTorso = Vector3.new(-0, -0.098, 0.018),
+		},
 		Curly = {
 			Head_Hair = Vector3.new(0.007, 0.324, 0.012),
 		},
@@ -3658,6 +4050,20 @@ return {
 			LeftUpperArm = Vector3.new(0.131, 0.444, -0.027),
 			RightUpperArm = Vector3.new(-0.13, 0.444, -0.027),
 			UpperTorso = Vector3.new(-0, 0.111, -0.075),
+		},
+		GoldenTitanBottom = {
+			LeftLowerLeg = Vector3.new(-0, 0.032, 0.014),
+			LeftUpperLeg = Vector3.new(-0, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.108, 0.078),
+			RightLowerLeg = Vector3.new(0, 0.033, 0.014),
+			RightUpperLeg = Vector3.new(0, 0.036, -0),
+		},
+		GoldenTitanTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.001, 0),
+			LeftUpperArm = Vector3.new(0.316, 0.519, 0),
+			RightLowerArm = Vector3.new(0, 0.001, 0),
+			RightUpperArm = Vector3.new(-0.315, 0.519, 0),
+			UpperTorso = Vector3.new(-0, 0.111, -0.139),
 		},
 		Handlebar = {
 			Head_Hair = Vector3.new(-0, -0.19, -0.613),
@@ -3746,6 +4152,20 @@ return {
 		},
 		Mullet = {
 			Head_Hair = Vector3.new(-0.002, 0.081, 0.095),
+		},
+		NeonPhantomBottom = {
+			LeftLowerLeg = Vector3.new(-0.046, -0.034, 0.062),
+			LeftUpperLeg = Vector3.new(0, 0.035, 0),
+			LowerTorso = Vector3.new(-0, -0.108, 0.078),
+			RightLowerLeg = Vector3.new(0.046, -0.034, 0.062),
+			RightUpperLeg = Vector3.new(0, 0.036, -0),
+		},
+		NeonPhantomTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.001, 0),
+			LeftUpperArm = Vector3.new(0.04, 0.276, -0.022),
+			RightLowerArm = Vector3.new(0, 0.001, 0),
+			RightUpperArm = Vector3.new(-0.039, 0.276, -0.023),
+			UpperTorso = Vector3.new(-0, 0.111, 0.084),
 		},
 		PajamaTop = {
 			LeftLowerArm = Vector3.new(0.001, 0.014, 0),
@@ -3974,6 +4394,20 @@ return {
 			RightUpperArm = Vector3.new(-0.135, 0.558, -0.068),
 			UpperTorso = Vector3.new(-0, 0.149, -0.108),
 		},
+		CosmicEmperorBottom = {
+			LeftLowerLeg = Vector3.new(-0.044, -0.041, 0.07),
+			LeftUpperLeg = Vector3.new(-0.01, 0.037, -0),
+			LowerTorso = Vector3.new(-0, -0.118, 0.02),
+			RightLowerLeg = Vector3.new(0.044, -0.041, 0.07),
+			RightUpperLeg = Vector3.new(0.01, 0.037, 0),
+		},
+		CosmicEmperorTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.043, 0),
+			LeftUpperArm = Vector3.new(0.522, 0.457, 0),
+			RightLowerArm = Vector3.new(0, 0.042, 0),
+			RightUpperArm = Vector3.new(-0.522, 0.457, 0),
+			UpperTorso = Vector3.new(-0, -0.058, -0),
+		},
 		Curly = {
 			Head_Hair = Vector3.new(0.007, 0.315, -0.065),
 		},
@@ -4045,6 +4479,20 @@ return {
 			LeftUpperArm = Vector3.new(0.136, 0.558, -0.068),
 			RightUpperArm = Vector3.new(-0.135, 0.558, -0.068),
 			UpperTorso = Vector3.new(-0, 0.149, -0.108),
+		},
+		GoldenTitanBottom = {
+			LeftLowerLeg = Vector3.new(0, 0.035, 0.015),
+			LeftUpperLeg = Vector3.new(-0.01, 0.037, -0),
+			LowerTorso = Vector3.new(-0, -0.118, 0.02),
+			RightLowerLeg = Vector3.new(-0, 0.035, 0.015),
+			RightUpperLeg = Vector3.new(0.01, 0.037, 0),
+		},
+		GoldenTitanTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.043, 0),
+			LeftUpperArm = Vector3.new(0.376, 0.683, 0),
+			RightLowerArm = Vector3.new(0, 0.042, 0),
+			RightUpperArm = Vector3.new(-0.376, 0.683, 0),
+			UpperTorso = Vector3.new(-0, 0.149, -0.159),
 		},
 		Handlebar = {
 			Head_Hair = Vector3.new(-0, -0.207, -0.758),
@@ -4133,6 +4581,20 @@ return {
 		},
 		Mullet = {
 			Head_Hair = Vector3.new(-0.002, 0.08, 0.015),
+		},
+		NeonPhantomBottom = {
+			LeftLowerLeg = Vector3.new(-0.044, -0.041, 0.07),
+			LeftUpperLeg = Vector3.new(-0.01, 0.037, -0),
+			LowerTorso = Vector3.new(-0, -0.118, 0.02),
+			RightLowerLeg = Vector3.new(0.044, -0.041, 0.07),
+			RightUpperLeg = Vector3.new(0.01, 0.037, 0),
+		},
+		NeonPhantomTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.043, 0),
+			LeftUpperArm = Vector3.new(0.061, 0.379, -0.033),
+			RightLowerArm = Vector3.new(0, 0.042, 0),
+			RightUpperArm = Vector3.new(-0.06, 0.378, -0.033),
+			UpperTorso = Vector3.new(-0, 0.152, 0.172),
 		},
 		PajamaTop = {
 			LeftLowerArm = Vector3.new(-0.001, 0.057, -0.005),
@@ -4361,6 +4823,20 @@ return {
 			RightUpperArm = Vector3.new(-0.137, 0.498, -0.039),
 			UpperTorso = Vector3.new(-0, 0.122, -0.126),
 		},
+		CosmicEmperorBottom = {
+			LeftLowerLeg = Vector3.new(-0.046, -0.038, 0.072),
+			LeftUpperLeg = Vector3.new(0, 0.036, -0),
+			LowerTorso = Vector3.new(-0, -0.114, 0.087),
+			RightLowerLeg = Vector3.new(0.046, -0.038, 0.072),
+			RightUpperLeg = Vector3.new(-0, 0.036, 0),
+		},
+		CosmicEmperorTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.014, 0),
+			LeftUpperArm = Vector3.new(0.472, 0.394, 0),
+			RightLowerArm = Vector3.new(-0, 0.014, 0),
+			RightUpperArm = Vector3.new(-0.472, 0.394, 0),
+			UpperTorso = Vector3.new(-0, -0.087, 0.018),
+		},
 		Curly = {
 			Head_Hair = Vector3.new(0.007, 0.315, 0),
 		},
@@ -4432,6 +4908,20 @@ return {
 			LeftUpperArm = Vector3.new(0.138, 0.498, -0.039),
 			RightUpperArm = Vector3.new(-0.137, 0.498, -0.039),
 			UpperTorso = Vector3.new(-0, 0.122, -0.075),
+		},
+		GoldenTitanBottom = {
+			LeftLowerLeg = Vector3.new(0, 0.043, 0.016),
+			LeftUpperLeg = Vector3.new(0, 0.036, -0),
+			LowerTorso = Vector3.new(-0, -0.114, 0.087),
+			RightLowerLeg = Vector3.new(-0, 0.043, 0.016),
+			RightUpperLeg = Vector3.new(-0, 0.036, 0),
+		},
+		GoldenTitanTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.014, 0),
+			LeftUpperArm = Vector3.new(0.338, 0.593, 0),
+			RightLowerArm = Vector3.new(0, 0.014, 0),
+			RightUpperArm = Vector3.new(-0.338, 0.593, 0),
+			UpperTorso = Vector3.new(-0, 0.122, -0.141),
 		},
 		Handlebar = {
 			Head_Hair = Vector3.new(-0, -0.161, -0.625),
@@ -4520,6 +5010,20 @@ return {
 		},
 		Mullet = {
 			Head_Hair = Vector3.new(-0.002, 0.08, 0.08),
+		},
+		NeonPhantomBottom = {
+			LeftLowerLeg = Vector3.new(-0.046, -0.038, 0.072),
+			LeftUpperLeg = Vector3.new(0, 0.036, -0),
+			LowerTorso = Vector3.new(-0, -0.114, 0.087),
+			RightLowerLeg = Vector3.new(0.046, -0.038, 0.072),
+			RightUpperLeg = Vector3.new(-0, 0.036, 0),
+		},
+		NeonPhantomTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.014, 0),
+			LeftUpperArm = Vector3.new(0.05, 0.325, -0.026),
+			RightLowerArm = Vector3.new(-0, 0.014, 0),
+			RightUpperArm = Vector3.new(-0.049, 0.325, -0.026),
+			UpperTorso = Vector3.new(-0, 0.122, 0.105),
 		},
 		PajamaTop = {
 			LeftLowerArm = Vector3.new(0.001, 0.027, 0),
@@ -4748,6 +5252,20 @@ return {
 			RightUpperArm = Vector3.new(-0.181, 0.896, -0.055),
 			UpperTorso = Vector3.new(-0, 0.251, -0.188),
 		},
+		CosmicEmperorBottom = {
+			LeftLowerLeg = Vector3.new(-0.046, -0.07, 0.127),
+			LeftUpperLeg = Vector3.new(0, 0.04, 0),
+			LowerTorso = Vector3.new(-0, -0.18, 0.02),
+			RightLowerLeg = Vector3.new(0.046, -0.07, 0.127),
+			RightUpperLeg = Vector3.new(-0, 0.04, 0),
+		},
+		CosmicEmperorTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.127, 0),
+			LeftUpperArm = Vector3.new(0.639, 0.774, 0),
+			RightLowerArm = Vector3.new(0, 0.127, 0),
+			RightUpperArm = Vector3.new(-0.639, 0.774, 0),
+			UpperTorso = Vector3.new(-0, 0.001, -0.077),
+		},
 		Curly = {
 			Head_Hair = Vector3.new(0.006, 0.279, -0.167),
 		},
@@ -4819,6 +5337,20 @@ return {
 			LeftUpperArm = Vector3.new(0.181, 0.896, -0.055),
 			RightUpperArm = Vector3.new(-0.181, 0.896, -0.055),
 			UpperTorso = Vector3.new(-0, 0.251, -0.188),
+		},
+		GoldenTitanBottom = {
+			LeftLowerLeg = Vector3.new(0, 0.084, 0.027),
+			LeftUpperLeg = Vector3.new(0, 0.04, 0),
+			LowerTorso = Vector3.new(-0, -0.18, 0.02),
+			RightLowerLeg = Vector3.new(-0, 0.084, 0.027),
+			RightUpperLeg = Vector3.new(-0, 0.04, 0),
+		},
+		GoldenTitanTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.127, 0),
+			LeftUpperArm = Vector3.new(0.458, 1.09, -0.009),
+			RightLowerArm = Vector3.new(0, 0.127, 0),
+			RightUpperArm = Vector3.new(-0.457, 1.09, -0.009),
+			UpperTorso = Vector3.new(-0, 0.251, -0.239),
 		},
 		Handlebar = {
 			Head_Hair = Vector3.new(-0, -0.13, -0.809),
@@ -4907,6 +5439,20 @@ return {
 		},
 		Mullet = {
 			Head_Hair = Vector3.new(-0.002, 0.076, -0.098),
+		},
+		NeonPhantomBottom = {
+			LeftLowerLeg = Vector3.new(-0.046, -0.07, 0.127),
+			LeftUpperLeg = Vector3.new(0, 0.04, 0),
+			LowerTorso = Vector3.new(-0, -0.18, 0.02),
+			RightLowerLeg = Vector3.new(0.046, -0.07, 0.127),
+			RightUpperLeg = Vector3.new(-0, 0.04, 0),
+		},
+		NeonPhantomTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.127, 0),
+			LeftUpperArm = Vector3.new(0.142, 0.665, -0.049),
+			RightLowerArm = Vector3.new(0, 0.127, 0),
+			RightUpperArm = Vector3.new(-0.141, 0.665, -0.049),
+			UpperTorso = Vector3.new(-0, 0.251, 0.236),
 		},
 		PajamaTop = {
 			LeftLowerArm = Vector3.new(-0.026, 0.145, 0),
@@ -5135,6 +5681,20 @@ return {
 			RightUpperArm = Vector3.new(-0.197, 0.793, -0.038),
 			UpperTorso = Vector3.new(-0, 0.169, -0.129),
 		},
+		CosmicEmperorBottom = {
+			LeftLowerLeg = Vector3.new(-0.046, -0.067, 0.13),
+			LeftUpperLeg = Vector3.new(-0, 0.039, 0),
+			LowerTorso = Vector3.new(0, -0.175, 0.124),
+			RightLowerLeg = Vector3.new(0.046, -0.066, 0.13),
+			RightUpperLeg = Vector3.new(0, 0.04, 0),
+		},
+		CosmicEmperorTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.074, 0),
+			LeftUpperArm = Vector3.new(0.583, 0.665, 0),
+			RightLowerArm = Vector3.new(0, 0.074, 0),
+			RightUpperArm = Vector3.new(-0.583, 0.665, 0),
+			UpperTorso = Vector3.new(-0, -0.048, 0.015),
+		},
 		Curly = {
 			Head_Hair = Vector3.new(0.006, 0.279, -0.043),
 		},
@@ -5206,6 +5766,20 @@ return {
 			LeftUpperArm = Vector3.new(0.198, 0.793, -0.038),
 			RightUpperArm = Vector3.new(-0.197, 0.793, -0.038),
 			UpperTorso = Vector3.new(-0, 0.169, -0.078),
+		},
+		GoldenTitanBottom = {
+			LeftLowerLeg = Vector3.new(0, 0.094, 0.027),
+			LeftUpperLeg = Vector3.new(-0, 0.039, 0),
+			LowerTorso = Vector3.new(0, -0.175, 0.124),
+			RightLowerLeg = Vector3.new(-0, 0.094, 0.027),
+			RightUpperLeg = Vector3.new(0, 0.04, 0),
+		},
+		GoldenTitanTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.074, 0),
+			LeftUpperArm = Vector3.new(0.417, 0.941, 0),
+			RightLowerArm = Vector3.new(0, 0.074, 0),
+			RightUpperArm = Vector3.new(-0.417, 0.941, 0),
+			UpperTorso = Vector3.new(-0, 0.169, -0.151),
 		},
 		Handlebar = {
 			Head_Hair = Vector3.new(-0, -0.077, -0.598),
@@ -5294,6 +5868,20 @@ return {
 		},
 		Mullet = {
 			Head_Hair = Vector3.new(-0.002, 0.076, 0.026),
+		},
+		NeonPhantomBottom = {
+			LeftLowerLeg = Vector3.new(-0.046, -0.067, 0.13),
+			LeftUpperLeg = Vector3.new(0, 0.039, 0),
+			LowerTorso = Vector3.new(0, -0.175, 0.124),
+			RightLowerLeg = Vector3.new(0.046, -0.066, 0.13),
+			RightUpperLeg = Vector3.new(-0, 0.04, 0),
+		},
+		NeonPhantomTop = {
+			LeftLowerArm = Vector3.new(0.001, 0.074, 0),
+			LeftUpperArm = Vector3.new(0.13, 0.57, -0.011),
+			RightLowerArm = Vector3.new(0, 0.074, 0),
+			RightUpperArm = Vector3.new(-0.128, 0.569, -0.011),
+			UpperTorso = Vector3.new(-0, 0.19, 0.207),
 		},
 		PajamaTop = {
 			LeftLowerArm = Vector3.new(-0.02, 0.092, -0.008),

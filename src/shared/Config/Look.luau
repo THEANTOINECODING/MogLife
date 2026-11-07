@@ -138,6 +138,11 @@ local Look = {
 		{ id = "IronGrip", duelWins = 25 },
 		{ id = "Unmoggable", duelWins = 100 },
 		{ id = "GodMogger", godWins = 1 }, -- vaincre le Dieu du Pump au Colisée (D93)
+		-- Titres secrets (D121, Config/Secrets.luau) : cachés dans le menu tant que le secret n'est pas trouvé
+		{ id = "GhostLifter", secret = "GhostLifter" },
+		{ id = "StatueBeliever", secret = "StatueBeliever" },
+		{ id = "SewerGains", secret = "SewerGains" },
+		{ id = "NeverForget", secret = "NeverForget" },
 	},
 
 	Defaults = {

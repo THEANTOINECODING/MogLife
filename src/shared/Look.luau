@@ -83,7 +83,9 @@ function Look.Default(): LookData
 end
 
 -- Titre exclusif (RewardTitles) : sa condition de déblocage, nil si ce n'est pas un titre exclusif
-function Look.RewardTitle(id: unknown): { id: string, trophies: number?, duelWins: number?, godWins: number? }?
+function Look.RewardTitle(
+	id: unknown
+): { id: string, trophies: number?, duelWins: number?, godWins: number?, secret: string? }?
 	for _, entry in LookConfig.RewardTitles do
 		if entry.id == id then
 			return entry
@@ -93,14 +95,20 @@ function Look.RewardTitle(id: unknown): { id: string, trophies: number?, duelWin
 end
 
 -- Titres exclusifs débloqués avec ce nombre de trophées de la semaine, de victoires en duel et de victoires contre le
--- Dieu du Pump
-function Look.UnlockedTitles(trophies: number, duelWins: number, godWins: number?): { [string]: boolean }
+-- Dieu du Pump, et avec les secrets trouvés (D121)
+function Look.UnlockedTitles(
+	trophies: number,
+	duelWins: number,
+	godWins: number?,
+	secrets: { [string]: boolean }?
+): { [string]: boolean }
 	local unlocked = {}
 	for _, entry in LookConfig.RewardTitles do
 		if
 			(entry.trophies and trophies >= entry.trophies)
 			or (entry.duelWins and duelWins >= entry.duelWins)
 			or (entry.godWins and (godWins or 0) >= entry.godWins)
+			or (entry.secret and secrets ~= nil and secrets[entry.secret] == true)
 		then
 			unlocked[entry.id] = true
 		end

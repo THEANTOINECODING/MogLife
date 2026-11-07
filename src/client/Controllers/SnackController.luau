@@ -186,6 +186,11 @@ local function buildFood(boostId: string): Model
 	return model
 end
 
+-- Modèle de l'aliment (aperçu 3D de la boutique et du sac, D121)
+function SnackController.BuildFood(boostId: string): Model
+	return buildFood(boostId)
+end
+
 -- ------------------------------------------------------------------ effets
 
 local function burst(at: BasePart, color: Color3, count: number, speed: number, size: number, lifetime: number)

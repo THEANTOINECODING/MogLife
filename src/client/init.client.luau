@@ -36,6 +36,9 @@ local ORDER = {
 	"ColosseumController",
 	"StatueWallController",
 	"PumpGodController",
+	"AuraController",
+	"ShopTourController",
+	"SecretController",
 }
 
 local controllers = {}

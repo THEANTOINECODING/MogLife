@@ -4,9 +4,11 @@
 -- déclenché. Attributs du miroir : Store (« Clothes », « Barber ») et Categories (« Top,Accessory », « Hair »).
 
 local CollectionService = game:GetService("CollectionService")
+local MarketplaceService = game:GetService("MarketplaceService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local GamePasses = require(ReplicatedStorage.Shared.Config.GamePasses)
 local LookConfig = require(ReplicatedStorage.Shared.Config.Look)
 local StyleItems = require(ReplicatedStorage.Shared.Config.StyleItems)
 local StyleSets = require(ReplicatedStorage.Shared.Config.StyleSets)
@@ -179,7 +181,22 @@ local function clearLuxuryAttachments(character: Model)
 	end
 end
 
+-- Effet des tenues Robux vu par tous (OutfitFxController) : l'ensemble Robux porté en entier, sinon ""
+local function updatePremiumAttribute(player: Player)
+	local data = DataService.Get(player)
+	local worn = ""
+	if data then
+		local top = data.StyleEquipped.Top and StyleItems[data.StyleEquipped.Top]
+		local set = top and top.setId and StyleSets.ById[top.setId]
+		if set and set.robux and data.StyleEquipped.Bottom == set.bottom then
+			worn = set.id
+		end
+	end
+	player:SetAttribute("PremiumSet", worn)
+end
+
 local function buildVisuals(player: Player)
+	updatePremiumAttribute(player)
 	local data = DataService.Get(player)
 	local character = player.Character
 	if not data or not character then
@@ -421,6 +438,56 @@ local function setupMirror(mirror: Instance)
 	end)
 end
 
+-- ------------------------------------------------------------------ tenues Robux (D121)
+-- Le Game Pass est la seule preuve d'achat : le serveur la vérifie lui-même (UserOwnsGamePassAsync à l'arrivée,
+-- PromptGamePassPurchaseFinished pendant la partie) et ajoute alors l'ensemble à la garde-robe.
+
+-- Ensemble Robux vendu par ce Game Pass (nil si aucun)
+local function setForPass(passId: number): string?
+	if passId == 0 then
+		return nil
+	end
+	for setId, id in GamePasses.StyleSets do
+		if id == passId and StyleSets.ById[setId] then
+			return setId
+		end
+	end
+	return nil
+end
+
+local function grantPremium(player: Player, setId: string, equip: boolean)
+	local set = StyleSets.ById[setId]
+	local data = DataService.Get(player)
+	if not set or not set.robux or not data then
+		return
+	end
+	if data.StyleOwned[set.top] and data.StyleOwned[set.bottom] then
+		return
+	end
+	data.StyleOwned[set.top] = true
+	data.StyleOwned[set.bottom] = true
+	if equip and setModelsReady(set) then
+		data.StyleEquipped.Top = set.top
+		data.StyleEquipped.Bottom = set.bottom
+	end
+	Analytics.Event(player, "PremiumStyle", 1, set.id)
+	buildVisuals(player)
+	sendState(player)
+	Remotes.Notify:FireClient(player, { key = "Shop.Bought", args = { item = { key = `StyleSet.{set.id}` } } })
+end
+
+-- À l'arrivée : passes achetés ailleurs (page du jeu) ou pendant une autre partie
+local function checkPasses(player: Player)
+	for setId, passId in GamePasses.StyleSets do
+		if passId ~= 0 then
+			local ok, owns = pcall(MarketplaceService.UserOwnsGamePassAsync, MarketplaceService, player.UserId, passId)
+			if ok and owns and player.Parent then
+				grantPremium(player, setId, false)
+			end
+		end
+	end
+end
+
 local function onPlayerLoaded(player: Player)
 	local function onCharacter(character: Model)
 		character:WaitForChild("UpperTorso", 10)
@@ -432,6 +499,7 @@ local function onPlayerLoaded(player: Player)
 		task.spawn(onCharacter, player.Character)
 	end
 	sendState(player)
+	task.spawn(checkPasses, player)
 end
 
 -- Entrée de luxe (D112) : au début d'un duel ou d'un combat de boss, chaque client joue l'effet autour du joueur
@@ -469,6 +537,12 @@ function StyleService.Start()
 	Remotes.BuyStyleSet.OnServerEvent:Connect(onBuySet)
 	Remotes.EquipStyleSet.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.Style, onEquipSet))
 	Remotes.SetHairDye.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.Style, onSetDye))
+	MarketplaceService.PromptGamePassPurchaseFinished:Connect(function(player, passId, purchased)
+		local setId = purchased and setForPass(passId)
+		if setId then
+			grantPremium(player, setId, true)
+		end
+	end)
 	Remotes.RequestStats.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.RequestStats, sendState))
 end
 

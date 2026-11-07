@@ -406,7 +406,8 @@ def shop(P, name, spec):
         (box((dw / 2 + 0.3, -0.2, dh / 2), (0.6, 0.4, dh)), "charcoal"),
         (box((0, -0.2, dh + 0.3), (dw + 1.2, 0.4, 0.6)), "charcoal"),
         (box((0, -0.35, dh + 1.8), (dw + 4, 0.4, 2.2)), "white"),
-        (box((0, -0.5, dh + 1.8), (dw + 3.4, 0.1, 1.7)), sign),
+        # D121 : l'enseigne dépasse du cadre (avant, même face avant que le cadre : double texture qui clignotait)
+        (box((0, -0.58, dh + 1.8), (dw + 3.4, 0.12, 1.7)), sign),
     ]
     for x in (-dw / 2 - 1.2, dw / 2 + 1.2):
         trim.append((box((x, -0.9, dh + 3.3), (0.5, 1.4, 0.3)), "charcoal"))

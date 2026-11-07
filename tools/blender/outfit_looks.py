@@ -1,4 +1,4 @@
-"""Twenty original MOG LIFE outfits, built against each stage's actual body shell.
+"""Twenty original MOG LIFE outfits (plus three Robux outfits, D121), built against each stage's actual body shell.
 
 Loaded by build_style.py. No game prices live here. Every garment has matching
 R15 part keys on all fourteen bodies so growth can interpolate continuously.
@@ -29,7 +29,13 @@ LOOKS = (
     ("CloudCruiser", "dreamy street", (0.80, 0.77, 0.96), (0.39, 0.56, 0.88), (0.97, 0.93, 0.98), "puffer", "baggy", "cloud"),
     ("IronMeteor", "comic armor", (0.20, 0.23, 0.29), (0.71, 0.79, 0.78), (0.92, 0.27, 0.12), "armor", "straight", "meteor"),
     ("PaperCrown", "absurd finale", (0.96, 0.91, 0.73), (0.91, 0.65, 0.15), (0.16, 0.52, 0.68), "cape", "flare", "crown"),
+    # D121 : tenues Robux (Game Pass), « Drip au maximum » : plus de pièces et de volumes que toutes les autres.
+    # Leurs cases d'atlas suivent les 20 premières (rangée 13 colonnes 4 à 7, puis rangée 14).
+    ("CosmicEmperor", "galactic emperor", (0.23, 0.10, 0.52), (0.05, 0.07, 0.22), (1.0, 0.80, 0.28), "cape", "straight", "crown"),
+    ("GoldenTitan", "molten gold colossus", (0.96, 0.72, 0.16), (0.99, 0.93, 0.70), (0.92, 0.32, 0.08), "armor", "straight", "meteor"),
+    ("NeonPhantom", "neon night runner", (0.04, 0.05, 0.09), (0.12, 0.14, 0.22), (0.08, 0.95, 1.0), "hoodie", "taper", "zigzag"),
 )
+PREMIUM_LOOKS = ("CosmicEmperor", "GoldenTitan", "NeonPhantom")
 
 
 def paint_outfit_cells(atlas):
@@ -291,7 +297,7 @@ def _bottom(w, body, g, cell, silhouette, name):
 
 
 def build_looks(w, body, g):
-    """Build all 20 two-piece outfits for one body stage."""
+    """Build all two-piece outfits (20 Cash sets, 3 Robux sets) for one body stage."""
     J, cfg = g["J"], g["cfg"]
     neck, waist, root = J["Neck"], J["Waist"], J["Root"]
     chest = g["chest_w"]
@@ -328,8 +334,9 @@ def build_looks(w, body, g):
         if silhouette == "cape":
             # Back panel is welded to the torso. It clears arms but moves with the torso.
             cape_y = max(row[6] for row in radii)
-            size = 1.25 if name == "PaperCrown" else 1.0
-            w.make("UpperTorso", _cape_mesh(chest, cape_y, neck.z, waist.z, size, 1.0), secondary)
+            size = {"PaperCrown": 1.25, "CosmicEmperor": 1.4}.get(name, 1.0)
+            length = 1.12 if name == "CosmicEmperor" else 1.0
+            w.make("UpperTorso", _cape_mesh(chest, cape_y, neck.z, waist.z, size, length), secondary)
         if silhouette == "puffer":
             for k in (4, 7, 10):
                 w.make("UpperTorso", prism((-chest * 0.40, front(k, -chest * 0.40), heights[k]),
@@ -465,6 +472,8 @@ def build_looks(w, body, g):
             for sx in (-1, 1):
                 seam(0, 11, sx * 0.42, 8, 0.12, secondary)
                 seam(sx * 0.42, 8, sx * 0.19, 2, 0.06, accent)
+        if name in PREMIUM_LOOKS:
+            _premium_top(w, body, g, name, radii, heights, front, seam, (primary, secondary, accent))
         w.start(name + "Bottom")
         leg_ease = _bottom(w, body, g, primary, lower, name)
         for side, sx in sides():
@@ -478,3 +487,117 @@ def build_looks(w, body, g):
                 w.make(side + "UpperLeg", block((hip.x + sx * (cfg["thigh"] + leg_ease + 0.05),
                                                  -cfg["thigh"] * 0.35, leg_z),
                                                 (0.16 + cfg["thigh"] * 0.30, 0.08, 0.22)), secondary)
+        if name in PREMIUM_LOOKS:
+            _premium_bottom(w, body, g, name, leg_ease, (primary, secondary, accent))
+
+
+# ------------------------------------------------------------------ D121 : détails des tenues Robux
+def _sleeve_top(body, g, side):
+    """Haut de la manche longue (comme _torso) et son rayon mesuré : là où se posent épaulettes et spalières."""
+    J, cfg = g["J"], g["cfg"]
+    sh, el = J[side + "Shoulder"], J[side + "Elbow"]
+    arm = bpy.data.objects.get(body + "_" + side + "UpperArm")
+    arm_top = max(v.co.z for v in arm.data.vertices) if arm else sh.z
+    top_z = max(sh.z + cfg["delt"] * 0.95, arm_top + 0.03)
+    z = top_z - (top_z - el.z) * 0.18
+    ring_r = _body_radii(body, side + "UpperArm", [z], 24, [(sh.x, sh.y)])[0]
+    ease = 0.115 + cfg["bicep"] * 0.06
+    return Vector((sh.x, sh.y, top_z)), max(ring_r) + ease, el
+
+
+def _leg_radius(body, part, z, center):
+    row = _body_radii(body, part, [z], 24, [center])[0]
+    return max(row), row[18]  # rayon le plus large, rayon vers l'avant (-Y)
+
+
+def _premium_top(w, body, g, name, radii, heights, front, seam, cells):
+    J = g["J"]
+    neck = J["Neck"]
+    chest = g["chest_w"]
+    primary, secondary, accent = cells
+    back = max(row[6] for row in radii[9:])
+    for side, sx in sides():
+        top, r, el = _sleeve_top(body, g, side)
+        if name == "CosmicEmperor":
+            # Épaulettes d'apparat dorées, frangées
+            w.make(side + "UpperArm", lowsphere((top.x + sx * r * 0.08, top.y, top.z - r * 0.18),
+                                                (r * 1.18, r * 1.12, r * 0.34), 12, 6), accent)
+            for k in range(5):
+                a = math.pi * (0.15 + 0.7 * k / 4)
+                x = top.x + sx * r * 1.05 * math.sin(a)
+                y = top.y - r * 1.0 * math.cos(a)
+                w.make(side + "UpperArm", prism((x, y, top.z - r * 0.25), (x, y, top.z - r * 0.85),
+                                                r * 0.075, r * 0.06, sides=4), accent)
+        elif name == "GoldenTitan":
+            # Spalières de colosse : dôme ivoire, liseré en fusion, pointe
+            cx = top.x + sx * r * 0.3  # décalé vers l'extérieur : la tête reste dégagée
+            w.make(side + "UpperArm", lowsphere((cx, top.y, top.z - r * 0.2),
+                                                (r * 1.2, r * 1.12, r * 0.55), 12, 7), secondary)
+            w.make(side + "UpperArm", ring((cx, top.y, top.z - r * 0.5), r * 1.2,
+                                           r * 0.12, r * 0.14, 14), accent)
+            w.make(side + "UpperArm", pyramid((cx + sx * r * 0.35, top.y, top.z + r * 0.2),
+                                              (cx + sx * r * 0.7, top.y, top.z + r * 0.62), r * 0.12, r * 0.12), accent)
+        elif name == "NeonPhantom":
+            # Couture néon le long du bras, de l'épaule au coude
+            outer = top.x + sx * r * 1.02
+            w.make(side + "UpperArm", prism((outer, top.y, top.z - r * 0.4), (el.x + sx * r * 0.92, el.y, el.z + r * 0.2),
+                                            r * 0.09, r * 0.09, sides=4), accent)
+    if name == "CosmicEmperor":
+        # Haut col d'empereur dans le dos (jamais devant : le menton reste libre, D120) et broches de la cape
+        h = chest * 0.13 + 0.12
+        w.make("UpperTorso", block((0, back * 0.92, neck.z + h * 0.32), (chest * 0.46, 0.05 + chest * 0.025, h),
+                                   1.35, chest * 0.05), secondary)
+        w.make("UpperTorso", block((0, back * 0.92 - 0.02 - chest * 0.012, neck.z + h * 0.32),
+                                   (chest * 0.48, 0.02 + chest * 0.008, h * 1.04), 1.36, chest * 0.05), accent)
+        for sx in (-1, 1):
+            w.make("UpperTorso", lowsphere((sx * chest * 0.30, front(11, sx * chest * 0.30) - 0.06, heights[11]),
+                                            (chest * 0.07, 0.05, chest * 0.07), 10, 6), accent)
+        seam(-0.30, 11, 0.30, 11, 0.05, accent)  # chaîne de cape
+        seam(-0.08, 10, -0.08, 1, 0.05, accent)  # boutonnières dorées
+        seam(0.08, 10, 0.08, 1, 0.05, accent)
+    elif name == "GoldenTitan":
+        # Plastron rayonnant et gorgerin
+        w.make("UpperTorso", ring_upright((0, front(8) - 0.10, heights[8]), chest * 0.15, chest * 0.04, 0.06, 14), accent)
+        for k in range(8):
+            a = 2 * math.pi * k / 8
+            ox, oz = math.cos(a) * chest * 0.21, math.sin(a) * chest * 0.21
+            w.make("UpperTorso", pyramid((ox * 0.7, front(8, ox) - 0.10, heights[8] + oz * 0.7),
+                                          (ox * 1.25, front(8, ox) - 0.12, heights[8] + oz * 1.25), chest * 0.03, chest * 0.03), accent)
+        seam(-0.40, 12, 0.40, 12, 0.10, secondary)
+        seam(-0.44, 2, 0.44, 2, 0.08, accent)
+    elif name == "NeonPhantom":
+        # Capuche rabattue dans le dos et lignes néon sur les flancs
+        w.make("UpperTorso", lowsphere((0, back + chest * 0.06, neck.z - chest * 0.02),
+                                        (chest * 0.24, chest * 0.11, chest * 0.13), 12, 6), secondary)
+        for sx in (-1, 1):
+            seam(sx * 0.44, 12, sx * 0.44, 1, 0.045, accent)
+            seam(sx * 0.12, 11, sx * 0.30, 5, 0.04, accent)
+        seam(-0.30, 1, 0.30, 1, 0.045, accent)
+
+
+def _premium_bottom(w, body, g, name, leg_ease, cells):
+    J, cfg = g["J"], g["cfg"]
+    primary, secondary, accent = cells
+    root = J["Root"]
+    # Ceinture (les trois) : anneau sur la taille du pantalon, boucle devant
+    z = root.z + 0.40
+    belt = _body_radii(body, "LowerTorso", [z])[0]
+    rings = [[(math.cos(2 * math.pi * j / 24) * (belt[j] + 0.11), math.sin(2 * math.pi * j / 24) * (belt[j] + 0.11), z + dz)
+              for j in range(24)] for dz in (-0.07, 0.07)]
+    w.make("LowerTorso", _loft(rings), accent if name == "NeonPhantom" else secondary)
+    w.make("LowerTorso", block((0, -(belt[18] + 0.13), z), (0.16 + cfg["chest_w"] * 0.05, 0.05, 0.14 + cfg["chest_w"] * 0.02)), accent)
+    for side, sx in sides():
+        knee, ankle = J[side + "Knee"], J[side + "Ankle"]
+        kz = knee.z - (knee.z - ankle.z) * 0.10
+        wide, fwd = _leg_radius(body, side + "LowerLeg", kz, (knee.x, knee.y))
+        if name == "GoldenTitan":
+            # Genouillères ivoire
+            w.make(side + "LowerLeg", lowsphere((knee.x, knee.y - fwd - leg_ease - wide * 0.05, kz),
+                                                (wide * 0.72, wide * 0.32, wide * 0.8), 10, 6), secondary)
+        else:
+            # Bande latérale du genou à la cheville (or pour l'empereur, néon pour le fantôme)
+            low = ankle.z + 0.25
+            wide_low, _ = _leg_radius(body, side + "LowerLeg", low, (ankle.x, ankle.y))
+            w.make(side + "LowerLeg", prism((knee.x + sx * (wide + leg_ease + 0.02), knee.y, kz),
+                                            (ankle.x + sx * (wide_low + leg_ease + 0.02), ankle.y, low),
+                                            0.045 + wide * 0.04, 0.045 + wide * 0.04, sides=4), accent)

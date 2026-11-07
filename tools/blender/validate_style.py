@@ -89,8 +89,8 @@ for body in BODY_KEYS:
                    if obj.name.split("__")[1] == item} for item in items} == expected_parts, (
         f"{body}: parties de vêtement incompatibles avec la croissance vers le stade suivant"
     )
-    assert len(items) == 74, f"{body}: {len(items)} articles au lieu de 74"
-    assert len(pieces) == 237, f"{body}: {len(pieces)} pièces au lieu de 237"
+    assert len(items) == 80, f"{body}: {len(items)} articles au lieu de 80"  # D121 : + 6 articles Robux
+    assert len(pieces) == 267, f"{body}: {len(pieces)} pièces au lieu de 267"  # D121 : + 30 pièces Robux
     for name, *_ in LOOKS:
         assert name + "Top" in items and name + "Bottom" in items, f"{body}: ensemble {name} incomplet"
     tris_by_item = {item: 0 for item in items}
@@ -209,7 +209,7 @@ for body in BODY_KEYS:
 
 atlas = bpy.data.images["Style_Atlas"]
 assert tuple(atlas.size) == (512, 512) and atlas.channels == 4
-assert total == 3318
+assert total == 3738  # D121 : + 3 tenues Robux (30 pièces par corps)
 print(f"Clothing coverage failures: {len(coverage_failures)}")
 if coverage_failures:
     print("Failure groups:", Counter((failure[0].split("__")[0], failure[1]) for failure in coverage_failures))

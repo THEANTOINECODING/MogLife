@@ -63,6 +63,9 @@ local function sendState(player: Player)
 		return
 	end
 	local id, endsAt = BoostService.Active(player)
+	-- Aura du boost (D121), vue par tous : attributs répliqués du joueur, dessinés par AuraController
+	player:SetAttribute("BoostAura", id or "")
+	player:SetAttribute("BoostAuraEnds", endsAt)
 	Remotes.BoostState:FireClient(player, { id = id, endsAt = endsAt, stock = table.clone(stockOf(data)) })
 end
 

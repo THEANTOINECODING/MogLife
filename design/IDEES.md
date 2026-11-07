@@ -3,6 +3,32 @@
 Toute nouvelle idée arrive ici. Elle passe dans le design seulement après une décision dans `DECISIONS.md`.
 Test de la vision : l'idée tient-elle dans les trois briques (mini-jeux, contenu en données, personnage) ?
 
+## Secrets du jeu (proposés par Claude le 06/11/2026, Antoine choisit ceux à construire)
+
+**Construits (D121, choix d'Antoine) : 3, 6, 7 et 8.** Les autres restent des idées.
+
+Simples, drôles, mystérieux. Aucun indice dans l'interface : on les découvre en jouant ou par le bouche-à-oreille.
+Récompense commune : un **titre secret** (liste `RewardTitles`, caché tant qu'il n'est pas trouvé) et une petite
+annonce « SECRET FOUND » ; aucun Mog ni avantage. Le serveur valide tout (distance, moment, ordre).
+1. **Pigeon Mogger** : un pigeon aux pectoraux énormes sur le rebord d'un toit de la place. Faire la pose double
+   biceps à côté de lui : il la fait aussi, puis lâche une plume dorée. Titre « Pigeon Whisperer ».
+2. **Fontaine aux vœux** : « Toss a coin » (1 Cash) à la fontaine ; une phrase de bro au hasard à chaque vœu
+   (« Your gains will be legendary... someday »). Au 7e vœu, l'haltère doré tourne sur lui-même et t'éclabousse.
+   Titre « Wish Maker ».
+3. **Haltère fantôme** : la nuit seulement, un haltère translucide flotte à un endroit tiré au hasard parmi 5. Le
+   soulever (appui long) : il disparaît dans un « booo... nice form ». Titre « Ghost Lifter ».
+4. **Gong de minuit** : frapper 3 fois le gong de l'arène pendant la nuit. La constellation du Dieu du Pump fait un
+   clin d'œil dans le ciel, avec un éclair doré. Titre « Heard By The God ».
+5. **Les chaussettes de Pas-Les-Jambes** : 5 minuscules chaussettes cachées dans la ville (sous un banc, dans un
+   arbre, derrière le frigo du garage...). Les rapporter toutes à Pas-Les-Jambes : il pleure de joie. Titre « Sock
+   Hunter ».
+6. **Statue qui cligne** : taper 10 fois vite sur le socle de la statue de la place : elle cligne de l'œil et
+   gonfle un biceps. Titre « Statue Believer ».
+7. **Le rat coach** : une plaque d'égout dans une ruelle se soulève ; dessous, un rat fait des pompes avec un
+   haltère minuscule et donne un conseil (« Never skip rat day »). Titre « Sewer Gains ».
+8. **Miroir du passé** : au GOD MOGGER, rester 5 s en pose devant le miroir du coiffeur : le reflet redevient ton
+   Normie, qui te fait coucou. Titre « Never Forget ».
+
 ## Propositions du 03/11/2026 (Claude, à décider par Antoine)
 
 Détails et raisons : `PROPOSITION_CORPS_V2.md` et `ANALYSE_VIRALE_2026-11-03.md`. Rien n'est codé.

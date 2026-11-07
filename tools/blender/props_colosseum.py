@@ -227,8 +227,9 @@ def pit_wall(P, gate=False):
     # Socle sombre au pied du mur
     for q0, q1 in (((a0, -90 - gap), (-90 + gap, a1)) if gate else ((a0, a1),)):
         parts.append((arc(r0 - 0.4, r0 + 0.1, q0, q1, 0, 0.7, 3), "sanddark"))
-    # Chaperon de marbre qui déborde des deux côtés
-    parts.append((arc(r0 - 0.45, r1 + 0.35, a0, a1, H, H + 0.8, 4), "marblew"))
+    # Chaperon de marbre qui déborde des deux côtés ; D121 : un peu au-dessus de la coursive (même hauteur avant :
+    # son dessus et les dalles se superposaient sur le bord)
+    parts.append((arc(r0 - 0.45, r1 + 0.35, a0, a1, H, H + 0.86, 4), "marblew"))
     # Pilastres aux bords du secteur (et au milieu s'il n'y a pas de porte)
     for deg in ((a0 + 0.6, a1 - 0.6) if gate else (a0 + 0.6, -90.0, a1 - 0.6)):
         pil = box((0, 0.3, H / 2), (1.6, 0.8, H), bevel=0.08)
@@ -272,14 +273,15 @@ def stands(P, variant="Normal"):
     a0, a1 = -90 - half, -90 + half
     walk_r0, walk_r1, wt = L["wall_outer"], L["walk_outer"], L["walk_top"]
     parts = []
-    # Coursive : dalles alternées
+    # Coursive : dalles alternées. D121 : les dalles ont une vraie épaisseur et le remplissage s'arrête dessous (avant,
+    # dalles d'épaisseur nulle au niveau du dessus du remplissage : deux sols au même endroit qui clignotaient)
+    slab = 0.3
     for k in range(6):
         s0 = a0 + (a1 - a0) * k / 6
         s1 = a0 + (a1 - a0) * (k + 1) / 6
-        parts.append((arc(walk_r0, walk_r1, s0, s1, L["wall_height"] + 0.8, wt, 2),
-                      "sand3" if k % 2 else "sand1"))
-    # Remplissage sous la coursive (du sol au dessus du mur), invisible de la piste mais visible depuis l'entrée
-    parts.append((arc(walk_r0, walk_r1, a0, a1, 0, L["wall_height"] + 0.8, 4), "sanddark"))
+        parts.append((arc(walk_r0, walk_r1, s0, s1, wt - slab, wt, 2), "sand3" if k % 2 else "sand1"))
+    # Remplissage sous la coursive (du sol au dessous des dalles), invisible de la piste mais visible depuis l'entrée
+    parts.append((arc(walk_r0, walk_r1, a0, a1, 0, wt - slab, 4), "sanddark"))
     # Balustrade : main courante et petits poteaux
     parts.append((arc(walk_r0 - 0.1, walk_r0 + 0.5, a0, a1, wt + 1.0, wt + 1.3, 6), "marblew"))
     for k in range(7):

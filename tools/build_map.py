@@ -438,7 +438,23 @@ def shop_shell(F, name, color, material, floor):
         # Deux battants vitrés, poignées au milieu (le battant de droite est retourné)
         auto_door(F, name + "DoorLeft", (-SHOP_DOOR_WIDTH[name] / 4, ft, 0.4), f"Door_Shop_{name}"),
         auto_door(F, name + "DoorRight", (SHOP_DOOR_WIDTH[name] / 4, ft, 0.4), f"Door_Shop_{name}", yaw=180),
-    ] + back_doors(F, name, d, ft) + shop_dressing(F, name)
+    ] + back_doors(F, name, d, ft) + shop_dressing(F, name) + shop_zone(F, name)
+
+
+# Magasins qui ont une visite guidée à la première entrée (D121) ; la salle de sport n'est pas un magasin
+TOUR_SHOPS = ("Clothes", "Barber", "Furniture", "Grocery")
+
+
+def shop_zone(F, name):
+    """Volume invisible de l'intérieur (tag ShopZone, attribut Store) : le serveur y repère la première entrée d'un
+    joueur pour lancer la visite guidée du magasin (D121)."""
+    if name not in TOUR_SHOPS:
+        return []
+    w, d = SHOP_DIMS[name]
+    h = SHOP_HEIGHT[name]
+    return [P(F, name + "Zone", (0, h / 2, d / 2 + 1), (w - 2, h, d - 4), WHITE, transparency=1, collide=False,
+              tags=["ShopZone"], attributes={"Store": name},
+              extra={"CanQuery": False, "CanTouch": False, "CastShadow": False})]
 
 
 def awning(F, name, x, width, top, colors, depth=3.6, slope=24):
@@ -1553,17 +1569,18 @@ def boss_arena():
         c.append(decor(T, f"TempleBrazier{sx}", (sx * 17, 0, -17), "Colosseum_Brazier", collide=False))
         c.append(P(T, f"TempleFire{sx}", (sx * 17, 4.0, -17), (1, 1, 1), WHITE, transparency=1, collide=False,
                    tags=["ColosseumFire"], extra=INVISIBLE))
-    # Portail vers le Colisée du Pump (D89, arche gothique en D105) : en tête du tapis rouge, entre les deux torches
-    c += colosseum_portal(T, "ColosseumPortalTemple", (0, 0.12, -17.6), 0, "Colosseum")
+    # Portail vers le Colisée du Pump (D89, arche gothique en D105) : à gauche du temple, à l'ancienne place du gong
+    # (D121 : en tête du tapis rouge, il cachait le Dieu du Pump), ouverture tournée vers le centre de l'arène
+    c += colosseum_portal(F, "ColosseumPortalTemple", (-102, 0.12, -64), -90, "Colosseum")
     # Ambiance de match (apparaît avec les modèles 3D) : projecteurs, gong, cordons, trophées des boss
     c.append(decor(F, "SpotlightSlot0", (-100, 0.12, -40), "Spotlight", yaw=-45))
     c.append(decor(F, "SpotlightSlot1", (-40, 0.12, -100), "Spotlight", yaw=135))
-    c.append(decor(F, "GongSlot", (-102, 0.12, -64), "Gong", yaw=-90))
+    c.append(decor(F, "GongSlot", (-66, 0.12, -101), "Gong", yaw=180))  # à droite du temple (D121)
     for k, (along, side) in enumerate(((-8, 1), (8, 1), (-8, -1), (8, -1))):
         x = -54 + along * 0.707 + side * 3.0
         z = -54 + along * 0.707 - side * 3.0
         c.append(decor(F, f"RopeSlot{k}", (x, 0.12, z), "StanchionRope", yaw=-45))
-    c.append(decor(F, "CrownSlot", (-60, 0.12, -98), "CrownCushion", yaw=135))
+    c.append(decor(F, "CrownSlot", (-57, 0.12, -99), "CrownCushion", yaw=135))  # écarté du gong (D121)
     # Torches enflammées le long du tapis rouge, cercles dorés autour des scènes, gradins (D101)
     for k, along in enumerate((-15, 0, 15)):
         for side in (-1, 1):
@@ -1572,7 +1589,7 @@ def boss_arena():
             c += torch(F, f"ArenaTorch{k}{side}", (x, 0.12, z))
     for name, (x, z), r in (("NoLegsRing", (-92, -46), 9.0), ("KingRing", (-46, -92), 11.8)):
         c += stone_ring(F.child((x, 0, z)), name, r, r + 0.8, 0.1, 0.2, 32, GOLD_TRIM, material="Metal")
-    c.append(decor(F, "BleachersSlot0", (-46, 0.12, -74), "Bleachers"))
+    c.append(decor(F, "BleachersSlot0", (-46, 0.12, -74), "Bleachers_King"))  # D121 : tribune violette du Roi
     c.append(decor(F, "BleachersSlot1", (-74, 0.12, -46), "Bleachers", yaw=90))
     c.append(decor(F, "SocksSlot", (-92, 0.1, -36), "GiantSocks"))
     return c
@@ -1640,7 +1657,23 @@ def downtown():
     # La voiture du voisin, en panne sur la route ouest ; le voisin attend sur le trottoir
     c += car(F, "NeighborCar", (-ROAD[0] - 5, 0.15, -40), (200, 60, 50), yaw=90)
     c.append(helper(F, "NeighborSpot", (-walk, WALK_TOP + 0.5, -32), "PushCar", yaw=90))
+    c += secret_spots(F)
     return folder("Downtown", c)
+
+
+def secret_spots(F):
+    """Secrets de la ville (D121, src/shared/Config/Secrets.luau, SecretService) :
+    - 5 emplacements invisibles (tag GhostSpot) où l'haltère fantôme peut flotter la nuit ;
+    - la plaque d'égout du rat coach (tag RatManhole), dans la ruelle entre le magasin de vêtements et le coiffeur.
+      Le cadre (modèle Secret_ManholeRing) est un décor ; le couvercle et le rat sont posés par le serveur."""
+    c = []
+    for k, (x, z) in enumerate(((0, -22), (-20, -20), (-74, 44), (-60, 60), (50, 36))):
+        c.append(P(F, f"GhostSpot{k}", (x, 0.2, z), (2, 0.2, 2), WHITE, transparency=1, collide=False,
+                   tags=["GhostSpot"], extra=INVISIBLE))
+    c.append(decor(F, "RatManholeRingSlot", (-52, 0, 80), "Secret_ManholeRing", collide=False))
+    c.append(P(F, "RatManhole", (-52, 0.1, 80), (3, 0.2, 3), WHITE, transparency=1, collide=False,
+               tags=["RatManhole"], extra=INVISIBLE))
+    return c
 
 
 # ------------------------------------------------------------------ 5. le Colisée du Pump (D89)
