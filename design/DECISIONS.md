@@ -2,6 +2,22 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-07 (Demande d'Antoine : secrets plus soignés, combat contre Pas-Les-Jambes, achats en Robux, tenues Robux haut de gamme)
+
+- **D122 — Secrets mis en scène, tracé de Pas-Les-Jambes revu, boutique Robux (Cash, Mog, victoire de boss), argent hors des combats entre joueurs.** Choix d'Antoine (QCM) : « Garder le tracé, corrigé » ; vendre des packs de Cash, des packs de Mog, la victoire contre un boss et un bonus de tenue au-delà de +5 % ; offre de victoire « sur l'écran de défaite » ; « l'argent ne doit pas influencer les combats entre vrais joueurs » ; 4 tenues Robux à construire (Dragon de la Salle, Soleil Éternel, Mecha-Mogger, Statue de Marbre).
+  - **Secrets** (`SecretController`, `SecretService`, `Config/Secrets.luau`) : chaque secret a sa petite cinématique, jouée seulement pour celui qui le trouve. Le fantôme sort du sol, fait trois curls avec l'haltère, parle, puis s'envole. La statue se tourne vers le joueur, fait un double biceps qui pompe et cligne de l'œil (animation côté serveur, car son squelette est simulé par le serveur) ; chaque tape la fait trembler. Le rat sort dans la vapeur, fait 4 pompes comptées, puis se dresse. Le Normie du passé apparaît dans le miroir, salue et se dissout. L'annonce est refaite : rayons, bannière tamponnée, confettis et compteur « Secrets found x/y ».
+  - **Tracé contre Pas-Les-Jambes** (`Minigames/Trace.luau`, `Balance.Minigames.Trace`) : trop dur à la souris. Plus de temps (×1,6, au moins 1,3 s), points de passage plus larges (0,1), départ accepté plus loin du point vert, notes plus tolérantes, moins de tracés difficiles, virages moins serrés. Le panneau est plus grand sur ordinateur (470×500) que sur téléphone (360×380).
+  - **Boutique Robux** (`Config/Products.luau`, `PurchaseService`, `StoreController`) : un bouton « + » à côté du Mog et du Cash ouvre les packs. Cash : montant fixe. Mog : une part du Mog demandé par le boss du stade, pour que le pack reste utile en avançant. Après une défaite contre le boss de son stade, une carte propose de le passer (première victoire seulement, jamais en revanche) ; si ce boss a été battu entre-temps, le joueur reçoit du Cash à la place. Un seul service reçoit les reçus de Roblox ; chaque reçu est noté dans la sauvegarde (`Receipts`) et n'est jamais accordé deux fois. « Prendre la place » d'une machine passe aussi par lui. Tant qu'un identifiant de produit vaut 0, le produit est caché.
+  - **Argent hors des combats entre joueurs** : le bras de fer n'utilise plus du tout le Drip (`DuelService`). Le Drip ne compte plus que contre les boss.
+  - **Tenue Robux portée en entier** (haut et bas du même ensemble) : +15 % contre les boss (`Balance.Drip.RobuxBossBonus`, ❓ à régler en jouant), au lieu du plafond de +5 %.
+  - **Divergences assumées avec `06_MONETISATION.md`**, choisies par Antoine : vente de Cash, de Mog et de victoires de boss ; offre proposée après une défaite ; bonus contre les boss supérieur à ce qu'on obtient gratuitement. `06_MONETISATION.md` est mis à jour.
+  - **Testé dans Studio** (son coupé, ids de produits de test remis à 0 ensuite, sauvegarde restaurée à l'identique) :
+    - Boutons « + » et panneau des packs (montants au stade 6 : +8,5K et +85K Mog, +1,5K et +6K Cash).
+    - Carte de victoire de boss : texte, prix, « No thanks ».
+    - Reçus simulés (`DevCommands "Receipt"`) : +1 500 Cash, le même reçu n'est pas payé deux fois, +8 500 Mog, produit inconnu refusé.
+    - Victoire achetée contre King of the Block : offre reçue, victoire accordée (`bought`), stade suivant, Cash de première victoire, carte masquée. Boss déjà battu : 6 000 Cash à la place.
+  - **Pas encore vérifié à l'image** : les cinématiques des secrets et le tracé à la souris (Studio réduit, rendu en pause pendant les tests).
+
 ## 2026-11-07 (Demande d'Antoine : tribunes, portail, aperçus 3D, aura, faces doublées, visite des magasins, secrets, meubles, tenues Robux)
 
 - **D121 — Grande passe qualité et contenu : tribunes de stade, portail déplacé, faces superposées corrigées, meubles refaits, aperçus 3D, aura de boost, visite guidée des magasins, 4 secrets, 3 tenues Robux.** Choix d'Antoine (QCM) : tribunes « vraie tribune de stade » aux couleurs des boss ; visite guidée de 5 à 8 s, une seule fois, passable ; secrets « proposer puis construire » (haltère fantôme, statue qui cligne, rat coach, miroir du passé) ; tenues Robux « Drip au maximum ».

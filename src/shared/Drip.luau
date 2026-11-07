@@ -1,6 +1,8 @@
--- Drip (D111) : la valeur de la tenue portée donne un petit bonus contre les boss (Mog-off et Colisée) et au bras
--- de fer. « Mogger », c'est aussi le look. Le style s'achète en Cash, sauf les 3 tenues Robux (D121) qui donnent le
--- Drip maximal (divergence assumée avec D15). Partagé : le serveur calcule le bonus, le client l'affiche.
+-- Drip (D111) : la valeur de la tenue portée donne un petit bonus contre les boss (Mog-off et Colisée). « Mogger »,
+-- c'est aussi le look. Le style s'achète en Cash, sauf les tenues Robux (D121) qui donnent le Drip maximal.
+-- D122 (choix d'Antoine) : une tenue Robux portée en entier donne un bonus plus fort contre les boss
+-- (Balance.Drip.RobuxBossBonus) ; et plus aucun bonus au bras de fer : « l'argent ne doit pas influencer les combats
+-- entre vrais joueurs ». Partagé : le serveur calcule le bonus, le client l'affiche.
 
 local Balance = require(script.Parent.Config.Balance)
 local StyleItems = require(script.Parent.Config.StyleItems)
@@ -42,9 +44,25 @@ function Drip.Ratio(equipped: { [string]: string }?): number
 	return math.clamp(Drip.Value(equipped) / DRIP.FullValue, 0, 1)
 end
 
--- Bonus (0 à Balance.Drip.MaxBonus) : proportionnel à la valeur de la tenue
+-- Ensemble Robux porté en entier (haut et bas du même ensemble), sinon nil
+function Drip.RobuxSet(equipped: { [string]: string }?): string?
+	local worn = equipped or {}
+	local top = worn.Top and StyleItems[worn.Top]
+	local set = top and top.setId and StyleSets.ById[top.setId]
+	if set and set.robux and worn.Bottom == set.bottom then
+		return set.id
+	end
+	return nil
+end
+
+-- Bonus contre les boss : proportionnel à la valeur de la tenue (0 à Balance.Drip.MaxBonus), ou le bonus des
+-- tenues Robux portées en entier. Jamais utilisé entre joueurs (bras de fer, D122).
 function Drip.Bonus(equipped: { [string]: string }?): number
-	return DRIP.MaxBonus * Drip.Ratio(equipped)
+	local bonus = DRIP.MaxBonus * Drip.Ratio(equipped)
+	if Drip.RobuxSet(equipped) then
+		bonus = math.max(bonus, DRIP.RobuxBossBonus)
+	end
+	return bonus
 end
 
 -- Palier de Drip (0 à #Balance.Drip.Tiers) : choisit les compliments des habitants (D112)

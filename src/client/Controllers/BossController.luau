@@ -606,7 +606,7 @@ local function onBossUpdate(update)
 					table.insert(lines, Texts.Get("Boss.RewardItem", { item = Texts.Get(`Style.{update.styleItem}`) }))
 				end
 				showPanel(
-					Texts.Get("Boss.Victory", { boss = name }),
+					Texts.Get(if update.bought then "Boss.VictoryBought" else "Boss.Victory", { boss = name }),
 					"",
 					table.concat(lines, "\n"),
 					Texts.Get("Boss.Ok")

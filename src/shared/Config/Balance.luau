@@ -24,6 +24,7 @@ return {
 		BoostStock = {}, -- réserve d'aliments achetés et pas encore mangés : boostId -> nombre (D114)
 		ShopTours = {}, -- magasins dont la visite guidée a été vue ou passée : store -> true (D121)
 		Secrets = {}, -- secrets de la ville trouvés : secretId -> true (D121, Config/Secrets.luau)
+		Receipts = {}, -- achats Robux déjà accordés : PurchaseId -> os.time() (D122, PurchaseService, jamais deux fois)
 		Records = {}, -- meilleure note de série par exercice (0 à 100)
 		Tips = {}, -- conseils du mentor déjà donnés
 		-- Réglages du joueur (Config/Settings.luau), tous activés par défaut
@@ -398,23 +399,28 @@ return {
 		},
 		-- Monsieur Pas-Les-Jambes (D110) : tracer la pose (coordonnées en part de la zone de dessin)
 		Trace = {
-			TimeFactor = 1.0, -- temps pour tracer une pose (× intervalle), manche 1
-			TimePerLevel = 0.12, -- moins de temps à chaque manche
-			MinTime = 0.7,
-			Checkpoints = 22, -- points du tracé à parcourir
-			Reach = 0.07, -- distance pour « attraper » un point du tracé
-			Skip = 2, -- points qu'on peut sauter d'un coup (doigt rapide)
-			StartRadius = 0.07, -- taille du point de départ
-			PerfectCoverage = 0.95, -- part du tracé parcourue
-			PerfectError = 0.032, -- écart moyen avec le tracé
-			GoodCoverage = 0.75,
-			GoodError = 0.065,
-			Pause = 0.25, -- secondes entre deux poses
+			-- D122 : rendu juste à la souris (« très compliqué sur ordinateur ») : plus de temps, plus de tolérance,
+			-- départ plus large, poses dures et rotations plus rares, zone de dessin plus grande sur ordinateur
+			TimeFactor = 1.6, -- temps pour tracer une pose (× intervalle), manche 1 (1,0 avant) ; 6 poses tiennent dans la manche
+			TimePerLevel = 0.15, -- moins de temps à chaque manche
+			MinTime = 1.3, -- (0,7 avant)
+			Checkpoints = 20, -- points du tracé à parcourir
+			Reach = 0.1, -- distance pour « attraper » un point du tracé (0,07 avant)
+			Skip = 4, -- points qu'on peut sauter d'un coup (souris rapide ; 2 avant)
+			StartRadius = 0.09, -- taille du point de départ
+			StartGrace = 2.2, -- on peut commencer jusqu'à StartRadius × StartGrace du point vert (1,6 avant)
+			PerfectCoverage = 0.9, -- part du tracé parcourue
+			PerfectError = 0.05, -- écart moyen avec le tracé (0,032 avant)
+			GoodCoverage = 0.7,
+			GoodError = 0.1, -- (0,065 avant)
+			Pause = 0.35, -- secondes entre deux poses
 			HardLevel = 1, -- éclair, double biceps, étoile, zigzag
-			HardChance = 0.6,
+			HardChance = 0.35, -- (0,6 avant)
 			MirrorLevel = 2, -- poses en miroir et tournées
-			MaxTurn = 25, -- degrés
+			MaxTurn = 15, -- degrés (25 avant)
 			CursorSpeed = 0.9, -- clavier et manette : part de la zone par seconde
+			PanelPc = Vector2.new(470, 500), -- taille de la zone sur ordinateur (360 × 380 sur téléphone)
+			PanelTouch = Vector2.new(360, 380),
 		},
 		-- Roi du Quartier : glisser la combinaison avant que le ventilateur l'efface
 		Combo = {
@@ -453,7 +459,8 @@ return {
 	-- Drip (D111) : la tenue portée ajoute un bonus aux points de Mog-off, aux coups contre le Dieu du Pump et aux
 	-- poussées du bras de fer. Valeur de la tenue = prix des articles portés (src/shared/Drip.luau). ❓ à calibrer
 	Drip = {
-		MaxBonus = 0.05, -- +5 % au maximum
+		MaxBonus = 0.05, -- +5 % au maximum (tenues en Cash)
+		RobuxBossBonus = 0.15, -- D122 : tenue Robux portée en entier, contre les boss seulement ❓ à régler en jouant
 		FullValue = 12_000, -- valeur de tenue (Cash) pour le bonus maximum
 		BossItemValue = 400, -- valeur d'une récompense de boss (article sans prix)
 		-- Habitants (D112) : pourboire à la fin d'une aide selon le Drip, « dress code » de certaines aides,

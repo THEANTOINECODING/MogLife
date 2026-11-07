@@ -11,6 +11,7 @@ local CollectionService = game:GetService("CollectionService")
 local Lighting = game:GetService("Lighting")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 
 local Look = require(ReplicatedStorage.Shared.Look)
@@ -62,7 +63,14 @@ function SecretService.Award(player: Player, secretId: string): boolean
 	data.Secrets[secretId] = true
 	-- Le titre est annoncé par SECRET FOUND (pas une seconde fois par LookService.CheckTitles)
 	data.Tips[`Title.{secretId}`] = true
-	Remotes.SecretFound:FireClient(player, secretId)
+	local found, total = 0, 0
+	for id in Secrets do
+		total += 1
+		if data.Secrets[id] then
+			found += 1
+		end
+	end
+	Remotes.SecretFound:FireClient(player, secretId, found, total)
 	return true
 end
 
@@ -125,8 +133,16 @@ local function onGhostLifted(player: Player)
 	if (root.Position - current.Position).Magnitude > Secrets.GhostLifter.PromptDistance + 4 then
 		return
 	end
-	Remotes.SecretFx:FireAllClients("GhostLifter", { position = current.Position, player = player })
-	removeGhost()
+	-- D122 : l'haltère reste le temps de la scène (le fantôme le soulève), puis disparaît
+	local prompt = current:FindFirstChildOfClass("ProximityPrompt")
+	if prompt then
+		prompt.Enabled = false
+	end
+	ghost = nil
+	Remotes.SecretFx:FireAllClients("GhostLifter", { position = current.Position, player = player, dumbbell = current })
+	task.delay(Secrets.GhostLifter.Scene + 0.3, function()
+		current:Destroy()
+	end)
 	nextGhostAt = os.clock() + Secrets.GhostLifter.Respawn
 	SecretService.Award(player, "GhostLifter")
 end
@@ -180,6 +196,97 @@ end
 
 local taps: { [Player]: { number } } = {}
 local lastStatueFx = -math.huge
+local statueBusy: { [Model]: boolean } = {}
+
+local function smooth(t: number): number
+	t = math.clamp(t, 0, 1)
+	return t * t * (3 - 2 * t)
+end
+
+-- La statue est un avatar Roblox (articulations AnimationConstraint, pièces simulées par le serveur) : seul le
+-- serveur peut l'animer, et tout le monde voit le même mouvement.
+local function statueJoints(statue: Model): { [string]: AnimationConstraint }
+	local found = {}
+	for _, item in statue:GetDescendants() do
+		if item:IsA("AnimationConstraint") then
+			found[item.Name] = item
+		end
+	end
+	return found
+end
+
+-- Une tape sur le socle : la statue tremble à peine (plus fort à chaque tape) ; rien d'autre ne trahit le secret
+local function shakeStatue(statue: Model, strength: number)
+	local root = statue:FindFirstChild("HumanoidRootPart")
+	if statueBusy[statue] or not root or not root:IsA("BasePart") then
+		return
+	end
+	statueBusy[statue] = true
+	local base = root.CFrame
+	task.spawn(function()
+		for k = 1, 4 do
+			if not root.Parent then
+				break
+			end
+			root.CFrame = base * CFrame.new((if k % 2 == 0 then -1 else 1) * strength, 0, 0)
+			task.wait(0.04)
+		end
+		if root.Parent then
+			root.CFrame = base
+		end
+		statueBusy[statue] = nil
+	end)
+end
+
+-- Elle se tourne vers le joueur, cligne de l'œil (côté client), fait un double biceps qui pompe, puis revient
+local function performStatue(statue: Model, toward: Vector3, duration: number): CFrame?
+	local root = statue:FindFirstChild("HumanoidRootPart")
+	if statueBusy[statue] or not root or not root:IsA("BasePart") then
+		return nil
+	end
+	statueBusy[statue] = true
+	local base = root.CFrame
+	local flat = Vector3.new(toward.X - base.X, 0, toward.Z - base.Z)
+	local turned = if flat.Magnitude > 0.1 then CFrame.lookAt(base.Position, base.Position + flat.Unit) else base
+	local rig = statueJoints(statue)
+	local pose = Secrets.StatueBeliever.Pose
+	local function set(name: string, angles: CFrame)
+		local joint = rig[name]
+		if joint and joint.Parent then
+			joint.Transform = angles
+		end
+	end
+	local start = os.clock()
+	local connection
+	connection = RunService.Heartbeat:Connect(function()
+		local t = os.clock() - start
+		if not root.Parent or t >= duration then
+			connection:Disconnect()
+			for _, joint in rig do
+				if joint.Parent then
+					joint.Transform = CFrame.new()
+				end
+			end
+			if root.Parent then
+				root.CFrame = base
+			end
+			statueBusy[statue] = nil
+			return
+		end
+		local turn = smooth(t / 0.6) * (1 - smooth((t - (duration - 0.6)) / 0.6))
+		root.CFrame = base:Lerp(turned, turn)
+		local flex = smooth((t - 1.3) / 0.35) * (1 - smooth((t - (duration - 0.7)) / 0.5))
+		local pump = math.abs(math.sin((t - 1.3) * 6)) * math.rad(pose.Pump) * flex
+		local shoulder = math.rad(pose.Shoulder) * flex
+		local elbow = math.rad(pose.Elbow) * flex + pump
+		set("RightShoulder", CFrame.Angles(0, 0, shoulder))
+		set("LeftShoulder", CFrame.Angles(0, 0, -shoulder))
+		set("RightElbow", CFrame.Angles(elbow, 0, 0))
+		set("LeftElbow", CFrame.Angles(elbow, 0, 0))
+		set("Neck", CFrame.Angles(math.rad(-8) * flex, 0, math.rad(6) * flex))
+	end)
+	return turned
+end
 
 local function onStatueClicked(player: Player, pedestal: BasePart)
 	local cfg = Secrets.StatueBeliever
@@ -194,13 +301,22 @@ local function onStatueClicked(player: Player, pedestal: BasePart)
 	while #list > 0 and now - list[1] > cfg.Window do
 		table.remove(list, 1)
 	end
+	local statue = pedestal:FindFirstChild("Statue")
 	if #list < cfg.Taps then
+		if statue and statue:IsA("Model") then
+			shakeStatue(statue, cfg.ShakePerTap * #list)
+		end
 		return
 	end
 	table.clear(list)
 	if now - lastStatueFx >= cfg.Cooldown then
 		lastStatueFx = now
-		Remotes.SecretFx:FireAllClients("StatueBeliever", { pedestal = pedestal, player = player })
+		local turned = if statue and statue:IsA("Model") then performStatue(statue, root.Position, cfg.Scene) else nil
+		Remotes.SecretFx:FireAllClients("StatueBeliever", {
+			pedestal = pedestal,
+			player = player,
+			facing = if turned then turned.LookVector else nil,
+		})
 	end
 	SecretService.Award(player, "StatueBeliever")
 end

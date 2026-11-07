@@ -43,6 +43,7 @@ local StyleService
 local TutorialService
 local WeeklyService
 local PumpGodService
+local PurchaseService
 
 -- Un même boss peut avoir plusieurs emplacements (Kevin dans le garage de chaque maison)
 local spots: { [string]: { BasePart } } = {}
@@ -51,6 +52,40 @@ local fights: { [Player]: Fight } = {}
 local lastChallenge: { [Player]: number } = {}
 
 local BossService = {}
+
+-- Première victoire : stade suivant, Cash du boss, récompense de style (idempotent : BossesBeaten). Partagée par le
+-- Mog-off gagné et la victoire achetée en Robux (D122). Renvoie le message « Victory » à envoyer au joueur, ou nil.
+local function grantFirstWin(player: Player, bossId: string): { [string]: any }?
+	local data = DataService.Get(player)
+	local boss, stageIndex = Stages.FindBoss(bossId)
+	if not data or not boss or not stageIndex then
+		return nil
+	end
+	if data.BossesBeaten[bossId] == true or stageIndex ~= data.Stage then
+		return nil
+	end
+	data.BossesBeaten[bossId] = true
+	data.Stage = stageIndex + 1
+	Analytics.Step(player, data, "FirstBossWin")
+	if data.Stage >= 3 then
+		Analytics.Step(player, data, "SecondStage")
+	end
+	Analytics.Event(player, "StageReached", data.Stage, Stages.List[data.Stage].id)
+	data.Cash += boss.firstWinCash
+	if boss.styleReward then
+		data.StyleOwned[boss.styleReward] = true
+	end
+	StatsService.Refresh(player)
+	StyleService.Refresh(player)
+	return {
+		state = "Victory",
+		bossId = bossId,
+		firstWin = true,
+		stageId = Stages.List[data.Stage].id,
+		cash = boss.firstWinCash,
+		styleItem = boss.styleReward,
+	}
+end
 
 local function cashLoss(cash: number, stage: number, percent: number, caps: { number }): number
 	local cap = caps[stage] or caps[#caps]
@@ -128,6 +163,10 @@ local function finishFight(player: Player, fight: Fight)
 			player,
 			{ state = "Defeat", bossId = fight.bossId, cash = fight.stakes, mog = mogLost }
 		)
+		-- D122 : un boss qu'on n'arrive pas à battre peut être passé en Robux (première victoire seulement)
+		if data.BossesBeaten[fight.bossId] ~= true and stageIndex == data.Stage then
+			PurchaseService.OfferBossWin(player, fight.bossId)
+		end
 		return
 	end
 
@@ -149,28 +188,10 @@ local function finishFight(player: Player, fight: Fight)
 	end
 
 	-- Première victoire : récompenses idempotentes (BossesBeaten est vérifié juste au-dessus)
-	data.BossesBeaten[fight.bossId] = true
-	data.Stage = stageIndex + 1
-	Analytics.Step(player, data, "FirstBossWin")
-	if data.Stage >= 3 then
-		Analytics.Step(player, data, "SecondStage")
+	local victory = grantFirstWin(player, fight.bossId)
+	if victory then
+		Remotes.BossUpdate:FireClient(player, victory)
 	end
-	Analytics.Event(player, "StageReached", data.Stage, Stages.List[data.Stage].id)
-	data.Cash += boss.firstWinCash
-	if boss.styleReward then
-		data.StyleOwned[boss.styleReward] = true
-	end
-	StatsService.Refresh(player)
-	StyleService.Refresh(player)
-
-	Remotes.BossUpdate:FireClient(player, {
-		state = "Victory",
-		bossId = fight.bossId,
-		firstWin = true,
-		stageId = Stages.List[data.Stage].id,
-		cash = boss.firstWinCash,
-		styleItem = boss.styleReward,
-	})
 	-- Le mentor annonce ce qui se débloque ; le tutoriel se termine sur Kevin
 	TutorialService.OnEvent(player, "BossBeaten", fight.bossId)
 	TutorialService.OnEvent(player, "StageUp", data.Stage)
@@ -485,6 +506,36 @@ end
 
 -- Le joueur est-il en plein Mog-off (y compris entre deux manches), ou au combat du Dieu du Pump au Colisée ?
 -- (bus, maison, portails, duels et bancs le refusent : sinon on fuirait un combat perdu sans perdre de Mog)
+-- Victoire achetée en Robux (D122, PurchaseService) : mêmes récompenses qu'un Mog-off gagné, et le même écran de
+-- victoire. Faux si ce boss n'est plus celui du stade du joueur, ou si le joueur est en plein combat.
+function BossService.GrantPurchasedWin(player: Player, bossId: string): boolean
+	if fights[player] then
+		return false
+	end
+	local victory = grantFirstWin(player, bossId)
+	if not victory then
+		return false
+	end
+	Analytics.Event(player, "BossWinBought", 0, bossId)
+	victory.bought = true
+	Remotes.BossUpdate:FireClient(player, victory)
+	-- Le boss vaincu s'envole, comme après un vrai combat
+	task.delay(BOSS.VictoryLaunchDelay, function()
+		for _, spot in spots[bossId] or {} do
+			local model = models[spot]
+			if model and model.Parent then
+				Npc.LaunchAndReturn(model, 80, 5)
+			end
+		end
+	end)
+	local data = DataService.Get(player)
+	TutorialService.OnEvent(player, "BossBeaten", bossId)
+	if data then
+		TutorialService.OnEvent(player, "StageUp", data.Stage)
+	end
+	return true
+end
+
 function BossService.IsFighting(player: Player): boolean
 	return fights[player] ~= nil or PumpGodService.IsFighting(player)
 end
@@ -520,6 +571,7 @@ function BossService.Init(services)
 	TutorialService = services.TutorialService
 	WeeklyService = services.WeeklyService
 	PumpGodService = services.PumpGodService
+	PurchaseService = services.PurchaseService
 end
 
 -- Première rencontre avec chaque boss : présentation en cinématique (D53), une seule fois par joueur

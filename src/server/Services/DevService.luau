@@ -3,6 +3,7 @@
 --   ServerStorage.DevCommands:Invoke("Get", userId)                 -> copie des données
 --   ServerStorage.DevCommands:Invoke("Set", userId, field, value)   -> modifie un champ + resynchronise
 --   ServerStorage.DevCommands:Invoke("Pump", userId, exerciseId, quality) -> vérifie les habits gonflés
+--   ServerStorage.DevCommands:Invoke("Receipt", userId, productId, purchaseId) -> simule un reçu Robux (D122)
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -19,6 +20,7 @@ local EventService
 local DuelService
 local WeeklyService
 local PumpGodService
+local PurchaseService
 
 local DevService = {}
 
@@ -96,6 +98,20 @@ local commands = {
 		BossService.ShowChallenge(player, bossId)
 		return true
 	end,
+	-- Simule un reçu Robux confirmé par Roblox (rien n'est payé) ; renvoie la décision (Enum.ProductPurchaseDecision)
+	Receipt = function(player: Player, productId: number, purchaseId: string)
+		return PurchaseService.HandleReceipt({
+			PlayerId = player.UserId,
+			ProductId = productId,
+			PurchaseId = purchaseId,
+			CurrencySpent = 0,
+		})
+	end,
+	-- Propose de passer le boss du stade, comme après une défaite
+	OfferBossWin = function(player: Player, bossId: string)
+		PurchaseService.OfferBossWin(player, bossId)
+		return true
+	end,
 }
 
 function DevService.Init(services)
@@ -110,6 +126,7 @@ function DevService.Init(services)
 	DuelService = services.DuelService
 	WeeklyService = services.WeeklyService
 	PumpGodService = services.PumpGodService
+	PurchaseService = services.PurchaseService
 end
 
 function DevService.Start()

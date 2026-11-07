@@ -41,6 +41,7 @@ local PIT = Balance.Colosseum.PitRadius
 
 local ColosseumService
 local DataService
+local PurchaseService
 local MinigameService
 local StatsService
 local StatueService
@@ -1623,6 +1624,13 @@ function finish(fight: Fight, reason: string)
 		end
 	end
 	local prize = if reason == "Victory" then reward(fight.player) else nil
+	-- D122 : le Dieu du Pump qu'on n'arrive pas à battre peut être passé en Robux (première victoire seulement)
+	if reason == "Defeat" then
+		local data = DataService.Get(fight.player)
+		if data and data.BossesBeaten.PumpGod ~= true then
+			PurchaseService.OfferBossWin(fight.player, "PumpGod")
+		end
+	end
 	broadcast({ state = "End", player = fight.player, reason = reason, mogLost = mogLost, reward = prize })
 	task.delay(PumpGod.EndDelay, function()
 		if fight.boss then
@@ -1790,6 +1798,29 @@ function PumpGodService.Stop(player: Player)
 	end
 end
 
+-- Victoire achetée en Robux (D122, PurchaseService) : les récompenses d'une victoire (titre, laurier, statue, stade
+-- GOD MOGGER) et l'écran de victoire des boss. Faux si le Dieu du Pump est déjà battu ou si le joueur combat.
+function PumpGodService.GrantPurchasedWin(player: Player): boolean
+	local data = DataService.Get(player)
+	local _, stageIndex = Stages.FindBoss("PumpGod")
+	if not data or fights[player] or data.BossesBeaten.PumpGod == true or data.Stage ~= stageIndex then
+		return false
+	end
+	local prize = reward(player)
+	if not prize.firstWin then
+		return false
+	end
+	Remotes.BossUpdate:FireClient(player, {
+		state = "Victory",
+		bossId = "PumpGod",
+		firstWin = true,
+		stageId = prize.stageId,
+		cash = prize.cash,
+		bought = true,
+	})
+	return true
+end
+
 function PumpGodService.IsFighting(player: Player): boolean
 	return fights[player] ~= nil
 end
@@ -1836,6 +1867,7 @@ function PumpGodService.Init(services)
 	StatueService = services.StatueService
 	TutorialService = services.TutorialService
 	StyleService = services.StyleService
+	PurchaseService = services.PurchaseService
 end
 
 function PumpGodService.Start()

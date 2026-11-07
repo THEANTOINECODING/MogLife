@@ -16,7 +16,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Duels = require(ReplicatedStorage.Shared.Config.Duels)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
-local Drip = require(ReplicatedStorage.Shared.Drip)
 local Npc = require(script.Parent.Parent.Npc)
 
 local DAY = 86_400
@@ -603,11 +602,6 @@ function startRound(duel: Duel)
 	end)
 end
 
-local function dripOf(player: Player): number
-	local data = DataService.Get(player)
-	return if data then Drip.Bonus(data.StyleEquipped) else 0
-end
-
 local function newSide(player: Player?, spot: BasePart, sign: number): Side
 	return {
 		player = player,
@@ -621,7 +615,7 @@ local function newSide(player: Player?, spot: BasePart, sign: number): Side
 		pushed = 0,
 		queue = {},
 		done = false,
-		drip = if player then dripOf(player) else 0,
+		drip = 0, -- D122 : la tenue ne compte plus au bras de fer (l'argent n'influence pas les combats entre joueurs)
 	}
 end
 

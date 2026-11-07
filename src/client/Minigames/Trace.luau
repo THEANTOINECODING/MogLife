@@ -7,6 +7,7 @@
 -- Clavier et manette : maintenir Espace / A et guider le curseur avec les flèches, ZQSD/WASD ou la croix.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Kit = require(script.Parent.Parent.MinigameKit)
@@ -111,7 +112,9 @@ local Trace = {}
 
 function Trace.new(parent: GuiObject, interval: number, onRep: (string) -> (), options)
 	local self = Kit.new(parent, interval, onRep, options)
-	local panel = self:Panel(UDim2.fromOffset(360, 380))
+	-- D122 : zone plus grande à la souris (gestes plus amples et plus précis)
+	local panelSize = if UserInputService.TouchEnabled then SETTINGS.PanelTouch else SETTINGS.PanelPc
+	local panel = self:Panel(UDim2.fromOffset(panelSize.X, panelSize.Y))
 	local rng = self:Random()
 	local tolerance = 1 / math.max(self.timingScale, 0.5) -- combat serré : fenêtres un peu plus étroites
 	local traceTime = interval * math.max(SETTINGS.TimeFactor - SETTINGS.TimePerLevel * self.level, SETTINGS.MinTime)
@@ -311,7 +314,7 @@ function Trace.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 			return
 		end
 		-- Il faut partir du point vert
-		if (point - path[1]).Magnitude > SETTINGS.StartRadius * 1.6 then
+		if (point - path[1]).Magnitude > SETTINGS.StartRadius * SETTINGS.StartGrace then
 			self:Nope(startMark)
 			return
 		end

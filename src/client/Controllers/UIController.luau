@@ -249,6 +249,29 @@ local function update(stats)
 	end
 end
 
+-- Petit bouton « + » collé à un compteur (« Mog » ou « Cash ») : ouvre la boutique Robux (StoreController, D122).
+-- Le Mog est aligné à gauche (bouton à droite du texte), le Cash à droite (bouton à gauche).
+function UIController.AttachCounterButton(name: string, color: Color3, onClick: () -> ()): TextButton?
+	local entry = counters[name]
+	if not entry then
+		return nil
+	end
+	local left = entry.label.TextXAlignment == Enum.TextXAlignment.Right
+	local button = Ui.button({
+		Name = "Buy" .. name,
+		AnchorPoint = if left then Vector2.new(0, 0.5) else Vector2.new(1, 0.5),
+		Position = if left then UDim2.fromScale(0, 0.5) else UDim2.fromScale(1, 0.5),
+		Size = UDim2.fromScale(1, 0.9),
+		BackgroundColor3 = color,
+		Text = "+",
+		ZIndex = 3,
+		Parent = entry.label,
+	})
+	Ui.create("UIAspectRatioConstraint", { AspectRatio = 1, Parent = button })
+	button.Activated:Connect(onClick)
+	return button
+end
+
 -- Cache le panneau Mog / Cash et la carte d'objectif pendant un combat de boss (la jauge du duel les remplace, et
 -- ils couvraient les annonces sur les petits écrans) ou quand une fenêtre est ouverte (boutique, garde-robe,
 -- réglages). Plusieurs raisons peuvent se cumuler : le panneau revient quand il n'y en a plus aucune.

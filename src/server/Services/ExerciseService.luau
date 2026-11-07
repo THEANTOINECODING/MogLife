@@ -25,7 +25,6 @@ local prompts: { [BasePart]: { train: ProximityPrompt, steal: ProximityPrompt } 
 local protectedUntil: { [Player]: number } = {}
 -- Machine visée par chaque acheteur pendant l'achat ; reçus déjà traités (Roblox peut renvoyer le même)
 local pendingSteal: { [Player]: BasePart } = {}
-local processedReceipts: { [string]: boolean } = {}
 
 local DataService
 local StatsService
@@ -36,6 +35,7 @@ local BoostService
 local SocialService
 local FurnitureService
 local WeeklyService
+local PurchaseService
 
 local ExerciseService = {}
 
@@ -214,24 +214,13 @@ local function deliverSteal(buyer: Player): boolean
 	return true
 end
 
-local function processReceipt(receipt): Enum.ProductPurchaseDecision
-	if receipt.ProductId ~= STEAL.ProductId then
-		return Enum.ProductPurchaseDecision.NotProcessedYet
-	end
-	if processedReceipts[receipt.PurchaseId] then
-		return Enum.ProductPurchaseDecision.PurchaseGranted
-	end
-	local buyer = Players:GetPlayerByUserId(receipt.PlayerId)
-	if not buyer then
-		-- Roblox réessaiera à sa prochaine connexion
-		return Enum.ProductPurchaseDecision.NotProcessedYet
-	end
+-- Reçu confirmé par Roblox (PurchaseService le reçoit et note qu'il est accordé)
+local function onStealReceipt(buyer: Player): boolean
 	-- Machine plus visée (acheteur reconnecté) : l'achat est accordé avec la protection, le reçu ne reste pas bloqué
 	if not deliverSteal(buyer) then
 		protectedUntil[buyer] = os.clock() + STEAL.ProtectSeconds
 	end
-	processedReceipts[receipt.PurchaseId] = true
-	return Enum.ProductPurchaseDecision.PurchaseGranted
+	return true
 end
 
 local function setupStation(station: Instance)
@@ -282,6 +271,7 @@ function ExerciseService.Init(services)
 	SocialService = services.SocialService
 	FurnitureService = services.FurnitureService
 	WeeklyService = services.WeeklyService
+	PurchaseService = services.PurchaseService
 end
 
 function ExerciseService.Start()
@@ -292,9 +282,8 @@ function ExerciseService.Start()
 	Remotes.StartSeries.OnServerEvent:Connect(function(player, exerciseId)
 		startSeries(player, exerciseId)
 	end)
-	-- Seul produit Robux du jeu pour l'instant : ce service reçoit les reçus (à déplacer dans un service d'achats
-	-- quand il y en aura d'autres)
-	MarketplaceService.ProcessReceipt = processReceipt
+	-- Les reçus Robux passent tous par PurchaseService (D122)
+	PurchaseService.Register(STEAL.ProductId, onStealReceipt)
 	Players.PlayerRemoving:Connect(function(player)
 		protectedUntil[player] = nil
 		pendingSteal[player] = nil

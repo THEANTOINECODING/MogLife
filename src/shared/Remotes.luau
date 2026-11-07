@@ -73,6 +73,9 @@ local NAMES = {
 	"ShopTourDone", -- client -> serveur : (store: string, played: boolean) visite vue ou passée (false = pas jouée)
 	"SecretFound", -- serveur -> client : (secretId: string) annonce « SECRET FOUND » et titre secret débloqué (D121)
 	"SecretFx", -- serveur -> tous : (secretId: string, data: { [string]: any }) scène d'un secret, vue par tous
+	"PurchaseDone", -- serveur -> client : ({ kind: "Cash" | "Mog", amount: number }) pack Robux accordé (D122)
+	"BossWinOffer", -- serveur -> client : ({ bossId, productId, robux, delay, window }) passer ce boss en Robux (D122)
+	"BuyBossWin", -- client -> serveur : (bossId: string) accepte l'offre : le serveur ouvre la fenêtre d'achat
 }
 
 local isServer = RunService:IsServer()
@@ -168,4 +171,7 @@ return remotes :: {
 	ShopTourDone: RemoteEvent,
 	SecretFound: RemoteEvent,
 	SecretFx: RemoteEvent,
+	PurchaseDone: RemoteEvent,
+	BossWinOffer: RemoteEvent,
+	BuyBossWin: RemoteEvent,
 }
