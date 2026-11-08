@@ -1,4 +1,4 @@
--- Objectif toujours visible (D52, D96) : une pastille d'une ligne à côté du rond du menu dit au joueur quoi faire
+-- Objectif toujours visible (D52, D96, D124) : une pastille d'une ligne en haut à gauche dit au joueur quoi faire
 -- ensuite, une fois le tutoriel fini (pendant le tutoriel, c'est sa carte qui parle). Un toucher sur la pastille
 -- affiche la phrase complète. Par ordre de priorité :
 -- 1. assez de Mog pour le boss : aller le défier (le trait doré du guide y mène) ;
@@ -25,18 +25,13 @@ local stats: { Mog: number, Stage: number }? = nil
 local records: { [string]: number } = {}
 local tutorialActive = false
 local hiddenForFight = false
-local menuOpen = false
 
 local UIController
 
 local ObjectiveController = {}
 
 local function refreshVisible()
-	-- En portrait, le tiroir du menu s'ouvre par-dessus la pastille : elle s'efface le temps qu'il soit ouvert
-	pill.Visible = stats ~= nil
-		and not tutorialActive
-		and not hiddenForFight
-		and not (menuOpen and Ui.isPhonePortrait())
+	pill.Visible = stats ~= nil and not tutorialActive and not hiddenForFight
 end
 
 local function layoutPill()
@@ -108,23 +103,26 @@ function ObjectiveController.SetHidden(hidden: boolean)
 	render()
 end
 
--- Le tiroir du menu (SettingsController) est ouvert ou fermé
-function ObjectiveController.SetMenuOpen(open: boolean)
-	menuOpen = open
-	refreshVisible()
-end
-
 local function buildGui()
 	local gui = Ui.create("ScreenGui", { Name = "Objective", ResetOnSpawn = false, DisplayOrder = 2 })
 	pill = Ui.create("TextButton", {
 		Name = "Goal",
-		BackgroundColor3 = Color3.fromRGB(40, 35, 55),
-		BackgroundTransparency = 0.25,
+		BackgroundColor3 = Ui.Dark,
+		BackgroundTransparency = 0.2,
 		AutoButtonColor = false,
 		Text = "",
 		Visible = false,
 		Parent = gui,
-	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.fromRGB(255, 220, 120), 1.5, 0.5) })
+	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Ui.Ink, 2.5) })
+	-- Liseré doré à l'intérieur du contour sombre : la pastille se lit comme « la quête »
+	Ui.create("Frame", {
+		Name = "Rim",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.5),
+		Size = UDim2.new(1, -4, 1, -4),
+		BackgroundTransparency = 1,
+		Parent = pill,
+	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.fromRGB(255, 224, 102), 1.5, 0.35) })
 	Ui.label({
 		Name = "Icon",
 		AnchorPoint = Vector2.new(0, 0.5),
@@ -141,6 +139,8 @@ local function buildGui()
 		TextXAlignment = Enum.TextXAlignment.Left,
 		Parent = pill,
 	})
+	Ui.outline(goalLabel, 2)
+	Ui.juice(pill)
 	pill.Activated:Connect(function()
 		if fullText ~= "" then
 			UIController.Toast(fullText, 3.5)

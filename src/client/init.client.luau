@@ -41,6 +41,7 @@ local ORDER = {
 	"SecretController",
 	"StoreController",
 	"SignatureFxController",
+	"MenuController",
 }
 
 local controllers = {}

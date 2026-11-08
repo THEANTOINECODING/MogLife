@@ -18,8 +18,6 @@ local player = Players.LocalPlayer
 
 local UIController = {}
 
-local mogLabel: TextLabel
-local cashLabel: TextLabel
 local bossLabel: TextLabel
 local progressLabel: TextLabel
 local barFill: Frame
@@ -27,7 +25,10 @@ local toastLabel: TextLabel
 local toastToken = 0
 local hudPanel: Frame
 local progressBar: Frame
+local chipRow: Frame
 
+-- Pastilles Mog et Cash (D124) : pièce ronde illustrée à gauche, gros nombre cerné, bouton « + » à droite (boutique
+-- Robux) ; barre du prochain boss dessous sur ordinateur. Plus de cadre sombre autour : le jeu reste visible.
 local function layoutHud()
 	local gui = hudPanel.Parent :: ScreenGui
 	if UserInputService.TouchEnabled then
@@ -36,42 +37,108 @@ local function layoutHud()
 		-- (D82). Portrait : les boutons de Roblox occupent le haut à gauche, il reste dessous.
 		gui.IgnoreGuiInset = not phone
 		hudPanel.AnchorPoint = if phone then Vector2.zero else Vector2.new(0.5, 0)
-		hudPanel.Position = if phone then UDim2.fromOffset(8, 8) else UDim2.new(0.5, 0, 0, 6)
-		hudPanel.Size = if phone then UDim2.new(1, -106, 0, 48) else UDim2.fromOffset(290, 40)
+		hudPanel.Position = if phone then UDim2.fromOffset(14, 10) else UDim2.new(0.5, 0, 0, 8)
+		hudPanel.Size = if phone then UDim2.new(1, -28, 0, 40) else UDim2.fromOffset(300, 38)
+		chipRow.Size = UDim2.fromScale(1, 1)
 		bossLabel.Visible = false
 		progressBar.Visible = false
 		toastLabel.Size = UDim2.new(1, -24, 0, 48)
 	else
 		gui.IgnoreGuiInset = false
 		hudPanel.AnchorPoint = Vector2.new(0.5, 0)
-		hudPanel.Position = UDim2.new(0.5, 0, 0, 8)
+		hudPanel.Position = UDim2.new(0.5, 0, 0, 10)
 		hudPanel.Size = UDim2.fromOffset(380, 104)
+		chipRow.Size = UDim2.new(1, 0, 0, 44)
 		bossLabel.Visible = true
 		progressBar.Visible = true
-		progressBar.Position = UDim2.fromOffset(10, 72)
-		progressBar.Size = UDim2.new(1, -20, 0, 24)
-		toastLabel.Size = UDim2.fromOffset(520, 48)
+		toastLabel.Size = UDim2.fromOffset(560, 52)
 	end
 end
 
 -- Compteurs qui défilent : une valeur affichée par compteur, qui glisse vers la vraie valeur
 local UI_FX = Balance.HudFx
-type Counter = { label: TextLabel, key: string, value: NumberValue, scale: UIScale, target: number?, color: Color3 }
+type Counter = {
+	label: TextLabel,
+	chip: Frame,
+	coin: Frame,
+	value: NumberValue,
+	scale: UIScale,
+	target: number?,
+	color: Color3,
+}
 local counters: { [string]: Counter } = {}
+local toastStroke: UIStroke
 
-local function counter(name: string, label: TextLabel, key: string): Counter
+-- Pastille d'un compteur : pièce ronde à gauche (qui dépasse), nombre, place pour le « + » à droite
+local function chip(name: string, icon: string, coinColor: Color3, textColor: Color3, order: number): Counter
+	local frame = Ui.create("Frame", {
+		Name = name,
+		LayoutOrder = order,
+		Size = UDim2.new(0.5, -20, 1, 0),
+		BackgroundColor3 = Ui.Dark,
+		BackgroundTransparency = 0.15,
+		Parent = chipRow,
+	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Ui.Ink, 2.5) })
+	local coin = Ui.create("Frame", {
+		Name = "Coin",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0, 0.5),
+		Size = UDim2.fromScale(1.22, 1.22),
+		SizeConstraint = Enum.SizeConstraint.RelativeYY,
+		BackgroundColor3 = Color3.new(1, 1, 1),
+		ZIndex = 3,
+		Parent = frame,
+	}, {
+		Ui.corner(UDim.new(1, 0)),
+		Ui.gradient(Ui.shade(coinColor, 1.35), coinColor),
+		Ui.stroke(Ui.Ink, 2.5),
+	})
+	Ui.label({
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.5),
+		Size = UDim2.fromScale(0.62, 0.62),
+		Text = icon,
+		TextStrokeTransparency = 1,
+		ZIndex = 4,
+		Parent = coin,
+	})
+	local label = Ui.label({
+		Name = "Value",
+		AnchorPoint = Vector2.new(0, 0.5),
+		TextXAlignment = Enum.TextXAlignment.Left,
+		TextColor3 = textColor,
+		ZIndex = 2,
+		Parent = frame,
+	})
+	Ui.outline(label, 2.5)
+	-- Le nombre commence juste après la pièce et s'arrête avant le « + »
+	local function fit()
+		local height = frame.AbsoluteSize.Y
+		label.Position = UDim2.new(0, math.floor(height * 0.72), 0.5, 0)
+		label.Size = UDim2.new(1, -math.floor(height * 0.72) - math.floor(height * 1.02), 0.68, 0)
+	end
+	frame:GetPropertyChangedSignal("AbsoluteSize"):Connect(fit)
+	fit()
 	local value = Instance.new("NumberValue")
 	local scale = Instance.new("UIScale")
-	scale.Parent = label
-	local entry = { label = label, key = key, value = value, scale = scale, target = nil, color = label.TextColor3 }
+	scale.Parent = coin
+	local entry = {
+		label = label,
+		chip = frame,
+		coin = coin,
+		value = value,
+		scale = scale,
+		target = nil,
+		color = textColor,
+	}
 	value.Changed:Connect(function(current)
-		label.Text = Texts.Get(key, { value = Format.Short(current) })
+		label.Text = Format.Short(current)
 	end)
 	counters[name] = entry
 	return entry
 end
 
--- Petit rebond du compteur (et un éclair de couleur)
+-- Petit rebond de la pièce (et un éclair de couleur sur le nombre)
 local function pulse(entry: Counter, color: Color3?)
 	entry.scale.Scale = UI_FX.PulseScale
 	TweenService:Create(entry.scale, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
@@ -88,7 +155,7 @@ local function setCounter(entry: Counter, target: number)
 	entry.target = target
 	if previous == nil then
 		entry.value.Value = target
-		entry.label.Text = Texts.Get(entry.key, { value = Format.Short(target) })
+		entry.label.Text = Format.Short(target)
 		return
 	end
 	if target == previous then
@@ -111,10 +178,10 @@ function UIController.FlyToCounter(name: string, count: number?)
 	end
 	local hudGui = hudPanel.Parent :: ScreenGui
 	fxGui.IgnoreGuiInset = hudGui.IgnoreGuiInset
-	local target = entry.label.AbsolutePosition + entry.label.AbsoluteSize / 2
+	local target = entry.coin.AbsolutePosition + entry.coin.AbsoluteSize / 2
 	local screen = fxGui.AbsoluteSize
 	local start = Vector2.new(screen.X * 0.5, screen.Y * 0.55)
-	local icon = if name == "Cash" then "💵" else "💪"
+	local icon = Texts.Get(if name == "Cash" then "Hud.CashIcon" else "Hud.FlyMog")
 	for index = 1, count or UI_FX.FlyCount do
 		task.delay((index - 1) * UI_FX.FlyStagger, function()
 			local label = Ui.label({
@@ -156,66 +223,85 @@ local function buildHud()
 	local panel = Ui.create("Frame", {
 		Name = "Stats",
 		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 0, 8),
+		Position = UDim2.new(0.5, 0, 0, 10),
 		Size = UDim2.fromOffset(380, 104),
-		BackgroundColor3 = Color3.fromRGB(20, 20, 20),
-		BackgroundTransparency = 0.25,
+		BackgroundTransparency = 1,
 		Parent = gui,
-	}, { Ui.corner() })
+	})
 	hudPanel = panel
 
-	mogLabel = Ui.label({
-		Position = UDim2.fromOffset(10, 6),
-		Size = UDim2.new(0.5, -15, 0, 34),
-		TextXAlignment = Enum.TextXAlignment.Left,
+	-- Rangée des deux pastilles ; la pièce dépasse à gauche de chacune, d'où l'écart entre elles
+	chipRow = Ui.create("Frame", {
+		Name = "Chips",
+		Size = UDim2.new(1, 0, 0, 44),
+		BackgroundTransparency = 1,
 		Parent = panel,
+	}, {
+		Ui.create("UIListLayout", {
+			FillDirection = Enum.FillDirection.Horizontal,
+			HorizontalAlignment = Enum.HorizontalAlignment.Center,
+			VerticalAlignment = Enum.VerticalAlignment.Center,
+			Padding = UDim.new(0, 28),
+			SortOrder = Enum.SortOrder.LayoutOrder,
+		}),
+		Ui.create("UIPadding", { PaddingLeft = UDim.new(0, 12) }),
 	})
-	cashLabel = Ui.label({
-		Position = UDim2.new(0.5, 5, 0, 6),
-		Size = UDim2.new(0.5, -15, 0, 34),
-		TextXAlignment = Enum.TextXAlignment.Right,
-		TextColor3 = Color3.fromRGB(140, 255, 140),
-		Parent = panel,
-	})
-	bossLabel = Ui.label({
-		Position = UDim2.fromOffset(10, 44),
-		Size = UDim2.new(1, -20, 0, 24),
-		TextColor3 = Color3.fromRGB(255, 220, 120),
-		Parent = panel,
-	})
+	chip("Mog", Texts.Get("Hud.MogIcon"), Color3.fromRGB(255, 176, 0), Color3.new(1, 1, 1), 1)
+	chip("Cash", Texts.Get("Hud.CashIcon"), Color3.fromRGB(47, 191, 69), Color3.fromRGB(182, 255, 158), 2)
 
-	local bar = Ui.create("Frame", {
-		Position = UDim2.fromOffset(10, 72),
-		Size = UDim2.new(1, -20, 0, 24),
-		BackgroundColor3 = Color3.fromRGB(60, 60, 60),
+	bossLabel = Ui.label({
+		Position = UDim2.fromOffset(10, 50),
+		Size = UDim2.new(1, -20, 0, 22),
+		TextColor3 = Color3.fromRGB(255, 224, 102),
 		Parent = panel,
-	}, { Ui.corner(UDim.new(0, 8)) })
+	})
+	Ui.outline(bossLabel, 2.5)
+
+	-- Barre du prochain boss : piste sombre, remplissage doré avec un reflet
+	local bar = Ui.create("Frame", {
+		Position = UDim2.fromOffset(10, 76),
+		Size = UDim2.new(1, -20, 0, 24),
+		BackgroundColor3 = Color3.fromRGB(42, 35, 64),
+		Parent = panel,
+	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Ui.Ink, 2.5) })
 	progressBar = bar
 	barFill = Ui.create("Frame", {
 		Size = UDim2.fromScale(0, 1),
-		BackgroundColor3 = Color3.fromRGB(255, 190, 40),
+		BackgroundColor3 = Color3.new(1, 1, 1),
 		Parent = bar,
-	}, { Ui.corner(UDim.new(0, 8)) })
+	}, {
+		Ui.corner(UDim.new(1, 0)),
+		Ui.gradient(Color3.fromRGB(255, 230, 128), Color3.fromRGB(255, 176, 0)),
+	})
+	Ui.create("Frame", {
+		Name = "Gloss",
+		Position = UDim2.new(0, 6, 0.1, 0),
+		Size = UDim2.new(1, -12, 0.34, 0),
+		BackgroundColor3 = Color3.new(1, 1, 1),
+		BackgroundTransparency = 0.6,
+		Parent = barFill,
+	}, { Ui.corner(UDim.new(1, 0)) })
 	progressLabel = Ui.label({
-		Size = UDim2.fromScale(1, 1),
+		Position = UDim2.fromScale(0, 0.1),
+		Size = UDim2.fromScale(1, 0.8),
 		ZIndex = 2,
 		Parent = bar,
 	})
+	Ui.outline(progressLabel, 2)
 
 	toastLabel = Ui.label({
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Position = UDim2.fromScale(0.5, 0.28),
-		Size = UDim2.fromOffset(520, 48),
+		Size = UDim2.fromOffset(560, 52),
 		Text = "",
 		TextTransparency = 1,
-		TextStrokeTransparency = 1,
 		Parent = gui,
 	})
+	toastStroke = Ui.outline(toastLabel, 3)
+	toastStroke.Transparency = 1
 
 	gui.Parent = player:WaitForChild("PlayerGui")
 	Ui.watchViewport(layoutHud)
-	counter("Mog", mogLabel, "Hud.Mog")
-	counter("Cash", cashLabel, "Hud.Cash")
 	fxGui = Ui.create("ScreenGui", { Name = "HudFx", ResetOnSpawn = false, DisplayOrder = 30 })
 	fxGui.Parent = player:WaitForChild("PlayerGui")
 end
@@ -229,13 +315,16 @@ local function update(stats)
 	if not boss then
 		bossLabel.Text = Texts.Get("Hud.MaxStage")
 		progressLabel.Text = ""
+		barFill.Visible = true
 		barFill.Size = UDim2.fromScale(1, 1)
 		return
 	end
 
 	local bossName = Texts.Get(`Boss.{boss.id}`)
 	local progress = math.clamp(stats.Mog / boss.mogRequired, 0, 1)
-	barFill.Size = UDim2.fromScale(progress, 1)
+	-- Remplissage jamais plus fin que ses coins ronds (sinon il se déforme) ; caché à zéro
+	barFill.Visible = progress > 0
+	barFill.Size = UDim2.fromScale(math.max(progress, 0.07), 1)
 	progressLabel.Text = Texts.Get("Hud.BossProgress", {
 		current = Format.Short(math.min(stats.Mog, boss.mogRequired)),
 		required = Format.Short(boss.mogRequired),
@@ -249,25 +338,38 @@ local function update(stats)
 	end
 end
 
--- Petit bouton « + » collé à un compteur (« Mog » ou « Cash ») : ouvre la boutique Robux (StoreController, D122).
--- Le Mog est aligné à gauche (bouton à droite du texte), le Cash à droite (bouton à gauche).
+-- Petit bouton « + » rond dans la pastille d'un compteur (« Mog » ou « Cash ») : ouvre la boutique Robux
+-- (StoreController, D122)
 function UIController.AttachCounterButton(name: string, color: Color3, onClick: () -> ()): TextButton?
 	local entry = counters[name]
 	if not entry then
 		return nil
 	end
-	local left = entry.label.TextXAlignment == Enum.TextXAlignment.Right
-	local button = Ui.button({
+	local button = Ui.create("TextButton", {
 		Name = "Buy" .. name,
-		AnchorPoint = if left then Vector2.new(0, 0.5) else Vector2.new(1, 0.5),
-		Position = if left then UDim2.fromScale(0, 0.5) else UDim2.fromScale(1, 0.5),
-		Size = UDim2.fromScale(1, 0.9),
-		BackgroundColor3 = color,
-		Text = "+",
+		AnchorPoint = Vector2.new(1, 0.5),
+		Position = UDim2.new(1, -3, 0.5, 0),
+		Size = UDim2.fromScale(0.8, 0.8),
+		SizeConstraint = Enum.SizeConstraint.RelativeYY,
+		BackgroundColor3 = Color3.new(1, 1, 1),
+		AutoButtonColor = false,
+		Font = Ui.Font,
+		TextScaled = true,
+		TextColor3 = Color3.new(1, 1, 1),
+		Text = Texts.Get("Hud.Buy"),
 		ZIndex = 3,
-		Parent = entry.label,
+		Parent = entry.chip,
+	}, {
+		Ui.corner(UDim.new(1, 0)),
+		Ui.gradient(Ui.shade(color, 1.4), color),
+		Ui.stroke(Ui.Ink, 2.5),
+		Ui.create("UIPadding", {
+			PaddingTop = UDim.new(0.1, 0),
+			PaddingBottom = UDim.new(0.14, 0),
+		}),
 	})
-	Ui.create("UIAspectRatioConstraint", { AspectRatio = 1, Parent = button })
+	Ui.outline(button, 2)
+	Ui.juice(button)
 	button.Activated:Connect(onClick)
 	return button
 end
@@ -276,6 +378,7 @@ end
 -- ils couvraient les annonces sur les petits écrans) ou quand une fenêtre est ouverte (boutique, garde-robe,
 -- réglages). Plusieurs raisons peuvent se cumuler : le panneau revient quand il n'y en a plus aucune.
 local hideReasons: { [string]: boolean } = {}
+local hiddenListeners: { () -> () } = {}
 local ObjectiveController
 function UIController.SetStatsHidden(hidden: boolean, reason: string?)
 	hideReasons[reason or "Default"] = if hidden then true else nil
@@ -284,6 +387,19 @@ function UIController.SetStatsHidden(hidden: boolean, reason: string?)
 	if ObjectiveController then
 		ObjectiveController.SetHidden(anyReason)
 	end
+	for _, listener in hiddenListeners do
+		task.spawn(listener)
+	end
+end
+
+-- Le HUD est-il rangé en ce moment (fenêtre ouverte, série, combat) ?
+function UIController.IsStatsHidden(): boolean
+	return next(hideReasons) ~= nil
+end
+
+-- Prévenir `listener` à chaque fois que le HUD est rangé ou revient (le menu de gauche suit le même rythme)
+function UIController.OnStatsHiddenChanged(listener: () -> ())
+	table.insert(hiddenListeners, listener)
 end
 
 function UIController.Init(controllers)
@@ -304,15 +420,19 @@ local function showToast(text: string, duration: number)
 	toastShownAt = os.clock()
 	toastLabel.Text = text
 	toastLabel.TextTransparency = 0
-	toastLabel.TextStrokeTransparency = 0.4
+	toastStroke.Transparency = 0
+	-- Le message arrive en claquant (un peu trop gros, puis à sa taille)
+	local scale = toastLabel:FindFirstChildOfClass("UIScale") or Ui.create("UIScale", { Parent = toastLabel })
+	scale.Scale = 1.25
+	TweenService:Create(scale, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+		Scale = 1,
+	}):Play()
 	task.delay(duration, function()
 		if token ~= toastToken then
 			return
 		end
-		TweenService:Create(toastLabel, TweenInfo.new(0.4), {
-			TextTransparency = 1,
-			TextStrokeTransparency = 1,
-		}):Play()
+		TweenService:Create(toastLabel, TweenInfo.new(0.4), { TextTransparency = 1 }):Play()
+		TweenService:Create(toastStroke, TweenInfo.new(0.4), { Transparency = 1 }):Play()
 	end)
 end
 

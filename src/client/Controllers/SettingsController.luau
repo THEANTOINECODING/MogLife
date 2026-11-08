@@ -1,17 +1,11 @@
--- Menu (D96) : un rond ☰ ouvre un petit tiroir de cases (Maison, Flex, Style, Maisons, Settings). Le tiroir se ferme d'un
--- toucher ailleurs, quand on choisit une case, quand le personnage se met à bouger ou quand une activité commence.
--- Les boutons Maison (TravelController) et Flex (EmoteController) sont rangés dans le tiroir.
--- - Style : la garde-robe (ShopController.OpenWardrobe) pour porter ou retirer ce qu'on possède, n'importe où.
--- - Settings : interrupteurs sauvegardés côté serveur (Config/Settings.luau). Ce contrôleur applique lui-même les
---   noms et l'affichage des autres joueurs ; la musique et les effets passent par SoundController ; les autres
---   systèmes lisent SettingsController.Get (effets d'écran, gros plan des activités).
+-- Réglages : interrupteurs sauvegardés côté serveur (Config/Settings.luau), ouverts par le petit rond ⚙ du menu
+-- (MenuController, D124). Ce contrôleur applique lui-même les noms et l'affichage des autres joueurs ; la musique et
+-- les effets passent par SoundController ; les autres systèmes lisent SettingsController.Get (effets d'écran, gros
+-- plan des activités).
 
-local ContextActionService = game:GetService("ContextActionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
 
 local Settings = require(ReplicatedStorage.Shared.Config.Settings)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
@@ -23,63 +17,20 @@ local OFF = Color3.fromRGB(90, 90, 100)
 
 local player = Players.LocalPlayer
 
-local ShopController
 local SoundController
 local MinigameController
 local UIController
 local OutfitFxController
-local ObjectiveController
-local HouseController
 local LuxuryController
 
 local values: { [string]: boolean } = {}
 local panel: Frame
 local switches: { [string]: { track: Frame, knob: Frame, label: TextLabel } } = {}
-local menuGui: ScreenGui
-local menuButton: TextButton
-local drawer: Frame
-local drawerGrid: UIGridLayout
-local menuOpen = false
 
 local SettingsController = {}
 
-local function layoutMenu()
-	local slots = Ui.menuSlots()
-	menuButton.AnchorPoint = slots.buttonAnchor
-	menuButton.Position = slots.buttonPosition
-	menuButton.Size = slots.buttonSize
-	drawer.AnchorPoint = slots.drawerAnchor
-	drawer.Position = slots.drawerPosition
-	drawerGrid.CellSize = UDim2.fromOffset(slots.tileSize.X, slots.tileSize.Y)
-	-- 3 colonnes, autant de rangées que nécessaire
-	local tiles = 0
-	for _, child in drawer:GetChildren() do
-		if child:IsA("GuiButton") then
-			tiles += 1
-		end
-	end
-	local rows = math.max(math.ceil(tiles / 3), 1)
-	drawer.Size = UDim2.fromOffset(slots.tileSize.X * 3 + 12 + 16, slots.tileSize.Y * rows + 6 * (rows - 1) + 16)
+local function layoutPanel()
 	panel.Size = if Ui.isPhonePortrait() then UDim2.new(1, -20, 1, -20) else UDim2.new(0, 460, 1, -20)
-end
-
-local function setMenuOpen(open: boolean)
-	if open == menuOpen then
-		return
-	end
-	menuOpen = open
-	menuButton.Text = Texts.Get(if open then "Menu.Close" else "Menu.Open")
-	ObjectiveController.SetMenuOpen(open)
-	if open then
-		drawer.Visible = true
-		local scale = drawer:FindFirstChildOfClass("UIScale") :: UIScale
-		scale.Scale = 0.85
-		TweenService:Create(scale, TweenInfo.new(0.18, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-			Scale = 1,
-		}):Play()
-	else
-		drawer.Visible = false
-	end
 end
 
 -- Réglage en cours (activé tant que le serveur n'a rien envoyé)
@@ -163,161 +114,7 @@ local function setPanel(visible: boolean)
 end
 
 local function buildGui()
-	local gui = Ui.create("ScreenGui", { Name = "Menu", ResetOnSpawn = false, DisplayOrder = 1 })
-
-	menuGui = gui
-	local styleButton = Ui.button({
-		Name = "Style",
-		BackgroundColor3 = Color3.fromRGB(40, 140, 200),
-		Text = Texts.Get("Menu.Style"),
-	})
-	styleButton.Activated:Connect(function()
-		if not panel.Visible then
-			ShopController.OpenWardrobe()
-		end
-	end)
-	local housesButton = Ui.button({
-		Name = "Houses",
-		BackgroundColor3 = Color3.fromRGB(200, 70, 110),
-		Text = Texts.Get("Menu.Houses"),
-	})
-	housesButton.Activated:Connect(function()
-		if not panel.Visible then
-			HouseController.Open()
-		end
-	end)
-	local settingsButton = Ui.button({
-		Name = "Settings",
-		BackgroundColor3 = Color3.fromRGB(80, 80, 95),
-		Text = Texts.Get("Menu.Settings"),
-	})
-	settingsButton.Activated:Connect(function()
-		if not ShopController.IsOpen() and not HouseController.IsOpen() then
-			setPanel(not panel.Visible)
-		end
-	end)
-	menuButton = Ui.button({
-		Name = "MenuButton",
-		BackgroundColor3 = Color3.fromRGB(40, 35, 55),
-		BackgroundTransparency = 0.12,
-		Text = Texts.Get("Menu.Open"),
-		Parent = gui,
-	})
-	menuButton:FindFirstChildOfClass("UICorner").CornerRadius = UDim.new(1, 0)
-	Ui.stroke(Color3.new(1, 1, 1), 2, 0.5).Parent = menuButton
-	menuButton.Activated:Connect(function()
-		setMenuOpen(not menuOpen)
-	end)
-	drawer = Ui.panel({
-		Name = "Drawer",
-		BackgroundTransparency = 0.2,
-		Visible = false,
-		Parent = gui,
-	})
-	Ui.create("UIScale", { Parent = drawer })
-	Ui.markModal(drawer) -- manette : la croix choisit une case, A l'ouvre
-	Ui.create("UIPadding", {
-		PaddingTop = UDim.new(0, 8),
-		PaddingBottom = UDim.new(0, 8),
-		PaddingLeft = UDim.new(0, 8),
-		PaddingRight = UDim.new(0, 8),
-		Parent = drawer,
-	})
-	drawerGrid = Ui.create("UIGridLayout", {
-		CellPadding = UDim2.fromOffset(6, 6),
-		SortOrder = Enum.SortOrder.LayoutOrder,
-		Parent = drawer,
-	})
-	-- Les 4 cases : icône au-dessus, nom dessous (les boutons gardent leurs actions d'origine)
-	local playerGui = player:WaitForChild("PlayerGui")
-	local tiles = {
-		{
-			button = playerGui:WaitForChild("Travel"):WaitForChild("Home") :: TextButton,
-			icon = "Menu.IconHome",
-			name = "Menu.Home",
-		},
-		{
-			button = playerGui:WaitForChild("Emotes"):WaitForChild("Flex") :: TextButton,
-			icon = "Menu.IconFlex",
-			name = "Emote.Button",
-		},
-		{ button = styleButton, icon = "Menu.IconStyle", name = "Menu.Style" },
-		{ button = housesButton, icon = "Menu.IconHouses", name = "Menu.Houses" },
-		{ button = settingsButton, icon = "Menu.IconSettings", name = "Menu.Settings" },
-	}
-	for index, tile in tiles do
-		local button = tile.button
-		button.Text = ""
-		button.LayoutOrder = index
-		button.AnchorPoint = Vector2.zero
-		local padding = button:FindFirstChildOfClass("UIPadding")
-		if padding then
-			padding:Destroy()
-		end
-		Ui.label({
-			Name = "Icon",
-			Position = UDim2.fromScale(0, 0.06),
-			Size = UDim2.fromScale(1, 0.5),
-			Text = Texts.Get(tile.icon),
-			TextStrokeTransparency = 1,
-			Parent = button,
-		})
-		Ui.label({
-			Name = "Caption",
-			Position = UDim2.fromScale(0.08, 0.58),
-			Size = UDim2.fromScale(0.84, 0.34),
-			Text = Texts.Get(tile.name),
-			Parent = button,
-		})
-		button.Parent = drawer
-		button.Activated:Connect(function()
-			setMenuOpen(false)
-		end)
-	end
-	-- Fermeture : un toucher ou un clic hors du tiroir et du rond
-	UserInputService.InputBegan:Connect(function(input)
-		if not menuOpen then
-			return
-		end
-		local kind = input.UserInputType
-		if kind ~= Enum.UserInputType.Touch and kind ~= Enum.UserInputType.MouseButton1 then
-			return
-		end
-		local at = Vector2.new(input.Position.X, input.Position.Y)
-		for _, guiObject in { drawer, menuButton } do
-			local corner = guiObject.AbsolutePosition
-			local size = guiObject.AbsoluteSize
-			if at.X >= corner.X and at.Y >= corner.Y and at.X <= corner.X + size.X and at.Y <= corner.Y + size.Y then
-				return
-			end
-		end
-		setMenuOpen(false)
-	end)
-	-- Touche M (clavier) ; bouton Select (manette, Vue sur Xbox) lié en priorité haute : Roblox s'en sert sinon
-	-- pour sa propre navigation dans l'interface
-	UserInputService.InputBegan:Connect(function(input, processed)
-		if not processed and input.KeyCode == Enum.KeyCode.M then
-			setMenuOpen(not menuOpen)
-		end
-	end)
-	ContextActionService:BindActionAtPriority("MogMenu", function(_, state)
-		if state == Enum.UserInputState.Begin and menuGui.Enabled then
-			setMenuOpen(not menuOpen)
-			return Enum.ContextActionResult.Sink
-		end
-		return Enum.ContextActionResult.Pass
-	end, false, Enum.ContextActionPriority.High.Value, Enum.KeyCode.ButtonSelect)
-	-- Il se referme quand le personnage bouge ou qu'une activité range le menu
-	RunService.Heartbeat:Connect(function()
-		if not menuOpen then
-			return
-		end
-		local character = player.Character
-		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-		if not menuGui.Enabled or (humanoid and humanoid.MoveDirection.Magnitude > 0.1) then
-			setMenuOpen(false)
-		end
-	end)
+	local gui = Ui.create("ScreenGui", { Name = "Settings", ResetOnSpawn = false, DisplayOrder = 4 })
 
 	panel = Ui.panel({
 		Name = "SettingsPanel",
@@ -413,17 +210,21 @@ local function buildGui()
 		setPanel(false)
 	end)
 	gui.Parent = player:WaitForChild("PlayerGui")
-	Ui.watchViewport(layoutMenu)
+	Ui.watchViewport(layoutPanel)
+end
+
+-- Petit rond ⚙ du menu (MenuController)
+function SettingsController.Open()
+	if not panel.Visible then
+		setPanel(true)
+	end
 end
 
 function SettingsController.Init(controllers)
-	ShopController = controllers.ShopController
 	SoundController = controllers.SoundController
 	MinigameController = controllers.MinigameController
 	UIController = controllers.UIController
 	OutfitFxController = controllers.OutfitFxController
-	ObjectiveController = controllers.ObjectiveController
-	HouseController = controllers.HouseController
 	LuxuryController = controllers.LuxuryController
 end
 

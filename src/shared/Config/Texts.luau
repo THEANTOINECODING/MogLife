@@ -6,8 +6,10 @@ local STRINGS: { [string]: string } = {
 	-- D76 strength playground
 
 	-- HUD
-	["Hud.Mog"] = "🗿 {value}",
-	["Hud.Cash"] = "💵 {value}",
+	["Hud.MogIcon"] = "🗿",
+	["Hud.CashIcon"] = "💵",
+	["Hud.FlyMog"] = "💪",
+	["Hud.Buy"] = "+",
 	["Hud.NextBoss"] = "Next boss: {boss}",
 	["Hud.BossProgress"] = "{current} / {required} Mog",
 	["Hud.BossReady"] = "Ready to face {boss}!",
@@ -228,8 +230,10 @@ local STRINGS: { [string]: string } = {
 	["Menu.Home"] = "Home",
 	["Menu.Style"] = "Style",
 	["Menu.Settings"] = "Settings",
-	["Menu.Open"] = "☰",
-	["Menu.Close"] = "✕",
+	["Menu.Store"] = "Shop",
+	["Menu.Rewards"] = "Rewards",
+	["Menu.IconStore"] = "🛒",
+	["Menu.IconRewards"] = "🎁",
 	["Menu.IconHome"] = "🏠",
 	["Menu.IconFlex"] = "💪",
 	["Menu.IconStyle"] = "👕",
@@ -498,7 +502,6 @@ local STRINGS: { [string]: string } = {
 	["Shop.WardrobeEmpty"] = "Nothing here yet. Visit the shops in town to find some style!",
 
 	-- Déplacements
-	["Travel.Home"] = "🏠 Home",
 	["Bus.Prompt"] = "Take the bus",
 	["Bus.Title"] = "Where to, champ?",
 	["Bus.Stop.Plaza"] = "Town Square",

@@ -33,6 +33,8 @@ return {
 		RepPerfect = { id = "rbxassetid://18448089848", volume = 0.4 }, -- « ding » + gonflement, crête 55
 		RepGood = { id = "rbxassetid://140323850218372", volume = 0.34 }, -- répétition réussie, crête 64
 		RepMiss = { id = "rbxassetid://109359226723492", volume = 0.14 }, -- ratée (« pfff » comique), crête 145
+		-- Toucher d'une case du menu (D124) : le son de répétition réussie, plus aigu et très bas (❓ à régler à l'oreille)
+		UiTap = { id = "rbxassetid://140323850218372", volume = 0.12, pitch = 1.35 },
 		MentorSay = { id = "rbxassetid://72467819049463", volume = 0.34 }, -- le mentor parle (« hmm »), crête 53
 		-- Récompenses : nettes
 		SeriesEnd = { id = "rbxassetid://9045129322", volume = 0.11 }, -- fin de série, crête 336

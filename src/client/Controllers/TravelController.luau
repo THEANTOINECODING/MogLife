@@ -1,4 +1,5 @@
--- Déplacements rapides : bouton « Maison » toujours visible, et menu des destinations aux arrêts de bus.
+-- Déplacements rapides : menu des destinations aux arrêts de bus (le retour à la maison est une case du menu,
+-- MenuController).
 -- Le serveur vérifie tout (délai, distance à l'arrêt, pas en pleine série ni en combat).
 
 local CollectionService = game:GetService("CollectionService")
@@ -57,21 +58,6 @@ end
 
 local function buildGui()
 	local gui = Ui.create("ScreenGui", { Name = "Travel", ResetOnSpawn = false, DisplayOrder = 3 })
-
-	-- Bouton « Maison » à gauche de l'écran
-	local home = Ui.button({
-		Name = "Home",
-		AnchorPoint = Vector2.new(0, 0.5),
-		-- Colonne de gauche, centrée : Maison, Flex, Style, Settings (64 px d'écart)
-		Position = UDim2.new(0, 12, 0.5, -64),
-		Size = UDim2.fromOffset(120, 54),
-		BackgroundColor3 = Color3.fromRGB(220, 120, 30),
-		Text = Texts.Get("Travel.Home"),
-		Parent = gui,
-	})
-	home.Activated:Connect(function()
-		Remotes.GoHome:FireServer()
-	end)
 
 	panel = Ui.panel({
 		Name = "Bus",

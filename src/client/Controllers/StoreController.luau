@@ -263,6 +263,15 @@ local function showOffer(offer)
 	end)
 end
 
+-- Case « Shop » du menu (MenuController, D124) : seulement si au moins un pack est en vente
+function StoreController.HasProducts(): boolean
+	return anyPack("Mog") or anyPack("Cash")
+end
+
+function StoreController.Open()
+	open()
+end
+
 function StoreController.Init(controllers)
 	UIController = controllers.UIController
 	MinigameController = controllers.MinigameController

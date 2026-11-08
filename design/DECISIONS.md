@@ -2,6 +2,46 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-09 (Demande d'Antoine : « je n'aime pas le menu », se renseigner à fond sur les menus qui marchent et refaire le nôtre dans le même style)
+
+- **D124 — Nouveau menu et nouveau HUD, dans le style des jeux Roblox les plus joués** (recherche complète dans `RECHERCHE_MENUS_2026-11-09.md`). Remplace le rond ☰ et son tiroir de D96 : aucun des jeux observés (Steal an Egg, Steal a Brainrot, Gym League, Pet Simulator 99, Blox Fruits) ne cache sa navigation derrière un bouton.
+  - **Colonne de menu** (`MenuController`, nouveau) :
+    - au bord gauche, toujours visible ;
+    - une case en relief par action (`Ui.tile`), chacune avec sa couleur, une grosse icône et un nom cerné à cheval sur le bas : **Shop** (or, boutique Robux, seulement si un pack est en vente), **Style** (bleu, garde-robe), **Flex** (rose, la liste des poses s'ouvre à côté de la case), **Home** (orange), **Rewards** (rouge, rouvre la fenêtre de la semaine), **Houses** (violet) ;
+    - dessous, un petit rond ⚙ pour les réglages.
+  - **Placement calculé sur la place réelle** :
+    - la colonne commence sous la pastille d'objectif, centrée sur le bord gauche si possible ;
+    - 1, 2 ou 3 colonnes selon la hauteur ;
+    - sur écran tactile, jamais dans le tiers du bas (zone du joystick, docs Roblox) ;
+    - cases de 52 px sur téléphone, 60 px sur tablette, 64 px sur PC.
+  - **Rangée** pendant une série, un combat ou un duel (comme avant), quand une fenêtre est ouverte (`UIController.OnStatsHiddenChanged`) et pendant le tutoriel (sa carte occupe le même coin ; le menu apparaît à la fin).
+  - **Rewards** :
+    - pastille rouge qui bat quand une récompense de la semaine attend (défi fini, bonus des 3 défis, coffre) ;
+    - la case tremble brièvement toutes les 3,5 s ;
+    - la fenêtre s'ouvre toujours d'elle-même à l'arrivée (D96).
+  - **Réaction au doigt** (`Ui.juice`), sur toutes les cases, le « + », la pastille d'objectif, les poses et toutes les croix de fermeture :
+    - le bouton s'enfonce dès le toucher (88 %) ;
+    - il rebondit au relâcher ;
+    - il grossit au survol de la souris ou à la sélection à la manette ;
+    - petit son (`UiTap`, ❓ volume à régler à l'oreille).
+  - **Compteurs** (`UIController`) :
+    - plus de rectangle sombre : deux pastilles, Mog (pièce dorée 🗿, nombre blanc) et Cash (pièce verte 💵, nombre vert clair) ;
+    - le nombre est gros et cerné ;
+    - « + » rond dans la pastille (boutique Robux, si en vente) ;
+    - les gains font rebondir la pièce et les icônes volent vers elle ;
+    - sur PC : nom du prochain boss en or cerné et barre dorée avec reflet ;
+    - les messages arrivent en claquant et sont cernés de sombre.
+  - **Objectif** : pastille sombre à contour épais et liseré doré, en haut à gauche sous les boutons de Roblox (en portrait : sous les compteurs, qui prennent toute la largeur).
+  - **Style commun** (`Ui.luau`) :
+    - `Ui.Ink` (contour), `Ui.shade`, `Ui.outline` (texte cerné), `Ui.juice`, `Ui.tile`, `Ui.setBadge` ;
+    - `Ui.closeButton` devient une croix rouge en dégradé à contour sombre, la même dans toutes les fenêtres.
+  - **Manette** : Select met la sélection dans la colonne ; la croix choisit, A ouvre, B ou Select ressort. La touche M (ancien tiroir) n'existe plus ; G ouvre toujours les poses.
+  - **Divergences avec D96, assumées** :
+    - la fenêtre de la semaine a de nouveau une case (« Rewards ») ;
+    - la boutique Robux a une case (« Shop »), comme dans tous les jeux observés, mais seulement si des packs sont en vente (aucun pour l'instant : ids à 0).
+  - **Non modifié** : les fenêtres elles-mêmes (boutique de style, maisons, réglages, bus), sauf leur croix.
+  - **Testé dans Studio, en partie** (son coupé, Studio réduit donc écran de 1 × 1) : le jeu démarre sans erreur ; la colonne est créée avec ses 6 cases et le ⚙, Shop cachée (aucun pack) ; elle est rangée tant que la fenêtre de la semaine est ouverte ; les pastilles affichent 57.0K Mog et 1.8K Cash ; l'ancien bouton Home a disparu. **Pas vérifié à l'image** : le rendu réel, les placements sur téléphone (paysage et portrait) et le toucher. La maquette HTML aux mêmes mesures a été vérifiée dans le navigateur sur iPhone paysage (844 × 390), portrait (390 × 844) et PC (1280 × 720).
+
 ## 2026-11-08 (Demande d'Antoine : 4 tenues Robux à construire, tracé de Pas-Les-Jambes plus agréable, secrets « 100x mieux », tenues données pour vérification)
 
 - **D123 — 4 tenues Robux signature, tracé de Pas-Les-Jambes amélioré sans changer le concept, caméra des secrets qui n'est plus cachée par le joueur.**

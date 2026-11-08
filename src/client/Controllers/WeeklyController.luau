@@ -1,7 +1,8 @@
 -- Récompenses de la semaine côté client (D67, D96, fenêtre « miniature YouTube » en D103) : la fenêtre s'ouvre d'elle-même à chaque arrivée dans le jeu
 -- (une fois le joueur libre : pas pendant le tutoriel, le créateur de personnage ou une scène) : les 3 défis de la
 -- semaine (progression, Cash, bouton Réclamer), le bonus des 3 défis (trophée), le coffre de la semaine (7 jours) et
--- le compte à rebours jusqu'aux prochains défis. Plus de bouton dans le menu.
+-- le compte à rebours jusqu'aux prochains défis. Case « Rewards » dans le menu (D124), avec une pastille rouge quand
+-- une récompense attend.
 -- Le serveur décide de tout (WeeklyService) ; le client n'envoie que « réclamer ».
 
 local Players = game:GetService("Players")
@@ -637,6 +638,29 @@ local function chestScene(cash: number)
 		task.wait(2)
 		finish()
 	end)
+end
+
+-- Case « Rewards » du menu (MenuController, D124) : rouvrir la fenêtre quand on veut
+function WeeklyController.Open()
+	if state and not panel.Visible and not MinigameController.IsGameplayLocked() then
+		setOpen(true)
+	end
+end
+
+-- Une récompense attend-elle d'être réclamée (défi fini, bonus des 3 défis, coffre du dimanche) ? Pastille rouge
+function WeeklyController.HasClaim(): boolean
+	if not state then
+		return false
+	end
+	for _, challenge in state.challenges do
+		if not challenge.claimed and challenge.progress >= challenge.target then
+			return true
+		end
+	end
+	if state.bonus and state.bonus.ready and not state.bonus.claimed then
+		return true
+	end
+	return state.chest ~= nil and state.chest.canOpen == true and not state.chest.opened
 end
 
 function WeeklyController.Init(controllers)

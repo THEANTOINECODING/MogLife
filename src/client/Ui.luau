@@ -28,53 +28,42 @@ function Ui.watchViewport(update: () -> ())
 	watchCamera()
 end
 
--- Emplacements du menu (D96) : le rond qui ouvre le tiroir, la pastille d'objectif à côté, le tiroir dessous.
--- Téléphone en portrait : le haut à gauche est pris par les compteurs, le rond passe à droite et la pastille dessous.
+-- Emplacements du HUD (D124) : la pastille d'objectif en haut à gauche, sous les boutons de Roblox, et la colonne
+-- du menu dessous (MenuController la place sous la pastille, au milieu du bord gauche si la place le permet).
+-- Téléphone en portrait : le haut est pris par les compteurs, la pastille passe dessous.
+-- `pillBottom` : bas de la pastille en pixels (dans un ScreenGui qui respecte la barre de Roblox).
 export type MenuSlots = {
-	buttonAnchor: Vector2,
-	buttonPosition: UDim2,
-	buttonSize: UDim2,
 	pillPosition: UDim2,
 	pillSize: UDim2,
-	drawerAnchor: Vector2,
-	drawerPosition: UDim2,
-	tileSize: Vector2,
+	pillBottom: number,
 }
 
 function Ui.menuSlots(): MenuSlots
 	if Ui.isPhonePortrait() then
 		return {
-			buttonAnchor = Vector2.new(1, 0),
-			buttonPosition = UDim2.new(1, -8, 0, 8),
-			buttonSize = UDim2.fromOffset(48, 48),
 			pillPosition = UDim2.fromOffset(8, 64),
 			pillSize = UDim2.new(1, -16, 0, 34),
-			drawerAnchor = Vector2.new(1, 0),
-			drawerPosition = UDim2.new(1, -8, 0, 62),
-			tileSize = Vector2.new(68, 54),
+			pillBottom = 98,
 		}
 	elseif UserInputService.TouchEnabled then
 		return {
-			buttonAnchor = Vector2.zero,
-			buttonPosition = UDim2.fromOffset(8, 8),
-			buttonSize = UDim2.fromOffset(44, 44),
-			pillPosition = UDim2.fromOffset(58, 10),
-			pillSize = UDim2.new(0.36, 0, 0, 40),
-			drawerAnchor = Vector2.zero,
-			drawerPosition = UDim2.fromOffset(8, 58),
-			tileSize = Vector2.new(68, 54),
+			pillPosition = UDim2.fromOffset(10, 6),
+			pillSize = UDim2.new(0.36, 0, 0, 36),
+			pillBottom = 42,
 		}
 	end
 	return {
-		buttonAnchor = Vector2.zero,
-		buttonPosition = UDim2.fromOffset(12, 12),
-		buttonSize = UDim2.fromOffset(52, 52),
-		pillPosition = UDim2.fromOffset(72, 16),
-		pillSize = UDim2.fromOffset(330, 44),
-		drawerAnchor = Vector2.zero,
-		drawerPosition = UDim2.fromOffset(12, 72),
-		tileSize = Vector2.new(88, 64),
+		pillPosition = UDim2.fromOffset(12, 10),
+		pillSize = UDim2.fromOffset(300, 42),
+		pillBottom = 52,
 	}
+end
+
+-- Petit écran (téléphone) : le plus petit côté fait au plus 500 pixels (même seuil que le bouton de saut de Roblox)
+function Ui.isSmallScreen(): boolean
+	local camera = workspace.CurrentCamera
+	local size = camera and camera.ViewportSize or Vector2.new(1000, 1000)
+	return math.min(size.X, size.Y) <= 500
 end
 
 -- Crée une instance, applique ses propriétés, puis lui ajoute ses enfants.
@@ -182,9 +171,16 @@ function Ui.closeButton(props: { [string]: any }): TextButton
 	for key, value in props do
 		base[key] = value
 	end
+	-- Style bonbon (D124) : dégradé rouge, contour sombre, croix cernée ; elle s'enfonce à l'appui
+	local color = base.BackgroundColor3
+	base.BackgroundColor3 = Color3.new(1, 1, 1)
+	base.AutoButtonColor = false
 	local button = Ui.button(base)
 	button:FindFirstChildOfClass("UICorner").CornerRadius = UDim.new(1, 0)
-	Ui.stroke(Color3.new(1, 1, 1), 2, 0.2).Parent = button
+	Ui.gradient(Ui.shade(color, 1.3), color).Parent = button
+	Ui.stroke(Ui.Ink, 2.5).Parent = button
+	Ui.outline(button, 2)
+	Ui.juice(button)
 	return button
 end
 
@@ -214,6 +210,197 @@ function Ui.fitToScreen(panel: GuiObject, margin: number?)
 	Ui.watchViewport(function()
 		task.defer(update)
 	end)
+end
+
+-- ------------------------------------------------------------------ style « bonbon » (D124)
+-- Langage visuel commun du HUD, repris des jeux Roblox les plus joués (Gym League, Steal a Brainrot, Pet Simulator 99,
+-- Adopt Me) : formes rondes, contour sombre épais, relief (une « lèvre » plus foncée sous chaque bouton), reflet en
+-- haut, texte blanc cerné de sombre. Chaque bouton s'enfonce quand on appuie et rebondit quand on relâche.
+
+local TweenService = game:GetService("TweenService")
+
+Ui.Ink = Color3.fromRGB(29, 20, 48) -- contour commun (violet presque noir, plus doux que le noir pur)
+Ui.Dark = Color3.fromRGB(25, 18, 40) -- fond des pastilles du HUD
+
+-- Couleur assombrie (factor < 1) ou éclaircie vers le blanc (factor > 1)
+function Ui.shade(color: Color3, factor: number): Color3
+	if factor <= 1 then
+		return Color3.new(color.R * factor, color.G * factor, color.B * factor)
+	end
+	return color:Lerp(Color3.new(1, 1, 1), math.min(factor - 1, 1))
+end
+
+-- Contour épais autour des lettres d'un texte (le texte reste lisible sur le ciel comme sur le sol)
+function Ui.outline(label: TextLabel | TextButton, thickness: number?, color: Color3?): UIStroke
+	label.TextStrokeTransparency = 1
+	return Ui.create("UIStroke", {
+		Color = color or Ui.Ink,
+		Thickness = thickness or 2.5,
+		ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual,
+		LineJoinMode = Enum.LineJoinMode.Round,
+		Parent = label,
+	})
+end
+
+-- Réaction d'un bouton : il grossit un peu au survol (souris), s'enfonce à l'appui (dès que le doigt touche, pas au
+-- relâcher) et rebondit en dépassant légèrement sa taille au relâcher. `onPress` : appelé à l'appui (son du clic).
+local PRESS_SCALE = 0.88
+local HOVER_SCALE = 1.06
+function Ui.juice(button: GuiButton, onPress: (() -> ())?): UIScale
+	local scale = button:FindFirstChildOfClass("UIScale") or Ui.create("UIScale", { Parent = button })
+	local hovered = false
+	local pressed = false
+	local function go(target: number, time: number, style: Enum.EasingStyle)
+		TweenService:Create(scale, TweenInfo.new(time, style, Enum.EasingDirection.Out), { Scale = target }):Play()
+	end
+	button.InputBegan:Connect(function(input)
+		local kind = input.UserInputType
+		if kind == Enum.UserInputType.MouseButton1 or kind == Enum.UserInputType.Touch then
+			pressed = true
+			go(PRESS_SCALE, 0.07, Enum.EasingStyle.Quad)
+			if onPress then
+				onPress()
+			end
+		elseif kind == Enum.UserInputType.MouseMovement and not hovered then
+			hovered = true
+			if not pressed then
+				go(HOVER_SCALE, 0.12, Enum.EasingStyle.Quad)
+			end
+		end
+	end)
+	button.InputEnded:Connect(function(input)
+		local kind = input.UserInputType
+		if kind == Enum.UserInputType.MouseButton1 or kind == Enum.UserInputType.Touch then
+			pressed = false
+			go(if hovered then HOVER_SCALE else 1, 0.3, Enum.EasingStyle.Back)
+		elseif kind == Enum.UserInputType.MouseMovement then
+			hovered = false
+			if not pressed then
+				go(1, 0.15, Enum.EasingStyle.Quad)
+			end
+		end
+	end)
+	-- Manette : la case choisie grossit comme au survol
+	button.SelectionGained:Connect(function()
+		go(HOVER_SCALE, 0.12, Enum.EasingStyle.Quad)
+	end)
+	button.SelectionLost:Connect(function()
+		go(1, 0.15, Enum.EasingStyle.Quad)
+	end)
+	return scale
+end
+
+-- Case de menu en relief : lèvre foncée dessous, face en dégradé, reflet, grosse icône, nom qui déborde en bas.
+-- Le bouton lui-même est transparent ; `size` est sa taille en pixels (la case est carrée).
+export type TileProps = {
+	name: string,
+	icon: string,
+	caption: string,
+	color: Color3,
+	size: number,
+	layoutOrder: number?,
+	parent: Instance?,
+}
+function Ui.tile(props: TileProps): TextButton
+	local size = props.size
+	local radius = UDim.new(0.26, 0)
+	local lip = math.max(math.floor(size * 0.07), 3)
+	local button = Ui.create("TextButton", {
+		Name = props.name,
+		Size = UDim2.fromOffset(size, size),
+		BackgroundTransparency = 1,
+		Text = "",
+		AutoButtonColor = false,
+		LayoutOrder = props.layoutOrder or 0,
+	})
+	Ui.create("Frame", {
+		Name = "Lip",
+		Position = UDim2.fromOffset(0, lip),
+		Size = UDim2.new(1, 0, 1, -lip),
+		BackgroundColor3 = Ui.shade(props.color, 0.55),
+		ZIndex = 1,
+		Parent = button,
+	}, { Ui.create("UICorner", { CornerRadius = radius }), Ui.stroke(Ui.Ink, 2.5) })
+	local face = Ui.create("Frame", {
+		Name = "Face",
+		Size = UDim2.new(1, 0, 1, -lip),
+		BackgroundColor3 = Color3.new(1, 1, 1),
+		ZIndex = 2,
+		Parent = button,
+	}, {
+		Ui.create("UICorner", { CornerRadius = radius }),
+		Ui.gradient(Ui.shade(props.color, 1.25), props.color),
+		Ui.stroke(Ui.Ink, 2.5),
+	})
+	Ui.create("Frame", {
+		Name = "Gloss",
+		Position = UDim2.fromScale(0.08, 0.05),
+		Size = UDim2.fromScale(0.84, 0.42),
+		BackgroundColor3 = Color3.new(1, 1, 1),
+		ZIndex = 3,
+		Parent = face,
+	}, {
+		Ui.create("UICorner", { CornerRadius = UDim.new(0.4, 0) }),
+		Ui.create("UIGradient", {
+			Rotation = 90,
+			Transparency = NumberSequence.new(0.55, 1),
+		}),
+	})
+	Ui.label({
+		Name = "Icon",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.42),
+		Size = UDim2.fromScale(0.62, 0.62),
+		Text = props.icon,
+		TextStrokeTransparency = 1,
+		ZIndex = 4,
+		Parent = face,
+	})
+	-- Nom : à cheval sur le bas de la case, plus large qu'elle (les traductions sont plus longues que l'anglais)
+	local caption = Ui.label({
+		Name = "Caption",
+		AnchorPoint = Vector2.new(0.5, 1),
+		Position = UDim2.new(0.5, 0, 1, math.floor(size * 0.1)),
+		Size = UDim2.fromScale(1.35, 0.3),
+		Text = props.caption,
+		ZIndex = 5,
+		Parent = button,
+	})
+	Ui.outline(caption, if size >= 60 then 3 else 2.5)
+	-- Pastille de notification (cachée) : un rond rouge cerné de blanc dans le coin haut droit
+	local badge = Ui.create("Frame", {
+		Name = "Badge",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.new(1, -4, 0, 4),
+		Size = UDim2.fromScale(0.38, 0.38),
+		BackgroundColor3 = Color3.fromRGB(255, 46, 77),
+		Visible = false,
+		ZIndex = 7,
+		Parent = button,
+	}, { Ui.create("UICorner", { CornerRadius = UDim.new(1, 0) }), Ui.stroke(Color3.new(1, 1, 1), 2) })
+	Ui.create("UIScale", { Parent = badge })
+	Ui.label({
+		Name = "Text",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.5),
+		Size = UDim2.fromScale(0.72, 0.72),
+		Text = "!",
+		TextStrokeTransparency = 1,
+		ZIndex = 8,
+		Parent = badge,
+	})
+	if props.parent then
+		button.Parent = props.parent
+	end
+	return button
+end
+
+-- Affiche ou cache la pastille d'une case (Ui.tile)
+function Ui.setBadge(tile: GuiObject, on: boolean)
+	local badge = tile:FindFirstChild("Badge")
+	if badge and badge:IsA("GuiObject") then
+		badge.Visible = on
+	end
 end
 
 -- ------------------------------------------------------------------ manette (GamepadController)

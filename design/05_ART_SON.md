@@ -77,7 +77,11 @@ vent), nouvelles cinématiques, tenues animées et danses.
 
 ## Interface
 
-- HUD : Mog et Cash sur une ligne en tactile ; le prochain objectif et Style restent accessibles dans Menu. Sur PC, la jauge vers le boss et l'objectif restent visibles. Rien de plus pendant l'exploration.
+- HUD (D124, voir `RECHERCHE_MENUS_2026-11-09.md`) :
+  - en haut : les pastilles Mog et Cash (pièce ronde, gros nombre, « + » pour la boutique Robux) et l'objectif en une ligne ; sur PC, la barre du prochain boss ;
+  - au bord gauche : une colonne de cases en relief toujours visible (Shop si des packs sont en vente, Style, Flex, Home, Rewards, Houses, ⚙) ;
+  - tout se range pendant une série, un combat, une fenêtre ou le tutoriel.
+- Style « bonbon » commun (`Ui.luau`) : formes rondes, contour sombre épais (`Ui.Ink`), dégradé, reflet, relief dessous, texte blanc cerné. Chaque bouton s'enfonce à l'appui et rebondit (`Ui.juice`). Rouge = fermer ou notification ; vert = acheter ; or = Mog et boss.
 - Mini-jeux : une zone d'interaction claire, en bas de l'écran sur mobile, avec le résultat (Raté / Bien / Parfait) en gros et en couleur.
 - Typographie grasse et exagérée, boutons arrondis et épais.
 - Mobile d'abord : zones de pouce, pas de chevauchement avec les boutons Roblox.
