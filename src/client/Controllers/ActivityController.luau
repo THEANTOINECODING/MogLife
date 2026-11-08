@@ -14,6 +14,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local StyleSets = require(ReplicatedStorage.Shared.Config.StyleSets)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local CameraFraming = require(script.Parent.Parent.CameraFraming)
 local Ground = require(script.Parent.Parent.Ground)
@@ -517,9 +518,15 @@ function ActivityController.Start()
 			BossScene.Finish(update.player, update.won == true)
 		end
 	end)
-	Remotes.EmotePlay.OnClientEvent:Connect(function(who, index)
+	Remotes.EmotePlay.OnClientEvent:Connect(function(who, index, celebrate)
 		if typeof(who) == "Instance" and who:IsA("Player") and typeof(index) == "number" then
-			-- Célébration : la caméra ne zoome plus (D87, zooms jugés désagréables), la pose suffit
+			-- Célébration : la caméra ne zoome plus (D87, zooms jugés désagréables), la pose suffit.
+			-- Une tenue haut de gamme (D122) a sa propre pose de victoire.
+			local premium = who:GetAttribute("PremiumSet")
+			local signature = celebrate == true and typeof(premium) == "string" and StyleSets.Signature[premium]
+			if signature then
+				index = signature.victoryPose
+			end
 			playEmote(who, index)
 		end
 	end)

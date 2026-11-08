@@ -380,7 +380,8 @@ local function buildShell(
 		table.insert(pieces, {
 			part = clone,
 			weld = weld,
-			kind = kindOf(entry.part),
+			-- Décoration d'une tenue (aile, auréole, queue : pièce <Partie>_Deco, D122) : jamais gonflée
+			kind = if entry.tint == "Deco" then "Deco" else kindOf(entry.part),
 			size = template.Size,
 			offset = offset,
 			growthRatio = growthRatios[entry.part],

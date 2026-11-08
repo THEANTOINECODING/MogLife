@@ -9,6 +9,7 @@ local Remotes = require(ReplicatedStorage.Shared.Remotes)
 
 local player = Players.LocalPlayer
 local SettingsController
+local SignatureFxController
 local equipped: { [string]: string } = {}
 local attachment: Attachment? = nil
 
@@ -24,6 +25,7 @@ end
 function OutfitFxController.Refresh()
 	clear()
 	OutfitFxController.RefreshAllPremium()
+	SignatureFxController.RefreshAll()
 	if not StyleSets.Active or not SettingsController.Get("OutfitFx") then
 		return
 	end
@@ -141,6 +143,7 @@ end
 
 function OutfitFxController.Init(controllers)
 	SettingsController = controllers.SettingsController
+	SignatureFxController = controllers.SignatureFxController
 end
 
 function OutfitFxController.Start()

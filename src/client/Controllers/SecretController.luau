@@ -10,6 +10,7 @@
 -- Purement visuel : le serveur a déjà tout validé (SecretService).
 
 local CollectionService = game:GetService("CollectionService")
+local Lighting = game:GetService("Lighting")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -270,9 +271,37 @@ local function animate(duration: number, step: (number, number) -> (), done: (()
 	end)
 end
 
--- Plan de caméra pour celui qui a trouvé le secret (jamais pendant une série ou une autre cinématique)
-local function film(data, shots: { any })
-	if data.player ~= player or MinigameController.IsGameplayLocked() or CutsceneController.IsPlaying() then
+-- Est-ce à ce joueur de voir le plan de caméra du secret ? (celui qui l'a trouvé, s'il n'est pas déjà occupé)
+local function isFinder(data): boolean
+	return data.player == player and not MinigameController.IsGameplayLocked() and not CutsceneController.IsPlaying()
+end
+
+-- Teinte d'ambiance pour celui qui a trouvé le secret, le temps de la scène (D122)
+local function mood(color: Color3, duration: number)
+	local effect = Instance.new("ColorCorrectionEffect")
+	effect.Name = "SecretMood"
+	effect.Parent = Lighting
+	local info = TweenInfo.new(0.35)
+	TweenService:Create(effect, info, { TintColor = color, Saturation = 0.15, Contrast = 0.1 }):Play()
+	task.delay(math.max(duration - 0.4, 0.1), function()
+		local back =
+			TweenService:Create(effect, info, { TintColor = Color3.new(1, 1, 1), Saturation = 0, Contrast = 0 })
+		back.Completed:Connect(function()
+			effect:Destroy()
+		end)
+		back:Play()
+	end)
+end
+
+-- Point de vue dégagé (ni mur, ni joueur) pour filmer `focus`, en partant de `eye`
+local function eyeOn(focus: Vector3, eye: Vector3, ignore: { Instance }): Vector3
+	return CutsceneController.FindEye(focus, eye, ignore)
+end
+
+-- Plan de caméra pour celui qui a trouvé le secret (jamais pendant une série ou une autre cinématique), puis retour
+-- en douceur à sa caméra. Chaque plan donne son sujet (focus) : son personnage s'efface s'il le cache.
+local function film(data, shots: { any }, tint: Color3?)
+	if not isFinder(data) then
 		return
 	end
 	local camera = workspace.CurrentCamera
@@ -280,8 +309,27 @@ local function film(data, shots: { any })
 		return
 	end
 	local home = camera.CFrame
-	table.insert(shots, { from = shots[#shots].to, to = home, duration = 0.6 })
+	local total = 0
+	for _, shot in shots do
+		total += shot.duration
+	end
+	table.insert(shots, {
+		from = shots[#shots].to,
+		to = home,
+		duration = 0.6,
+		fovFrom = shots[#shots].fovTo,
+		fovTo = camera.FieldOfView,
+	})
+	if tint then
+		mood(tint, total + 0.3)
+	end
 	CutsceneController.Play(shots)
+end
+
+local function shake(data, strength: number, duration: number)
+	if data.player == player and CutsceneController.IsPlaying() then
+		CutsceneController.Shake(strength, duration)
+	end
 end
 
 local function rootPosition(): Vector3?
@@ -428,6 +476,7 @@ local function ghostFx(data)
 		if fly > 0 and not spunUp then
 			spunUp = true
 			sfx("EventWhoosh", 1.2)
+			shake(data, 0.35, 0.4)
 			local trail = stream(ghost.body, SPARKLE, GHOST_BLUE, 40, 0.6, 2, 1)
 			trail.LightEmission = 1
 		end
@@ -439,22 +488,43 @@ local function ghostFx(data)
 			part:Destroy()
 		end
 	end)
-	-- De profil (le joueur au bord de l'image, le fantôme au centre), puis on lève les yeux quand il s'envole
+	-- 1. Gros plan sur l'haltère qui s'agite ; 2. de profil, le fantôme au centre pendant ses curls (point de vue
+	-- dégagé, le joueur s'efface s'il gêne) ; 3. on lève les yeux quand il s'envole
+	local ignore: { Instance } = table.clone(ghost.all)
+	if dumbbell then
+		table.insert(ignore, dumbbell)
+	end
 	local camAt = data.position + Vector3.new(0, 1.2, 0)
 	local side = facing.RightVector
-	local eye = camAt + side * 9 + toward.Unit * 3 + Vector3.new(0, 1.5, 0)
+	local close = eyeOn(data.position, data.position + side * 4 + toward.Unit * 2.5 + Vector3.new(0, 1, 0), ignore)
+	local eye = eyeOn(camAt, camAt + side * 9 + toward.Unit * 3 + Vector3.new(0, 1.5, 0), ignore)
+	local sky = camAt + Vector3.new(0, 7, 0)
 	film(data, {
 		{
-			from = CFrame.lookAt(eye + side * 2, camAt),
+			from = CFrame.lookAt(close + (close - data.position).Unit * 1.5, data.position),
+			to = CFrame.lookAt(close, data.position),
+			duration = 0.6,
+			focus = data.position,
+			fovFrom = 55,
+			fovTo = 45,
+		},
+		{
+			from = CFrame.lookAt(close, data.position),
 			to = CFrame.lookAt(eye, camAt),
-			duration = duration - 1,
+			duration = duration - 1.6,
+			focus = camAt,
+			fovFrom = 45,
+			fovTo = 52,
 		},
 		{
 			from = CFrame.lookAt(eye, camAt),
-			to = CFrame.lookAt(eye + side * 3 - Vector3.new(0, 0.5, 0), camAt + Vector3.new(0, 7, 0)),
+			to = CFrame.lookAt(eye + (eye - camAt).Unit * 3 - Vector3.new(0, 0.5, 0), sky),
 			duration = 1.1,
+			focus = sky,
+			fovFrom = 52,
+			fovTo = 68,
 		},
-	})
+	}, Color3.fromRGB(190, 215, 255))
 end
 
 -- ------------------------------------------------------------------ statue qui cligne
@@ -536,30 +606,40 @@ local function statueFx(data)
 			shockwave(top + Vector3.new(0, 0.1, 0), GOLD, 16, 1)
 			burst(anchorAt(top + Vector3.new(0, size.Y * 0.8, 0), 2.5), SPARKLE, GOLD, 40, 0.8, 9)
 			sfx("SceneImpact", 1.1)
+			shake(data, 0.6, 0.45)
 		end
 	end, function()
 		for _, eye in eyes do
 			eye.part:Destroy()
 		end
 	end)
+	-- Le joueur se tient juste devant la statue : on filme de trois quarts (jamais depuis sa place), zoom sur le clin
+	-- d'œil, puis contre-plongée large pour le double biceps
 	local face = head.Position
 	local look = if typeof(data.facing) == "Vector3" then data.facing else head.CFrame.LookVector
 	local right = look:Cross(Vector3.yAxis)
+	local ignore: { Instance } = { statue, pedestal }
+	local chest = face - Vector3.new(0, size.Y * 0.3, 0)
+	local near3q = eyeOn(face, face + look * 5 + right * 3.5 + Vector3.new(0, 0.3, 0), ignore)
+	local wide = eyeOn(chest, chest + look * 10 - right * 5 - Vector3.new(0, size.Y * 0.25, 0), ignore)
 	film(data, {
 		{
-			from = CFrame.lookAt(face + look * 9 - Vector3.new(0, 2, 0), face),
-			to = CFrame.lookAt(face + look * 5 - Vector3.new(0, 0.5, 0), face),
+			from = CFrame.lookAt(near3q + (near3q - face).Unit * 3, face),
+			to = CFrame.lookAt(near3q, face),
 			duration = 1.3,
+			focus = face,
+			fovFrom = 55,
+			fovTo = 34,
 		},
 		{
-			from = CFrame.lookAt(face + look * 5 - Vector3.new(0, 0.5, 0), face),
-			to = CFrame.lookAt(
-				face + look * 12 + right * 3 - Vector3.new(0, 3, 0),
-				face - Vector3.new(0, size.Y * 0.3, 0)
-			),
+			from = CFrame.lookAt(near3q, face),
+			to = CFrame.lookAt(wide, chest),
 			duration = duration - 1.3,
+			focus = chest,
+			fovFrom = 34,
+			fovTo = 62,
 		},
-	})
+	}, Color3.fromRGB(255, 235, 190))
 end
 
 -- ------------------------------------------------------------------ rat coach
@@ -608,6 +688,7 @@ local function ratFx(data)
 				burst(anchorAt(rat.Position + Vector3.new(0, 1, 0), 2), SPARKLE, GOLD, 18, 0.5, 5)
 				bubble(rat, Texts.Get("Secret.SewerGains.Line"), rat.Size.Y + 2.2, duration - t - 0.2)
 				sfx("SceneImpact", 1.6)
+				shake(data, 0.3, 0.35)
 			end
 		end
 		rat.CFrame = frame
@@ -616,20 +697,31 @@ local function ratFx(data)
 			rat.CFrame = base
 		end
 	end)
+	-- Caméra au ras du sol, à hauteur de rat (point de vue dégagé : le joueur est souvent juste au-dessus de la plaque)
 	local look = base.LookVector
 	local at = base.Position + Vector3.new(0, 0.5, 0)
+	local up = at + Vector3.new(0, 1, 0)
+	local ignore: { Instance } = { rat }
+	local low = eyeOn(at, at + look * 5 + base.RightVector * 1.8 + Vector3.new(0, 0.8, 0), ignore)
+	local front = eyeOn(up, at + look * 4.2 + Vector3.new(0, 0.3, 0), ignore)
 	film(data, {
 		{
 			from = CFrame.lookAt(at + look * 7 + Vector3.new(0, 3, 0), at),
-			to = CFrame.lookAt(at + look * 5 + base.RightVector * 1.5 + Vector3.new(0, 1, 0), at),
+			to = CFrame.lookAt(low, at),
 			duration = flexAt,
+			focus = at,
+			fovFrom = 60,
+			fovTo = 42,
 		},
 		{
-			from = CFrame.lookAt(at + look * 5 + base.RightVector * 1.5 + Vector3.new(0, 1, 0), at),
-			to = CFrame.lookAt(at + look * 4.5 + Vector3.new(0, 0.6, 0), at + Vector3.new(0, 1, 0)),
+			from = CFrame.lookAt(low, at),
+			to = CFrame.lookAt(front, up),
 			duration = duration - flexAt,
+			focus = up,
+			fovFrom = 42,
+			fovTo = 55,
 		},
-	})
+	}, Color3.fromRGB(205, 255, 205))
 end
 
 -- ------------------------------------------------------------------ miroir du passé
@@ -710,17 +802,31 @@ local function mirrorFx(data)
 		model:Destroy()
 		sheen:Destroy()
 	end)
-	-- Par-dessus l'épaule du joueur, vers la glace
-	local mine = rootPosition()
-	local eye = (if mine then mine else feet + front * 6) + Vector3.new(0, 3, 0)
+	-- De biais (35°) devant la glace, jamais dans le dos du joueur : il se tient juste devant le miroir et le
+	-- cacherait ; s'il passe quand même dans le champ, il s'efface
 	local target = feet + Vector3.new(0, size.Y * 0.55, 0)
+	local ignore: { Instance } = { mirror, sheen, model }
+	local angled = CFrame.Angles(0, math.rad(35), 0):VectorToWorldSpace(front)
+	local start = eyeOn(target, target + angled * 7 + Vector3.new(0, 1.2, 0), ignore)
+	local finish = eyeOn(target, target + angled * 4.5 + Vector3.new(0, 0.4, 0), ignore)
+	local mine = rootPosition()
+	local opening = if mine then mine + Vector3.new(0, 4, 0) + front * 2 else start
 	film(data, {
 		{
-			from = CFrame.lookAt(eye + front * 3, target),
-			to = CFrame.lookAt(target + front * 4.5 + mirror.CFrame.RightVector * 1.2, target),
-			duration = duration,
+			from = CFrame.lookAt(opening, target),
+			to = CFrame.lookAt(start, target),
+			duration = 0.8,
+			focus = target,
 		},
-	})
+		{
+			from = CFrame.lookAt(start, target),
+			to = CFrame.lookAt(finish, target),
+			duration = duration - 0.8,
+			focus = target,
+			fovFrom = 60,
+			fovTo = 44,
+		},
+	}, Color3.fromRGB(200, 225, 255))
 end
 
 -- ------------------------------------------------------------------ annonce

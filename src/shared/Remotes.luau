@@ -23,6 +23,7 @@ local NAMES = {
 	"EquipStyleSet",
 	"SetHairDye", -- client -> serveur : (dye: string) teinture du coiffeur, "" = couleur d'origine (D106) -- client -> serveur : (setId: string), équipe haut + bas possédés
 	"LuxuryEntrance", -- serveur -> tous : (player, entranceId) jouer l'entrée de luxe de ce joueur (D112)
+	"OutfitShow", -- serveur -> tous : (player, kind) mise en scène d'une tenue haut de gamme (D122) : "Entrance"
 	"StyleState", -- serveur -> client : ({ owned: { [itemId]: true }, equipped: { [category]: itemId } })
 	"BuyFurniture", -- client -> serveur : (itemId: string) au comptoir du magasin de meubles
 	"PlaceFurniture", -- client -> serveur : (slot: string, itemId: string?) nil = vider l'emplacement
@@ -126,6 +127,7 @@ return remotes :: {
 	EquipStyleSet: RemoteEvent,
 	SetHairDye: RemoteEvent,
 	LuxuryEntrance: RemoteEvent,
+	OutfitShow: RemoteEvent,
 	StyleState: RemoteEvent,
 	BuyFurniture: RemoteEvent,
 	PlaceFurniture: RemoteEvent,

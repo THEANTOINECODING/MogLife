@@ -421,6 +421,12 @@ return {
 			CursorSpeed = 0.9, -- clavier et manette : part de la zone par seconde
 			PanelPc = Vector2.new(470, 500), -- taille de la zone sur ordinateur (360 × 380 sur téléphone)
 			PanelTouch = Vector2.new(360, 380),
+			-- Lisibilité (D122, demande d'Antoine « mieux, même concept »)
+			PreviewTime = 0.5, -- une comète montre le sens du tracé au début de chaque pose (le temps court déjà)
+			LineWidth = 9, -- épaisseur du tracé (pixels), qui se remplit d'or en avançant
+			TargetPulse = 4, -- pulsations par seconde de l'anneau sur le prochain point à atteindre
+			-- Doigt ou bouton lâché avant la fin : on reprend là où on s'était arrêté (seul le temps compte)
+			ResumeRadius = 0.16, -- distance au dernier point atteint pour reprendre
 		},
 		-- Roi du Quartier : glisser la combinaison avant que le ventilateur l'efface
 		Combo = {

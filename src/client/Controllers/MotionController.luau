@@ -15,6 +15,7 @@ local UserInputService = game:GetService("UserInputService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Motion = require(ReplicatedStorage.Shared.Config.Motion)
+local StyleSets = require(ReplicatedStorage.Shared.Config.StyleSets)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Rig = require(script.Parent.Parent.Activities.Rig)
 
@@ -232,6 +233,40 @@ local function deg(x: number): number
 	return math.rad(x)
 end
 
+-- Attitude au repos d'une tenue haut de gamme (D122) : angles en degrés, nil sans tenue
+type Stance =
+	{ waistP: number, waistY: number, neckP: number, neckY: number, arms: number, hip: number, breath: number }
+local function stanceOf(who: Player, now: number): Stance?
+	local premium = who:GetAttribute("PremiumSet")
+	local signature = typeof(premium) == "string" and StyleSets.Signature[premium]
+	local cfg = signature and Motion.Stances[signature.style]
+	if not cfg then
+		return nil
+	end
+	local neckY = cfg.neck[2]
+	if cfg.sway and cfg.sway > 0 then
+		neckY += cfg.sway * math.sin(2 * math.pi * cfg.swayRate * now)
+	end
+	if cfg.scan then
+		-- Balayage par à-coups : gauche, centre, droite, centre ; 0,15 s pour passer d'une position à l'autre
+		local positions = { -1, 0, 1, 0 }
+		local slot = math.floor(now / cfg.scanEvery)
+		local t = math.clamp((now - slot * cfg.scanEvery) / 0.15, 0, 1)
+		local from = positions[(slot - 1) % 4 + 1]
+		local to = positions[slot % 4 + 1]
+		neckY += cfg.scan * (from + (to - from) * t)
+	end
+	return {
+		waistP = cfg.waist[1],
+		waistY = cfg.waist[2],
+		neckP = cfg.neck[1],
+		neckY = neckY,
+		arms = cfg.arms,
+		hip = cfg.hip,
+		breath = cfg.breath,
+	}
+end
+
 -- Pareur : il applaudit devant lui, mains à hauteur de poitrine (toute la pose, pas une couche)
 local function spotterPose(state: State, now: number)
 	local rig = state.rig :: Rig.Rig
@@ -307,22 +342,46 @@ local function step(dt: number)
 		local swing = math.sin(state.phase)
 		local breath = math.sin(2 * math.pi * Motion.Idle.BreathRate * now)
 		local idle = 1 - walk
-		local breathAmp = Motion.Idle.Breath * (0.5 + b)
+		-- Tenue haut de gamme : son attitude au repos (D122), qui s'efface en marchant
+		local stance = stanceOf(who, now)
+		local st = idle * idle
+		local breathAmp = Motion.Idle.Breath * (0.5 + b) * (if stance then 1 + (stance.breath - 1) * st else 1)
 		layer(
 			state,
 			"Waist",
 			CFrame.Angles(
-				deg(Motion.Walk.ChestOut * b * walk + breathAmp * breath * idle * 0.5),
-				deg(Motion.Walk.Twist * b * walk * swing),
+				deg(
+					Motion.Walk.ChestOut * b * walk
+						+ breathAmp * breath * idle * 0.5
+						+ (if stance then stance.waistP * st else 0)
+				),
+				deg(Motion.Walk.Twist * b * walk * swing + (if stance then stance.waistY * st else 0)),
 				0
 			)
 		)
-		layer(state, "Neck", CFrame.Angles(deg(Motion.Walk.ChinUp * b * walk - breathAmp * breath * idle * 0.3), 0, 0))
+		layer(
+			state,
+			"Neck",
+			CFrame.Angles(
+				deg(
+					Motion.Walk.ChinUp * b * walk
+						- breathAmp * breath * idle * 0.3
+						+ (if stance then stance.neckP * st else 0)
+				),
+				deg(if stance then stance.neckY * st else 0),
+				0
+			)
+		)
 		local armsOut = (Motion.Walk.ArmsOut * walk + Motion.Idle.ArmsOut * idle) * b
+			+ (if stance then stance.arms * st else 0)
 		local lift = Motion.Idle.ShoulderLift * (0.5 + b) * breath * idle
 		layer(state, "LeftShoulder", CFrame.Angles(0, 0, deg(-armsOut - lift)))
 		layer(state, "RightShoulder", CFrame.Angles(0, 0, deg(armsOut + lift)))
-		layer(state, "Root", CFrame.Angles(0, 0, deg(Motion.Walk.Sway * b * walk * swing)))
+		layer(
+			state,
+			"Root",
+			CFrame.Angles(0, 0, deg(Motion.Walk.Sway * b * walk * swing + (if stance then stance.hip * st else 0)))
+		)
 
 		-- Poussière des pas
 		if grounded and speed >= Motion.Dust.MinSpeed then

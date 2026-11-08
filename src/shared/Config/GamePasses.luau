@@ -8,5 +8,9 @@ return {
 		CosmicEmperor = 0,
 		GoldenTitan = 0,
 		NeonPhantom = 0,
+		GymDragon = 0, -- D122
+		EternalSun = 0,
+		MechaMogger = 0,
+		MarbleStatue = 0,
 	},
 }

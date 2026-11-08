@@ -72,4 +72,18 @@ return {
 		CheerJump = 0.6, -- saut sur un Perfect du pratiquant
 		CheerTime = 0.5,
 	},
+
+	-- Attitude au repos des tenues haut de gamme (D122, StyleSets.Signature[...].style), en degrés, à l'arrêt seulement
+	-- waist / neck : { tangage (+ = buste ou menton relevé), lacet } ; arms : bras écartés en plus ; hip : bascule
+	-- du bassin ; breath : multiplie la respiration ; sway : balancement lent (degrés, sur le lacet de la tête)
+	Stances = {
+		-- Dragon : penché en avant, tête basse qui rôde de gauche à droite, griffes écartées
+		Dragon = { waist = { -7, 0 }, neck = { -6, 0 }, arms = 8, hip = 0, breath = 1.6, sway = 14, swayRate = 0.18 },
+		-- Soleil : buste fier, menton levé vers le ciel, bras ouverts qui flottent
+		Sun = { waist = { 6, 0 }, neck = { 10, 0 }, arms = 14, hip = 0, breath = 0.8, sway = 0, swayRate = 0 },
+		-- Mecha : la tête balaie par à-coups (gauche, centre, droite), presque pas de respiration
+		Mecha = { waist = { 2, 0 }, neck = { 0, 0 }, arms = 6, hip = 0, breath = 0.25, scan = 22, scanEvery = 1.1 },
+		-- Statue : contrapposto (bassin basculé, tête tournée), immobile comme du marbre
+		Marble = { waist = { 3, -8 }, neck = { 4, 18 }, arms = 5, hip = 4, breath = 0.15, sway = 0, swayRate = 0 },
+	},
 }

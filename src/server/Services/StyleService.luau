@@ -510,6 +510,11 @@ function StyleService.PlayEntrance(player: Player)
 	if entry and entry.category == "Entrance" then
 		Remotes.LuxuryEntrance:FireAllClients(player, entry.id)
 	end
+	-- Tenue haut de gamme portée en entier (D122) : son entrée en scène, en plus
+	local premium = player:GetAttribute("PremiumSet")
+	if typeof(premium) == "string" and StyleSets.Signature[premium] then
+		Remotes.OutfitShow:FireAllClients(player, "Entrance")
+	end
 end
 
 -- Rafraîchit visuels et état (après une modification directe des données, ex. récompense de boss)

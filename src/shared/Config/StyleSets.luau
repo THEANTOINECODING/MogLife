@@ -47,6 +47,12 @@ local premium = {
 	{ "CosmicEmperor", 120, 60, 230, 12_000, "Galaxy" },
 	{ "GoldenTitan", 245, 190, 50, 12_000, "Molten" },
 	{ "NeonPhantom", 20, 240, 255, 12_000, "Neon" },
+	-- D122 (choix d'Antoine) : tenues haut de gamme, avec en plus traînée, entrée en scène, pose de victoire et
+	-- animation au repos (Signature, plus bas ; SignatureFxController et MotionController)
+	{ "GymDragon", 40, 200, 90, 12_000, "Dragonfire" },
+	{ "EternalSun", 255, 190, 50, 12_000, "Solar" },
+	{ "MechaMogger", 30, 220, 255, 12_000, "Reactor" },
+	{ "MarbleStatue", 240, 236, 225, 12_000, "Marble" },
 }
 
 local list: { Set } = {}
@@ -125,5 +131,92 @@ return {
 			light = Color3.fromRGB(30, 245, 255),
 			texture = "rbxasset://textures/particles/sparkles_main.dds",
 		},
+		-- D122
+		Dragonfire = {
+			rate = 12,
+			lifetime = 1.1,
+			size = 0.3,
+			speed = 1.4,
+			colors = { Color3.fromRGB(255, 200, 60), Color3.fromRGB(230, 50, 20) },
+			light = Color3.fromRGB(255, 120, 40),
+			texture = "rbxasset://textures/particles/fire_sparks_main.dds",
+		},
+		Solar = {
+			rate = 12,
+			lifetime = 1.4,
+			size = 0.34,
+			speed = 0.8,
+			colors = { Color3.fromRGB(255, 245, 190), Color3.fromRGB(255, 170, 40) },
+			light = Color3.fromRGB(255, 210, 110),
+			texture = "rbxasset://textures/particles/sparkles_main.dds",
+		},
+		Reactor = {
+			rate = 11,
+			lifetime = 0.8,
+			size = 0.24,
+			speed = 1.6,
+			colors = { Color3.fromRGB(140, 250, 255), Color3.fromRGB(40, 140, 255) },
+			light = Color3.fromRGB(60, 220, 255),
+			texture = "rbxasset://textures/particles/sparkles_main.dds",
+		},
+		Marble = {
+			rate = 7,
+			lifetime = 1.8,
+			size = 0.3,
+			speed = 0.4,
+			colors = { Color3.fromRGB(255, 255, 250), Color3.fromRGB(255, 215, 110) },
+			light = Color3.fromRGB(255, 240, 210),
+			texture = "rbxasset://textures/particles/sparkles_main.dds",
+		},
+	},
+	-- Mise en scène des tenues haut de gamme (D122), vue par tous ; le réglage « effets de tenue » la masque aussi.
+	-- style : famille d'effets (SignatureFxController) et d'attitude au repos (MotionController)
+	-- trail : couleurs de la traînée en mouvement ; victoryPose : pose de célébration (MogOff, 1 à 5)
+	-- idleEvery : secondes entre deux effets au repos ; entrance : durée de l'entrée en scène (s)
+	Signature = {
+		GymDragon = {
+			style = "Dragon",
+			color = Color3.fromRGB(255, 120, 30),
+			glow = Color3.fromRGB(255, 70, 20),
+			trail = { Color3.fromRGB(255, 210, 70), Color3.fromRGB(200, 30, 10) },
+			victoryPose = 2,
+			idleEvery = 4.5,
+			entrance = 1.6,
+		},
+		EternalSun = {
+			style = "Sun",
+			color = Color3.fromRGB(255, 205, 70),
+			glow = Color3.fromRGB(255, 240, 180),
+			trail = { Color3.fromRGB(255, 250, 210), Color3.fromRGB(255, 150, 30) },
+			victoryPose = 5,
+			idleEvery = 5,
+			entrance = 1.8,
+		},
+		MechaMogger = {
+			style = "Mecha",
+			color = Color3.fromRGB(40, 220, 255),
+			glow = Color3.fromRGB(150, 245, 255),
+			trail = { Color3.fromRGB(160, 250, 255), Color3.fromRGB(30, 90, 255) },
+			victoryPose = 3,
+			idleEvery = 4,
+			entrance = 1.5,
+		},
+		MarbleStatue = {
+			style = "Marble",
+			color = Color3.fromRGB(245, 240, 228),
+			glow = Color3.fromRGB(255, 215, 110),
+			trail = { Color3.fromRGB(255, 255, 250), Color3.fromRGB(255, 205, 90) },
+			victoryPose = 4,
+			idleEvery = 5.5,
+			entrance = 1.7,
+		},
+	},
+	-- Réglages communs de la mise en scène
+	SignatureFx = {
+		TrailMinSpeed = 6, -- studs/s : la traînée apparaît au-delà (marche rapide, course)
+		TrailLifetime = 0.45,
+		IdleAfter = 2.5, -- secondes immobile avant les effets au repos
+		MaxDistance = 140, -- studs : au-delà, on ne joue rien (autres joueurs lointains)
+		VictoryTime = 2.4, -- durée de l'effet de victoire
 	},
 }

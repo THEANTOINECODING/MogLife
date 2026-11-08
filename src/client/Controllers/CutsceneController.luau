@@ -5,6 +5,11 @@
 --   « BOSS » avec son nom, son stade et sa réplique.
 -- CutsceneController.Play(shots, onDone) est aussi utilisé par BossController (entrée en scène du défi).
 -- Un plan : { from: CFrame, to: CFrame, duration: number, caption: string?, sub: string?, onStart: (() -> ())? }
+-- Options du plan (D122, scènes des secrets) :
+-- - focus: Vector3? : ce qu'on filme. Si son propre personnage passe entre la caméra et ce point, il s'efface
+--   (pour soi seul) au lieu de boucher l'image ;
+-- - fovFrom / fovTo: number? : zoom (champ de vision en degrés) pendant le plan.
+-- CutsceneController.FindEye cherche un point de vue dégagé (ni mur ni joueur) ; CutsceneController.Shake secoue.
 
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
@@ -34,8 +39,93 @@ local subLabel: TextLabel
 local skipButton: TextButton
 local playing: { connection: RBXScriptConnection?, done: (() -> ())?, token: number }? = nil
 local token = 0
+local baseFov: number? = nil -- champ de vision d'avant la cinématique (rendu à la fin)
+local faded = 0 -- effacement actuel de son propre personnage (0 = visible)
+local shakeUntil, shakeStrength = 0, 0
 
 local CutsceneController = {}
+
+-- Son propre personnage s'efface (LocalTransparencyModifier : les autres joueurs le voient toujours)
+local function fadeCharacter(amount: number)
+	if math.abs(amount - faded) < 0.01 then
+		return
+	end
+	faded = amount
+	local character = player.Character
+	if not character then
+		return
+	end
+	for _, item in character:GetDescendants() do
+		if item:IsA("BasePart") or item:IsA("Decal") then
+			item.LocalTransparencyModifier = amount
+		end
+	end
+end
+
+-- Son personnage est-il entre la caméra et ce qu'on filme ?
+local function blocking(eye: Vector3, focus: Vector3): boolean
+	local character = player.Character
+	local root = character and character:FindFirstChild("HumanoidRootPart")
+	if not root or not root:IsA("BasePart") then
+		return false
+	end
+	local line = focus - eye
+	local length = line.Magnitude
+	if length < 0.5 then
+		return false
+	end
+	local _, size = (character :: Model):GetBoundingBox()
+	local radius = math.max(size.X, size.Z) * 0.5 + 0.6
+	-- Le corps entier : des pieds à la tête, testé en trois points
+	for _, k in { -0.35, 0, 0.35 } do
+		local point = root.Position + Vector3.new(0, size.Y * k, 0)
+		local t = (point - eye):Dot(line) / (length * length)
+		if t > 0.02 and t < 0.98 and (eye + line * t - point).Magnitude < radius then
+			return true
+		end
+	end
+	return false
+end
+
+-- Point de vue dégagé pour filmer `focus` depuis `eye` (ou à côté) : on tourne autour du sujet jusqu'à trouver une
+-- ligne de vue libre (ni mur ni joueur) ; sinon on se rapproche jusqu'à l'obstacle. ignore : effets, sujet...
+function CutsceneController.FindEye(focus: Vector3, eye: Vector3, ignore: { Instance }?): Vector3
+	local params = RaycastParams.new()
+	params.FilterType = Enum.RaycastFilterType.Exclude
+	local list = table.clone(ignore or {})
+	for _, other in Players:GetPlayers() do
+		if other.Character then
+			table.insert(list, other.Character)
+		end
+	end
+	params.FilterDescendantsInstances = list
+	local offset = eye - focus
+	local function clear(candidate: Vector3): boolean
+		local direction = candidate - focus
+		return workspace:Raycast(focus, direction, params) == nil and not blocking(candidate, focus)
+	end
+	for _, degrees in { 0, 25, -25, 50, -50, 80, -80, 120, -120, 180 } do
+		local turned = CFrame.Angles(0, math.rad(degrees), 0):VectorToWorldSpace(offset)
+		for _, lift in { 0, 2.5 } do
+			local candidate = focus + turned + Vector3.new(0, lift, 0)
+			if clear(candidate) then
+				return candidate
+			end
+		end
+	end
+	-- Rien de libre : au plus près de l'obstacle, juste devant lui
+	local hit = workspace:Raycast(focus, offset, params)
+	if hit then
+		return focus + offset.Unit * math.max((hit.Position - focus).Magnitude - 0.8, 2)
+	end
+	return eye
+end
+
+-- Secousse de la caméra pendant la cinématique en cours (impact, flexion)
+function CutsceneController.Shake(strength: number, duration: number)
+	shakeStrength = strength
+	shakeUntil = os.clock() + duration
+end
 
 local function smooth(t: number): number
 	t = math.clamp(t, 0, 1)
@@ -97,7 +187,13 @@ local function finish()
 	local camera = workspace.CurrentCamera
 	if camera then
 		camera.CameraType = Enum.CameraType.Custom
+		if baseFov then
+			camera.FieldOfView = baseFov
+		end
 	end
+	baseFov = nil
+	shakeUntil = 0
+	fadeCharacter(0)
 	MinigameController.SetGameplayLocked(false, "Cutscene")
 	if done then
 		done()
@@ -122,6 +218,7 @@ function CutsceneController.Play(shots: { any }, onDone: (() -> ())?, keepCamera
 	MinigameController.SetGameplayLocked(true, "Cutscene")
 	CameraFraming.CancelReturn()
 	camera.CameraType = Enum.CameraType.Scriptable
+	baseFov = camera.FieldOfView
 	setBars(true)
 	setInterfaceHidden(true)
 	skipButton.Visible = true
@@ -165,8 +262,24 @@ function CutsceneController.Play(shots: { any }, onDone: (() -> ())?, keepCamera
 		if not shot then
 			return
 		end
-		local t = (os.clock() - shotStart) / shot.duration
-		camera.CFrame = shot.from:Lerp(shot.to, smooth(t))
+		local now = os.clock()
+		local t = (now - shotStart) / shot.duration
+		local cf = shot.from:Lerp(shot.to, smooth(t))
+		if now < shakeUntil then
+			local k = shakeStrength * (shakeUntil - now)
+			cf *= CFrame.new((math.random() - 0.5) * k, (math.random() - 0.5) * k, 0)
+		end
+		camera.CFrame = cf
+		if shot.fovFrom or shot.fovTo then
+			local from = shot.fovFrom or baseFov or 70
+			camera.FieldOfView = from + ((shot.fovTo or from) - from) * smooth(t)
+		elseif baseFov then
+			camera.FieldOfView = baseFov
+		end
+		-- Son propre personnage devant le sujet : il s'efface en douceur
+		local wanted = if shot.focus and blocking(cf.Position, shot.focus) then 0.85 else 0
+		local step = faded + (wanted - faded) * 0.25
+		fadeCharacter(if math.abs(step - wanted) < 0.02 then wanted else step)
 		if t >= 1 and not nextShot() then
 			finish()
 		end

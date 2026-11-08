@@ -1,7 +1,10 @@
 -- Mini-jeu « Trace » (boss : Monsieur Pas-Les-Jambes, D110, remplace Wobble) : « Tracer la pose ». Une pose de
 -- frime s'affiche en pointillés (V de la victoire, cercle, éclair, double biceps…) : poser le doigt sur le point de
 -- départ et suivre le tracé jusqu'au bout avant la fin du temps. Plus le tracé est fidèle et complet, plus le coup
--- est fort (Perfect, Good) ; trop lent, trop loin du tracé ou lâché trop tôt = raté.
+-- est fort (Perfect, Good) ; trop lent ou trop loin du tracé = raté.
+-- D122 (« mieux, même concept ») : le tracé est un trait plein qui se remplit d'or, un anneau pulse sur le prochain
+-- point à atteindre, une comète montre le sens au début, une flèche part du point vert ; doigt ou bouton lâché en
+-- route : on reprend au dernier point atteint (seul le temps file).
 -- Surprises : poses plus dures (niveau Trace.HardLevel), poses en miroir et tournées (niveau Trace.MirrorLevel) ;
 -- le temps raccourcit à chaque manche.
 -- Clavier et manette : maintenir Espace / A et guider le curseur avec les flèches, ZQSD/WASD ou la croix.
@@ -156,6 +159,25 @@ function Trace.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 	local cursor = Vector2.new(0.5, 0.5) -- clavier et manette
 	local touch: InputObject? = nil
 	local lastInk = 0
+	local segments: { [number]: Frame } = {}
+	local comet: Frame? = nil
+
+	-- Trait entre deux points de la zone (carrée : mêmes angles en proportions et en pixels)
+	local function segment(a: Vector2, b: Vector2, color: Color3, transparency: number, width: number, z: number): Frame
+		local mid = (a + b) / 2
+		local d = b - a
+		return Ui.create("Frame", {
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(mid.X, mid.Y),
+			Size = UDim2.new(d.Magnitude, width, 0, width),
+			Rotation = math.deg(math.atan2(d.Y, d.X)),
+			BackgroundColor3 = color,
+			BackgroundTransparency = transparency,
+			BorderSizePixel = 0,
+			ZIndex = z,
+			Parent = layer,
+		}, { Ui.corner(UDim.new(1, 0)) })
+	end
 
 	local startMark = Ui.create("Frame", {
 		AnchorPoint = Vector2.new(0.5, 0.5),
@@ -167,6 +189,25 @@ function Trace.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 3, 0) })
 	local startArrow = self:Emoji(startMark, "👆", 30, 5)
 	startArrow.Position = UDim2.fromScale(0.5, 0.5)
+	-- Sens du tracé : une flèche juste après le point vert
+	local headArrow = Ui.label({
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Size = UDim2.fromOffset(34, 34),
+		Text = "➤",
+		TextColor3 = GREEN,
+		TextScaled = true,
+		ZIndex = 5,
+		Parent = board,
+	})
+	-- Anneau qui pulse sur le prochain point à atteindre
+	local target = Ui.create("Frame", {
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Size = UDim2.fromOffset(34, 34),
+		BackgroundTransparency = 1,
+		ZIndex = 5,
+		Visible = false,
+		Parent = board,
+	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(GOLD, 3, 0) })
 	local pen = Ui.create("Frame", {
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		Size = UDim2.fromOffset(22, 22),
@@ -179,6 +220,7 @@ function Trace.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 	local function newPose()
 		layer:ClearAllChildren()
 		dots = {}
+		segments = {}
 		local pool = EASY
 		if self.level >= SETTINGS.HardLevel and rng:NextNumber() < SETTINGS.HardChance then
 			pool = HARD
@@ -207,15 +249,19 @@ function Trace.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 			table.insert(path, p + Vector2.new(0.5, 0.5))
 		end
 		checkpoints = resample(path, SETTINGS.Checkpoints)
+		-- Le tracé en trait plein (pâle) et un point par étape ; chaque trait s'allume en or quand on l'a parcouru
+		for k = 2, #checkpoints do
+			segments[k] = segment(checkpoints[k - 1], checkpoints[k], DOT, 0.55, SETTINGS.LineWidth, 1)
+		end
 		for _, point in checkpoints do
 			table.insert(
 				dots,
 				Ui.create("Frame", {
 					AnchorPoint = Vector2.new(0.5, 0.5),
 					Position = UDim2.fromScale(point.X, point.Y),
-					Size = UDim2.fromOffset(14, 14),
+					Size = UDim2.fromOffset(12, 12),
 					BackgroundColor3 = DOT,
-					BackgroundTransparency = 0.2,
+					BackgroundTransparency = 0.1,
 					ZIndex = 2,
 					Parent = layer,
 				}, { Ui.corner(UDim.new(1, 0)) })
@@ -223,6 +269,23 @@ function Trace.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		end
 		startMark.Position = UDim2.fromScale(path[1].X, path[1].Y)
 		startMark.Visible = true
+		-- La flèche pointe vers la suite du tracé
+		local direction = checkpoints[math.min(3, #checkpoints)] - path[1]
+		local unit = if direction.Magnitude > 0 then direction.Unit else Vector2.zero
+		local arrowAt = path[1] + unit * SETTINGS.StartRadius * 1.9
+		headArrow.Position = UDim2.fromScale(arrowAt.X, arrowAt.Y)
+		headArrow.Rotation = math.deg(math.atan2(direction.Y, direction.X))
+		headArrow.Visible = true
+		target.Visible = false
+		-- Comète qui parcourt le tracé une fois, dans le bon sens (le temps court déjà : on peut partir tout de suite)
+		comet = Ui.create("Frame", {
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(path[1].X, path[1].Y),
+			Size = UDim2.fromOffset(20, 20),
+			BackgroundColor3 = Color3.new(1, 1, 1),
+			ZIndex = 4,
+			Parent = layer,
+		}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(GOLD, 3, 0) })
 		reached, errorSum, samples = 0, 0, 0
 		drawing = false
 		resolved = false
@@ -240,6 +303,8 @@ function Trace.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		touch = nil
 		pen.Visible = false
 		startMark.Visible = false
+		headArrow.Visible = false
+		target.Visible = false
 		local coverage = reached / #checkpoints
 		local meanError = if samples > 0 then errorSum / samples else 1
 		local quality = "Miss"
@@ -251,6 +316,10 @@ function Trace.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		local color = Kit.QUALITY_COLORS[quality]
 		for _, dot in dots do
 			dot.BackgroundColor3 = color
+		end
+		for _, line in segments do
+			line.BackgroundColor3 = color
+			line.BackgroundTransparency = 0.15
 		end
 		self:Rep(quality, board)
 		-- Pose suivante : après une courte pause, jamais avant que le serveur accepte la répétition suivante
@@ -282,7 +351,12 @@ function Trace.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 			if (checkpoints[k] - point).Magnitude <= SETTINGS.Reach * tolerance then
 				for j = reached + 1, k do
 					dots[j].BackgroundColor3 = GOLD
-					dots[j].Size = UDim2.fromOffset(18, 18)
+					dots[j].Size = UDim2.fromOffset(16, 16)
+					local line = segments[j]
+					if line then
+						line.BackgroundColor3 = GOLD
+						line.BackgroundTransparency = 0
+					end
 				end
 				reached = k
 				break
@@ -309,19 +383,38 @@ function Trace.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		end
 	end
 
+	-- Point d'où (re)partir : le point vert, ou le dernier point atteint après un lâcher
+	local function anchor(): (Vector2, number)
+		if reached > 0 then
+			return checkpoints[reached], SETTINGS.ResumeRadius
+		end
+		return path[1], SETTINGS.StartRadius * SETTINGS.StartGrace
+	end
+
 	local function begin(point: Vector2)
 		if resolved or drawing then
 			return
 		end
-		-- Il faut partir du point vert
-		if (point - path[1]).Magnitude > SETTINGS.StartRadius * SETTINGS.StartGrace then
+		local from, radius = anchor()
+		if (point - from).Magnitude > radius then
 			self:Nope(startMark)
 			return
 		end
 		drawing = true
 		startMark.Visible = false
+		headArrow.Visible = false
 		pen.Visible = true
 		move(point)
+	end
+
+	-- Lâché en route : on garde ce qui est tracé, le point vert attend au dernier point atteint
+	local function pause()
+		drawing = false
+		touch = nil
+		pen.Visible = false
+		local from = anchor()
+		startMark.Position = UDim2.fromScale(from.X, from.Y)
+		startMark.Visible = true
 	end
 
 	local function isPress(input: InputObject): boolean
@@ -329,7 +422,7 @@ function Trace.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 	end
 	self:Connect(Kit.Input.InputBegan, function(input)
 		if input.KeyCode == Enum.KeyCode.Space or input.KeyCode == Enum.KeyCode.ButtonA then
-			cursor = if resolved then cursor else path[1]
+			cursor = if resolved then cursor else (anchor())
 			begin(cursor)
 		elseif isPress(input) and touch == nil and not self:_overButton(input.Position) then
 			touch = input
@@ -348,11 +441,10 @@ function Trace.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		end
 	end)
 	self:Connect(Kit.Input.InputEnded, function(input)
-		-- Doigt levé avant la fin du tracé : la pose est notée telle quelle
+		-- Doigt levé avant la fin du tracé : on pourra reprendre (la pose est notée à la fin du temps)
 		local key = input.KeyCode == Enum.KeyCode.Space or input.KeyCode == Enum.KeyCode.ButtonA
 		if (input == touch or (key and touch == nil)) and drawing then
-			touch = nil
-			finish()
+			pause()
 		end
 	end)
 	self:Guide(board, "Drag")
@@ -366,6 +458,29 @@ function Trace.new(parent: GuiObject, interval: number, onRep: (string) -> (), o
 		timeFill.Size = UDim2.fromScale(left, 1)
 		timeFill.BackgroundColor3 = if left < 0.3 then Color3.fromRGB(255, 90, 70) else GOLD
 		startArrow.Rotation = math.sin(now * 8) * 12
+		-- Comète du début : parcourt le tracé en PreviewTime, puis s'efface
+		local c = comet
+		if c then
+			local t = (now - shownAt) / SETTINGS.PreviewTime
+			if t >= 1 then
+				c:Destroy()
+				comet = nil
+			else
+				local index = math.clamp(t * (#checkpoints - 1) + 1, 1, #checkpoints)
+				local low = math.floor(index)
+				local p = checkpoints[low]:Lerp(checkpoints[math.min(low + 1, #checkpoints)], index - low)
+				c.Position = UDim2.fromScale(p.X, p.Y)
+				c.BackgroundTransparency = t * 0.6
+			end
+		end
+		-- Anneau sur le prochain point (une fois parti)
+		local nextPoint = checkpoints[reached + 1]
+		target.Visible = (drawing or reached > 0) and nextPoint ~= nil
+		if nextPoint then
+			local pulse = 1 + 0.25 * math.sin(now * SETTINGS.TargetPulse * math.pi * 2)
+			target.Position = UDim2.fromScale(nextPoint.X, nextPoint.Y)
+			target.Size = UDim2.fromOffset(30 * pulse, 30 * pulse)
+		end
 		-- Clavier et manette : le curseur suit la direction tenue
 		if drawing and touch == nil then
 			local direction = self:HeldDirection()

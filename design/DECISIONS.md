@@ -2,6 +2,28 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-08 (Demande d'Antoine : 4 tenues Robux à construire, tracé de Pas-Les-Jambes plus agréable, secrets « 100x mieux », tenues données pour vérification)
+
+- **D123 — 4 tenues Robux signature, tracé de Pas-Les-Jambes amélioré sans changer le concept, caméra des secrets qui n'est plus cachée par le joueur.**
+  - **Tenues** (`tools/blender/outfit_looks.py`) : Dragon de la Salle (armure à écailles, cornes, crête, ailes, queue, griffes), Soleil Éternel (robe à rayons, auréole, rayons d'épaule), Mecha-Mogger (plaques, modules d'épaule, réacteur dorsal), Statue de Marbre (marbre veiné, cape). L'atlas passe à 88 articles, soit 319 pièces par corps et 4 466 au total. Validation Blender réussie : 0 défaut de couverture, 4 812 triangles au plus par article.
+  - **Pièces `_Deco`** (ailes, auréole, queue, cornes) : le jeu gonfle chaque pièce autour de son propre centre. Une décoration éloignée déplaçait ce centre et faisait glisser le vêtement, d'où 468 défauts de couverture. Les décorations sont donc des pièces à part (teinte « Deco », `BodyService` : kind = "Deco"), qui suivent la croissance du corps sans être gonflées.
+  - **Mise en scène** :
+    - `StyleSets.Signature` et `StyleSets.SignatureFx`, nouveau `SignatureFxController`, remote `OutfitShow` ;
+    - avec la tenue complète, le joueur a une traînée de couleur quand il court, une entrée en scène propre (anneau de feu, colonne de lumière, balayage de scanner, poussière de marbre et couronne), une pose de victoire (souffle de feu, rayons, jets de réacteur, statue figée) et un petit effet au repos ;
+    - attitudes au repos dans `Motion.Stances`.
+  - **Purement esthétique** : ces effets ne changent aucun chiffre. Le bonus contre les boss reste celui de D122, et il ne s'applique jamais entre joueurs.
+  - **Tracé contre Pas-Les-Jambes** (`Minigames/Trace.luau`, `Balance.Minigames.Trace`) :
+    - même concept, mais le chemin est dessiné en traits pleins qui deviennent dorés une fois parcourus ;
+    - une flèche montre le sens, un anneau pulse sur le prochain point et une comète parcourt le tracé au départ (`PreviewTime`) ;
+    - lever le doigt n'échoue plus : on reprend depuis le dernier point atteint (`ResumeRadius`), et la note tombe à la fin du temps ou du tracé.
+  - **Caméra des secrets** (`CutsceneController`, `SecretController`) :
+    - chaque plan vise un point (`focus`) ;
+    - la position de la caméra est cherchée par des lancers de rayons (`FindEye`) : elle tourne autour de la cible jusqu'à trouver une vue dégagée ;
+    - si le personnage du joueur passe malgré tout dans le champ, il s'estompe ;
+    - zooms (`fovFrom`/`fovTo`), petites secousses aux moments forts et teinte d'ambiance propre à chaque secret ;
+    - le plan du miroir, qui était pris par-dessus l'épaule et donc caché par le corps, est maintenant de biais (35°).
+  - **Pas encore testé dans Studio** : aucun jeu n'était ouvert dans Studio à la fin de la session. Les modèles des tenues restent à importer : `MogLife_Wardrobe.fbx`, puis `tools/install_characters.luau`, puis copier `StylePieces.pending.luau` vers `src/shared/Config/StylePieces.luau`.
+
 ## 2026-11-07 (Demande d'Antoine : secrets plus soignés, combat contre Pas-Les-Jambes, achats en Robux, tenues Robux haut de gamme)
 
 - **D122 — Secrets mis en scène, tracé de Pas-Les-Jambes revu, boutique Robux (Cash, Mog, victoire de boss), argent hors des combats entre joueurs.** Choix d'Antoine (QCM) : « Garder le tracé, corrigé » ; vendre des packs de Cash, des packs de Mog, la victoire contre un boss et un bonus de tenue au-delà de +5 % ; offre de victoire « sur l'écran de défaite » ; « l'argent ne doit pas influencer les combats entre vrais joueurs » ; 4 tenues Robux à construire (Dragon de la Salle, Soleil Éternel, Mecha-Mogger, Statue de Marbre).

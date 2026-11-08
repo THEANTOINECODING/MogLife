@@ -35,7 +35,8 @@ export type Piece = {
 	template: string, -- nom du modèle dans ce dossier
 	part: string, -- partie R15 à laquelle la pièce est soudée
 	offset: Vector3, -- décalage par rapport au centre de cette partie, au repos
-	tint: string?, -- "Skin", "Hair", "Eyes", "Top", "Shorts" ou nil (couleurs de la texture)
+	tint: string?, -- "Skin", "Hair", "Eyes", "Top", "Shorts" ou nil (couleurs de la texture) ; "Deco" : décoration
+	-- d'une tenue (D122), couleurs de la texture, jamais gonflée
 	color: Color3?, -- couleur propre de l'objet (coupe ou barbe achetée), à la place de la teinte (D102)
 	key: string, -- nom de la pièce sans le corps (<Partie>[_<Groupe>]) : sa jumelle dans un autre corps a le même
 	item: string?, -- objet de style (nil pour le corps)
