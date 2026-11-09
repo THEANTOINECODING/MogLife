@@ -1,5 +1,18 @@
 # Importer la nouvelle garde-robe dans Roblox Studio
 
+## Tenues Robux seulement (D125, le plus rapide)
+
+Quand seules les tenues Robux ont changé, importer **`MogLife_Premium.fbx`** (3 388 pièces) au lieu de
+`MogLife_Wardrobe.fbx` (6 706 pièces) :
+
+1. En mode **Edit**, importer `MogLife_Premium.fbx` (Accueil > Importer 3D), avec `MogLife_Style.png` dans le même dossier.
+2. Coller le contenu de `tools/install_characters.luau` dans la barre de commande. Le script :
+   - vérifie les 3 388 pièces et la texture ;
+   - retire les anciennes pièces des 8 tenues Robux de `ReplicatedStorage.Style` ;
+   - range les nouvelles ;
+   - affiche le total (attendu : 6 706).
+3. Enregistrer la place, puis activer `StylePieces.pending.luau` dans `src/shared/Config/StylePieces.luau`.
+
 ## État après l'import du 18/10/2026
 
 Les 3 318 MeshParts et leur texture ont été installés dans `ReplicatedStorage.Style` depuis `MogLife_Wardrobe`. Les décalages de `StylePieces.pending.luau` ont été activés dans `src/shared/Config/StylePieces.luau` via Rojo. En Play, 42 combinaisons représentatives ont été chargées sur les 14 corps ; l'achat d'un ensemble, la croissance et le pump ont été vérifiés. La validation Blender couvre les 20 ensembles sur les 14 corps, avec zéro défaut de couverture dans ses échantillons. L'inspection visuelle en mouvement et la mesure de 30 FPS sur téléphone restent à faire.

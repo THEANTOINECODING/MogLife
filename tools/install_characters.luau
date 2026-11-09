@@ -1,6 +1,7 @@
 --[[
 	Range les personnages importés depuis Blender (assets/export/characters/MogLife_Characters.fbx,
-	ou MogLife_Wardrobe.fbx pour ne réimporter que le style ; Accueil > Importer 3D) :
+	ou MogLife_Wardrobe.fbx pour ne réimporter que le style, ou MogLife_Premium.fbx pour ne réimporter que les
+	tenues Robux (D125, le plus rapide) ; Accueil > Importer 3D) :
 	corps des stades -> ReplicatedStorage.Bodies (<stade>_<Partie>),
 	objets de style -> ReplicatedStorage.Style (<stade>__<objet>__<Partie>). Une pièce déjà présente du même
 	nom est remplacée (pour réimporter après une modification).
@@ -12,10 +13,40 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local imported = workspace:FindFirstChild("MogLife_Wardrobe") or workspace:FindFirstChild("MogLife_Characters")
+-- D125 : MogLife_Premium.fbx ne contient que les 8 tenues Robux (import bien plus rapide). Les anciennes pièces de
+-- ces tenues sont retirées de ReplicatedStorage.Style avant de ranger les nouvelles ; le reste n'est pas touché.
+local PREMIUM_SETS = {
+	"CosmicEmperor",
+	"GoldenTitan",
+	"NeonPhantom",
+	"GymDragon",
+	"EternalSun",
+	"MechaMogger",
+	"MarbleStatue",
+	"InfernalDemon",
+}
+local EXPECTED = { MogLife_Characters = 6706, MogLife_Wardrobe = 6706, MogLife_Premium = 3388 }
+
+local imported = workspace:FindFirstChild("MogLife_Premium")
+	or workspace:FindFirstChild("MogLife_Wardrobe")
+	or workspace:FindFirstChild("MogLife_Characters")
 if not imported then
-	warn("[install_characters] Modèle MogLife_Wardrobe ou MogLife_Characters introuvable dans Workspace.")
+	warn(
+		"[install_characters] Modèle MogLife_Premium, MogLife_Wardrobe ou MogLife_Characters introuvable dans Workspace."
+	)
 	return
+end
+local premiumOnly = imported.Name == "MogLife_Premium"
+local expected = EXPECTED[imported.Name]
+
+local function isPremium(name: string): boolean
+	local item = string.split(name, "__")[2]
+	for _, set in PREMIUM_SETS do
+		if item == set .. "Top" or item == set .. "Bottom" then
+			return true
+		end
+	end
+	return false
 end
 
 -- La nouvelle palette contient aussi les couleurs des 20 ensembles. Si Studio perd toutes les textures
@@ -32,8 +63,10 @@ for _, part in imported:GetDescendants() do
 		styleAppearance = styleAppearance or part:FindFirstChildOfClass("SurfaceAppearance")
 	end
 end
-if styleCount ~= 6706 then
-	warn(`[install_characters] Import incomplet : {styleCount} pièces de style sur 6706. Rien n'a été remplacé.`)
+if styleCount ~= expected then
+	warn(
+		`[install_characters] Import incomplet : {styleCount} pièces de style sur {expected}. Rien n'a été remplacé.`
+	)
 	return
 end
 if styleCount > 0 and styleTexture == "" and not styleAppearance then
@@ -60,6 +93,21 @@ for _, part in imported:GetDescendants() do
 	if part:IsA("MeshPart") and part.Size.Magnitude > 500 then
 		scale = 1 / 100
 		break
+	end
+end
+
+-- Anciennes pièces des tenues Robux : retirées (leurs noms changent d'une version à l'autre)
+local removed = 0
+local styleFolder = ReplicatedStorage:FindFirstChild("Style")
+if styleFolder then
+	for _, old in styleFolder:GetChildren() do
+		if isPremium(old.Name) then
+			old:Destroy()
+			removed += 1
+			if removed % 200 == 0 then
+				task.wait()
+			end
+		end
 	end
 end
 
@@ -100,4 +148,12 @@ for _, part in imported:GetDescendants() do
 	end
 end
 imported:Destroy()
-print(`[install_characters] {counts.Bodies} pièces de corps et {counts.Style} pièces de style rangées`)
+print(
+	`[install_characters] {counts.Bodies} pièces de corps et {counts.Style} pièces de style rangées, {removed} anciennes pièces de tenues Robux retirées`
+)
+if styleFolder then
+	print(`[install_characters] ReplicatedStorage.Style : {#styleFolder:GetChildren()} pièces (attendu : 6706)`)
+end
+if premiumOnly then
+	print("[install_characters] Tenues Robux seulement : les autres pièces de style n'ont pas été touchées.")
+end

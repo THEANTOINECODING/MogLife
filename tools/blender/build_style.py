@@ -896,6 +896,21 @@ bpy.ops.export_scene.fbx(
     axis_forward="-Z", axis_up="Y", apply_unit_scale=True, apply_scale_options="FBX_SCALE_ALL",
     mesh_smooth_type="FACE", path_mode="RELATIVE", embed_textures=False,
 )
+# D125 : fichier léger avec les seules tenues Robux (les autres pièces ne changent pas d'une version à l'autre)
+premium_items = {look + half for look in PREMIUM_LOOKS for half in ("Top", "Bottom")}
+premium_objs = [o for o in style_objs if o.name.split("__")[1] in premium_items]
+for o in style_objs:
+    o.select_set(False)
+for o in premium_objs:
+    o.select_set(True)
+bpy.context.view_layer.objects.active = premium_objs[0]
+premium_fbx = os.path.join(STYLE_OUT, "MogLife_Premium.fbx")
+bpy.ops.export_scene.fbx(
+    filepath=premium_fbx, use_selection=True, object_types={"MESH"},
+    axis_forward="-Z", axis_up="Y", apply_unit_scale=True, apply_scale_options="FBX_SCALE_ALL",
+    mesh_smooth_type="FACE", path_mode="RELATIVE", embed_textures=False,
+)
+print(f"{len(premium_objs)} pièces de tenues Robux exportées dans {premium_fbx}")
 for o, loc in saved.items():
     o.location = loc
 print(f"{len(all_objs)} pièces exportées dans {fbx}")
