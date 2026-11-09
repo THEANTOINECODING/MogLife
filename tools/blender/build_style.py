@@ -911,6 +911,22 @@ bpy.ops.export_scene.fbx(
     mesh_smooth_type="FACE", path_mode="RELATIVE", embed_textures=False,
 )
 print(f"{len(premium_objs)} pièces de tenues Robux exportées dans {premium_fbx}")
+# D126 : fichier de mise à jour = tenues Robux + coupes + barbes (un seul import dans Studio)
+HAIR_ITEMS = {"Banana", "Mullet", "Mohawk", "ShinyBald", "Pompadour", "Curly", "LongHair", "Bun", "Bob",
+              "LumberBeard", "Goatee", "Handlebar", "ChinStrap"}
+update_objs = [o for o in style_objs if o.name.split("__")[1] in premium_items | HAIR_ITEMS]
+for o in premium_objs:
+    o.select_set(False)
+for o in update_objs:
+    o.select_set(True)
+bpy.context.view_layer.objects.active = update_objs[0]
+update_fbx = os.path.join(STYLE_OUT, "MogLife_Update.fbx")
+bpy.ops.export_scene.fbx(
+    filepath=update_fbx, use_selection=True, object_types={"MESH"},
+    axis_forward="-Z", axis_up="Y", apply_unit_scale=True, apply_scale_options="FBX_SCALE_ALL",
+    mesh_smooth_type="FACE", path_mode="RELATIVE", embed_textures=False,
+)
+print(f"{len(update_objs)} pièces (tenues Robux, coupes, barbes) exportées dans {update_fbx}")
 for o, loc in saved.items():
     o.location = loc
 print(f"{len(all_objs)} pièces exportées dans {fbx}")

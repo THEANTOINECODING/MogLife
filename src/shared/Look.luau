@@ -320,8 +320,16 @@ function Look.Pieces(bodyKey: string, look: LookData, items: { string }, options
 					template = `{bodyKey}__{itemId}__{key}`,
 					part = part,
 					offset = offset,
-					tint = if ownColor and split[2] == "Hair" then nil else split[2],
-					color = if split[2] == "Hair" then ownColor else Look.GlowColor(itemId, split[2]),
+					tint = if (ownColor and split[2] == "Hair") or split[2] == "HairShade" then nil else split[2],
+					-- D126 : _HairShade = sous-couche des coupes et barbes, la couleur des cheveux assombrie
+					color = if split[2] == "Hair"
+						then ownColor
+						elseif split[2] == "HairShade" then (ownColor or Look.Color(look, "Hair") or Color3.new(
+							0.3,
+							0.2,
+							0.1
+						)):Lerp(Color3.new(0, 0, 0), LookConfig.HairShade)
+						else Look.GlowColor(itemId, split[2]),
 					glow = Look.IsGlow(split[2]),
 					key = key,
 					item = itemId,

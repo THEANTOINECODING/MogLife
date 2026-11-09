@@ -25,9 +25,27 @@ local PREMIUM_SETS = {
 	"MarbleStatue",
 	"InfernalDemon",
 }
-local EXPECTED = { MogLife_Characters = 6706, MogLife_Wardrobe = 6706, MogLife_Premium = 3388 }
+-- D126 : MogLife_Update.fbx = tenues Robux + coupes + barbes (refaites en mèches, pièces _HairShade)
+local HAIR_ITEMS = {
+	"Banana",
+	"Mullet",
+	"Mohawk",
+	"ShinyBald",
+	"Pompadour",
+	"Curly",
+	"LongHair",
+	"Bun",
+	"Bob",
+	"LumberBeard",
+	"Goatee",
+	"Handlebar",
+	"ChinStrap",
+}
+local EXPECTED = { MogLife_Characters = 6958, MogLife_Wardrobe = 6958, MogLife_Premium = 3486, MogLife_Update = 3864 }
+local TOTAL_STYLE = 6958
 
-local imported = workspace:FindFirstChild("MogLife_Premium")
+local imported = workspace:FindFirstChild("MogLife_Update")
+	or workspace:FindFirstChild("MogLife_Premium")
 	or workspace:FindFirstChild("MogLife_Wardrobe")
 	or workspace:FindFirstChild("MogLife_Characters")
 if not imported then
@@ -36,11 +54,15 @@ if not imported then
 	)
 	return
 end
-local premiumOnly = imported.Name == "MogLife_Premium"
+local premiumOnly = imported.Name == "MogLife_Premium" or imported.Name == "MogLife_Update"
+local withHair = imported.Name == "MogLife_Update"
 local expected = EXPECTED[imported.Name]
 
 local function isPremium(name: string): boolean
 	local item = string.split(name, "__")[2]
+	if withHair and table.find(HAIR_ITEMS, item) then
+		return true
+	end
 	for _, set in PREMIUM_SETS do
 		if item == set .. "Top" or item == set .. "Bottom" then
 			return true
@@ -198,7 +220,7 @@ print(
 	`[install_characters] {counts.Bodies} pièces de corps et {counts.Style} pièces de style rangées, {removed} anciennes pièces de tenues Robux retirées`
 )
 if styleFolder then
-	print(`[install_characters] ReplicatedStorage.Style : {#styleFolder:GetChildren()} pièces (attendu : 6706)`)
+	print(`[install_characters] ReplicatedStorage.Style : {#styleFolder:GetChildren()} pièces (attendu : {TOTAL_STYLE})`)
 end
 if premiumOnly then
 	print("[install_characters] Tenues Robux seulement : les autres pièces de style n'ont pas été touchées.")

@@ -72,6 +72,9 @@ local Look = {
 		"Purple",
 	},
 
+	-- D126 : la sous-couche des coupes et barbes (pièces _HairShade) est la couleur des cheveux assombrie de cette part
+	HairShade = 0.4,
+
 	EyeColors = {
 		{ id = "Brown", color = rgb(112, 70, 40) },
 		{ id = "Hazel", color = rgb(142, 112, 52) },

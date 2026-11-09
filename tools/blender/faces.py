@@ -143,44 +143,98 @@ def clear_chin(w, g):
 
 
 # ------------------------------------------------------------------ barbes
+def _beard_shade(w, bm, cell):
+    """Sous-couche de barbe assombrie (Head_HairShade, D126) : donne du relief entre les mèches."""
+    obj = w.b.make(bm, cell, None)
+    w.current.setdefault("Head_HairShade", []).append(obj)
+
+
+def _tuft(w, center, pts, width, cell, flat=0.55, shade=False):
+    """Mèche de barbe : ruban effilé (hair.py, clump) aplati contre le visage."""
+    bm = clump(pts, widths(len(pts), width * 0.8, width, 0.35), flat, 6, center)
+    if shade:
+        _beard_shade(w, bm, cell)
+    else:
+        w.make("Head", bm, cell)
+
+
 def build_beards(w, g):
+    """D126 : barbes sculptées en mèches, posées sur une sous-couche plus sombre (comme les coupes de hair.py)."""
     fp, trees = face_frame(g)
     center, jw, jh, jd = fp["jaw"][:4]
     lip_r, mz, mh = fp["lip_r"], fp["mz"], fp["mh"]
     under_lip = mz - mh * 0.5 - lip_r * 2.0
-    jaw_top = center[2] + jh * 0.5
-
-    w.start("LumberBeard")       # grosse barbe de bûcheron : coque jusqu'aux oreilles, touffe sous le menton, moustache
-    w.make("Head", beard_shell(fp, 0.12, under_lip, jaw_top + jh * 0.15), "beard_brown")
+    jaw_top = center[2] + jh * 0.15
+    ctr = Vector(center)
     chin = on_face(trees, (0, -20, center[2] - jh * 0.3), (0, 1, 0), 0.0)
     cy = chin.y if chin else center[1] - jd / 2
-    w.make("Head", ball((0, cy + jd * 0.12, center[2] - jh * 0.62), (jw * 0.4, jd * 0.32, jh * 0.4), 14, 10), "beard_brown")
-    pts = mustache_pts(trees, fp, 1.15, lip_r * 0.4, droop=0.3)
-    w.make("Head", sweep(pts, taper(len(pts), lip_r * 0.8, lip_r * 1.6), 10, 0.75), "beard_brown")
 
-    w.start("Goatee")            # bouc pointu sous la lèvre + fine moustache
-    n = 7
-    zs = [under_lip - (jh * 0.75) * i / (n - 1) for i in range(n)]
-    col = front_line(trees, [0.0] * n, lambda i: zs[i], lip_r * 0.3)
-    if col:
-        tip = Vector(col[-1]) + Vector((0, -jh * 0.12, -jh * 0.35))
-        col = col + [tuple(tip)]
-        radii = [jw * 0.1 * (1 - 0.85 * (i / (len(col) - 1)) ** 1.5) for i in range(len(col))]
-        w.make("Head", sweep(col, radii, 10, 1.0), "beard_black")
-    pts = mustache_pts(trees, fp, 0.95, lip_r * 0.3)
-    w.make("Head", sweep(pts, taper(len(pts), lip_r * 0.35, lip_r * 0.8), 10, 0.7), "beard_black")
+    # -------- Barbe de bûcheron : coque sombre, grosses mèches qui descendent en pointe, moustache en deux vagues
+    w.start("LumberBeard")
+    _beard_shade(w, beard_shell(fp, 0.12, under_lip, jaw_top + jh * 0.15), "beard_brown")
+    tip = Vector((0, cy - jd * 0.06, center[2] - jh * 1.1))
+    line = wrap_jaw(trees, center, jw * 0.5, jh * 0.5, [-85 + 170 * i / 14 for i in range(15)], 0.05, rise=0.9)
+    for i, p in enumerate(line):
+        p = Vector(p)
+        u = i / (len(line) - 1) * 2 - 1
+        end = tip + Vector((u * jw * 0.22, -jd * 0.05 * (1 - abs(u)), jh * 0.25 * abs(u)))
+        mid = p.lerp(end, 0.45) + (p - ctr).normalized() * jh * 0.05 + Vector((0, -jd * 0.06, 0))
+        _tuft(w, ctr, _catmull([tuple(p), tuple(mid), tuple(end)], 7), jw * 0.15, "beard_brown", flat=0.42)
+    for k in range(-2, 3):                                     # mèches du menton, devant
+        top = Vector((k * jw * 0.1, cy - lip_r, under_lip - lip_r))
+        end = tip + Vector((k * jw * 0.05, -jd * 0.12, jh * 0.05))
+        mid = top.lerp(end, 0.5) + Vector((0, -jd * 0.18, 0))
+        _tuft(w, ctr, _catmull([tuple(top), tuple(mid), tuple(end)], 7), jw * 0.11, "beard_brown")
+    pts = mustache_pts(trees, fp, 1.15, lip_r * 0.5, droop=0.35)
+    if len(pts) >= 4:
+        half = len(pts) // 2
+        for side in (pts[: half + 1][::-1], pts[half:]):
+            seq = [Vector(q) for q in side]
+            seq.append(seq[-1] + Vector((0, -lip_r, -mh * 1.2)))
+            _tuft(w, ctr, [tuple(q) for q in seq], lip_r * 1.7, "beard_brown")
 
-    w.start("Handlebar")         # moustache en guidon, pointes relevées
-    pts = mustache_pts(trees, fp, 1.1, lip_r * 0.4, droop=0.1, curl=1.0)
-    w.make("Head", sweep(pts, taper(len(pts), lip_r * 0.25, lip_r * 1.5), 10, 0.75), "beard_ginger")
+    # -------- Bouc : pointe sculptée sous la lèvre + fine moustache aux pointes effilées
+    w.start("Goatee")
+    for k in (-1, 0, 1):
+        top = on_face(trees, (k * jw * 0.08, -20, under_lip - lip_r), (0, 1, 0), lip_r * 0.4)
+        if top is None:
+            continue
+        end = Vector((k * jw * 0.02, top.y - jd * 0.06, under_lip - jh * 0.7))
+        mid = top.lerp(end, 0.5) + Vector((0, -jd * 0.1, 0))
+        _tuft(w, ctr, _catmull([tuple(top), tuple(mid), tuple(end)], 7), jw * (0.1 if k == 0 else 0.075),
+              "beard_black", shade=k != 0)
+    pts = mustache_pts(trees, fp, 1.0, lip_r * 0.35, droop=0.25)
+    if len(pts) >= 4:
+        half = len(pts) // 2
+        for side in (pts[: half + 1][::-1], pts[half:]):
+            _tuft(w, ctr, side, lip_r * 0.9, "beard_black", flat=0.6)
 
-    w.start("ChinStrap")         # collier fin qui suit le bas de la mâchoire, d'une oreille à l'autre
+    # -------- Guidon : moustache épaisse, pointes enroulées vers le haut
+    w.start("Handlebar")
+    pts = mustache_pts(trees, fp, 1.1, lip_r * 0.5, droop=0.1)
+    if len(pts) >= 4:
+        half = len(pts) // 2
+        for sx, side in ((-1, pts[: half + 1][::-1]), (1, pts[half:])):
+            seq = [Vector(q) for q in side]
+            e = seq[-1]
+            for k in range(1, 6):                              # la pointe s'enroule
+                a = k / 5 * math.pi * 1.3
+                seq.append(e + Vector((sx * jh * 0.12 * math.sin(a) + sx * jh * 0.06 * k / 5, -lip_r * 0.3,
+                                       jh * 0.12 * (1 - math.cos(a)))))
+            _tuft(w, ctr, [tuple(q) for q in seq], lip_r * 1.7, "beard_ginger")
+        _beard_shade(w, sweep(pts, taper(len(pts), lip_r * 0.4, lip_r * 1.2), 8, 0.7), "beard_ginger")
+
+    # -------- Collier : ligne nette qui suit la mâchoire, petite mouche sous la lèvre, fine moustache
+    w.start("ChinStrap")
     thetas = [-95 + 190 * i / 16 for i in range(17)]
-    pts = wrap_jaw(trees, center, jw * 0.5, jh * 0.5, thetas, 0.015, rise=0.9)
+    pts = wrap_jaw(trees, center, jw * 0.5, jh * 0.5, thetas, 0.02, rise=0.9)
     if len(pts) >= 2:
-        w.make("Head", sweep(pts, [0.035 + jw * 0.02] * len(pts), 10, 0.8), "beard_black")
-    pts = mustache_pts(trees, fp, 0.8, lip_r * 0.2)
-    w.make("Head", sweep(pts, taper(len(pts), lip_r * 0.3, lip_r * 0.6), 10, 0.7), "beard_black")
+        w.make("Head", sweep(pts, [0.04 + jw * 0.025] * len(pts), 8, 0.55), "beard_black")
+    patch = on_face(trees, (0, -20, under_lip - lip_r * 0.5), (0, 1, 0), lip_r * 0.3)
+    if patch is not None:
+        _tuft(w, ctr, [tuple(patch), tuple(patch + Vector((0, -lip_r * 0.2, -jh * 0.22)))], jw * 0.06, "beard_black")
+    pts = mustache_pts(trees, fp, 0.85, lip_r * 0.25)
+    w.make("Head", sweep(pts, taper(len(pts), lip_r * 0.2, lip_r * 0.6), 8, 0.6), "beard_black")
 
 
 # ------------------------------------------------------------------ visages

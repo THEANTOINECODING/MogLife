@@ -2,6 +2,48 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-10 (Demande d'Antoine, sans questions : « renseigne-toi sur l'économie, les animations, les effets et le son des combats, ce qui rend un jeu addictif ; review complète et solutions aux problèmes les plus importants ; derniers détails des skins payants (cape molle…) ; refais toutes les coupes et barbes 1000x plus stylées ; couleur de cheveux et barbe au choix, à tout moment, la même pour la paire »)
+
+- **D126 — Review complète et premières solutions, détails des tenues Robux, coupes et barbes refaites, couleur de cheveux libre.** Review et sources dans `REVIEW_2026-11-10.md`.
+  - **Ressenti des coups** (`src/client/ImpactFx.luau`, `Config/Feel.luau`) :
+    - le son de la répétition part au moment même du geste, et non plus à la confirmation du serveur ; la confirmation ne le rejoue pas si un geste a eu lieu dans la dernière 1,2 s, et le mode auto garde le son du serveur ;
+    - combat de boss, coup du joueur : couches d'impact ; sur un Perfect, la caméra se fige 60 ms (hit-stop) puis un flash bref ;
+    - quand le boss marque : son de coup grave, secousse de côté de la caméra (`CameraFraming.Jolt`), voile rouge sur les bords, vibration ;
+    - tous les effets sonores varient de ±5 % en hauteur et ±10 % en volume (`Sounds.Jitter`), sauf les jingles (`steady`) ;
+    - le réglage « effets d'écran » coupe les secousses, le flash et le voile.
+  - **Invitation d'amis** : case « Invite » 📨 dans le menu de gauche (`SocialService:PromptGameInvite`), visible si le compte peut inviter.
+  - **Badges** : `BadgeAwardService` et `Config/Badges.luau` (stades, boss, première note S).
+    - Les badges sont donnés d'après la sauvegarde, donc les anciens joueurs les reçoivent aussi.
+    - **Numéros à créer par Antoine** : 0 = désactivé.
+  - **Couleur de cheveux et barbe** :
+    - toutes les coupes **et** barbes prennent la couleur du joueur, la même pour la paire, sourcils compris ;
+    - les 16 couleurs sont proposées, plus « Natural », la couleur de la création ;
+    - la rangée se trouve dans le menu Style, aux coupes et aux barbes, et dans la boutique du coiffeur ; c'est gratuit et possible à tout moment.
+    - **Changement** : les coupes achetées perdent leur couleur de vitrine (crête rose, banane jaune).
+  - **Tenues Robux : derniers détails** (`PremiumMotionController`, vus par tous, coupés par le réglage « effets de tenue ») :
+    - pièces souples (nouvelles teintes `CapeDeco`, `TailDeco`, `WingADeco`/`WingBDeco`, `SpinDeco` dans `premium_looks.py`) :
+      - les capes ondulent au repos et s'envolent en courant ou en tombant, avec retard et rebond ;
+      - les queues remuent ;
+      - les ailes battent et se replient en course ;
+      - l'auréole du Soleil et la couronne d'étoiles tournent ;
+    - nouvelle cape pour le Titan d'or : obsidienne doublée d'or ;
+    - traces de pas sous chaque pas, propres à chaque tenue (`StyleSets.Footsteps`) : braises, étoiles, éclats, pixels, poussière de marbre.
+  - **Coupes et barbes refaites** (`tools/blender/hair.py`, `faces.py`) : grosses mèches sculptées qui suivent une vraie direction de coiffage, en couches.
+    - Une sous-couche plus sombre donne la profondeur : nouvelle pièce `Head_HairShade`, la couleur du joueur assombrie de 40 % (`Look.HairShade`).
+    - Aperçu : `tools/blender/preview_hair.py`.
+  - **Export** : `MogLife_Update.fbx` (3 864 pièces) regroupe les tenues Robux, les coupes et les barbes, pour un seul import.
+    - Garde-robe complète : 6 958 pièces de style (avant : 6 706).
+    - Aperçu : `assets/export/characters/hair_preview.png`.
+  - **Dépôt** : les FBX de plus de 100 Mo étaient refusés par GitHub ; les exports `MogLife_*.fbx` sont maintenant ignorés par Git (`.gitignore`) et se régénèrent avec `build_style.py`.
+  - **Statut** :
+    - testé dans Studio (Play, son coupé) :
+      - démarrage sans erreur ;
+      - le voile, le flash et le son au geste fonctionnent quand on les appelle directement ;
+      - teinture Platinum appliquée à la coupe par le serveur, puis teinture d'Antoine remise à Purple ;
+      - coupe et barbe de la même couleur (`Look.Pieces`) ;
+    - **pas vérifié dans Studio** : un vrai combat de boss au doigt, le hit-stop à l'image, les traces de pas et les pièces souples en mouvement (Studio réduit : pas de rendu) ; le bouton Invite (caché dans Studio, invitation impossible) ; les badges (aucun numéro).
+    - **À importer par Antoine** : `MogLife_Update.fbx`, puis `install_characters`, puis activation de `StylePieces.pending`. D'ici là, les anciens modèles restent en jeu sans pièces souples ni sous-couche.
+
 ## 2026-11-09 (Demande d'Antoine : « refait les tenues payante entièrement… beaucoup plus qualitative, cool et stylé, aussi rajoute une tenue Démon des enfer qui sera payante »)
 
 - **D125 — Les 8 tenues Robux sont refaites de zéro, avec lumière, aura en couches et mise en scène propres, plus une nouvelle tenue Démon des Enfers.** Recherche dans `RECHERCHE_TENUES_2026-11-09.md`.
