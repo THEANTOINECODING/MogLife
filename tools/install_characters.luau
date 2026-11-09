@@ -148,6 +148,52 @@ for _, part in imported:GetDescendants() do
 	end
 end
 imported:Destroy()
+
+-- D125 : l'importeur de Studio coupe les noms de plus de 50 caractères au milieu (« GodMogger__InfernalDemo...tom__… »).
+-- Le nom complet est retrouvé dans StylePieces (à activer via Rojo AVANT ce script) : début et fin identiques.
+local repaired, unresolved = 0, 0
+local styleTarget = ReplicatedStorage:FindFirstChild("Style")
+local okPieces, StylePieces = pcall(function()
+	return require(ReplicatedStorage.Shared.Config.StylePieces) :: any
+end)
+if styleTarget then
+	local expectedNames = {}
+	if okPieces then
+		for body, items in StylePieces do
+			for item, pieces in items do
+				for piece in pieces do
+					table.insert(expectedNames, `{body}__{item}__{piece}`)
+				end
+			end
+		end
+	end
+	for _, part in styleTarget:GetChildren() do
+		local cut = string.find(part.Name, "...", 1, true)
+		if cut then
+			local head, tail = string.sub(part.Name, 1, cut - 1), string.sub(part.Name, cut + 3)
+			local found = nil
+			for _, name in expectedNames do
+				if #name > 50 and string.sub(name, 1, #head) == head and string.sub(name, -#tail) == tail then
+					found = if found then false else name
+				end
+			end
+			if found and not styleTarget:FindFirstChild(found) then
+				part.Name = found
+				repaired += 1
+			else
+				unresolved += 1
+			end
+		end
+	end
+end
+if repaired > 0 then
+	print(`[install_characters] {repaired} noms coupés par l'importeur réparés`)
+end
+if unresolved > 0 then
+	warn(
+		`[install_characters] {unresolved} noms coupés non réparés : activer StylePieces.pending via Rojo puis relancer`
+	)
+end
 print(
 	`[install_characters] {counts.Bodies} pièces de corps et {counts.Style} pièces de style rangées, {removed} anciennes pièces de tenues Robux retirées`
 )

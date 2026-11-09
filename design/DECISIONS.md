@@ -29,7 +29,14 @@ Format : date — décision — raison. La plus récente en haut.
     - Démon : portail des Enfers, six geysers de feu, fumée par les naseaux.
   - **Poids** : 242 pièces de tenues Robux par corps (avant : 82), soit **6 706 pièces de style** au total (avant : 4 466). Le chargement à la demande reste une piste (non commencée).
   - **Statut** : export Blender fait et aperçu rendu (`assets/export/characters/premium_preview.png`) ; stylua et selene sans erreur.
-    - **Pas encore testé dans Studio** : import de `MogLife_Wardrobe.fbx` par Antoine, puis `install_characters`, puis activation de `StylePieces`.
+    - **Import léger** : `MogLife_Premium.fbx` (tenues Robux seules, 3 388 pièces, deux fois plus léger que la garde-robe), importé par Antoine le 09/11.
+    - **Installé et testé dans Studio le 09/11** (son coupé) :
+      - 6 706 pièces dans `ReplicatedStorage.Style` ; `StylePieces` activé ;
+      - les 8 tenues portées une à une : toutes leurs pièces présentes, pièces Néon marquées, aura active ;
+      - Démon et Mecha vus à l'image (le visage du Mecha est dégagé) ; entrée et victoire des 4 nouveaux styles jouées sans erreur ;
+      - Antoine possède la tenue Démon.
+    - **Piège de l'import** : Studio coupe au milieu les noms de plus de 50 caractères (10 pièces ici). Réparé à la main ; `install_characters` les répare maintenant tout seul grâce à `StylePieces`.
+    - Pas encore vus : les 6 autres tenues à l'image, la respiration du Néon en mouvement, la fluidité sur téléphone.
     - `validate_style.py` n'a pas été relancé : il lit `wardrobe.blend`, qui n'a pas été réenregistré.
 
 ## 2026-11-09 (Demande d'Antoine : « je n'aime pas le menu », se renseigner à fond sur les menus qui marchent et refaire le nôtre dans le même style)
