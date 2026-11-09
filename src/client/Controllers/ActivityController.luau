@@ -21,6 +21,7 @@ local Ground = require(script.Parent.Parent.Ground)
 local MogOff = require(script.Parent.Parent.Activities.MogOff)
 local BossScene = require(script.Parent.Parent.BossFights.Scene)
 local Rig = require(script.Parent.Parent.Activities.Rig)
+local ImpactFx = require(script.Parent.Parent.ImpactFx)
 
 local Activities = script.Parent.Parent.Activities
 -- Duels de boss (D85) : un module par boss ; sans module, le Mog-off générique (poses de culturisme)
@@ -452,6 +453,8 @@ function ActivityController.LocalRep(quality: string)
 	-- Petit coup de caméra (D110), aussi pendant les duels et les combats
 	CameraFraming.Kick(quality)
 	local animator = animators[localPlayer]
+	-- Son du coup au moment même du geste, et ressenti des coups en combat de boss (D126)
+	ImpactFx.LocalRep(quality, animator ~= nil and animator.kind == "Boss")
 	local look = QUALITY[quality]
 	-- Duel : les deux bras sont animés ensemble par le serveur (ArmWrestle)
 	if not animator or not look or animator.kind == "Duel" then
@@ -503,6 +506,9 @@ function ActivityController.Start()
 			onRep(update)
 		elseif update.state == "OpponentRep" then
 			local animator = animators[update.player]
+			if update.player == localPlayer and typeof(update.quality) == "string" then
+				ImpactFx.BossRep(update.quality) -- le joueur prend le coup (D126)
+			end
 			if animator and animator.activity.OpponentRep then
 				animator.activity:OpponentRep(update.quality)
 			end

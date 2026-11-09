@@ -438,6 +438,22 @@ function CameraFraming.Kick(quality: string)
 	momentum = math.min(1, momentum + MOMENTUM_STEP)
 end
 
+-- Ressenti des coups (D126, Config/Feel.luau) : caméra figée un instant sur un gros coup (« hit-stop ») et secousse
+-- latérale quand le joueur prend un coup
+local Feel = require(game:GetService("ReplicatedStorage").Shared.Config.Feel)
+local freezeUntil = -math.huge
+local joltAt, joltAmount, joltSide = -math.huge, 0, 1
+
+function CameraFraming.Freeze(seconds: number)
+	freezeUntil = math.max(freezeUntil, os.clock() + seconds)
+end
+
+function CameraFraming.Jolt(amount: number)
+	joltAt = os.clock()
+	joltAmount = math.clamp(amount, 0, 1)
+	joltSide = if math.random() < 0.5 then -1 else 1
+end
+
 local REPLAN_MOVE = 4 -- studs : le sujet s'est vraiment déplacé, l'angle est recalculé
 local AREA_TOLERANCE = 0.1 -- part de la diagonale de l'écran : en dessous, un changement d'interface est ignoré
 local BLOCK_CHECK = 1.2 -- secondes entre deux contrôles de visibilité
@@ -494,6 +510,10 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 			return
 		end
 		local now = os.clock()
+		-- Hit-stop : l'image reste figée un instant (la caméra ne bouge plus), puis reprend avec le coup de zoom
+		if now < freezeUntil then
+			return
+		end
 		-- Suit les vrais déplacements, en douceur (pas les mouvements des répétitions : la racine bouge peu)
 		if not options.fixed then
 			smoothAnchor = smoothAnchor:Lerp(anchor, math.min(dt * 3, 1))
@@ -542,6 +562,12 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 		local k = math.clamp((now - kickAt) / KICK_TIME, 0, 1)
 		local kick = if k < 1 then kickAmount * (1 - k) * (1 - k) else 0
 		local wanted = CFrame.lookAt(eyeNow, aimNow) * CFrame.new(0, KICK_LIFT * kick * math.cos(k * 9), 0)
+		-- Coup reçu : secousse de côté qui s'éteint vite
+		local j = math.clamp((now - joltAt) / Feel.Jolt.Time, 0, 1)
+		if j < 1 then
+			local wave = joltAmount * (1 - j) * (1 - j) * math.sin(j * Feel.Jolt.Frequency) * joltSide
+			wanted *= CFrame.new(Feel.Jolt.Side * wave, 0, 0) * CFrame.Angles(0, 0, Feel.Jolt.Roll * wave)
+		end
 		local e = math.clamp((now - t0) / enter, 0, 1)
 		camera.CFrame = if e < 1 then startCF:Lerp(wanted, e * e * (3 - 2 * e)) else wanted
 		camera.FieldOfView = FOV - KICK_FOV * kick
@@ -557,6 +583,7 @@ function CameraFraming.Follow(options: FollowOptions): () -> ()
 		connection:Disconnect()
 		knownLow, knownHigh = nil, nil
 		kickAt, kickAmount, momentum = -math.huge, 0, 0
+		joltAt, freezeUntil = -math.huge, -math.huge
 		CameraFraming.ClearFade(fader)
 		local from, fromFov = camera.CFrame, camera.FieldOfView
 		local began = os.clock()

@@ -212,7 +212,10 @@ local function addDyeRow()
 		table.insert(dyes, id)
 	end
 	for index, dye in dyes do
-		local color = Look.DyeColor({ Dye = dye } :: any)
+		-- "" : couleur naturelle choisie à la création
+		local color = if dye == ""
+			then Look.Color({ Hair = look and look.Hair or "Brown", Dye = "" } :: any, "Hair")
+			else Look.DyeColor({ Dye = dye } :: any)
 		local chosen = dye == current
 		local swatch = Ui.create("TextButton", {
 			Name = if dye == "" then "Original" else dye,
@@ -231,8 +234,7 @@ local function addDyeRow()
 			),
 		})
 		if dye == "" then
-			-- Couleur d'origine : arc-en-ciel, le nom dessous
-			Ui.gradient(Color3.fromRGB(255, 120, 160), Color3.fromRGB(120, 180, 255), 45).Parent = swatch
+			-- Couleur naturelle (celle de la création), son nom dessus
 			Ui.label({
 				Size = UDim2.fromScale(1, 1),
 				Text = Texts.Get("Shop.HairColorOriginal"),
@@ -398,7 +400,8 @@ function render()
 	end
 
 	local items = sortedItems(category)
-	if category == "Hair" then
+	-- D126 : la couleur se choisit aussi depuis les barbes (même couleur pour la coupe et la barbe)
+	if category == "Hair" or category == "Beard" then
 		addDyeRow()
 	end
 	if wardrobe and #items == 0 then

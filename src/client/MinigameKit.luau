@@ -103,6 +103,11 @@ function Kit.SetSettingsGetter(getter: (string) -> boolean)
 	settingsGet = getter
 end
 
+-- Réglage du joueur (vrai si aucun réglage n'est encore branché)
+function Kit.Setting(key: string): boolean
+	return settingsGet == nil or settingsGet(key)
+end
+
 function Kit.SetRepListener(listener: (string) -> ())
 	repListener = listener
 end

@@ -568,6 +568,83 @@ return {
 			pulse = { 0.5, 1, 1.4 },
 		},
 	},
+	-- D126 : traces de pas de chaque tenue Robux (PremiumMotionController), vues par tous ; même réglage que l'aura.
+	-- Une petite gerbe de particules sous le pied à chaque pas (StepDistance studs parcourus au sol).
+	-- texture, colors, alpha, size, life, speed, emission : comme les couches d'aura ; count : particules par pas
+	Footsteps = {
+		CosmicEmperor = {
+			texture = "sparkles_main.dds",
+			colors = { Color3.fromRGB(255, 245, 220), Color3.fromRGB(160, 120, 255) },
+			count = 4,
+			size = { 0.35, 0.25, 0 },
+			life = { 0.6, 1 },
+			speed = { 0.5, 1.5 },
+			emission = 1,
+		},
+		GoldenTitan = {
+			texture = "sparkles_main.dds",
+			colors = { Color3.fromRGB(255, 225, 120), Color3.fromRGB(255, 120, 30) },
+			count = 4,
+			size = { 0.3, 0.2, 0 },
+			life = { 0.4, 0.7 },
+			speed = { 1.5, 3 },
+			emission = 1,
+		},
+		NeonPhantom = {
+			texture = "sparkles_main.dds",
+			colors = { Color3.fromRGB(40, 240, 255), Color3.fromRGB(255, 50, 200) },
+			count = 3,
+			size = { 0.3, 0.3, 0 },
+			life = { 0.3, 0.5 },
+			speed = { 0.2, 0.6 },
+			emission = 1,
+		},
+		GymDragon = {
+			texture = "fire_main.dds",
+			colors = { Color3.fromRGB(255, 190, 60), Color3.fromRGB(230, 60, 10) },
+			count = 3,
+			size = { 0.45, 0.3, 0 },
+			life = { 0.35, 0.6 },
+			speed = { 1, 2.5 },
+			emission = 1,
+		},
+		EternalSun = {
+			texture = "sparkles_main.dds",
+			colors = { Color3.fromRGB(255, 250, 220), Color3.fromRGB(255, 190, 60) },
+			count = 4,
+			size = { 0.4, 0.25, 0 },
+			life = { 0.5, 0.9 },
+			speed = { 0.8, 2 },
+			emission = 1,
+		},
+		MechaMogger = {
+			texture = "sparkles_main.dds",
+			colors = { Color3.fromRGB(60, 230, 255), Color3.fromRGB(220, 255, 255) },
+			count = 3,
+			size = { 0.25, 0.2, 0 },
+			life = { 0.25, 0.4 },
+			speed = { 2, 4 },
+			emission = 1,
+		},
+		MarbleStatue = {
+			texture = "smoke_main.dds",
+			colors = { Color3.fromRGB(245, 242, 235), Color3.fromRGB(220, 215, 205) },
+			count = 2,
+			size = { 0.5, 0.9, 1.2 },
+			life = { 0.5, 0.8 },
+			speed = { 0.5, 1.2 },
+			emission = 0,
+		},
+		InfernalDemon = {
+			texture = "fire_main.dds",
+			colors = { Color3.fromRGB(255, 120, 30), Color3.fromRGB(150, 10, 10) },
+			count = 4,
+			size = { 0.55, 0.35, 0 },
+			life = { 0.45, 0.8 },
+			speed = { 1.5, 3.5 },
+			emission = 1,
+		},
+	},
 	-- Réglages communs de la mise en scène
 	SignatureFx = {
 		TrailMinSpeed = 6, -- studs/s : la traînée apparaît au-delà (marche rapide, course)

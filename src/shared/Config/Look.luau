@@ -50,8 +50,27 @@ local Look = {
 		{ id = "Purple", color = rgb(152, 82, 222), fantasy = true },
 	},
 
-	-- Teintures du coiffeur (D106) : couleurs au choix, gratuites, pour la coupe portée (identifiants de HairColors)
-	HairDyes = { "Black", "White", "Blond", "Ginger", "Red", "Pink", "Purple", "Blue", "Teal", "Green" },
+	-- Teintures (D106) : couleurs au choix, gratuites (identifiants de HairColors). D126 : toutes les couleurs, pour
+	-- la coupe ET la barbe (la même pour la paire), au choix à tout moment dans le menu Style ; "" = couleur naturelle
+	-- choisie à la création.
+	HairDyes = {
+		"Black",
+		"DarkBrown",
+		"Brown",
+		"Auburn",
+		"Ginger",
+		"DarkBlond",
+		"Blond",
+		"Platinum",
+		"Gray",
+		"White",
+		"Pink",
+		"Red",
+		"Blue",
+		"Teal",
+		"Green",
+		"Purple",
+	},
 
 	EyeColors = {
 		{ id = "Brown", color = rgb(112, 70, 40) },

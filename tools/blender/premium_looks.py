@@ -399,7 +399,7 @@ class Kit:
                                self.head_hi.z - self.eye_z + 0.02))
 
     def make(self, part, bm, channel, tint=None):
-        """tint : None, 'Deco', 'Glow', 'GlowB', 'GlowDeco', 'GlowBDeco'."""
+        """tint : None, 'Deco', 'Glow', 'GlowB', 'GlowDeco', 'GlowBDeco' (D126 : aussi CapeDeco, TailDeco, WingADeco…)."""
         self.w.make(part + ("_" + tint if tint else ""), bm, self.c[channel])
 
     # ---------------- haut : sous-tenue et surface du torse
@@ -585,15 +585,16 @@ def _cosmic(K, top):
     K.gloves("dark", "trim")
     # Cape étoilée doublée d'or
     cape_y = max(row[6] for row in T.rows)
-    K.make("UpperTorso", _cape_mesh(chest, cape_y + 0.02, neck.z, J["Waist"].z - 0.9 * k, 1.5, 1.35), "base")
-    K.make("UpperTorso", _cape_mesh(chest, cape_y - 0.015, neck.z - 0.04, J["Waist"].z - 0.86 * k, 1.47, 1.32), "trim")
+    # D126 : pièce « Cape » à part, qui ondule et suit les mouvements dans le jeu (PremiumMotionController)
+    K.make("UpperTorso_CapeDeco", _cape_mesh(chest, cape_y + 0.02, neck.z, J["Waist"].z - 0.9 * k, 1.5, 1.35), "base")
+    K.make("UpperTorso_CapeDeco", _cape_mesh(chest, cape_y - 0.015, neck.z - 0.04, J["Waist"].z - 0.86 * k, 1.47, 1.32), "trim")
     # Couronne d'étoiles qui flotte au-dessus de la tête (lumineuse)
     hc = Vector((0, K.skull_c.y, K.head_hi.z + 0.28 * k))
-    K.make("Head_GlowBDeco", ring(tuple(hc), K.head_r * 0.82, 0.05, 0.07, 20), "trim")
+    K.make("Head_GlowBSpinDeco", ring(tuple(hc), K.head_r * 0.82, 0.05, 0.07, 20), "trim")  # D126 : tourne
     for n in range(7):
         a = TAU * n / 7
         p = hc + Vector((math.cos(a) * K.head_r * 0.82, math.sin(a) * K.head_r * 0.82, 0.12 * k))
-        K.make("Head_GlowDeco", _star(p, "y", 0.11 * k, 0.045 * k, 0.04, rot=math.pi / 2), "trim")
+        K.make("Head_GlowSpinDeco", _star(p, "y", 0.11 * k, 0.045 * k, 0.04, rot=math.pi / 2), "trim")
 
 
 def _cosmic_bottom(K):
@@ -625,6 +626,11 @@ def _titan(K, top):
     for i in (7.4, 5.25, 3.25):
         K.make("UpperTorso", T.line([(i, 15.4), (i, 20.6)], 0.0, 0.05, 0.04), "extra", "Glow")
     K.collar("trim", 0.16)
+    # D126 : cape d'obsidienne doublée d'or, qui ondule dans le jeu
+    J = K.J
+    cape_y = max(row[6] for row in T.rows)
+    K.make("UpperTorso_CapeDeco", _cape_mesh(chest, cape_y + 0.02, J["Neck"].z, J["Waist"].z - 1.0 * k, 1.45, 1.4), "base")
+    K.make("UpperTorso_CapeDeco", _cape_mesh(chest, cape_y - 0.015, J["Neck"].z - 0.04, J["Waist"].z - 0.96 * k, 1.42, 1.37), "trim")
     for side, sx in sides():
         c, r = K.pauldron(side, sx, "plate", layers=3, scale=1.12, glow="Glow")
         # Cornes de colosse sur l'épaulière
@@ -753,20 +759,21 @@ def _dragon(K, top):
     # Ailes déployées : trois doigts sombres, membranes rouge feu, griffe au coude d'aile
     back = T.radius(9, 6)
     for sx in (-1, 1):
+        wing = "UpperTorso_WingADeco" if sx < 0 else "UpperTorso_WingBDeco"  # D126 : une pièce par aile (battement)
         root = Vector((sx * chest * 0.16, back + 0.06, T.heights[10]))
         elbow = root + Vector((sx * (0.55 + chest * 0.25), 0.35 * k, 0.75 * k))
         tips = [elbow + Vector((sx * (0.9 + 0.45 * n) * k, (0.25 + 0.12 * n) * k, (0.55 - 0.75 * n) * k)) for n in range(3)]
         low = root + Vector((sx * chest * 0.12, 0.2 * k, -1.0 * k))
         arm_bone = _bone(root, elbow, Vector((0, 0.05, 0.15 * k)), 4)
-        K.make("UpperTorso_Deco", sweep([tuple(p) for p in arm_bone], [0.09 * k, 0.08 * k, 0.07 * k, 0.065 * k], 6), "dark")
+        K.make(wing, sweep([tuple(p) for p in arm_bone], [0.09 * k, 0.08 * k, 0.07 * k, 0.065 * k], 6), "dark")
         bones = [_bone(elbow, tip, Vector((0, 0.06 * k, 0.12 * k)), 5) for tip in tips]
         for b in bones:
-            K.make("UpperTorso_Deco", sweep([tuple(p) for p in b], [0.06 * k, 0.05 * k, 0.04 * k, 0.03 * k, 0.012 * k], 6), "dark")
+            K.make(wing, sweep([tuple(p) for p in b], [0.06 * k, 0.05 * k, 0.04 * k, 0.03 * k, 0.012 * k], 6), "dark")
         edges = [_bone(root, elbow, Vector((0, 0, 0)), 5)] + bones + [_bone(elbow, low, Vector((sx * 0.25 * k, 0.1, -0.1)), 5)]
         for a, b in zip(edges[1:], edges[2:]):
-            K.make("UpperTorso_Deco", _membrane(a, b, 0.025, 0.18 * k), "extra")
-        K.make("UpperTorso_Deco", _membrane(_bone(root, elbow, Vector((0, 0, 0)), 5), bones[0], 0.025, 0.0), "extra")
-        K.make("UpperTorso_Deco", _horn(elbow, (sx * 0.2, 0, 1), 0.2 * k, 0.05 * k, (sx * 0.8, 0, 0)), "trim")
+            K.make(wing, _membrane(a, b, 0.025, 0.18 * k), "extra")
+        K.make(wing, _membrane(_bone(root, elbow, Vector((0, 0, 0)), 5), bones[0], 0.025, 0.0), "extra")
+        K.make(wing, _horn(elbow, (sx * 0.2, 0, 1), 0.2 * k, 0.05 * k, (sx * 0.8, 0, 0)), "trim")
     # Cornes de dragon sur la tête : deux grandes cornes vers l'arrière et une petite crête
     s, R = K.skull_c, K.skull_r
     for sx in (-1, 1):
@@ -795,12 +802,12 @@ def _dragon_bottom(K):
     pts = [(0, by, z0), (0, by + 0.4 * k, z0 - 0.4 * k), (0.1, by + 0.95 * k, z0 - 0.75 * k), (0.25, by + 1.55 * k, z0 - 0.88 * k),
            (0.35, by + 2.15 * k, z0 - 0.78 * k), (0.3, by + 2.6 * k, z0 - 0.5 * k), (0.15, by + 2.9 * k, z0 - 0.2 * k)]
     radii = [0.26 * k, 0.22 * k, 0.17 * k, 0.13 * k, 0.09 * k, 0.06 * k, 0.03 * k]
-    K.make("LowerTorso_Deco", sweep(pts, radii, 10), "base")
+    K.make("LowerTorso_TailDeco", sweep(pts, radii, 10), "base")
     for n in range(1, 6):
         p = Vector(pts[n])
-        K.make("LowerTorso_Deco", _horn(p + Vector((0, 0, radii[n] * 0.8)), (0, 0.3, 1), (0.22 - n * 0.025) * k, radii[n] * 0.45,
+        K.make("LowerTorso_TailDeco", _horn(p + Vector((0, 0, radii[n] * 0.8)), (0, 0.3, 1), (0.22 - n * 0.025) * k, radii[n] * 0.45,
                                         (0, 1, 0)), "extra")
-    K.make("LowerTorso_GlowDeco", sweep(pts[1:6], [r * 0.32 for r in radii[1:6]], 6), "trim")
+    K.make("LowerTorso_GlowTailDeco", sweep(pts[1:6], [r * 0.32 for r in radii[1:6]], 6), "trim")
 
 
 def _sun(K, top):
@@ -834,13 +841,14 @@ def _sun(K, top):
     s, R = K.skull_c, K.skull_r
     hc = Vector((0, K.head_hi.y + 0.25 * k, s.z + 0.05))
     big = K.head_r * 1.65 + 0.2 * k
-    K.make("Head_GlowDeco", ring_upright(tuple(hc), big, big * 0.09, 0.06, 28), "plate")
-    K.make("Head_GlowBDeco", ring_upright(tuple(hc + Vector((0, 0.02, 0))), big * 0.72, big * 0.05, 0.05, 24), "plate")
+    # D126 : l'auréole tourne lentement dans le jeu (pièces « Spin »)
+    K.make("Head_GlowSpinDeco", ring_upright(tuple(hc), big, big * 0.09, 0.06, 28), "plate")
+    K.make("Head_GlowBSpinDeco", ring_upright(tuple(hc + Vector((0, 0.02, 0))), big * 0.72, big * 0.05, 0.05, 24), "plate")
     for n in range(16):
         a = TAU * n / 16
         d = Vector((math.cos(a), 0, math.sin(a)))
         length = big * (0.55 if n % 2 == 0 else 0.32)
-        K.make("Head_GlowDeco", _horn(hc + d * big * 0.98, d, length, big * 0.06, (0, 0, 0), 3, 4), "plate")
+        K.make("Head_GlowSpinDeco", _horn(hc + d * big * 0.98, d, length, big * 0.06, (0, 0, 0), 3, 4), "plate")
     # Diadème solaire
     band_z = K.eye_z + (K.head_hi.z - K.eye_z) * 0.6
     K.make("Head_Deco", ring((0, s.y, band_z), R.x * 1.07, 0.05, 0.08, 18), "plate")
@@ -960,8 +968,8 @@ def _marble(K, top):
         K.make(side + "LowerArm", B.band(6.6, 8, 0.0, 0.05), "trim")
     K.gloves("base", "trim")
     cape_y = max(row[6] for row in T.rows)
-    K.make("UpperTorso", _cape_mesh(chest, cape_y + 0.02, neck.z, J["Waist"].z - 0.6 * k, 1.35, 1.25), "base")
-    K.make("UpperTorso", _cape_mesh(chest, cape_y - 0.015, neck.z - 0.04, J["Waist"].z - 0.56 * k, 1.31, 1.21), "trim")
+    K.make("UpperTorso_CapeDeco", _cape_mesh(chest, cape_y + 0.02, neck.z, J["Waist"].z - 0.6 * k, 1.35, 1.25), "base")
+    K.make("UpperTorso_CapeDeco", _cape_mesh(chest, cape_y - 0.015, neck.z - 0.04, J["Waist"].z - 0.56 * k, 1.31, 1.21), "trim")
     # Couronne de laurier d'or : deux branches de feuilles qui se rejoignent devant
     s, R = K.skull_c, K.skull_r
     band_z = K.eye_z + (K.head_hi.z - K.eye_z) * 0.5
@@ -1024,18 +1032,19 @@ def _demon(K, top):
     # Ailes de démon déchirées : os noirs, membrane pourpre sombre, échancrures
     back = T.radius(9, 6)
     for sx in (-1, 1):
+        wing = "UpperTorso_WingADeco" if sx < 0 else "UpperTorso_WingBDeco"  # D126 : une pièce par aile (battement)
         root = Vector((sx * chest * 0.15, back + 0.06, T.heights[10]))
         elbow = root + Vector((sx * (0.5 + chest * 0.22), 0.4 * k, 0.95 * k))
         tips = [elbow + Vector((sx * (0.75 + 0.5 * n) * k, (0.3 + 0.1 * n) * k, (0.35 - 0.85 * n) * k)) for n in range(4)]
         arm_bone = _bone(root, elbow, Vector((0, 0.05, 0.2 * k)), 4)
-        K.make("UpperTorso_Deco", sweep([tuple(p) for p in arm_bone], [0.09 * k, 0.08 * k, 0.07 * k, 0.06 * k], 6), "trim")
+        K.make(wing, sweep([tuple(p) for p in arm_bone], [0.09 * k, 0.08 * k, 0.07 * k, 0.06 * k], 6), "trim")
         bones = [_bone(elbow, tip, Vector((0, 0.05 * k, 0.1 * k)), 5) for tip in tips]
         for b in bones:
-            K.make("UpperTorso_Deco", sweep([tuple(p) for p in b], [0.055 * k, 0.045 * k, 0.035 * k, 0.025 * k, 0.01 * k], 6), "trim")
-        K.make("UpperTorso_Deco", _membrane(_bone(root, elbow, Vector((0, 0, 0)), 5), bones[0], 0.025, 0.0), "plate")
+            K.make(wing, sweep([tuple(p) for p in b], [0.055 * k, 0.045 * k, 0.035 * k, 0.025 * k, 0.01 * k], 6), "trim")
+        K.make(wing, _membrane(_bone(root, elbow, Vector((0, 0, 0)), 5), bones[0], 0.025, 0.0), "plate")
         for a, b in zip(bones, bones[1:]):
-            K.make("UpperTorso_Deco", _membrane(a, b, 0.025, 0.3 * k), "plate")
-        K.make("UpperTorso_Deco", _horn(elbow, (sx * 0.1, 0, 1), 0.28 * k, 0.06 * k, (sx * 1.0, 0, 0)), "extra")
+            K.make(wing, _membrane(a, b, 0.025, 0.3 * k), "plate")
+        K.make(wing, _horn(elbow, (sx * 0.1, 0, 1), 0.28 * k, 0.06 * k, (sx * 1.0, 0, 0)), "extra")
     # Cornes : deux grandes cornes de bélier-démon (ivoire vers noir), lueur de magma à la base
     s, R = K.skull_c, K.skull_r
     for sx in (-1, 1):
@@ -1065,10 +1074,10 @@ def _demon_bottom(K):
     z0 = root.z + 0.15
     pts = [(0, by, z0), (0.05, by + 0.45 * k, z0 - 0.45 * k), (0.25, by + 0.95 * k, z0 - 0.8 * k), (0.6, by + 1.35 * k, z0 - 0.75 * k),
            (0.85, by + 1.6 * k, z0 - 0.4 * k), (0.95, by + 1.65 * k, z0 + 0.05 * k)]
-    K.make("LowerTorso_Deco", sweep(pts, [0.12 * k, 0.1 * k, 0.08 * k, 0.065 * k, 0.05 * k, 0.04 * k], 8), "dark")
+    K.make("LowerTorso_TailDeco", sweep(pts, [0.12 * k, 0.1 * k, 0.08 * k, 0.065 * k, 0.05 * k, 0.04 * k], 8), "dark")
     tip = Vector(pts[-1])
-    K.make("LowerTorso_Deco", _rbox(tip + Vector((0, 0, 0.12 * k)), (0.06, 0.3 * k, 0.32 * k), 0.2, taper_top=0.05), "plate")
-    K.make("LowerTorso_GlowDeco", sweep(pts[:5], [0.04 * k] * 5, 5), "trim")
+    K.make("LowerTorso_TailDeco", _rbox(tip + Vector((0, 0, 0.12 * k)), (0.06, 0.3 * k, 0.32 * k), 0.2, taper_top=0.05), "plate")
+    K.make("LowerTorso_GlowTailDeco", sweep(pts[:5], [0.04 * k] * 5, 5), "trim")
 
 
 BUILDERS = {

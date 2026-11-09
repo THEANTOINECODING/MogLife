@@ -16,6 +16,7 @@ local GuiService = game:GetService("GuiService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local SocialService = game:GetService("SocialService")
 local UserInputService = game:GetService("UserInputService")
 
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
@@ -54,6 +55,7 @@ local gear: TextButton
 local builtSize = 0
 local focused = false
 local tutorialActive = false
+local canInvite = false -- le compte peut inviter des amis (D126)
 
 -- Une fenêtre est-elle déjà ouverte (ou une série, une scène) ? Les cases ne font alors rien
 local function busy(): boolean
@@ -307,6 +309,21 @@ local function buildGui()
 			end,
 		},
 		{
+			-- Inviter des amis (D126) : ouvre l'invitation Roblox ; caché si le compte ne peut pas inviter
+			id = "Invite",
+			icon = Texts.Get("Menu.IconInvite"),
+			caption = Texts.Get("Menu.Invite"),
+			color = Color3.fromRGB(40, 185, 110),
+			action = function()
+				pcall(function()
+					SocialService:PromptGameInvite(player)
+				end)
+			end,
+			shown = function()
+				return canInvite
+			end,
+		},
+		{
 			id = "Houses",
 			icon = Texts.Get("Menu.IconHouses"),
 			caption = Texts.Get("Menu.Houses"),
@@ -317,6 +334,16 @@ local function buildGui()
 		},
 	}
 	gui.Parent = player:WaitForChild("PlayerGui")
+	-- Le compte peut-il inviter (contrôle parental, plateforme) ? Demandé une fois, en arrière-plan
+	task.spawn(function()
+		local ok, result = pcall(function()
+			return SocialService:CanSendGameInviteAsync(player)
+		end)
+		if ok and result == true and not canInvite then
+			canInvite = true
+			task.defer(layout)
+		end
+	end)
 	build(tileSize())
 	Ui.watchViewport(function()
 		task.defer(layout)

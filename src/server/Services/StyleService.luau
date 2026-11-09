@@ -233,7 +233,9 @@ local function buildVisuals(player: Player)
 			part.Name = `{itemId}_{index}`
 			part.Size = attach.Size * piece.size
 			part.CFrame = attach.CFrame * CFrame.new(attach.Size * piece.offset)
-			part.Color = if item.category == "Hair" then Look.DyeColor(data.Look) or piece.color else piece.color
+			part.Color = if item.category == "Hair" or item.category == "Beard"
+				then Look.Color(data.Look, "Hair") or piece.color
+				else piece.color
 			part.Material = piece.material or Enum.Material.SmoothPlastic
 			part.Shape = piece.shape or Enum.PartType.Block
 			part.Transparency = piece.transparency or 0

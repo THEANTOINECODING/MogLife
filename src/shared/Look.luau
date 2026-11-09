@@ -172,6 +172,13 @@ end
 
 -- Couleur d'une teinte pour cette apparence
 function Look.Color(look: LookData, tint: string): Color3?
+	-- D126 : cheveux, barbe et sourcils ont toujours la même couleur, celle choisie par le joueur (teinture comprise)
+	if tint == "Hair" then
+		local dyed = Look.DyeColor(look)
+		if dyed then
+			return dyed
+		end
+	end
 	local list = PALETTES[tint]
 	local swatch = list and (findSwatch(list, (look :: any)[tint]) or list[1])
 	return swatch and swatch.color
@@ -296,11 +303,12 @@ function Look.Pieces(bodyKey: string, look: LookData, items: { string }, options
 		-- Coupe ou barbe achetée : elle garde la couleur montrée en boutique (crête rose, banane jaune) ; les coupes de
 		-- départ prennent la couleur de cheveux choisie à la création (D102). Une teinture du coiffeur colore la coupe
 		-- portée, quelle qu'elle soit (D106).
+		-- D126 : toutes les coupes et barbes prennent la couleur de cheveux du joueur (la même pour la paire),
+		-- choisie à tout moment dans le style ; les autres objets gardent leur couleur.
 		local item = StyleItems[itemId]
-		local ownColor = if item
-				and item.category == "Hair"
-				and Look.DyeColor(look)
-			then Look.DyeColor(look)
+		local hairLike = item and (item.category == "Hair" or item.category == "Beard")
+		local ownColor = if hairLike
+			then Look.Color(look, "Hair")
 			elseif item and not item.starter then item.swatch or (item.pieces[1] and item.pieces[1].color)
 			else nil
 		for key, offset in (StylePieces[bodyKey] and StylePieces[bodyKey][itemId]) or {} do

@@ -12,6 +12,8 @@ local SoundService = game:GetService("SoundService")
 local TweenService = game:GetService("TweenService")
 
 local Sounds = require(ReplicatedStorage.Shared.Config.Sounds)
+local Feel = require(ReplicatedStorage.Shared.Config.Feel)
+local ImpactFx = require(script.Parent.Parent.ImpactFx)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 
 local player = Players.LocalPlayer
@@ -46,7 +48,12 @@ function SoundController.Play(name: string, pitch: number?)
 		sound.Parent = SoundService
 		cache[name] = sound
 	end
-	sound.PlaybackSpeed = pitch or entry.pitch or 1 -- un effet peut avoir sa propre hauteur (Config/Sounds.luau)
+	-- Petite variation de hauteur et de volume à chaque fois (D126) : un son répété ne lasse pas ; jingles fixes
+	local jitter = if entry.steady then 0 else 1
+	local pitchJitter = 1 + (math.random() * 2 - 1) * Sounds.Jitter.Pitch * jitter
+	local volumeJitter = 1 + (math.random() * 2 - 1) * Sounds.Jitter.Volume * jitter
+	sound.PlaybackSpeed = (pitch or entry.pitch or 1) * pitchJitter -- hauteur propre possible (Config/Sounds.luau)
+	sound.Volume = (entry.volume or 0.5) * volumeJitter
 	SoundService:PlayLocalSound(sound)
 end
 
@@ -66,7 +73,8 @@ function SoundController.PlayAt(name: string, part: BasePart, pitch: number?)
 	sound.Name = name
 	sound.SoundId = entry.id
 	sound.Volume = entry.volume or 0.5
-	sound.PlaybackSpeed = pitch or entry.pitch or 1
+	local jitter = if entry.steady then 0 else Sounds.Jitter.Pitch
+	sound.PlaybackSpeed = (pitch or entry.pitch or 1) * (1 + (math.random() * 2 - 1) * jitter)
 	sound.RollOffMinDistance = 10
 	sound.RollOffMaxDistance = 70
 	sound.SoundGroup = sfxGroup
@@ -282,7 +290,14 @@ local REP_SOUNDS = { Perfect = "RepPerfect", Good = "RepGood", Miss = "RepMiss" 
 function SoundController.Start()
 	startMusic()
 	Remotes.SeriesUpdate.OnClientEvent:Connect(function(update)
-		if update.state == "Rep" then
+		if update.state == "Started" then
+			ImpactFx.ResetStreak()
+		elseif update.state == "Rep" then
+			-- Son déjà joué au moment du geste (ImpactFx, D126) : la confirmation du serveur ne le rejoue pas.
+			-- Sans geste récent (mode auto), c'est elle qui joue le son.
+			if os.clock() - ImpactFx.LastLocalRep() < Feel.EchoWindow then
+				return
+			end
 			-- Chaque répétition réussie d'affilée joue un peu plus aigu : on entend la série monter (D52)
 			local streak = math.min(update.streak or 0, Sounds.ComboPitch.MaxStreak)
 			SoundController.Play(REP_SOUNDS[update.quality] or "RepGood", 1 + streak * Sounds.ComboPitch.Step)

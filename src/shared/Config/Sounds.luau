@@ -29,21 +29,27 @@ return {
 		-- Deux couches courtes pour sentir le contact et l'impact, avant la note serveur.
 		SceneTouch = { id = "rbxassetid://140323850218372", volume = 0.12 },
 		SceneImpact = { id = "rbxassetid://18448089848", volume = 0.28 },
+		-- Couches d'impact des combats de boss (D126, Config/Feel.luau) : sons déjà vérifiés ci-dessous (Pro Sound
+		-- Effects), ❓ volumes de départ à régler à l'oreille
+		HitPunch = { id = "rbxassetid://9113573976", volume = 0.22, pitch = 1.15 }, -- le coup du joueur porte
+		HitBoom = { id = "rbxassetid://9118628772", volume = 0.16, pitch = 1.35 }, -- grave d'un Perfect
+		BossPunch = { id = "rbxassetid://9113573976", volume = 0.3, pitch = 0.72 }, -- le boss touche le joueur
+		HitWhiff = { id = "rbxassetid://9120718279", volume = 0.1, pitch = 1.4 }, -- le boss rate (souffle)
 		-- Répétitions (à chaque mouvement) : discrètes
 		RepPerfect = { id = "rbxassetid://18448089848", volume = 0.4 }, -- « ding » + gonflement, crête 55
 		RepGood = { id = "rbxassetid://140323850218372", volume = 0.34 }, -- répétition réussie, crête 64
 		RepMiss = { id = "rbxassetid://109359226723492", volume = 0.14 }, -- ratée (« pfff » comique), crête 145
 		-- Toucher d'une case du menu (D124) : le son de répétition réussie, plus aigu et très bas (❓ à régler à l'oreille)
-		UiTap = { id = "rbxassetid://140323850218372", volume = 0.12, pitch = 1.35 },
-		MentorSay = { id = "rbxassetid://72467819049463", volume = 0.34 }, -- le mentor parle (« hmm »), crête 53
+		UiTap = { id = "rbxassetid://140323850218372", volume = 0.12, steady = true, pitch = 1.35 },
+		MentorSay = { id = "rbxassetid://72467819049463", volume = 0.34, steady = true }, -- le mentor parle (« hmm »), crête 53
 		-- Récompenses : nettes
-		SeriesEnd = { id = "rbxassetid://9045129322", volume = 0.11 }, -- fin de série, crête 336
+		SeriesEnd = { id = "rbxassetid://9045129322", volume = 0.11, steady = true }, -- fin de série, crête 336
 		HelpDone = { id = "rbxassetid://134810204798705", volume = 0.3 }, -- aide réussie (cha-ching), crête 125
 		Purchase = { id = "rbxassetid://134810204798705", volume = 0.3 }, -- achat à la boutique, crête 125
 		-- Jingles : les plus forts (la musique baisse en même temps)
-		StageUp = { id = "rbxassetid://9042409054", volume = 0.2 }, -- transformation (fanfare), crête 218
-		BossVictory = { id = "rbxassetid://1836860398", volume = 0.078 }, -- Mog-off gagné, crête 542
-		BossDefeat = { id = "rbxassetid://190705984", volume = 0.1 }, -- Mog-off perdu (trombone triste), crête 402
+		StageUp = { id = "rbxassetid://9042409054", volume = 0.2, steady = true }, -- transformation (fanfare), crête 218
+		BossVictory = { id = "rbxassetid://1836860398", volume = 0.078, steady = true }, -- Mog-off gagné, crête 542
+		BossDefeat = { id = "rbxassetid://190705984", volume = 0.1, steady = true }, -- Mog-off perdu (trombone triste), crête 402
 		-- Combat du Dieu du Pump au Colisée (D93). Sons de la boutique Roblox (gratuits, vérifiés dans Studio : ils se
 		-- chargent). Volumes de départ à régler à l'oreille (❓) : pas encore mesurés avec PlaybackLoudness.
 		PumpGodWarn = { id = "rbxassetid://9117060349", volume = 0.12 }, -- nouvelle zone (bip court, Pro Sound Effects)
@@ -75,6 +81,8 @@ return {
 		Sfx = 1, -- volume général des effets
 		Duck = 0.35, -- part du volume de la musique gardée pendant un jingle
 	},
+	-- Variation aléatoire de chaque effet (± part de la hauteur et du volume), sauf les sons marqués steady (D126)
+	Jitter = { Pitch = 0.05, Volume = 0.1 },
 	-- Les répétitions réussies d'affilée jouent un peu plus aigu (on entend le combo monter), sans devenir criardes
 	ComboPitch = { Step = 0.02, MaxStreak = 15 },
 	Timing = {
