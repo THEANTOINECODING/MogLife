@@ -14,6 +14,7 @@ local BodyPieces = require(ReplicatedStorage.Shared.Config.BodyPieces)
 local LookConfig = require(ReplicatedStorage.Shared.Config.Look)
 local StyleItems = require(ReplicatedStorage.Shared.Config.StyleItems)
 local StylePieces = require(ReplicatedStorage.Shared.Config.StylePieces)
+local StyleSets = require(ReplicatedStorage.Shared.Config.StyleSets)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 
 export type LookData = {
@@ -36,7 +37,9 @@ export type Piece = {
 	part: string, -- partie R15 à laquelle la pièce est soudée
 	offset: Vector3, -- décalage par rapport au centre de cette partie, au repos
 	tint: string?, -- "Skin", "Hair", "Eyes", "Top", "Shorts" ou nil (couleurs de la texture) ; "Deco" : décoration
-	-- d'une tenue (D122), couleurs de la texture, jamais gonflée
+	-- d'une tenue (D122), couleurs de la texture, jamais gonflée ; "Glow", "GlowB" : pièce lumineuse d'une tenue Robux
+	-- (D125, Néon à la couleur de StyleSets.Glow), "GlowDeco", "GlowBDeco" : décoration lumineuse
+	glow: boolean?, -- pièce lumineuse (Néon)
 	color: Color3?, -- couleur propre de l'objet (coupe ou barbe achetée), à la place de la teinte (D102)
 	key: string, -- nom de la pièce sans le corps (<Partie>[_<Groupe>]) : sa jumelle dans un autre corps a le même
 	item: string?, -- objet de style (nil pour le corps)
@@ -190,6 +193,37 @@ function Look.Tint(part: BasePart, color: Color3, flat: boolean?)
 	end
 end
 
+-- D125 : teintes des pièces de tenue. "Deco" et "GlowDeco"/"GlowBDeco" : décorations jamais gonflées par le pump ;
+-- "Glow"/"GlowB" et leurs décorations : pièces lumineuses (Néon).
+function Look.IsDeco(tint: string?): boolean
+	return tint ~= nil and string.sub(tint, -4) == "Deco"
+end
+
+function Look.IsGlow(tint: string?): boolean
+	return tint ~= nil and string.sub(tint, 1, 4) == "Glow"
+end
+
+-- Couleur d'une pièce lumineuse : celle de l'ensemble (StyleSets.Glow), A ou B
+function Look.GlowColor(itemId: string, tint: string?): Color3?
+	if not Look.IsGlow(tint) then
+		return nil
+	end
+	local item = StyleItems[itemId]
+	local colors = item and item.setId and StyleSets.Glow[item.setId]
+	if not colors then
+		return nil
+	end
+	return if string.sub(tint :: string, 1, 5) == "GlowB" then colors[2] else colors[1]
+end
+
+-- Pièce lumineuse : Néon uni, sans ombre (le Bloom de Lighting la fait rayonner)
+function Look.Glow(part: BasePart)
+	part.Material = Enum.Material.Neon
+	part.CastShadow = false
+	-- repère pour SignatureFxController : ces pièces « respirent » (StyleSets.Signature[...].pulse)
+	part:SetAttribute("Glow", true)
+end
+
 -- Corps à porter : <Stade> ou <Stade>F. Si le corps féminin n'est pas importé, on garde le masculin.
 function Look.BodyKey(stageId: string, look: LookData?, bodies: Instance?): string
 	if look and look.Gender == "F" then
@@ -279,7 +313,8 @@ function Look.Pieces(bodyKey: string, look: LookData, items: { string }, options
 					part = part,
 					offset = offset,
 					tint = if ownColor and split[2] == "Hair" then nil else split[2],
-					color = if split[2] == "Hair" then ownColor else nil,
+					color = if split[2] == "Hair" then ownColor else Look.GlowColor(itemId, split[2]),
+					glow = Look.IsGlow(split[2]),
 					key = key,
 					item = itemId,
 				})

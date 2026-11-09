@@ -21,6 +21,7 @@ Ce dossier est la source de vérité du jeu. Un fichier = un sujet.
 | [PROPOSITION_CORPS_V2.md](PROPOSITION_CORPS_V2.md) | Nouveau corps du joueur proposé (prototype, ❓ à choisir) | Avant de toucher aux corps |
 | [ANALYSE_VIRALE_2026-11-03.md](ANALYSE_VIRALE_2026-11-03.md) | Bons et mauvais points pour un jeu viral, solutions proposées | Avant de choisir les prochaines étapes |
 | [RECHERCHE_MENUS_2026-11-09.md](RECHERCHE_MENUS_2026-11-09.md) | Menus et HUD des jeux Roblox les plus joués, règles retenues | Avant de toucher à l'interface |
+| [RECHERCHE_TENUES_2026-11-09.md](RECHERCHE_TENUES_2026-11-09.md) | Ce qui fait vendre une tenue payante (silhouette, lumière, aura, mise en scène) | Avant de créer ou retoucher une tenue Robux |
 | [DECISIONS.md](DECISIONS.md) | Journal des décisions et de leurs raisons | On se demande « pourquoi on a fait ça ? » |
 | [IDEES.md](IDEES.md) | Idées en attente | On a une nouvelle idée |
 

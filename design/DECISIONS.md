@@ -2,6 +2,36 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-09 (Demande d'Antoine : « refait les tenues payante entièrement… beaucoup plus qualitative, cool et stylé, aussi rajoute une tenue Démon des enfer qui sera payante »)
+
+- **D125 — Les 8 tenues Robux sont refaites de zéro, avec lumière, aura en couches et mise en scène propres, plus une nouvelle tenue Démon des Enfers.** Recherche dans `RECHERCHE_TENUES_2026-11-09.md`.
+  - **Divergence assumée** : les modèles des 7 tenues D121/D122/D123 sont remplacés, pas retouchés. Leurs identifiants ne changent pas : les joueurs qui les possèdent les gardent.
+  - **Modèles** : nouveau `tools/blender/premium_looks.py`, appelé par `outfit_looks.py`. Une silhouette forte par tenue :
+    - **Empereur cosmique** : couronne d'étoiles, épaulières à anneaux de planète, cape étoilée doublée d'or ;
+    - **Titan d'or** : cuirasse d'or sur obsidienne, coutures de lave, épaulières à cornes, casque-couronne ;
+    - **Fantôme néon** : capuche, visière lumineuse, X et chevrons néon cyan et magenta ;
+    - **Dragon** : ailes ouvertes, crête, cornes, queue au cœur de braise, griffes ;
+    - **Soleil éternel** : pectoral de pharaon, cœur solaire, auréole à 16 rayons, diadème ;
+    - **Mecha-Mogger** : plaques blanches, lignes cyan, réacteur dorsal, casque ouvert, antennes ; le défaut D123 (épaules devant le visage) est corrigé dans l'aperçu Blender ;
+    - **Statue de marbre** : toge, fissures d'or (kintsugi), couronne de laurier, jambières en colonne ;
+    - **Démon des Enfers** (nouvelle, Game Pass `InfernalDemon`, 0 tant qu'Antoine ne l'a pas créé) : armure cramoisie et obsidienne, fissures de magma, cornes de bélier, ailes déchirées, queue en fouet, griffes.
+  - **Pièces lumineuses** : nouvelles teintes `Glow`, `GlowB`, `GlowDeco`, `GlowBDeco`.
+    - Elles sont en Néon, à la couleur de la tenue (`StyleSets.Glow`).
+    - Un liseré posé sur un vêtement suit sa surface quand le joueur gonfle (`BodyService`).
+    - Elles respirent (`Signature.pulse`) et s'embrasent pendant l'entrée en scène et la victoire (`SignatureFx.GlowFlare`).
+  - **Aura** (`StyleSets.Auras`, `OutfitFxController`), vue par tous :
+    - 3 ou 4 couches de particules par tenue (braises, fumée, étoiles, anneau au sol…) et une lumière colorée ;
+    - coupée au-delà de 160 studs (téléphones).
+  - **Mise en scène** (`SignatureFxController`, `Motion.Stances`) : les 4 tenues qui n'en avaient pas reçoivent une entrée, une victoire, un effet au repos et une attitude.
+    - Cosmique : portail d'étoiles, supernova, étoile filante.
+    - Titan : fontaine de métal en fusion, coup de poing au sol, gouttes de lave.
+    - Néon : chargement d'hologramme, égaliseur, bug d'affichage.
+    - Démon : portail des Enfers, six geysers de feu, fumée par les naseaux.
+  - **Poids** : 242 pièces de tenues Robux par corps (avant : 82), soit **6 706 pièces de style** au total (avant : 4 466). Le chargement à la demande reste une piste (non commencée).
+  - **Statut** : export Blender fait et aperçu rendu (`assets/export/characters/premium_preview.png`) ; stylua et selene sans erreur.
+    - **Pas encore testé dans Studio** : import de `MogLife_Wardrobe.fbx` par Antoine, puis `install_characters`, puis activation de `StylePieces`.
+    - `validate_style.py` n'a pas été relancé : il lit `wardrobe.blend`, qui n'a pas été réenregistré.
+
 ## 2026-11-09 (Demande d'Antoine : « je n'aime pas le menu », se renseigner à fond sur les menus qui marchent et refaire le nôtre dans le même style)
 
 - **D124 — Nouveau menu et nouveau HUD, dans le style des jeux Roblox les plus joués** (recherche complète dans `RECHERCHE_MENUS_2026-11-09.md`). Remplace le rond ☰ et son tiroir de D96 : aucun des jeux observés (Steal an Egg, Steal a Brainrot, Gym League, Pet Simulator 99, Blox Fruits) ne cache sa navigation derrière un bouton.

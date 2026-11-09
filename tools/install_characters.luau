@@ -32,8 +32,8 @@ for _, part in imported:GetDescendants() do
 		styleAppearance = styleAppearance or part:FindFirstChildOfClass("SurfaceAppearance")
 	end
 end
-if styleCount ~= 4466 then
-	warn(`[install_characters] Import incomplet : {styleCount} pièces de style sur 4466. Rien n'a été remplacé.`)
+if styleCount ~= 6706 then
+	warn(`[install_characters] Import incomplet : {styleCount} pièces de style sur 6706. Rien n'a été remplacé.`)
 	return
 end
 if styleCount > 0 and styleTexture == "" and not styleAppearance then

@@ -39,7 +39,8 @@ local function place(
 	parent: Instance,
 	whiten: boolean,
 	color: Color3?,
-	flat: boolean?
+	flat: boolean?,
+	glow: boolean?
 )
 	if not template or not template:IsA("BasePart") then
 		return
@@ -52,6 +53,9 @@ local function place(
 	clone.CFrame = cframe
 	if color and not whiten then
 		Look.Tint(clone, color, flat) -- voile en Overlay (D119)
+	end
+	if glow and not whiten then
+		Look.Glow(clone) -- D125 : pièce lumineuse d'une tenue Robux
 	end
 	if whiten and clone:IsA("MeshPart") then
 		clone.TextureID = ""
@@ -98,7 +102,8 @@ function Outfit.Build(stage: string, items: { string }, options: Options?): Mode
 			model,
 			whiten and isBody,
 			color,
-			entry.tint == "Hair" or entry.color ~= nil
+			entry.tint == "Hair" or entry.color ~= nil,
+			entry.glow
 		)
 	end
 	model.WorldPivot = CFrame.new()

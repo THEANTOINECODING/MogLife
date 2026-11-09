@@ -12,5 +12,6 @@ return {
 		EternalSun = 0,
 		MechaMogger = 0,
 		MarbleStatue = 0,
+		InfernalDemon = 0,
 	},
 }

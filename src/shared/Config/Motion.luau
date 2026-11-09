@@ -85,5 +85,13 @@ return {
 		Mecha = { waist = { 2, 0 }, neck = { 0, 0 }, arms = 6, hip = 0, breath = 0.25, scan = 22, scanEvery = 1.1 },
 		-- Statue : contrapposto (bassin basculé, tête tournée), immobile comme du marbre
 		Marble = { waist = { 3, -8 }, neck = { 4, 18 }, arms = 5, hip = 4, breath = 0.15, sway = 0, swayRate = 0 },
+		-- D125 : Empereur cosmique : port de tête royal, lévite presque, lent balancement
+		Cosmic = { waist = { 5, 0 }, neck = { 7, 0 }, arms = 10, hip = 0, breath = 0.6, sway = 6, swayRate = 0.08 },
+		-- Titan d'or : massif, épaules en avant, respiration lourde de forge
+		Molten = { waist = { -3, 0 }, neck = { -2, 0 }, arms = 16, hip = 0, breath = 1.8, sway = 0, swayRate = 0 },
+		-- Fantôme néon : déhanché, tête qui glitche par à-coups
+		Neon = { waist = { 0, 10 }, neck = { 3, -12 }, arms = 4, hip = 5, breath = 0.5, scan = 10, scanEvery = 0.7 },
+		-- Démon : voûté, menaçant, tête qui rôde, respiration lourde
+		Demon = { waist = { -9, 0 }, neck = { -4, 0 }, arms = 14, hip = 0, breath = 2, sway = 10, swayRate = 0.12 },
 	},
 }

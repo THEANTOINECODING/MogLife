@@ -3,6 +3,10 @@
 -- - entrée en scène quand il enfile la tenue, réapparaît, ou entre en combat (Remotes.OutfitShow « Entrance ») ;
 -- - effet de victoire pendant sa pose de célébration (Remotes.EmotePlay, célébration) : le Dragon crache du feu, le
 --   Soleil éclate en rayons, le Mecha allume ses réacteurs, la Statue se change en marbre couronné de laurier ;
+--   D125 : l'Empereur cosmique fait une supernova, le Titan d'or frappe le sol, le Fantôme néon lance un égaliseur,
+--   le Démon fait jaillir les Enfers ;
+-- - les pièces lumineuses (Néon, attribut Glow) respirent (Signature.pulse) et s'embrasent pendant l'entrée en scène
+--   et la victoire (SignatureFx.GlowFlare) ;
 -- - de temps en temps à l'arrêt, un petit effet (fumée, pulsation, balayage, reflet). Son attitude au repos est dans
 --   MotionController ; l'aura (particules et lumière) dans OutfitFxController.
 -- Purement visuel, calculé chez chaque joueur ; le réglage « effets de tenue » (OutfitFx) masque tout.
@@ -33,6 +37,9 @@ type State = {
 	points: { Attachment },
 	stillSince: number,
 	nextIdle: number,
+	glow: { BasePart },
+	glowScan: number,
+	flareUntil: number,
 }
 
 local states: { [Player]: State } = {}
@@ -357,6 +364,173 @@ function entrances.Marble(character: Model, f: Frame, sig: Signature, time: numb
 	flash(ground, sig.glow, 4, 16, time)
 end
 
+-- D125 : Empereur cosmique, Titan d'or, Fantôme néon, Démon des Enfers
+
+function entrances.Cosmic(_character: Model, f: Frame, sig: Signature, time: number)
+	-- Un portail d'étoiles s'ouvre sous ses pieds, une pluie d'étoiles tombe sur lui, la nuit s'illumine
+	shockwave(f.feet + Vector3.new(0, 0.1, 0), Color3.fromRGB(60, 30, 140), 1, 16, time * 0.8)
+	task.delay(time * 0.15, shockwave, f.feet + Vector3.new(0, 0.15, 0), sig.color, 1, 11, time * 0.6)
+	local sky = anchorAt(f.head + Vector3.new(0, 10, 0), time + 2)
+	local rain = emitter(sky, {
+		texture = SPARKLES,
+		colors = { Color3.new(1, 1, 1), sig.glow, sig.color },
+		size = { 0.6, 0.1 },
+		lifetime = { 0.7, 1 },
+		speed = { 12, 18 },
+		spread = 18,
+		direction = Enum.NormalId.Bottom,
+		rate = 70,
+		light = 1,
+	})
+	local ground = anchorAt(f.feet + Vector3.new(0, 0.3, 0), time + 2.5)
+	burst(ground, {
+		texture = SPARKLES,
+		colors = { sig.glow, Color3.fromRGB(255, 215, 120) },
+		size = { 0.5, 0 },
+		lifetime = { 1, 1.8 },
+		speed = { 4, 10 },
+		spread = 80,
+		drag = 2,
+		light = 1,
+	}, 60)
+	burst(ground, {
+		texture = SMOKE,
+		colors = { Color3.fromRGB(110, 60, 220), Color3.fromRGB(30, 40, 160) },
+		size = { 2, 4.5 },
+		lifetime = { 1.2, 1.8 },
+		speed = { 3, 6 },
+		spread = 85,
+		drag = 2,
+		light = 0.8,
+		transparency = { 0.5, 1 },
+	}, 18)
+	flash(ground, sig.color, 7, 24, time)
+	task.delay(time * 0.5, function()
+		rain.Enabled = false
+	end)
+end
+
+function entrances.Molten(character: Model, f: Frame, sig: Signature, time: number)
+	-- Le sol se fend, une fontaine de métal en fusion jaillit, le joueur sort de la forge doré et brûlant
+	shockwave(f.feet + Vector3.new(0, 0.1, 0), Color3.fromRGB(255, 90, 10), 1, 15, time * 0.5)
+	local ground = anchorAt(f.feet + Vector3.new(0, 0.2, 0), time + 2)
+	burst(ground, {
+		texture = SPARKS,
+		colors = { Color3.fromRGB(255, 250, 200), sig.color, Color3.fromRGB(200, 40, 10) },
+		size = { 0.5, 0.1 },
+		lifetime = { 1, 1.6 },
+		speed = { 14, 24 },
+		spread = 35,
+		accel = Vector3.new(0, -30, 0),
+		light = 1,
+	}, 90)
+	local lava = emitter(ground, {
+		texture = FIRE,
+		colors = { Color3.fromRGB(255, 240, 150), sig.color, Color3.fromRGB(150, 30, 5) },
+		size = { 2, 0.4 },
+		lifetime = { 0.4, 0.7 },
+		speed = { 6, 12 },
+		spread = 30,
+		rate = 70,
+		light = 1,
+	})
+	glaze(character, GOLD, sig.glow, 0.25, time * 0.4, 0.7)
+	flash(ground, sig.glow, 7, 22, time)
+	task.delay(time * 0.4, function()
+		lava.Enabled = false
+	end)
+end
+
+function entrances.Neon(character: Model, f: Frame, sig: Signature, time: number)
+	-- Il « charge » comme un hologramme : clignote en cyan et magenta, deux plans de scan le traversent
+	local torso = partOf(character, "UpperTorso")
+	task.spawn(function()
+		for index = 1, 5 do
+			local color = if index % 2 == 0 then sig.glow else sig.color
+			glaze(character, color, color, 0.35, 0.03, 0.06)
+			if torso then
+				flash(torso, color, 5, 16, 0.1)
+			end
+			task.wait(time * 0.08)
+		end
+	end)
+	for index, color in { sig.color, sig.glow } do
+		local plane = fxPart({
+			Size = Vector3.new(f.height * 1.2, 0.08, f.height * 1.2),
+			CFrame = CFrame.new(if index == 1 then f.head + Vector3.new(0, 0.8, 0) else f.feet),
+			Color = color,
+			Transparency = 0.35,
+		})
+		local goal = if index == 1 then f.feet else f.head + Vector3.new(0, 0.8, 0)
+		fade(plane, time * 0.5, { Position = goal }, Enum.EasingStyle.Sine)
+		task.delay(time * 0.5, function()
+			fade(plane, 0.2, { Transparency = 1 })
+			task.wait(0.2)
+			plane:Destroy()
+		end)
+	end
+	local point = anchorAt(f.chest, time + 1.5)
+	burst(point, {
+		texture = "rbxasset://textures/particles/SquareParticle.png",
+		colors = { sig.color, sig.glow },
+		size = { 0.35, 0 },
+		lifetime = { 0.4, 0.9 },
+		speed = { 8, 16 },
+		drag = 3,
+		light = 1,
+	}, 60)
+	shockwave(f.feet + Vector3.new(0, 0.1, 0), sig.glow, 1, 12, time * 0.5)
+end
+
+function entrances.Demon(character: Model, f: Frame, sig: Signature, time: number)
+	-- Les Enfers s'ouvrent : cercle de feu au sol, colonne de flammes, fumée noire, il en sort rouge braise
+	local portal = disc(f.feet + Vector3.new(0, 0.08, 0), 1, Color3.fromRGB(25, 0, 0), 0.1)
+	fade(portal, time * 0.3, { Size = Vector3.new(0.12, f.height * 1.6, f.height * 1.6) }, Enum.EasingStyle.Back)
+	task.delay(time, function()
+		fade(portal, 0.5, { Transparency = 1 })
+		task.wait(0.5)
+		portal:Destroy()
+	end)
+	shockwave(f.feet + Vector3.new(0, 0.12, 0), sig.color, 1, 18, time * 0.6)
+	local ground = anchorAt(f.feet + Vector3.new(0, 0.2, 0), time + 2.5)
+	local pillar = emitter(ground, {
+		texture = FIRE,
+		colors = { Color3.fromRGB(255, 200, 80), sig.color, Color3.fromRGB(80, 0, 0) },
+		size = { 2.6, 0.5 },
+		lifetime = { 0.5, 0.9 },
+		speed = { 14, 22 },
+		spread = 18,
+		rate = 120,
+		light = 0.9,
+	})
+	burst(ground, {
+		texture = SMOKE,
+		colors = { Color3.fromRGB(40, 15, 10), Color3.fromRGB(5, 0, 0) },
+		size = { 2.5, 5 },
+		lifetime = { 1.4, 2.2 },
+		speed = { 4, 8 },
+		spread = 70,
+		accel = Vector3.new(0, 3, 0),
+		drag = 1.5,
+		light = 0,
+		transparency = { 0.25, 1 },
+	}, 26)
+	burst(ground, {
+		texture = SPARKS,
+		colors = { Color3.fromRGB(255, 170, 50), sig.color },
+		size = { 0.4, 0 },
+		lifetime = { 1, 1.6 },
+		speed = { 10, 18 },
+		spread = 60,
+		accel = Vector3.new(0, -10, 0),
+	}, 70)
+	glaze(character, Color3.fromRGB(120, 0, 0), sig.glow, 0.4, time * 0.45, 0.6)
+	flash(ground, sig.color, 9, 26, time)
+	task.delay(time * 0.45, function()
+		pillar.Enabled = false
+	end)
+end
+
 local function playEntrance(owner: Player)
 	local state = states[owner]
 	if not state or not enabled() or not near(state.character) then
@@ -366,6 +540,7 @@ local function playEntrance(owner: Player)
 	local play = entrances[state.signature.style]
 	if f and play then
 		SignatureFxController.Played.Entrance += 1
+		state.flareUntil = os.clock() + state.signature.entrance
 		play(state.character, f, state.signature, state.signature.entrance)
 	end
 end
@@ -563,6 +738,179 @@ function victories.Marble(character: Model, f: Frame, sig: Signature, time: numb
 	flash(point, sig.glow, 4, 16, time)
 end
 
+-- D125 : Empereur cosmique, Titan d'or, Fantôme néon, Démon des Enfers
+
+function victories.Cosmic(_character: Model, f: Frame, sig: Signature, time: number)
+	-- Supernova : une sphère d'étoiles grossit dans sa poitrine puis explose en anneaux et en poussière d'étoiles
+	local core = fxPart({
+		Shape = Enum.PartType.Ball,
+		Size = Vector3.new(0.5, 0.5, 0.5),
+		Position = f.chest,
+		Color = sig.glow,
+		Transparency = 0.1,
+	})
+	fade(core, time * 0.3, { Size = Vector3.new(3, 3, 3) }, Enum.EasingStyle.Back)
+	task.delay(time * 0.3, function()
+		fade(core, 0.35, { Size = Vector3.new(f.height * 2.4, f.height * 2.4, f.height * 2.4), Transparency = 1 })
+		task.wait(0.35)
+		core:Destroy()
+	end)
+	task.delay(time * 0.3, function()
+		local point = anchorAt(f.chest, 3)
+		burst(point, {
+			texture = SPARKLES,
+			colors = { Color3.new(1, 1, 1), sig.glow, sig.color },
+			size = { 0.8, 0 },
+			lifetime = { 1.2, 2 },
+			speed = { 10, 20 },
+			drag = 2.5,
+			light = 1,
+		}, 120)
+		burst(point, {
+			texture = SMOKE,
+			colors = { Color3.fromRGB(130, 70, 240), Color3.fromRGB(30, 40, 170) },
+			size = { 2, 6 },
+			lifetime = { 1.2, 2 },
+			speed = { 6, 10 },
+			drag = 2,
+			light = 0.8,
+			transparency = { 0.45, 1 },
+		}, 24)
+		flash(point, sig.color, 10, 30, time * 0.7)
+		-- deux anneaux inclinés, comme une orbite
+		for index, tilt in { 25, -25 } do
+			local ring = disc(f.chest, 1, if index == 1 then sig.glow else Color3.fromRGB(255, 215, 120), 0.2)
+			ring.CFrame = CFrame.new(f.chest) * CFrame.Angles(math.rad(tilt), 0, math.rad(90))
+			fade(ring, time * 0.5, { Size = Vector3.new(0.05, f.height * 3, f.height * 3), Transparency = 1 })
+			task.delay(time * 0.5, function()
+				ring:Destroy()
+			end)
+		end
+		shockwave(f.feet + Vector3.new(0, 0.1, 0), sig.color, 2, 20, time * 0.6)
+	end)
+end
+
+function victories.Molten(character: Model, f: Frame, sig: Signature, time: number)
+	-- Coup de poing au sol : deux ondes de lave, éclaboussures de métal en fusion, il brille comme de l'or
+	shockwave(f.feet + Vector3.new(0, 0.1, 0), Color3.fromRGB(255, 100, 10), 2, 22, time * 0.5)
+	task.delay(0.2, shockwave, f.feet + Vector3.new(0, 0.15, 0), sig.glow, 1, 14, time * 0.45)
+	local ground = anchorAt(f.feet + Vector3.new(0, 0.3, 0), time + 2)
+	burst(ground, {
+		texture = SPARKS,
+		colors = { Color3.fromRGB(255, 250, 210), sig.color, Color3.fromRGB(180, 40, 5) },
+		size = { 0.6, 0.1 },
+		lifetime = { 1.2, 1.8 },
+		speed = { 16, 28 },
+		spread = 55,
+		accel = Vector3.new(0, -35, 0),
+		light = 1,
+	}, 140)
+	burst(ground, {
+		texture = FIRE,
+		colors = { Color3.fromRGB(255, 230, 140), sig.color },
+		size = { 3, 0.5 },
+		lifetime = { 0.5, 0.8 },
+		speed = { 6, 10 },
+		spread = 90,
+		light = 1,
+	}, 40)
+	glaze(character, GOLD, sig.color, 0.15, time * 0.5, 0.8)
+	flash(ground, sig.glow, 9, 26, time)
+end
+
+function victories.Neon(character: Model, f: Frame, sig: Signature, time: number)
+	-- Égaliseur : un cercle de barres néon qui montent et descendent au rythme, il clignote en couleurs
+	local count = 12
+	local bars = {}
+	for index = 1, count do
+		local angle = (index / count) * math.pi * 2
+		local base = f.feet + Vector3.new(math.cos(angle), 0, math.sin(angle)) * f.height * 0.75
+		local bar = fxPart({
+			Size = Vector3.new(0.25, 0.1, 0.25),
+			CFrame = CFrame.new(base),
+			Color = if index % 2 == 0 then sig.color else sig.glow,
+			Transparency = 0.1,
+		})
+		table.insert(bars, { part = bar, base = base, phase = index * 0.7 })
+	end
+	local start = os.clock()
+	task.spawn(function()
+		while os.clock() - start < time do
+			local t = os.clock() - start
+			for _, bar in bars do
+				local h = 0.3 + f.height * 0.9 * math.abs(math.sin(t * 7 + bar.phase))
+				bar.part.Size = Vector3.new(0.25, h, 0.25)
+				bar.part.Position = bar.base + Vector3.new(0, h / 2, 0)
+			end
+			task.wait()
+		end
+		for _, bar in bars do
+			fade(bar.part, 0.25, { Transparency = 1 })
+			task.delay(0.25, function()
+				bar.part:Destroy()
+			end)
+		end
+	end)
+	task.spawn(function()
+		for index = 1, 6 do
+			local color = if index % 2 == 0 then sig.glow else sig.color
+			glaze(character, color, color, 0.5, 0.05, 0.1)
+			task.wait(time / 7)
+		end
+	end)
+	local point = anchorAt(f.chest, time + 1.5)
+	burst(point, {
+		texture = "rbxasset://textures/particles/SquareParticle.png",
+		colors = { sig.color, sig.glow },
+		size = { 0.4, 0 },
+		lifetime = { 0.6, 1.2 },
+		speed = { 8, 18 },
+		drag = 2,
+		light = 1,
+	}, 80)
+	flash(point, sig.color, 7, 22, time)
+end
+
+function victories.Demon(character: Model, f: Frame, sig: Signature, time: number)
+	-- Éruption des Enfers : six geysers de feu jaillissent autour de lui, onde rouge, fumée noire
+	shockwave(f.feet + Vector3.new(0, 0.1, 0), sig.color, 2, 24, time * 0.6)
+	for index = 1, 6 do
+		local angle = (index / 6) * math.pi * 2
+		local spot = f.feet + Vector3.new(math.cos(angle), 0, math.sin(angle)) * f.height * 0.9
+		task.delay(index * 0.06, function()
+			local point = anchorAt(spot + Vector3.new(0, 0.2, 0), time + 1.5)
+			local geyser = emitter(point, {
+				texture = FIRE,
+				colors = { Color3.fromRGB(255, 210, 90), sig.color, Color3.fromRGB(70, 0, 0) },
+				size = { 1.8, 0.3 },
+				lifetime = { 0.5, 0.8 },
+				speed = { 14, 22 },
+				spread = 10,
+				rate = 60,
+				light = 0.9,
+			})
+			task.delay(time * 0.6, function()
+				geyser.Enabled = false
+			end)
+		end)
+	end
+	local ground = anchorAt(f.feet + Vector3.new(0, 0.5, 0), time + 2.5)
+	burst(ground, {
+		texture = SMOKE,
+		colors = { Color3.fromRGB(40, 12, 8), Color3.fromRGB(5, 0, 0) },
+		size = { 3, 6 },
+		lifetime = { 1.5, 2.4 },
+		speed = { 5, 10 },
+		spread = 80,
+		accel = Vector3.new(0, 3, 0),
+		drag = 1.5,
+		light = 0,
+		transparency = { 0.3, 1 },
+	}, 30)
+	glaze(character, Color3.fromRGB(140, 0, 0), sig.glow, 0.35, time * 0.5, 0.7)
+	flash(ground, sig.color, 10, 30, time)
+end
+
 local function playVictory(owner: Player)
 	local state = states[owner]
 	if not state or not enabled() or not near(state.character) then
@@ -572,6 +920,7 @@ local function playVictory(owner: Player)
 	local play = victories[state.signature.style]
 	if f and play then
 		SignatureFxController.Played.Victory += 1
+		state.flareUntil = os.clock() + 0.25 + FX.VictoryTime
 		-- Laisser au personnage le temps de prendre la pose
 		task.delay(0.25, play, state.character, f, state.signature, FX.VictoryTime)
 	end
@@ -652,11 +1001,163 @@ function idles.Marble(character: Model, f: Frame, sig: Signature)
 	}, 6)
 end
 
+-- D125 : Empereur cosmique, Titan d'or, Fantôme néon, Démon des Enfers
+
+function idles.Cosmic(_character: Model, f: Frame, sig: Signature)
+	-- Une étoile filante passe au-dessus de sa tête
+	local from = f.head + Vector3.new(-4, 3, 0)
+	local star = fxPart({
+		Shape = Enum.PartType.Ball,
+		Size = Vector3.new(0.3, 0.3, 0.3),
+		Position = from,
+		Color = sig.glow,
+	})
+	local a0 = Instance.new("Attachment")
+	a0.Position = Vector3.new(0, 0.12, 0)
+	a0.Parent = star
+	local a1 = Instance.new("Attachment")
+	a1.Position = Vector3.new(0, -0.12, 0)
+	a1.Parent = star
+	local trail = Instance.new("Trail")
+	trail.Attachment0 = a0
+	trail.Attachment1 = a1
+	trail.Color = ColorSequence.new(sig.glow, sig.color)
+	trail.Transparency = NumberSequence.new(0, 1)
+	trail.Lifetime = 0.35
+	trail.LightEmission = 1
+	trail.Parent = star
+	fade(star, 0.9, { Position = f.head + Vector3.new(4, 1.5, 0), Transparency = 1 }, Enum.EasingStyle.Linear)
+	task.delay(1.3, function()
+		star:Destroy()
+	end)
+end
+
+function idles.Molten(character: Model, f: Frame, sig: Signature)
+	-- Quelques gouttes de métal en fusion tombent de ses épaules, une bouffée de chaleur
+	local torso = partOf(character, "UpperTorso")
+	if not torso then
+		return
+	end
+	for _, sx in { -1, 1 } do
+		local shoulder = attach(torso, CFrame.new(sx * torso.Size.X * 0.55, torso.Size.Y * 0.4, 0), 2)
+		burst(shoulder, {
+			texture = SPARKS,
+			colors = { Color3.fromRGB(255, 240, 160), sig.color },
+			size = { 0.25, 0.05 },
+			lifetime = { 0.6, 1 },
+			speed = { 1, 3 },
+			spread = 40,
+			accel = Vector3.new(0, -20, 0),
+			light = 1,
+		}, 5)
+	end
+	flash(torso, sig.glow, 3, 12, 0.8)
+	shockwave(f.feet + Vector3.new(0, 0.1, 0), sig.color, 1, 5, 0.6)
+end
+
+function idles.Neon(character: Model, _f: Frame, sig: Signature)
+	-- Petit bug d'affichage : il clignote une fois, quelques pixels s'échappent
+	glaze(character, sig.glow, sig.color, 0.55, 0.04, 0.08)
+	local torso = partOf(character, "UpperTorso")
+	if torso then
+		local point = attach(torso, CFrame.new(), 2)
+		burst(point, {
+			texture = "rbxasset://textures/particles/SquareParticle.png",
+			colors = { sig.color, sig.glow },
+			size = { 0.2, 0 },
+			lifetime = { 0.3, 0.6 },
+			speed = { 3, 6 },
+			light = 1,
+		}, 12)
+	end
+end
+
+function idles.Demon(character: Model, _f: Frame, sig: Signature)
+	-- Il souffle de la fumée noire et des braises par les naseaux, ses yeux s'allument en rouge
+	local head = partOf(character, "Head")
+	if not head then
+		return
+	end
+	local nose = attach(head, CFrame.new(0, -head.Size.Y * 0.05, -head.Size.Z * 0.55), 3)
+	burst(nose, {
+		texture = SMOKE,
+		colors = { Color3.fromRGB(50, 25, 20), Color3.fromRGB(10, 5, 5) },
+		size = { 0.4, 1.6 },
+		lifetime = { 1, 1.6 },
+		speed = { 1.5, 3 },
+		spread = 20,
+		direction = Enum.NormalId.Front,
+		accel = Vector3.new(0, 2.5, 0),
+		light = 0,
+		transparency = { 0.3, 1 },
+	}, 7)
+	burst(nose, {
+		texture = SPARKS,
+		colors = { Color3.fromRGB(255, 160, 40), sig.color },
+		size = { 0.18, 0 },
+		lifetime = { 0.6, 1 },
+		speed = { 2, 4 },
+		spread = 40,
+		direction = Enum.NormalId.Front,
+	}, 8)
+	flash(head, sig.color, 4, 10, 0.9)
+end
+
 -- ------------------------------------------------------------------ suivi des joueurs
+
+-- Couleur d'origine d'une pièce lumineuse (gardée dans un attribut local : la pulsation change sa couleur)
+local function glowBase(part: BasePart): Color3
+	local base = part:GetAttribute("GlowBase")
+	if typeof(base) == "Color3" then
+		return base
+	end
+	part:SetAttribute("GlowBase", part.Color)
+	return part.Color
+end
+
+local function restoreGlow(state: State)
+	for _, part in state.glow do
+		if part.Parent then
+			part.Color = glowBase(part)
+		end
+	end
+end
+
+-- Pièces lumineuses de la tenue (refaites par le serveur quand le corps change : on les recherche chaque seconde)
+local function scanGlow(state: State, now: number)
+	if now < state.glowScan then
+		return
+	end
+	state.glowScan = now + 1
+	table.clear(state.glow)
+	for _, part in state.character:GetDescendants() do
+		if part:IsA("BasePart") and part:GetAttribute("Glow") then
+			glowBase(part)
+			table.insert(state.glow, part)
+		end
+	end
+end
+
+-- Respiration : plus sombre au creux, plus blanc pendant l'entrée en scène et la victoire
+local function pulseGlow(state: State, now: number)
+	scanGlow(state, now)
+	local pulse = state.signature.pulse
+	local level = pulse[1] + (pulse[2] - pulse[1]) * (0.5 + 0.5 * math.sin(now * 2 * math.pi / pulse[3]))
+	if now < state.flareUntil then
+		level = FX.GlowFlare
+	end
+	for _, part in state.glow do
+		local base = glowBase(part)
+		part.Color = if level >= 1
+			then base:Lerp(Color3.new(1, 1, 1), math.min((level - 1) * 0.6, 0.6))
+			else base:Lerp(Color3.new(0, 0, 0), (1 - level) * 0.6)
+	end
+end
 
 local function clear(owner: Player)
 	local state = states[owner]
 	if state then
+		restoreGlow(state)
 		states[owner] = nil
 		for _, point in state.points do
 			point:Destroy()
@@ -714,6 +1215,9 @@ local function refresh(owner: Player, entrance: boolean)
 		points = points,
 		stillSince = os.clock(),
 		nextIdle = os.clock() + FX.IdleAfter + sig.idleEvery,
+		glow = {},
+		glowScan = 0,
+		flareUntil = 0,
 	}
 	if entrance then
 		task.delay(0.3, playEntrance, owner)
@@ -746,6 +1250,9 @@ local function step()
 		local speed = Vector3.new(velocity.X, 0, velocity.Z).Magnitude
 		if state.trail then
 			state.trail.Enabled = speed >= FX.TrailMinSpeed
+		end
+		if near(character) then
+			pulseGlow(state, now)
 		end
 		if speed > 1 or owner:GetAttribute("InRun") then
 			state.stillSince = now

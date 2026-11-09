@@ -215,7 +215,7 @@ for body in BODY_KEYS:
 
 atlas = bpy.data.images["Style_Atlas"]
 assert tuple(atlas.size) == (512, 512) and atlas.channels == 4
-assert total == 4466  # D121 : + 3 tenues Robux (30 pièces par corps) ; D122 : + 4 tenues (52 pièces par corps)
+assert total == 6706  # D121 : + 3 tenues Robux ; D122 : + 4 tenues ; D125 : 8 tenues Robux refaites (242 pièces par corps)
 print(f"Clothing coverage failures: {len(coverage_failures)}")
 if coverage_failures:
     print("Failure groups:", Counter((failure[0].split("__")[0], failure[1]) for failure in coverage_failures))

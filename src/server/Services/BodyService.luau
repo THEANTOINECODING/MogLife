@@ -39,6 +39,11 @@ type Piece = {
 	growthRatio: Vector3?,
 	nextSize: Vector3?,
 	nextOffset: Vector3?,
+	key: string?, -- <objet>/<pièce> (pièces de tenue)
+	anchorKey: string?, -- D125 : pièce lumineuse posée sur ce vêtement (<objet>/<partie>)
+	anchor: Piece?,
+	pump: Vector3?, -- gonflement appliqué au dernier calcul
+	current: Vector3?, -- décalage (croissance comprise) au dernier calcul
 }
 type State = {
 	character: Model,
@@ -364,6 +369,9 @@ local function buildShell(
 			-- Cheveux et barbes : couleur unie, sans la texture. Le reste garde son voile, posé en Overlay (D119).
 			Look.Tint(clone, color, entry.tint == "Hair" or entry.color ~= nil)
 		end
+		if entry.glow then
+			Look.Glow(clone)
+		end
 		local weld = Instance.new("Weld")
 		weld.Part0 = target
 		weld.Part1 = clone
@@ -381,13 +389,32 @@ local function buildShell(
 			part = clone,
 			weld = weld,
 			-- Décoration d'une tenue (aile, auréole, queue : pièce <Partie>_Deco, D122) : jamais gonflée
-			kind = if entry.tint == "Deco" then "Deco" else kindOf(entry.part),
+			kind = if Look.IsDeco(entry.tint) then "Deco" else kindOf(entry.part),
+			-- D125 : un liseré lumineux suit la surface de son vêtement quand celui-ci gonfle (pump)
+			anchorKey = if entry.glow
+					and not Look.IsDeco(entry.tint)
+					and entry.item
+				then `{entry.item}/{entry.part}`
+				else nil,
+			key = if entry.item then `{entry.item}/{entry.key}` else nil,
 			size = template.Size,
 			offset = offset,
 			growthRatio = growthRatios[entry.part],
 			nextSize = nextSize,
 			nextOffset = nextOffset,
 		})
+	end
+	-- D125 : chaque liseré lumineux retrouve le vêtement sur lequel il est posé
+	local byKey: { [string]: Piece } = {}
+	for _, piece in pieces do
+		if piece.key then
+			byKey[piece.key] = piece
+		end
+	end
+	for _, piece in pieces do
+		if piece.anchorKey then
+			piece.anchor = byKey[piece.anchorKey]
+		end
 	end
 	shell.Parent = character
 	return pieces
@@ -449,6 +476,15 @@ local function applySizes(player: Player)
 		end
 		piece.part.Size = size * pump
 		piece.weld.C0 = CFrame.new(offset)
+		piece.pump = pump
+		piece.current = offset
+	end
+	-- Liserés lumineux : leur écart au centre du vêtement gonfle avec lui (sinon le tissu gonflé les recouvre)
+	for _, piece in state.pieces do
+		local anchor = piece.anchor
+		if anchor and anchor.current and anchor.pump and piece.current then
+			piece.weld.C0 = CFrame.new(anchor.current + (piece.current - anchor.current) * anchor.pump)
+		end
 	end
 end
 

@@ -16,3 +16,6 @@ sourcemap.json
 # Divers
 .DS_Store
 Thumbs.db
+
+# Exports FBX lourds (> 50 Mo, refusés par GitHub) : régénérés par tools/blender/build_style.py depuis wardrobe.blend
+assets/export/characters/MogLife_*.fbx

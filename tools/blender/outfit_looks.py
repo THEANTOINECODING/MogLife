@@ -40,8 +40,11 @@ LOOKS = (
     ("EternalSun", "eternal sun", (0.98, 0.74, 0.16), (1.0, 0.95, 0.80), (1.0, 0.40, 0.06), "robe", "straight", "sunburst"),
     ("MechaMogger", "mecha mogger", (0.82, 0.85, 0.90), (0.14, 0.15, 0.20), (0.10, 0.85, 1.0), "armor", "straight", "panels"),
     ("MarbleStatue", "marble statue", (0.94, 0.93, 0.90), (0.60, 0.60, 0.63), (0.95, 0.75, 0.25), "cape", "straight", "marble"),
+    # D125 : tenue Robux « Démon des Enfers » (les huit tenues Robux sont construites par premium_looks.py)
+    ("InfernalDemon", "infernal demon", (0.07, 0.045, 0.05), (0.52, 0.035, 0.045), (1.0, 0.22, 0.04), "armor", "straight", "panels"),
 )
-PREMIUM_LOOKS = ("CosmicEmperor", "GoldenTitan", "NeonPhantom", "GymDragon", "EternalSun", "MechaMogger", "MarbleStatue")
+PREMIUM_LOOKS = ("CosmicEmperor", "GoldenTitan", "NeonPhantom", "GymDragon", "EternalSun", "MechaMogger", "MarbleStatue",
+                 "InfernalDemon")  # D125 : refaites dans premium_looks.py
 SIGNATURE_LOOKS = ("GymDragon", "EternalSun", "MechaMogger", "MarbleStatue")  # D122
 FIRST_SIGNATURE = 23  # index de GymDragon dans LOOKS
 
@@ -49,6 +52,8 @@ FIRST_SIGNATURE = 23  # index de GymDragon dans LOOKS
 def paint_outfit_cells(atlas):
     """Eight 32px cells per row; new colors occupy rows 6-14 (D122 : columns 8-15 of rows 6-7)."""
     for i, (name, _, primary, secondary, accent, _, _, signature) in enumerate(LOOKS):
+        if name in PREMIUM_LOOKS:
+            continue  # D125 : leurs cases sont peintes par paint_premium_cells
         for channel, color in enumerate((primary, secondary, accent)):
             if i >= FIRST_SIGNATURE:
                 cell = (i - FIRST_SIGNATURE) * 3 + channel
@@ -98,6 +103,7 @@ def paint_outfit_cells(atlas):
                     return tuple(base[k] * 0.65 + other[k] * 0.35 for k in range(3))
                 return base
             atlas.cell(f"look_{name}_{channel}", x, y, painted)
+    paint_premium_cells(atlas)
 
 
 def _loft(rings):
@@ -332,7 +338,13 @@ def build_looks(w, body, g):
     J, cfg = g["J"], g["cfg"]
     neck, waist, root = J["Neck"], J["Waist"], J["Root"]
     chest = g["chest_w"]
+    only = globals().get("ONLY_LOOKS")
     for name, _, _, _, _, silhouette, lower, signature in LOOKS:
+        if only and name not in only:
+            continue  # aperçu rapide (preview_premium.py)
+        if name in PREMIUM_LOOKS:
+            build_premium(w, body, g, name)  # D125
+            continue
         primary, secondary, accent = (f"look_{name}_{i}" for i in range(3))
         w.start(name + "Top")
         radii, heights = _torso(w, body, g, primary, silhouette, name)
@@ -867,3 +879,8 @@ def _signature_bottom(w, body, g, name, leg_ease, cells):
                                                  low + 0.05), 0.035 + wide * 0.03, 0.035 + wide * 0.03, sides=4), secondary)
             w.make(side + "LowerLeg", ring((knee.x, knee.y, kz), out + 0.07, 0.06, 0.09, 14), accent)
             w.make(side + "LowerLeg", ring((ankle.x, ankle.y, low), wide_low + leg_ease + 0.07, 0.06, 0.09, 14), accent)
+
+
+# D125 : les huit tenues Robux refaites
+_premium_path = os.path.join(D, "premium_looks.py")
+exec(compile(open(_premium_path, encoding="utf-8").read(), _premium_path, "exec"), globals())
