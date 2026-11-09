@@ -62,7 +62,13 @@ Format : date — décision — raison. La plus récente en haut.
     - si le personnage du joueur passe malgré tout dans le champ, il s'estompe ;
     - zooms (`fovFrom`/`fovTo`), petites secousses aux moments forts et teinte d'ambiance propre à chaque secret ;
     - le plan du miroir, qui était pris par-dessus l'épaule et donc caché par le corps, est maintenant de biais (35°).
-  - **Pas encore testé dans Studio** : aucun jeu n'était ouvert dans Studio à la fin de la session. Les modèles des tenues restent à importer : `MogLife_Wardrobe.fbx`, puis `tools/install_characters.luau`, puis copier `StylePieces.pending.luau` vers `src/shared/Config/StylePieces.luau`.
+  - **Installé et vérifié dans Studio le 09/11** (son coupé) :
+    - 4 466 pièces de style dans `ReplicatedStorage.Style`, toutes en SurfaceAppearance ; `StylePieces.luau` activé ;
+    - l'import brut, resté dans Workspace, rendait le Play très lent ; il est retiré, et le jeu démarre en ≈ 4 s ;
+    - les 7 tenues Robux se montent sur les 7 stades sans pièce manquante (49 sur 49) et sont données à Antoine pour vérification ;
+    - vues portées : Dragon, Soleil, Marbre corrects ; **défaut du Mecha-Mogger : les modules d'épaule cachent le visage** (à corriger dans `outfit_looks.py`, puis réimport) ;
+    - la nouvelle interface D124 est vue à l'image sur PC : colonne, pastilles et barre du boss s'affichent comme prévu ;
+    - non vérifiés : les secrets, le tracé de Pas-Les-Jambes, et les effets d'entrée et de victoire.
 
 ## 2026-11-07 (Demande d'Antoine : secrets plus soignés, combat contre Pas-Les-Jambes, achats en Robux, tenues Robux haut de gamme)
 
