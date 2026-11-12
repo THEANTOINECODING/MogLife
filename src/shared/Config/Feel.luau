@@ -90,6 +90,10 @@ return {
 		BurstSpeedScale = 0.22, -- vitesse de l'entrée réduite pour rester dans le cadre
 		BurstGravity = 6, -- studs/s²
 		RateScale = 1, -- multiplie le débit des auras
+		Glow = 3.2, -- éclaircit les images (la lumière de l'aperçu les assombrit ; les vraies particules brillent)
+		Opacity = 2, -- renforce l'opacité, bornée à 1
+		Layers = 2, -- images superposées par particule (les textures de feu et d'étincelles sont très transparentes)
+		AuraSize = 1.4, -- agrandit les particules d'aura des articles de luxe
 	},
 
 	-- Secousse latérale de la caméra (CameraFraming.Jolt) à pleine force

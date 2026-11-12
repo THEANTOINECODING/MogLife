@@ -16,8 +16,11 @@ Format : date — décision — raison. La plus récente en haut.
       - Mecha-Mogger porté : torse, bras, jambes et pieds couleur acier ; tête et mains couleur Sand ;
       - la croix a ses 2 barres ;
       - PreviewFx avancé à la main : les particules naissent, changent de taille et de transparence, avec les bonnes textures, sans erreur ;
-    - **pas vu à l'image** : Studio était réduit (pas de rendu) ;
-    - **épaulières** : il faut réimporter `MogLife_Update.fbx`.
+    - puis, une fois `MogLife_Update.fbx` importé par Antoine (le 2026-11-12) :
+      - `StylePieces.pending` activé, `install_characters` lancé : 6 958 pièces, 24 noms coupés réparés, toutes les pièces attendues présentes et texturées ;
+      - vu en jeu : épaulières du Mecha-Mogger blanches et nettes, ailes et queue du Dragon, sous-couche de la crête ;
+      - aperçu de la boutique vu à l'image : auras, traînées, entrées et auras des tenues Robux s'affichent. Les images sont éclaircies et doublées (`Feel.ShopFx.Glow`, `Layers`), sinon elles étaient trop sombres ;
+      - les flammes (FlexFlames) restent l'effet le plus discret : leur texture est très transparente.
 
 ## 2026-11-10 (Demande d'Antoine, sans questions : « renseigne-toi sur l'économie, les animations, les effets et le son des combats, ce qui rend un jeu addictif ; review complète et solutions aux problèmes les plus importants ; derniers détails des skins payants (cape molle…) ; refais toutes les coupes et barbes 1000x plus stylées ; couleur de cheveux et barbe au choix, à tout moment, la même pour la paire »)
 

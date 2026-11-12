@@ -34,7 +34,7 @@ type Emitter = {
 
 type Particle = {
 	part: BasePart,
-	decal: Decal,
+	decals: { Decal },
 	position: Vector3,
 	velocity: Vector3,
 	accel: Vector3,
@@ -69,7 +69,10 @@ end
 local function luxuryEmitter(entry: Luxury.Entry): Emitter
 	local fx = entry.fx
 	local kind = entry.category
-	local size = if kind == "Trail" then (fx.width or 1) else fx.size
+	local size = if kind == "Trail"
+		then (fx.width or 1)
+		elseif kind == "Aura" then fx.size * TUNING.AuraSize
+		else fx.size
 	return {
 		kind = kind,
 		texture = texture(if kind == "Trail" then "" else fx.texture),
@@ -198,12 +201,16 @@ function PreviewFx:_spawn(emitter: Emitter, position: Vector3, velocity: Vector3
 		part.CastShadow = false
 		part.Transparency = 1
 		part.Size = Vector3.new(1, 1, 0.05)
-		local decal = Instance.new("Decal")
-		decal.Face = Enum.NormalId.Front
-		decal.Parent = part
+		local decals = {}
+		for _ = 1, TUNING.Layers do
+			local decal = Instance.new("Decal")
+			decal.Face = Enum.NormalId.Front
+			decal.Parent = part
+			table.insert(decals, decal)
+		end
 		particle = {
 			part = part,
-			decal = decal,
+			decals = decals,
 			position = position,
 			velocity = velocity,
 			accel = accel,
@@ -218,7 +225,9 @@ function PreviewFx:_spawn(emitter: Emitter, position: Vector3, velocity: Vector3
 	p.position, p.velocity, p.accel, p.age, p.life, p.emitter = position, velocity, accel, 0, life, emitter
 	p.flat = emitter.flat
 	p.turn = self.rng:NextNumber() * math.pi * 2
-	p.decal.Texture = emitter.texture
+	for _, decal in p.decals do
+		decal.Texture = emitter.texture
+	end
 	p.part.Parent = self.folder
 	table.insert(self.particles, p)
 end
@@ -301,8 +310,14 @@ function PreviewFx:Step(dt: number)
 		local emitter = p.emitter
 		local size = math.max(0.02, curve(emitter.size, t))
 		local colors = emitter.colors
-		p.decal.Color3 = if #colors > 1 then colors[1]:Lerp(colors[#colors], t) else colors[1]
-		p.decal.Transparency = 1 - math.clamp(curve(emitter.alpha, t), 0, 1)
+		local color = if #colors > 1 then colors[1]:Lerp(colors[#colors], t) else colors[1]
+		-- Decal.Color3 au-delà de 1 éclaircit l'image : imite la lueur (LightEmission) des vraies particules
+		local glow = Color3.new(color.R * TUNING.Glow, color.G * TUNING.Glow, color.B * TUNING.Glow)
+		local transparency = 1 - math.clamp(curve(emitter.alpha, t) * TUNING.Opacity, 0, 1)
+		for _, decal in p.decals do
+			decal.Color3 = glow
+			decal.Transparency = transparency
+		end
 		p.part.Size = Vector3.new(size, size, 0.05)
 		p.turn += dt
 		p.part.CFrame = if p.flat
