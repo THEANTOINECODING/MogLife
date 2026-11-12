@@ -1,14 +1,20 @@
 # Importer la nouvelle garde-robe dans Roblox Studio
 
+## Mise à jour D128 : capes refaites (même fichier, mêmes étapes)
+
+`MogLife_Update.fbx` contient maintenant 4 634 pièces : tenues Robux, coupes, barbes et les deux hauts à cape en Cash
+(Royal Rumble, Paper Crown). Chaque cape est découpée en 8 bandes (`UpperTorso_Cape1Deco` à `Cape8Deco`) que le jeu
+plie en chaîne. Total attendu après l'installation : **7 588** pièces de style.
+
 ## Mise à jour D126 : tenues Robux + coupes + barbes (un seul fichier)
 
-1. En mode **Edit**, importer **`MogLife_Update.fbx`** (3 864 pièces), avec `MogLife_Style.png` dans le même dossier.
+1. En mode **Edit**, importer **`MogLife_Update.fbx`** (4 634 pièces depuis D128), avec `MogLife_Style.png` dans le même dossier.
 2. Activer `StylePieces.pending.luau` dans `src/shared/Config/StylePieces.luau` (Rojo connecté). Le script en a besoin
    pour réparer les noms coupés.
 3. Coller `tools/install_characters.luau` dans la barre de commande. Le script :
    - retire les anciennes pièces des tenues Robux, des coupes et des barbes ;
    - range les nouvelles ;
-   - affiche le total (attendu : 6 958).
+   - affiche le total (attendu : 7 588 depuis D128).
 4. Enregistrer la place (Ctrl+S).
 
 ## Tenues Robux seulement (D125, le plus rapide)

@@ -43,15 +43,24 @@ return {
 		RunSpeed = 24, -- studs/s : vitesse qui donne l'effet plein
 		Stiffness = 60, -- raideur du ressort
 		Damping = 9, -- amortissement (plus bas = rebonds plus longs)
+		-- D128 : cape en bandes (teinte Cape<n>). Chaque bande a une direction simulée dans le repère du torse.
 		Cape = {
-			Lift = -1.0, -- angle à pleine course (le signe envoie la cape vers l'arrière)
-			Idle = 0.05, -- ondulation au repos
-			IdleSpeed = 1.6,
-			Flutter = 0.08, -- battement en course
-			FlutterSpeed = 9,
-			Turn = 0.25, -- inclinaison de côté quand on tourne (par rad/s de rotation)
-			Fall = 0.5, -- se soulève en tombant (par 10 studs/s de chute)
-			Max = 1.2,
+			Wind = 1.25, -- poussée du vent à RunSpeed, comparée à la pesanteur (1 = la cape part à 45°)
+			WindCurve = 0.7, -- le bas de la cape prend plus de vent que le haut (exposant sur la hauteur)
+			MaxUp = 0.7, -- en chute, part du vent vers le haut gardée (la cape ne passe pas par-dessus la tête)
+			Stiffness = 55, -- rappel vers la direction d'équilibre (bande du haut)
+			TipSoftness = 0.45, -- la bande du bas est rappelée cette fraction de fois moins fort : elle traîne
+			Coupling = 30, -- chaque bande est tirée par celle du dessus
+			Damping = 5, -- frottement de l'air (plus haut = la cape se calme plus vite)
+			Flutter = 0.22, -- battement en pleine course
+			FlutterSpeed = 9, -- radians par seconde
+			FlutterPhase = 0.9, -- décalage d'une bande à la suivante : l'onde descend le long de la cape
+			Idle = 0.035, -- respiration au repos
+			IdleSpeed = 1.4,
+			Turn = 0.1, -- balancement de côté quand on tourne (par rad/s)
+			MinBack = -0.03, -- le dos arrête la cape (composante vers le dos de la direction)
+			MaxBend = math.rad(20), -- pli le plus fort entre deux bandes
+			MaxRootBend = math.rad(55), -- pli le plus fort aux épaules
 		},
 		Tail = {
 			Wag = 0.22,

@@ -402,6 +402,16 @@ class Kit:
         """tint : None, 'Deco', 'Glow', 'GlowB', 'GlowDeco', 'GlowBDeco' (D126 : aussi CapeDeco, TailDeco, WingADeco…)."""
         self.w.make(part + ("_" + tint if tint else ""), bm, self.c[channel])
 
+    def cape_hem(self, down):
+        """Hauteur de l'ourlet : 0 = au genou, 1 = à la cheville."""
+        knee, ankle = self.J["LeftKnee"].z, self.J["LeftAnkle"].z
+        return knee + (ankle - knee) * down
+
+    def cape(self, cape, outer, lining, hem, roll_channel, roll=0.075):
+        """D128 : cape en bandes (outfit_looks.Cape)."""
+        cape_build(lambda part, bm, channel: self.w.make(part, bm, channel), cape,
+                   tuple(self.c[ch] for ch in (outer, lining, hem, roll_channel)), roll)
+
     # ---------------- haut : sous-tenue et surface du torse
     def torso(self, silhouette):
         self.sil = silhouette
@@ -583,11 +593,19 @@ def _cosmic(K, top):
         K.make(side + "UpperArm_GlowDeco", ring((c.x + sx * r * 0.1, c.y, c.z + r * 0.1), r * 1.55, 0.03, 0.03, 24), "trim")
     K.bracers("plate", glow="Glow")
     K.gloves("dark", "trim")
-    # Cape étoilée doublée d'or
+    # D128 : grande cape étoilée doublée d'or, en bandes qui se plient dans le jeu (PremiumMotionController)
     cape_y = max(row[6] for row in T.rows)
-    # D126 : pièce « Cape » à part, qui ondule et suit les mouvements dans le jeu (PremiumMotionController)
-    K.make("UpperTorso_CapeDeco", _cape_mesh(chest, cape_y + 0.02, neck.z, J["Waist"].z - 0.9 * k, 1.5, 1.35), "base")
-    K.make("UpperTorso_CapeDeco", _cape_mesh(chest, cape_y - 0.015, neck.z - 0.04, J["Waist"].z - 0.86 * k, 1.47, 1.32), "trim")
+    cape = Cape(chest, cape_y, neck.z - 0.04, K.cape_hem(0.5), 1.12, 2.0, pleats=5, scallop=0.10)
+    K.cape(cape, "base", "trim", "trim", "trim", roll=0.08 * k)
+    # Étoiles lumineuses semées sur la cape, et un liseré de lumière au-dessus de l'ourlet
+    for n, (s_, t_) in enumerate(((0.0, 0.19), (-0.4, 0.31), (0.4, 0.44), (0.0, 0.56), (-0.8, 0.56), (0.8, 0.69),
+                                  (-0.4, 0.69), (0.4, 0.81), (0.0, 0.81), (-0.8, 0.81))):
+        p = cape.point(s_, t_, Cape.THICK / 2 + 0.03)
+        size = (0.075 + 0.03 * (n % 3)) * k
+        K.make(f"UpperTorso_GlowCape{cape.segment_of(t_)}Deco", _star(p, "y", size, size * 0.42, 0.03, rot=math.pi / 2),
+               "trim")
+    index, bm = cape.strip(0.895, 0.915)
+    K.make(f"UpperTorso_GlowBCape{index}Deco", bm, "trim")
     # Couronne d'étoiles qui flotte au-dessus de la tête (lumineuse)
     hc = Vector((0, K.skull_c.y, K.head_hi.z + 0.28 * k))
     K.make("Head_GlowBSpinDeco", ring(tuple(hc), K.head_r * 0.82, 0.05, 0.07, 20), "trim")  # D126 : tourne
@@ -626,11 +644,14 @@ def _titan(K, top):
     for i in (7.4, 5.25, 3.25):
         K.make("UpperTorso", T.line([(i, 15.4), (i, 20.6)], 0.0, 0.05, 0.04), "extra", "Glow")
     K.collar("trim", 0.16)
-    # D126 : cape d'obsidienne doublée d'or, qui ondule dans le jeu
+    # D128 : lourde cape d'obsidienne doublée d'or, large ourlet doré et filet de lave
     J = K.J
     cape_y = max(row[6] for row in T.rows)
-    K.make("UpperTorso_CapeDeco", _cape_mesh(chest, cape_y + 0.02, J["Neck"].z, J["Waist"].z - 1.0 * k, 1.45, 1.4), "base")
-    K.make("UpperTorso_CapeDeco", _cape_mesh(chest, cape_y - 0.015, J["Neck"].z - 0.04, J["Waist"].z - 0.96 * k, 1.42, 1.37), "trim")
+    cape = Cape(chest, cape_y, J["Neck"].z - 0.04, K.cape_hem(0.55), 1.1, 1.9, pleats=5,
+                depth=1.15, scallop=0.05, hem_band=0.11)
+    K.cape(cape, "base", "plate", "plate", "trim", roll=0.09 * k)
+    index, bm = cape.strip(0.845, 0.868)
+    K.make(f"UpperTorso_GlowCape{index}Deco", bm, "extra")
     for side, sx in sides():
         c, r = K.pauldron(side, sx, "plate", layers=3, scale=1.12, glow="Glow")
         # Cornes de colosse sur l'épaulière
@@ -969,9 +990,11 @@ def _marble(K, top):
         B = K.arm(side, lower=True)
         K.make(side + "LowerArm", B.band(6.6, 8, 0.0, 0.05), "trim")
     K.gloves("base", "trim")
+    # D128 : drapé de marbre aux plis serrés, ourlet d'or
     cape_y = max(row[6] for row in T.rows)
-    K.make("UpperTorso_CapeDeco", _cape_mesh(chest, cape_y + 0.02, neck.z, J["Waist"].z - 0.6 * k, 1.35, 1.25), "base")
-    K.make("UpperTorso_CapeDeco", _cape_mesh(chest, cape_y - 0.015, neck.z - 0.04, J["Waist"].z - 0.56 * k, 1.31, 1.21), "trim")
+    cape = Cape(chest, cape_y, neck.z - 0.04, K.cape_hem(0.15), 1.05, 1.75, pleats=7, depth=0.9,
+                scallop=0.06, hem_band=0.05)
+    K.cape(cape, "base", "plate", "trim", "trim", roll=0.07 * k)
     # Couronne de laurier d'or : deux branches de feuilles qui se rejoignent devant
     s, R = K.skull_c, K.skull_r
     band_z = K.eye_z + (K.head_hi.z - K.eye_z) * 0.5

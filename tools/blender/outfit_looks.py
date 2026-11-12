@@ -121,36 +121,138 @@ def _loft(rings):
     return bm
 
 
-def _cape_mesh(chest, y_back, neck_z, waist_z, width_scale=1.0, length_scale=1.0):
-    """A tapered cloth panel with shallow folds, closed at the edges."""
-    bm = bmesh.new()
-    front, rear = [], []
-    for i in range(7):
-        t = i / 6
-        width = chest * (0.34 + 0.17 * t) * width_scale
-        z = neck_z - 0.10 - (neck_z - waist_z + 0.22) * t * length_scale
-        frow, rrow = [], []
-        for j in range(7):
-            s = (j - 3) / 3
-            x = s * width
-            fold = 0.065 * (1 - t * 0.45) * math.cos(s * math.pi * 2)
-            y = y_back + 0.07 + fold + t * 0.10
-            frow.append(bm.verts.new((x, y, z)))
-            rrow.append(bm.verts.new((x, y + 0.035, z)))
-        front.append(frow)
-        rear.append(rrow)
-    for i in range(6):
-        for j in range(6):
-            bm.faces.new((front[i][j], front[i][j + 1], front[i + 1][j + 1], front[i + 1][j]))
-            bm.faces.new((rear[i + 1][j], rear[i + 1][j + 1], rear[i][j + 1], rear[i][j]))
-    for j in range(6):
-        bm.faces.new((front[0][j + 1], front[0][j], rear[0][j], rear[0][j + 1]))
-        bm.faces.new((front[-1][j], front[-1][j + 1], rear[-1][j + 1], rear[-1][j]))
-    for i in range(6):
-        for j in (0, 6):
-            bm.faces.new((front[i][j], front[i + 1][j], rear[i + 1][j], rear[i][j]))
-    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
-    return bm
+CAPE_SEGMENTS = 8  # bandes horizontales d'une cape : chacune est une pièce, le jeu les plie en chaîne (D128)
+TAU_ = 2 * math.pi
+
+
+class Cape:
+    """Cape drapée (D128) : plis profonds qui s'ouvrent vers l'ourlet, évasée, bord qui ondule, doublure.
+
+    Découpée en CAPE_SEGMENTS bandes horizontales « <Partie>_Cape<n>Deco » (1 = en haut). Dans le jeu,
+    PremiumMotionController plie la chaîne de bandes : la cape se courbe au lieu de tourner comme une planche.
+    Chaque bande remonte un peu sous la précédente (rabat rentré vers le corps) pour qu'aucun jour ne s'ouvre au pli.
+    Repère Blender : +Y = le dos, Z = le haut. s va de -1 à 1 (largeur), t de 0 (épaules) à 1 (ourlet).
+    """
+
+    COLS = 24
+    THICK = 0.035
+
+    def __init__(self, chest, y_back, top_z, hem_z, width=1.0, flare=1.85, pleats=5, depth=1.0, scallop=0.07,
+                 hem_band=0.06):
+        self.chest, self.y_back, self.top_z, self.hem_z = chest, y_back, top_z, hem_z
+        self.width, self.flare, self.pleats, self.depth = width, flare, pleats, depth
+        self.scallop, self.hem_band = scallop, hem_band
+
+    def point(self, s, t, out=0.0):
+        """Point de la surface (milieu de l'épaisseur), décalé de `out` vers l'extérieur (le dos)."""
+        tt = max(t, 0.0)
+        half = self.chest * 0.40 * self.width * (1 + (self.flare - 1) * tt ** 1.3)
+        wave = math.cos(s * math.pi * self.pleats)
+        fold = self.depth * (0.02 + 0.17 * tt) * wave
+        wrap = -0.11 * self.chest * s * s * (1 - tt) ** 2      # en haut, les bords épousent les épaules
+        drape = 0.06 + 0.20 * tt ** 1.5                        # la cape s'écarte du corps en descendant
+        z = self.top_z - (self.top_z - self.hem_z) * t - self.scallop * tt * (0.5 + 0.5 * wave)
+        return Vector((s * half, self.y_back + drape + fold + wrap + out, z))
+
+    @staticmethod
+    def _quad(bm, pts, want):
+        """Face à quatre coins, tournée vers `want` (Roblox n'affiche qu'un côté)."""
+        n = (pts[1] - pts[0]).cross(pts[2] - pts[0]) + (pts[2] - pts[0]).cross(pts[3] - pts[0])
+        if n.dot(Vector(want)) < 0:
+            pts = list(reversed(pts))
+        bm.faces.new([bm.verts.new(p) for p in pts])
+
+    def _rows(self, index):
+        n = CAPE_SEGMENTS
+        t0, t1 = index / n, (index + 1) / n
+        rows = [t0 + (t1 - t0) * r / 3 for r in range(4)]
+        cut = 1 - self.hem_band
+        if t0 < cut < t1 and all(abs(cut - r) > 0.01 for r in rows):
+            rows = sorted(rows + [cut])
+        if index > 0:
+            rows.insert(0, t0 - 0.3 / n)  # rabat sous la bande du dessus
+        return rows
+
+    def parts(self):
+        """Liste de (numéro de bande à partir de 1, rôle, bmesh) ; rôles : outer, lining, hem."""
+        result = []
+        half_t = self.THICK / 2
+        cut = 1 - self.hem_band
+        cols = self.COLS
+        for index in range(CAPE_SEGMENTS):
+            rows = self._rows(index)
+            flap = index > 0
+            outer, lining, hem = bmesh.new(), bmesh.new(), bmesh.new()
+            back, front = [], []
+            for r, t in enumerate(rows):
+                tuck = -self.THICK * 1.25 if (flap and r == 0) else 0.0
+                back.append([self.point((j - cols / 2) / (cols / 2), t, half_t + tuck) for j in range(cols + 1)])
+                front.append([self.point((j - cols / 2) / (cols / 2), t, -half_t + tuck) for j in range(cols + 1)])
+            for r in range(len(rows) - 1):
+                target = hem if rows[r] >= cut - 1e-6 else outer
+                for j in range(cols):
+                    self._quad(target, [back[r][j], back[r][j + 1], back[r + 1][j + 1], back[r + 1][j]], (0, 1, 0))
+                    self._quad(lining, [front[r][j], front[r][j + 1], front[r + 1][j + 1], front[r + 1][j]], (0, -1, 0))
+                for j, side in ((0, -1), (cols, 1)):
+                    self._quad(lining, [back[r][j], back[r + 1][j], front[r + 1][j], front[r][j]], (side, 0, 0))
+            for j in range(cols):
+                self._quad(lining, [back[0][j], back[0][j + 1], front[0][j + 1], front[0][j]], (0, 0, 1))
+                self._quad(lining, [back[-1][j], back[-1][j + 1], front[-1][j + 1], front[-1][j]], (0, 0, -1))
+            for role, bm in (("outer", outer), ("lining", lining), ("hem", hem)):
+                if bm.faces:
+                    # Deux points libres aux coins de la cape entière : la texture se pose alors sur toute la cape
+                    # (et non bande par bande) ; cape_build les retire après le calcul des UV
+                    for corner in self.bounds():
+                        bm.verts.new(corner)
+                    result.append((index + 1, role, bm))
+                else:
+                    bm.free()
+        return result
+
+    def bounds(self):
+        pts = [self.point(s / 12 - 1, t / 16, o) for s in range(25) for t in range(17) for o in (-0.03, 0.03)]
+        return (Vector((min(p.x for p in pts), min(p.y for p in pts), min(p.z for p in pts))),
+                Vector((max(p.x for p in pts), max(p.y for p in pts), max(p.z for p in pts))))
+
+    def segment_of(self, t):
+        return min(int(t * CAPE_SEGMENTS), CAPE_SEGMENTS - 1) + 1
+
+    def strip(self, t0, t1, out=0.012):
+        """Bande décorative posée sur l'extérieur (liseré lumineux) ; t0 et t1 dans la même bande."""
+        bm = bmesh.new()
+        cols = self.COLS
+        o = self.THICK / 2 + out
+        for j in range(cols):
+            s0, s1 = (j - cols / 2) / (cols / 2), (j + 1 - cols / 2) / (cols / 2)
+            self._quad(bm, [self.point(s0, t0, o), self.point(s1, t0, o), self.point(s1, t1, o), self.point(s0, t1, o)],
+                       (0, 1, 0))
+        return self.segment_of((t0 + t1) / 2), bm
+
+    def roll(self, radius, sides=8):
+        """Bourrelet du haut de la cape, d'une épaule à l'autre (pièce fixe : il cache l'attache)."""
+        rings = []
+        count = 12
+        for i in range(count + 1):
+            s = -1 + 2 * i / count
+            c = self.point(s, 0, 0)
+            r = radius * (1.0 + 0.45 * abs(s) ** 3)
+            rings.append([(c.x, c.y + math.cos(TAU_ * q / sides) * r, c.z + 0.02 + math.sin(TAU_ * q / sides) * r)
+                          for q in range(sides)])
+        return _loft(rings)
+
+
+def cape_build(make, cape, cells, roll=0.075):
+    """Monte une cape : make(part, bm, cell) ; cells = (extérieur, doublure, ourlet, bourrelet)."""
+    for index, role, bm in cape.parts():
+        cell = {"outer": cells[0], "lining": cells[1], "hem": cells[2]}[role]
+        obj = make(f"UpperTorso_Cape{index}Deco", bm, cell)
+        loose = bmesh.new()
+        loose.from_mesh(obj.data)
+        bmesh.ops.delete(loose, geom=[v for v in loose.verts if not v.link_faces], context="VERTS")
+        loose.to_mesh(obj.data)
+        loose.free()
+    if roll:
+        make("UpperTorso", cape.roll(roll), cells[3])
 
 
 _BODY_TREES = {}
@@ -375,13 +477,11 @@ def build_looks(w, body, g):
             w.make("UpperTorso", ring((0, 0.10, neck.z + 0.03), cfg["neck"] * 1.38,
                                       0.075, 0.15, 12), secondary)
         if silhouette == "cape":
-            # Back panel is welded to the torso. It clears arms but moves with the torso.
+            # D128 : cape drapée en bandes, qui se plie et suit les mouvements dans le jeu
             cape_y = max(row[6] for row in radii)
-            size = {"PaperCrown": 1.25, "CosmicEmperor": 1.4, "MarbleStatue": 1.3}.get(name, 1.0)
-            length = 1.12 if name in ("CosmicEmperor", "MarbleStatue") else 1.0
-            # La statue porte un drapé de marbre blanc (les autres capes : couleur secondaire)
-            w.make("UpperTorso", _cape_mesh(chest, cape_y, neck.z, waist.z, size, length),
-                   primary if name == "MarbleStatue" else secondary)
+            size = {"PaperCrown": 1.2}.get(name, 1.0)
+            cape = Cape(chest, cape_y, neck.z - 0.06, root.z + (J["LeftKnee"].z - root.z) * 0.85, size, 1.7)
+            cape_build(w.make, cape, (secondary, accent, accent, accent))
         if silhouette == "puffer":
             for k in (4, 7, 10):
                 w.make("UpperTorso", prism((-chest * 0.40, front(k, -chest * 0.40), heights[k]),

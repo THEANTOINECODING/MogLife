@@ -187,6 +187,7 @@ class Wardrobe:
         obj = self.b.make(bm, cell, front_cell)
         tint = STYLE_TINT.get(cell)
         self.current.setdefault(part + ("_" + tint if tint else ""), []).append(obj)
+        return obj
 
 
 def ring_upright(center, radius, thickness, height, n=16):
@@ -914,7 +915,8 @@ print(f"{len(premium_objs)} pièces de tenues Robux exportées dans {premium_fbx
 # D126 : fichier de mise à jour = tenues Robux + coupes + barbes (un seul import dans Studio)
 HAIR_ITEMS = {"Banana", "Mullet", "Mohawk", "ShinyBald", "Pompadour", "Curly", "LongHair", "Bun", "Bob",
               "LumberBeard", "Goatee", "Handlebar", "ChinStrap"}
-update_objs = [o for o in style_objs if o.name.split("__")[1] in premium_items | HAIR_ITEMS]
+CAPE_ITEMS = {"RoyalRumbleTop", "PaperCrownTop"}  # D128 : capes en Cash refaites
+update_objs = [o for o in style_objs if o.name.split("__")[1] in premium_items | HAIR_ITEMS | CAPE_ITEMS]
 for o in premium_objs:
     o.select_set(False)
 for o in update_objs:

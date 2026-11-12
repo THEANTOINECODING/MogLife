@@ -13,6 +13,7 @@ local MANNEQUIN_COLOR = Color3.fromRGB(236, 234, 228)
 
 export type Options = {
 	mannequin: boolean?, -- corps blanc mat (vitrine) au lieu de la peau
+	setSkin: boolean?, -- avec mannequin : le corps garde la couleur de peau d'une tenue Robux (acier, or… D128)
 	bust: boolean?, -- tête seule (les objets portés ailleurs sont ignorés)
 	look: Look.LookData?, -- apparence (genre, couleurs, expression) ; sinon l'apparence par défaut
 }
@@ -40,7 +41,8 @@ local function place(
 	whiten: boolean,
 	color: Color3?,
 	flat: boolean?,
-	glow: boolean?
+	glow: boolean?,
+	bodyColor: Color3?
 )
 	if not template or not template:IsA("BasePart") then
 		return
@@ -63,7 +65,7 @@ local function place(
 		if appearance then
 			appearance:Destroy()
 		end
-		clone.Color = MANNEQUIN_COLOR
+		clone.Color = bodyColor or MANNEQUIN_COLOR
 		clone.Material = Enum.Material.SmoothPlastic
 	end
 	clone.Parent = parent
@@ -103,7 +105,8 @@ function Outfit.Build(stage: string, items: { string }, options: Options?): Mode
 			whiten and isBody,
 			color,
 			entry.tint == "Hair" or entry.color ~= nil,
-			entry.glow
+			entry.glow,
+			if opts.setSkin then entry.skin else nil
 		)
 	end
 	model.WorldPivot = CFrame.new()

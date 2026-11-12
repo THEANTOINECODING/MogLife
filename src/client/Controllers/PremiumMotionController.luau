@@ -1,7 +1,10 @@
 -- Derniers détails des tenues Robux (D126, design/REVIEW_2026-11-10.md), vus par tous les joueurs :
--- - pièces souples : la cape ondule et s'envole en courant, la queue remue, les ailes battent et se replient,
---   l'auréole et la couronne d'étoiles tournent (pièces dont la teinte contient Cape, Tail, WingA/WingB ou Spin) ;
---   chaque pièce suit le mouvement avec un ressort (retard puis léger dépassement : « follow-through ») ;
+-- - pièces souples : la queue remue, les ailes battent et se replient, l'auréole et la couronne d'étoiles tournent
+--   (pièces dont la teinte contient Tail, WingA/WingB ou Spin) ; chaque pièce suit le mouvement avec un ressort
+--   (retard puis léger dépassement : « follow-through ») ;
+-- - cape (D128) : elle est découpée en bandes horizontales (teinte Cape<n>, 1 = en haut). Chaque bande a une
+--   direction simulée (pesanteur, vent de la course et de la chute, battement, retard sur la bande du dessus) et la
+--   chaîne se plie : la cape se courbe, ondule de haut en bas et retombe, sans jamais traverser le dos ;
 -- - traces de pas : une petite gerbe de particules sous chaque pas (StyleSets.Footsteps).
 -- Réglages : Config/Feel.luau (Sway, Footsteps). Le réglage « effets de tenue » du joueur coupe tout.
 -- Les soudures (Weld) appartiennent au serveur (BodyService) : on garde la valeur du serveur comme base et on n'y
@@ -26,8 +29,25 @@ type Piece = {
 	part: BasePart,
 	weld: Weld,
 	kind: string, -- "Cape", "Tail", "Wing", "Spin"
+	index: number?, -- cape : numéro de la bande (1 = en haut)
 	base: CFrame,
 	written: CFrame?,
+}
+
+-- Une bande de cape : ses pièces (tissu, étoiles, liseré), sa charnière au repos (repère du torse), le vecteur
+-- vers la charnière suivante, et sa direction simulée (repère du torse, repos = vers le bas)
+type CapeSegment = {
+	pieces: { Piece },
+	hinge: Vector3,
+	length: Vector3,
+	dir: Vector3,
+	vel: Vector3,
+}
+
+type Cape = {
+	segments: { CapeSegment },
+	back: number, -- signe de Z du côté du dos
+	torso: BasePart,
 }
 
 type Spring = { x: number, v: number }
@@ -41,6 +61,8 @@ type State = {
 	velocity: Vector3,
 	turn: number,
 	springs: { [string]: Spring },
+	cape: Cape?,
+	capeDirty: boolean,
 	stepDistance: number,
 	foot: number,
 	steps: BasePart?,
@@ -50,7 +72,7 @@ type State = {
 local states: { [Model]: State } = {}
 local folder: Folder? = nil
 
-local function kindOf(name: string): string?
+local function kindOf(name: string): (string?, number?)
 	-- Nom de la pièce : <Corps>__<Objet>__<Partie>_<Teinte>
 	local key = string.match(name, "__[^_]+__(.+)$")
 	local tint = key and string.match(key, "_(%w+)$")
@@ -58,7 +80,7 @@ local function kindOf(name: string): string?
 		return nil
 	end
 	if string.find(tint, "Cape", 1, true) then
-		return "Cape"
+		return "Cape", tonumber(string.match(tint, "Cape(%d+)")) or 1
 	elseif string.find(tint, "Tail", 1, true) then
 		return "Tail"
 	elseif string.find(tint, "Wing", 1, true) then
@@ -77,14 +99,183 @@ local function scan(state: State)
 	local list: { Piece } = {}
 	for _, part in state.character:GetDescendants() do
 		if part:IsA("BasePart") then
-			local kind = kindOf(part.Name)
+			local kind, index = kindOf(part.Name)
 			local weld = kind and part:FindFirstChildOfClass("Weld")
 			if kind and weld then
-				table.insert(list, known[part] or { part = part, weld = weld, kind = kind, base = weld.C0 })
+				table.insert(
+					list,
+					known[part] or { part = part, weld = weld, kind = kind, index = index, base = weld.C0 }
+				)
 			end
 		end
 	end
 	state.pieces = list
+	state.capeDirty = true
+end
+
+-- ------------------------------------------------------------------ cape en bandes (D128)
+
+local DOWN = Vector3.new(0, -1, 0)
+
+-- Rotation la plus courte qui amène `from` sur `to` (vecteurs unitaires)
+local function arc(from: Vector3, to: Vector3): CFrame
+	local axis = from:Cross(to)
+	if axis.Magnitude < 1e-5 then
+		return CFrame.identity
+	end
+	return CFrame.fromAxisAngle(axis.Unit, math.acos(math.clamp(from:Dot(to), -1, 1)))
+end
+
+-- Range les pièces de cape par bande et mesure les charnières au repos ; garde le mouvement en cours
+local function buildCape(state: State)
+	state.capeDirty = false
+	local groups: { [number]: { Piece } } = {}
+	local indices: { number } = {}
+	for _, piece in state.pieces do
+		if piece.kind == "Cape" and piece.weld.Parent and piece.part.Parent then
+			local index = piece.index or 1
+			if not groups[index] then
+				groups[index] = {}
+				table.insert(indices, index)
+			end
+			table.insert(groups[index], piece)
+		end
+	end
+	if #indices == 0 then
+		state.cape = nil
+		return
+	end
+	table.sort(indices)
+	-- Pièce principale d'une bande : la plus grande (le tissu), les autres (étoiles, liseré) la suivent
+	local centers: { Vector3 } = {}
+	local sizes: { Vector3 } = {}
+	local torso: BasePart? = nil
+	for order, index in indices do
+		local main = groups[index][1]
+		for _, piece in groups[index] do
+			if piece.part.Size.X * piece.part.Size.Y > main.part.Size.X * main.part.Size.Y then
+				main = piece
+			end
+		end
+		centers[order] = main.base.Position
+		sizes[order] = main.part.Size
+		torso = torso or main.weld.Part0
+	end
+	if not torso then
+		state.cape = nil
+		return
+	end
+	local old = state.cape
+	local keep = old ~= nil and #old.segments == #indices
+	local segments: { CapeSegment } = {}
+	local count = #indices
+	local hinges: { Vector3 } = {}
+	for order = 1, count do
+		local c = centers[order]
+		if order == 1 then
+			hinges[order] = Vector3.new(c.X, c.Y + sizes[order].Y / 2, c.Z)
+		else
+			local above = centers[order - 1]
+			hinges[order] = Vector3.new(c.X, above.Y - sizes[order - 1].Y / 2, (above.Z + c.Z) / 2)
+		end
+	end
+	local last = centers[count]
+	hinges[count + 1] = Vector3.new(last.X, last.Y - sizes[count].Y / 2, last.Z)
+	for order, index in indices do
+		segments[order] = {
+			pieces = groups[index],
+			hinge = hinges[order],
+			length = hinges[order + 1] - hinges[order],
+			dir = if keep and old then old.segments[order].dir else DOWN,
+			vel = if keep and old then old.segments[order].vel else Vector3.zero,
+		}
+	end
+	state.cape = { segments = segments, back = if centers[1].Z < 0 then -1 else 1, torso = torso }
+end
+
+local function stepCape(state: State, cape: Cape, dt: number, now: number)
+	local config = SWAY.Cape
+	local torso = cape.torso
+	if not torso.Parent then
+		state.capeDirty = true
+		return
+	end
+	local frame = torso.CFrame
+	local down = frame:VectorToObjectSpace(DOWN)
+	-- Vent relatif : l'air vient à la rencontre du personnage (course, chute)
+	local air = frame:VectorToObjectSpace(-state.velocity) / SWAY.RunSpeed
+	local speed = math.clamp(air.Magnitude, 0, 1.5)
+	local worldUp = frame:VectorToObjectSpace(-DOWN)
+	local lift = air:Dot(worldUp)
+	if lift > config.MaxUp then
+		air -= worldUp * (lift - config.MaxUp) -- en chute, la cape se soulève sans passer par-dessus la tête
+	end
+	local wind = air * config.Wind
+	local back = cape.back
+	local count = #cape.segments
+	local damping = math.exp(-config.Damping * dt)
+	local previous: CapeSegment? = nil
+	for order, segment in cape.segments do
+		local depth = order / count
+		local weight = depth ^ config.WindCurve
+		local phase = now * config.FlutterSpeed - order * config.FlutterPhase
+		local flutter = speed * config.Flutter * weight
+		local idle = config.Idle * weight
+		local target = down
+			+ wind * weight
+			+ Vector3.new(
+				math.sin(phase * 0.73 + 1.3) * flutter * 0.6
+					+ math.sin(now * config.IdleSpeed + order * 0.5) * idle
+					+ state.turn * config.Turn * weight,
+				0,
+				back * (math.sin(phase) * flutter + math.sin(now * config.IdleSpeed * 0.7 + order * 0.4) * idle)
+			)
+		target = if target.Magnitude > 1e-3 then target.Unit else down
+		-- Les bandes du bas sont plus souples : elles suivent en retard (l'onde descend le long de la cape)
+		local stiffness = config.Stiffness * (1 + (config.TipSoftness - 1) * (order - 1) / math.max(count - 1, 1))
+		local accel = (target - segment.dir) * stiffness
+		if previous then
+			accel += (previous.dir - segment.dir) * config.Coupling
+		end
+		local velocity = (segment.vel + accel * dt) * damping
+		local dir = segment.dir + velocity * dt
+		-- Le dos arrête la cape
+		if dir.Z * back < config.MinBack then
+			dir = Vector3.new(dir.X, dir.Y, config.MinBack * back)
+			if velocity.Z * back < 0 then
+				velocity = Vector3.new(velocity.X, velocity.Y, 0)
+			end
+		end
+		dir = dir.Unit
+		-- Pli limité entre deux bandes (le tissu ne se casse pas, les bandes ne s'ouvrent pas)
+		local parent = if previous then previous.dir else DOWN
+		local limit = if previous then config.MaxBend else config.MaxRootBend
+		if math.acos(math.clamp(dir:Dot(parent), -1, 1)) > limit then
+			local axis = parent:Cross(dir)
+			if axis.Magnitude > 1e-5 then
+				dir = CFrame.fromAxisAngle(axis.Unit, limit) * parent
+				velocity *= 0.5
+			end
+		end
+		segment.vel = velocity - dir * velocity:Dot(dir)
+		segment.dir = dir
+		previous = segment
+	end
+	-- Pose : chaque bande tourne autour de sa charnière, portée par la bande du dessus
+	local position = cape.segments[1].hinge
+	for _, segment in cape.segments do
+		local rotation = arc(DOWN, segment.dir)
+		local transform = CFrame.new(position) * rotation * CFrame.new(-segment.hinge)
+		for _, piece in segment.pieces do
+			local weld = piece.weld
+			if weld.Parent and piece.part.Parent then
+				local c0 = transform * piece.base
+				weld.C0 = c0
+				piece.written = c0
+			end
+		end
+		position += rotation * segment.length
+	end
 end
 
 local function spring(state: State, name: string, target: number, dt: number): number
@@ -211,21 +402,7 @@ local function step(state: State, dt: number, now: number, near: boolean)
 	end
 	local localVelocity = root.CFrame:VectorToObjectSpace(state.velocity)
 	local run = math.clamp(Vector3.new(localVelocity.X, 0, localVelocity.Z).Magnitude / SWAY.RunSpeed, 0, 1)
-	local fall = math.clamp(-localVelocity.Y / 10, 0, 1.5)
-	local cape, tail, wing = SWAY.Cape, SWAY.Tail, SWAY.Wing
-	local capeLift = spring(
-		state,
-		"capeLift",
-		math.clamp(
-			cape.Lift * (run + fall * cape.Fall)
-				- cape.Idle * math.sin(now * cape.IdleSpeed)
-				- run * cape.Flutter * math.sin(now * cape.FlutterSpeed),
-			-cape.Max,
-			cape.Max
-		),
-		dt
-	)
-	local capeSide = spring(state, "capeSide", math.clamp(-state.turn * cape.Turn, -cape.Max, cape.Max), dt)
+	local tail, wing = SWAY.Tail, SWAY.Wing
 	local wagSpeed = tail.WagSpeed * (1 + run)
 	local tailWag = spring(
 		state,
@@ -249,14 +426,17 @@ local function step(state: State, dt: number, now: number, near: boolean)
 		-- La soudure a changé ailleurs que chez nous (croissance, pump, nouvelle tenue) : nouvelle base
 		if piece.written == nil or weld.C0 ~= piece.written then
 			piece.base = weld.C0
+			if piece.kind == "Cape" then
+				state.capeDirty = true
+			end
+		end
+		if piece.kind == "Cape" then
+			continue -- posée par stepCape
 		end
 		local base, size = piece.base, piece.part.Size
 		local offset = base.Position
 		local c0
-		if piece.kind == "Cape" then
-			local pivot = Vector3.new(0, size.Y / 2, -sign(offset.Z) * size.Z / 2)
-			c0 = around(base, pivot, CFrame.Angles(capeLift * sign(offset.Z), 0, capeSide))
-		elseif piece.kind == "Tail" then
+		if piece.kind == "Tail" then
 			local pivot = Vector3.new(0, size.Y / 2, -sign(offset.Z) * size.Z / 2)
 			c0 = around(base, pivot, CFrame.Angles(tailLift * sign(offset.Z), tailWag, 0))
 		elseif piece.kind == "Wing" then
@@ -274,6 +454,12 @@ local function step(state: State, dt: number, now: number, near: boolean)
 		weld.C0 = c0
 		piece.written = c0
 	end
+	if state.capeDirty then
+		buildCape(state)
+	end
+	if state.cape then
+		stepCape(state, state.cape, dt, now)
+	end
 end
 
 -- Effets coupés : les pièces reprennent la position donnée par le serveur
@@ -284,6 +470,8 @@ local function restore(state: State)
 		end
 		piece.written = nil
 	end
+	state.cape = nil
+	state.capeDirty = true
 end
 
 local function drop(character: Model)
@@ -333,6 +521,7 @@ function PremiumMotionController.Start()
 						velocity = Vector3.zero,
 						turn = 0,
 						springs = {},
+						capeDirty = true,
 						stepDistance = 0,
 						foot = 1,
 					}

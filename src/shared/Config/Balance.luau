@@ -21,6 +21,8 @@ return {
 		HousesLiked = {}, -- UserId (texte) des maisons déjà aimées -> true (une fois par maison, D112)
 		Tutorial = { Step = 1, Done = false }, -- tutoriel des 5 premières minutes (TutorialService)
 		Boost = { Id = "", EndsAt = 0 }, -- boost temporaire en cours (BoostService), EndsAt en os.time()
+		-- Boost de Mog acheté en Robux (D128, Products.Boost) : secondes de jeu restantes (ne s'écoule que connecté)
+		PaidBoost = { Multiplier = 1, Remaining = 0 },
 		BoostStock = {}, -- réserve d'aliments achetés et pas encore mangés : boostId -> nombre (D114)
 		ShopTours = {}, -- magasins dont la visite guidée a été vue ou passée : store -> true (D121)
 		Secrets = {}, -- secrets de la ville trouvés : secretId -> true (D121, Config/Secrets.luau)

@@ -1,6 +1,7 @@
 -- Achats Robux à usage unique (Developer Products, D122, Config/Products.luau) : seul ce service reçoit les reçus
 -- de Roblox (MarketplaceService.ProcessReceipt) et les distribue :
 -- - packs de Cash (montant fixe) et de Mog (part du Mog demandé par le boss du stade, calculée au moment du reçu) ;
+-- - boosts de Mog (D128) : temps de jeu ajouté au boost Robux du joueur (BoostService.GrantPaid) ;
 -- - victoire contre un boss, proposée sur l'écran de défaite (choix d'Antoine), première victoire seulement ;
 -- - autres produits enregistrés par d'autres services (PurchaseService.Register : « prendre la place » d'une machine).
 -- Seule la confirmation officielle de Roblox accorde un produit. Chaque reçu est noté dans la sauvegarde (Receipts) :
@@ -23,6 +24,7 @@ local StatsService
 local BossService
 local PumpGodService
 local MinigameService
+local BoostService
 
 -- Produit -> fonction qui l'accorde ; renvoie true si c'est accordé, false pour que Roblox réessaie plus tard
 type Handler = (player: Player, receipt: { [string]: any }) -> boolean
@@ -98,6 +100,19 @@ local function packHandler(pack: Products.Pack, kind: string): Handler
 		local amount = if kind == "Cash" then pack.amount or 0 else Products.MogAmount(pack, data.Stage)
 		StatsService.Add(player, kind :: "Mog" | "Cash", amount)
 		Remotes.PurchaseDone:FireClient(player, { kind = kind, amount = amount })
+		return true
+	end
+end
+
+local function boostHandler(pack: Products.BoostPack): Handler
+	return function(player)
+		if not BoostService.GrantPaid(player, pack.multiplier, pack.duration) then
+			return false
+		end
+		Remotes.PurchaseDone:FireClient(
+			player,
+			{ kind = "Boost", multiplier = pack.multiplier, minutes = math.floor(pack.duration / 60 + 0.5) }
+		)
 		return true
 	end
 end
@@ -184,6 +199,7 @@ function PurchaseService.Init(services)
 	BossService = services.BossService
 	PumpGodService = services.PumpGodService
 	MinigameService = services.MinigameService
+	BoostService = services.BoostService
 end
 
 function PurchaseService.Start()
@@ -191,6 +207,9 @@ function PurchaseService.Start()
 		for _, pack in (Products :: any)[kind] do
 			PurchaseService.Register(pack.productId, packHandler(pack, kind))
 		end
+	end
+	for _, pack in Products.Boost do
+		PurchaseService.Register(pack.productId, boostHandler(pack))
 	end
 	PurchaseService.Register(BOSS_WIN.productId, bossWinHandler)
 	Remotes.BuyBossWin.OnServerEvent:Connect(onBuyBossWin)

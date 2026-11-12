@@ -2,6 +2,29 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-13 (Demande d'Antoine : « les capes sont vraiment très moches et pas du tout bien animées, refais-les ; un bouton boutique pour les skins payants, les coffres d'argent, des boosts de Mog et le reste des choses payables en Robux ; des mannequins dans le magasin avec certaines tenues payantes ; de manière qualitative et sans tricher »)
+
+- **D128 — Capes refaites (modèle et animation), boutique Robux à onglets, boost de Mog en Robux, mannequins des tenues Robux.**
+  - **Capes, modèle** (`outfit_looks.py`, classe `Cape` ; `premium_looks.py`) : l'ancienne cape était une planche trapézoïdale presque plate. La nouvelle part des épaules (bourrelet fixe qui cache l'attache), s'évase, a des plis profonds qui s'ouvrent vers l'ourlet, un bord qui ondule, une doublure et un ourlet d'une autre couleur. Empereur Cosmique : étoiles lumineuses semées et liseré de lumière. Titan Doré : large ourlet d'or et filet de lave. Statue de Marbre : drapé aux plis serrés. Les deux capes en Cash (Royal Rumble, Paper Crown) utilisent le même modèle.
+  - **Capes, découpe** : chaque cape est livrée en 8 bandes horizontales (`UpperTorso_Cape1Deco` … `Cape8Deco`, plus `GlowCape<n>Deco` pour les étoiles). Chaque bande remonte un peu sous la précédente pour qu'aucun jour ne s'ouvre au pli. La texture est posée sur la cape entière, pas bande par bande.
+  - **Capes, animation** (`PremiumMotionController`, `Feel.Sway.Cape`) : l'ancienne cape tournait en bloc autour de son bord haut. Chaque bande a maintenant une direction simulée dans le repère du torse : pesanteur réelle (la cape pend vers le sol même quand le torse penche), vent de la course et de la chute, battement dont l'onde descend le long de la cape, retard des bandes du bas, balancement en virage. Le dos arrête la cape et le pli entre deux bandes est limité. Les anciennes capes en une pièce restent animées (chaîne d'une seule bande) tant que les nouveaux modèles ne sont pas importés.
+  - **Boutique Robux** (`StoreController` refait, `Config/Store.luau`) : la case « Shop » du menu ouvre une seule fenêtre à quatre onglets.
+    - **Outfits** : les tenues Robux avec un grand aperçu 3D qui tourne et leur aura (`PreviewFx`), ce qu'elles donnent, le prix lu sur Roblox ; une tenue possédée se porte d'ici.
+    - **Boosts** : boosts de Mog (nouveau, ci-dessous), avec le temps restant.
+    - **Cash** : les packs de Cash, montrés comme des coffres en 3D (bois, bois cerclé d'or, tout en or). Montant fixe et affiché : ce ne sont pas des coffres au hasard (`06_MONETISATION.md`).
+    - **Mog** : les packs de Mog (inchangés).
+    - Le « + » des compteurs ouvre le bon onglet. La fenêtre a une mise en page pour téléphone debout et une pour le paysage.
+    - Un produit dont l'identifiant vaut 0 reste caché dans le jeu. **Dans Studio seulement**, il s'affiche avec un bouton gris « Not on sale yet », pour régler la boutique avant de créer les produits. Tant qu'aucun produit n'existe, la case « Shop » n'apparaît donc pas dans le jeu publié.
+    - Le « reste » déjà décidé garde sa place : victoire contre le boss sur l'écran de défaite (D122), « prendre la place » sur la machine (D110).
+  - **Boost de Mog en Robux** (`Products.Boost`, `BoostService.GrantPaid`, champ `PaidBoost`) : ×2 Mog aux exercices pendant 15 ou 60 minutes **de jeu** (le minuteur ne tourne que connecté ; racheter ajoute du temps). Il se multiplie avec les en-cas en Cash et « bien reposé ». Badge doré sous le HUD. **Divergence avec `06_MONETISATION.md`** (« ne pas vendre x2 Mog au lancement »), demandée par Antoine ; le fichier est mis à jour. Rien de ce qui s'achète ne compte entre vrais joueurs (D122). ❓ Multiplicateur, durées et prix (79 et 249 R$ conseillés) sont des valeurs de départ, à régler par Antoine.
+  - **Mannequins** (`PremiumDisplayController`, tag `PremiumDisplay`, `tools/build_map.py`) : un podium doré au centre du magasin de vêtements, quatre mannequins dos à dos (Titan Doré, Empereur Cosmique, Dragon de la Salle, Démon des Enfers) sur un corps Chad. Ils portent la vraie tenue avec ses couleurs, ses pièces lumineuses, son aura et sa lumière ; tête et mains blanches de vitrine. Nom et prix au-dessus, invite « View » qui ouvre la boutique sur la tenue. Montés chez chaque joueur seulement quand il s'approche (`Store.Display`).
+  - **Export** : `MogLife_Update.fbx` (4 634 pièces, total 7 588), `install_characters.luau` et `IMPORT_WARDROBE.md` mis à jour.
+  - **État au 13/11** :
+    - Blender : capes vues à l'image (dos, trois quarts dos) sur Bro et GodMogger ; export complet fait.
+    - Studio, testé (son coupé) : aucune erreur au démarrage ; boost de Mog accordé par un faux reçu (une seule fois par reçu, cumul 15 + 60 min, décompte) ; badge affiché ; 4 mannequins montés avec leurs particules et leur invite ; sauvegarde d'Antoine restaurée.
+    - **Pas encore vu à l'image** (Studio était réduit, sans rendu) : la fenêtre de la boutique, les mannequins, l'animation des capes.
+    - **À faire par Antoine** : importer `MogLife_Update.fbx` (voir `IMPORT_WARDROBE.md`) ; créer les produits et les passes dans le Creator Hub et renseigner leurs identifiants.
+
 ## 2026-11-12 (Demande d'Antoine : « une croix dans le bouton rouge de fermeture ; bug de texture aux épaules du Mecha-Mogger ; la peau prend la couleur du skin porté, sauf cou, tête et mains ; il manque des aperçus en boutique, comme l'aura »)
 
 - **D127 — Croix de fermeture, épaulières du Mecha-Mogger, peau de tenue, effets visibles dans l'aperçu de la boutique.**

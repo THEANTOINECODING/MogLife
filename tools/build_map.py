@@ -1156,6 +1156,14 @@ def shop_frame(cx):
     return Frame((cx, GROUND, CENTER), 180)
 
 
+# D128 : mannequins des tenues Robux (tag PremiumDisplay) : tenue (StyleSets) et direction du regard (yaw local)
+PREMIUM_DISPLAYS = (("GoldenTitan", 45), ("CosmicEmperor", -45), ("GymDragon", 135), ("InfernalDemon", -135))
+PREMIUM_STAGE = "Chad"          # corps porté
+PREMIUM_PODIUM = (14, 0.6)      # diamètre, hauteur
+PREMIUM_PODIUM_Z = 20           # profondeur dans le magasin (repère local)
+PREMIUM_RADIUS = 4.2            # distance des mannequins au centre du podium
+
+
 def clothing_store():
     F = shop_frame(-78)
     c = shop_shell(F, "Clothes", (120, 170, 210), "Plaster", ((236, 230, 220), "Marble", 0.4))
@@ -1180,6 +1188,26 @@ def clothing_store():
                                             (4.5, "Alpha", ("BoxerRobe", "Headband")),
                                             (12.5, "Chad", ("MogTank", "LeatherPants", "GoldChain")))):
         c.append(style_display(F, f"ClothesDisplay{k}", (lx, 0.4, 7.5), stage, items))
+    # D128 : podium des tenues Robux au centre du magasin. Quatre mannequins dos à dos, tournés vers les quatre coins
+    # (PremiumDisplayController les monte chez le joueur qui s'approche et ouvre la boutique Robux sur la tenue).
+    c.append(P(F, "PremiumPodium", (0, 0.4 + PREMIUM_PODIUM[1] / 2, PREMIUM_PODIUM_Z),
+               (PREMIUM_PODIUM[1], PREMIUM_PODIUM[0], PREMIUM_PODIUM[0]), (38, 30, 58), "Marble", roll=90,
+               shape="Cylinder"))
+    c.append(P(F, "PremiumPodiumRim", (0, 0.4 + PREMIUM_PODIUM[1] + 0.05, PREMIUM_PODIUM_Z),
+               (0.1, PREMIUM_PODIUM[0] + 0.5, PREMIUM_PODIUM[0] + 0.5), (255, 205, 70), "Neon", roll=90,
+               shape="Cylinder", collide=False))
+    c.append(P(F, "PremiumPodiumTop", (0, 0.4 + PREMIUM_PODIUM[1] + 0.08, PREMIUM_PODIUM_Z),
+               (0.1, PREMIUM_PODIUM[0] - 0.4, PREMIUM_PODIUM[0] - 0.4), (52, 42, 78), "Marble", roll=90,
+               shape="Cylinder", collide=False))
+    c.append(P(F, "PremiumSpot", (0, 15.2, PREMIUM_PODIUM_Z), (5, 0.3, 5), (255, 236, 190), "Neon",
+               children=[light(color=(255, 232, 190), brightness=1.6, range_=24)]))
+    for k, (set_id, yaw) in enumerate(PREMIUM_DISPLAYS):
+        a = math.radians(yaw)
+        # yaw 0 = regarde vers -Z local (la façade) : le mannequin est posé du côté où il regarde
+        lx, lz = -math.sin(a) * PREMIUM_RADIUS, PREMIUM_PODIUM_Z - math.cos(a) * PREMIUM_RADIUS
+        c.append(P(F, f"PremiumDisplay{k}", (lx, 0.4 + PREMIUM_PODIUM[1] + 0.2, lz), (1, 0.2, 1), WHITE, yaw=yaw,
+                   transparency=1, collide=False, tags=["PremiumDisplay"],
+                   attributes={"SetId": set_id, "Stage": PREMIUM_STAGE}, extra={"CanQuery": False, "CanTouch": False}))
     n0 = len(c)
     c.append(P(F, "ClothesCounter", (11, 1.9, 31), (12, 3.4, 2.4), WOOD_LIGHT, "WoodPlanks"))
     wrap(c, n0, F, "CounterSlot", (11, 0.4, 31), "ShopCounter")

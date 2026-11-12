@@ -41,8 +41,10 @@ local HAIR_ITEMS = {
 	"Handlebar",
 	"ChinStrap",
 }
-local EXPECTED = { MogLife_Characters = 6958, MogLife_Wardrobe = 6958, MogLife_Premium = 3486, MogLife_Update = 3864 }
-local TOTAL_STYLE = 6958
+-- D128 : hauts à cape en Cash refaits (cape en bandes), livrés aussi dans MogLife_Update.fbx
+local CAPE_ITEMS = { "RoyalRumbleTop", "PaperCrownTop" }
+local EXPECTED = { MogLife_Characters = 7588, MogLife_Wardrobe = 7588, MogLife_Premium = 3892, MogLife_Update = 4634 }
+local TOTAL_STYLE = 7588
 
 local imported = workspace:FindFirstChild("MogLife_Update")
 	or workspace:FindFirstChild("MogLife_Premium")
@@ -60,7 +62,7 @@ local expected = EXPECTED[imported.Name]
 
 local function isPremium(name: string): boolean
 	local item = string.split(name, "__")[2]
-	if withHair and table.find(HAIR_ITEMS, item) then
+	if withHair and (table.find(HAIR_ITEMS, item) or table.find(CAPE_ITEMS, item)) then
 		return true
 	end
 	for _, set in PREMIUM_SETS do

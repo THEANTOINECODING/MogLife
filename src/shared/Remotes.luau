@@ -44,7 +44,7 @@ local NAMES = {
 	"TutorialAction", -- client -> serveur : ("Skip") passer le tutoriel
 	"MentorSay", -- serveur -> client : ({ key, args }) le mentor parle (tutoriel, conseils)
 	"BuyBoost", -- client -> serveur : (boostId: string) au camion à shakes ou au distributeur
-	"BoostState", -- serveur -> client : ({ id: string?, endsAt: number, stock: { [string]: number } }) boost en cours
+	"BoostState", -- serveur -> client : ({ id: string?, endsAt: number, stock: { [string]: number }, paid: { multiplier: number, remaining: number } }) boost en cours, réserve, boost Robux (D128)
 	"EatBoost", -- client -> serveur : (boostId: string) manger un aliment de sa réserve (D114)
 	"BoostEaten", -- serveur -> tous : (player: Player, boostId: string) un joueur mange : animation du repas
 	"RestState", -- serveur -> client : ({ bonus: number, endsAt: number, home: boolean }) bien reposé (D111)
@@ -74,7 +74,7 @@ local NAMES = {
 	"ShopTourDone", -- client -> serveur : (store: string, played: boolean) visite vue ou passée (false = pas jouée)
 	"SecretFound", -- serveur -> client : (secretId: string) annonce « SECRET FOUND » et titre secret débloqué (D121)
 	"SecretFx", -- serveur -> tous : (secretId: string, data: { [string]: any }) scène d'un secret, vue par tous
-	"PurchaseDone", -- serveur -> client : ({ kind: "Cash" | "Mog", amount: number }) pack Robux accordé (D122)
+	"PurchaseDone", -- serveur -> client : ({ kind: "Cash" | "Mog", amount: number } ou { kind: "Boost", multiplier, minutes }) achat Robux accordé (D122, D128)
 	"BossWinOffer", -- serveur -> client : ({ bossId, productId, robux, delay, window }) passer ce boss en Robux (D122)
 	"BuyBossWin", -- client -> serveur : (bossId: string) accepte l'offre : le serveur ouvre la fenêtre d'achat
 }

@@ -1,5 +1,5 @@
--- Produits Robux à achat répétable (Developer Products, D122, choix d'Antoine) : packs de Cash, packs de Mog et
--- victoire contre un boss qu'on n'arrive pas à battre. Identifiants à créer par Antoine dans le Creator Hub
+-- Produits Robux à achat répétable (Developer Products, D122, choix d'Antoine) : packs de Cash, packs de Mog,
+-- boosts de Mog (D128) et victoire contre un boss qu'on n'arrive pas à battre. Identifiants à créer par Antoine dans le Creator Hub
 -- (Créations > le jeu > Monétisation > Produits de développeur). Tant qu'un identifiant vaut 0, le produit reste
 -- caché dans le jeu. Le prix réel est celui du Creator Hub ; `robux` n'est qu'un prix conseillé.
 -- Seule la confirmation officielle de Roblox (ProcessReceipt, PurchaseService) accorde un produit.
@@ -11,6 +11,18 @@ export type Pack = {
 	robux: number, -- prix conseillé (affiché si Roblox ne répond pas)
 	amount: number?, -- Cash : montant fixe
 	share: number?, -- Mog : part du Mog demandé par le boss du stade du joueur (le pack grandit avec lui)
+	icon: string,
+}
+
+-- Boost de Mog en Robux (D128, demande d'Antoine) : multiplie le Mog des exercices pendant `duration` secondes DE JEU
+-- (le minuteur ne tourne que quand le joueur est connecté ; racheter ajoute du temps). Il se cumule avec les
+-- en-cas en Cash et le bonus « bien reposé ». Jamais pris en compte entre vrais joueurs (bras de fer).
+export type BoostPack = {
+	id: string,
+	productId: number,
+	robux: number,
+	multiplier: number,
+	duration: number,
 	icon: string,
 }
 
@@ -29,6 +41,12 @@ Products.Mog = {
 	{ id = "MogMedium", productId = 0, robux = 149, share = 0.35, icon = "🗿" },
 	{ id = "MogLarge", productId = 0, robux = 399, share = 1.0, icon = "🔥" },
 } :: { Pack }
+
+-- ❓ Multiplicateur, durées et prix de départ, à régler (Antoine).
+Products.Boost = {
+	{ id = "MogBoostShort", productId = 0, robux = 79, multiplier = 2, duration = 15 * 60, icon = "⚡" },
+	{ id = "MogBoostLong", productId = 0, robux = 249, multiplier = 2, duration = 60 * 60, icon = "🚀" },
+} :: { BoostPack }
 
 -- Victoire contre le boss qu'on vient de perdre (proposée sur l'écran de défaite, choix d'Antoine). Seulement pour la
 -- première victoire (le boss qui garde le stade du joueur), jamais en revanche, jamais au bras de fer.

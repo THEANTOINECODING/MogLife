@@ -5,8 +5,11 @@
 -- quand il veut, n'importe où, mais un seul boost à la fois (refusé tant qu'un boost est actif). Tout le monde voit
 -- le repas (Remotes.BoostEaten, animation dans SnackController).
 -- L'heure de fin est enregistrée (os.time) : le boost continue de s'écouler si le joueur se déconnecte.
+-- Boost Robux (D128, Products.Boost, accordé par PurchaseService) : un second multiplicateur, à part, dont le temps
+-- restant est compté en secondes de jeu (il ne s'écoule que connecté : ce qui est payé n'est jamais perdu).
 
 local CollectionService = game:GetService("CollectionService")
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
@@ -25,6 +28,7 @@ local MinigameService
 local BossService
 
 local lastEat: { [Player]: number } = {}
+local PAID_TICK = 1 -- secondes entre deux décomptes du boost Robux
 
 local BoostService = {}
 
@@ -38,10 +42,30 @@ function BoostService.Active(player: Player): (string?, number)
 	return boost.Id, boost.EndsAt
 end
 
--- Multiplicateur de Mog du boost en cours (1 sans boost)
+-- Boost Robux du joueur (champ PaidBoost, réparé s'il manque ou s'il est abîmé)
+local function paidOf(data): { Multiplier: number, Remaining: number }
+	local paid = data.PaidBoost
+	if typeof(paid) ~= "table" or typeof(paid.Multiplier) ~= "number" or typeof(paid.Remaining) ~= "number" then
+		paid = { Multiplier = 1, Remaining = 0 }
+		data.PaidBoost = paid
+	end
+	return paid
+end
+
+-- Multiplicateur du boost Robux en cours (1 sans boost)
+function BoostService.PaidMultiplier(player: Player): number
+	local data = DataService.Get(player)
+	if not data then
+		return 1
+	end
+	local paid = paidOf(data)
+	return if paid.Remaining > 0 then math.max(paid.Multiplier, 1) else 1
+end
+
+-- Multiplicateur de Mog des boosts en cours : en-cas (Cash) × boost Robux (1 sans boost)
 function BoostService.Multiplier(player: Player): number
 	local id = BoostService.Active(player)
-	return if id then Boosts[id].mogMultiplier else 1
+	return (if id then Boosts[id].mogMultiplier else 1) * BoostService.PaidMultiplier(player)
 end
 
 -- Réserve du joueur (aliment -> nombre), nettoyée des aliments inconnus ou à zéro
@@ -66,7 +90,41 @@ local function sendState(player: Player)
 	-- Aura du boost (D121), vue par tous : attributs répliqués du joueur, dessinés par AuraController
 	player:SetAttribute("BoostAura", id or "")
 	player:SetAttribute("BoostAuraEnds", endsAt)
-	Remotes.BoostState:FireClient(player, { id = id, endsAt = endsAt, stock = table.clone(stockOf(data)) })
+	local paid = paidOf(data)
+	Remotes.BoostState:FireClient(player, {
+		id = id,
+		endsAt = endsAt,
+		stock = table.clone(stockOf(data)),
+		paid = { multiplier = paid.Multiplier, remaining = math.max(paid.Remaining, 0) },
+	})
+end
+
+-- Boost Robux accordé par un reçu (PurchaseService) : le temps s'ajoute à ce qui reste. Renvoie true si accordé.
+function BoostService.GrantPaid(player: Player, multiplier: number, duration: number): boolean
+	local data = DataService.Get(player)
+	if not data or multiplier <= 1 or duration <= 0 then
+		return false
+	end
+	local paid = paidOf(data)
+	local running = paid.Remaining > 0
+	paid.Multiplier = if running then math.max(paid.Multiplier, multiplier) else multiplier
+	paid.Remaining = math.max(paid.Remaining, 0) + duration
+	sendState(player)
+	return true
+end
+
+-- Décompte du boost Robux : seulement pendant que le joueur est là
+local function tickPaid(elapsed: number)
+	for _, player in Players:GetPlayers() do
+		local data = DataService.Get(player)
+		local paid = data and data.PaidBoost
+		if typeof(paid) == "table" and typeof(paid.Remaining) == "number" and paid.Remaining > 0 then
+			paid.Remaining = math.max(paid.Remaining - elapsed, 0)
+			if paid.Remaining == 0 then
+				sendState(player)
+			end
+		end
+	end
 end
 
 local function isNearShop(player: Player): boolean
@@ -211,8 +269,17 @@ function BoostService.Start()
 	CollectionService:GetInstanceAddedSignal(SHOP_TAG):Connect(setupShop)
 	Remotes.BuyBoost.OnServerEvent:Connect(onBuy)
 	Remotes.EatBoost.OnServerEvent:Connect(onEat)
-	game:GetService("Players").PlayerRemoving:Connect(function(player)
+	Players.PlayerRemoving:Connect(function(player)
 		lastEat[player] = nil
+	end)
+	task.spawn(function()
+		local last = os.clock()
+		while true do
+			task.wait(PAID_TICK)
+			local now = os.clock()
+			tickPaid(now - last)
+			last = now
+		end
 	end)
 	Remotes.RequestStats.OnServerEvent:Connect(Throttle.Wrap(Balance.RemoteThrottle.RequestStats, sendState))
 	DataService.PlayerLoaded:Connect(sendState)

@@ -24,6 +24,7 @@ local player = Players.LocalPlayer
 
 local MinigameController
 local SnackController
+local StoreController
 
 local panel: Frame
 local list: ScrollingFrame
@@ -42,6 +43,11 @@ local rest = { bonus = 0, endsAt = 0, home = false }
 local restBadge: Frame
 local restLabel: TextLabel
 local restBar: Frame
+-- Boost de Mog acheté en Robux (D128) : un badge doré de plus ; le toucher ouvre l'onglet Boosts de la boutique
+local paid = { multiplier = 1, endsAt = 0, total = 1 } -- endsAt sur l'horloge locale (os.clock)
+local paidBadge: TextButton
+local paidLabel: TextLabel
+local paidBar: Frame
 
 local BoostController = {}
 
@@ -260,6 +266,9 @@ end
 -- ------------------------------------------------------------------ badges
 
 local function clock(seconds: number): string
+	if seconds >= 3600 then
+		return string.format("%d:%02d:%02d", seconds // 3600, seconds % 3600 // 60, math.floor(seconds % 60))
+	end
 	return string.format("%d:%02d", math.floor(seconds / 60), math.floor(seconds % 60))
 end
 
@@ -297,6 +306,17 @@ local function updateBadge()
 		local below = if badge.Visible then badge.Size.Y.Offset + 4 else 0
 		restBadge.Position = badge.Position + UDim2.fromOffset(0, below)
 		restBadge.Size = badge.Size
+	end
+
+	local paidLeft = paid.endsAt - os.clock()
+	paidBadge.Visible = paidLeft > 0
+	if paidBadge.Visible then
+		paidLabel.Text = Texts.Get("Store.BoostBadge", { multiplier = paid.multiplier, time = clock(paidLeft) })
+		paidBar.Size = UDim2.fromScale(math.clamp(paidLeft / paid.total, 0, 1), 1)
+		local below = (if badge.Visible then badge.Size.Y.Offset + 4 else 0)
+			+ (if restBadge.Visible then badge.Size.Y.Offset + 4 else 0)
+		paidBadge.Position = badge.Position + UDim2.fromOffset(0, below)
+		paidBadge.Size = badge.Size
 	end
 end
 
@@ -353,6 +373,25 @@ local function buildGui()
 	}, { Ui.corner(UDim.new(0, 8)) })
 	restLabel, restBar = badgeContent(restBadge)
 	restBar.BackgroundColor3 = Color3.fromRGB(120, 200, 255)
+
+	paidBadge = Ui.create("TextButton", {
+		Name = "PaidBoost",
+		Text = "",
+		AutoButtonColor = true,
+		AnchorPoint = Vector2.new(0.5, 0),
+		BackgroundColor3 = Color3.fromRGB(70, 48, 12),
+		BackgroundTransparency = 0.1,
+		Visible = false,
+		Parent = gui,
+	}, { Ui.corner(UDim.new(0, 8)), Ui.stroke(Color3.fromRGB(255, 210, 60), 1.5, 0.2) })
+	paidLabel, paidBar = badgeContent(paidBadge)
+	paidLabel.TextColor3 = Color3.fromRGB(255, 225, 120)
+	paidBar.BackgroundColor3 = Color3.fromRGB(255, 210, 60)
+	paidBadge.Activated:Connect(function()
+		if StoreController and not MinigameController.IsGameplayLocked() then
+			StoreController.Open("Boosts")
+		end
+	end)
 
 	panel = Ui.panel({
 		Name = "Panel",
@@ -445,6 +484,7 @@ end
 function BoostController.Init(controllers)
 	MinigameController = controllers.MinigameController
 	SnackController = controllers.SnackController
+	StoreController = controllers.StoreController
 end
 
 function BoostController.Start()
@@ -471,6 +511,14 @@ function BoostController.Start()
 			return
 		end
 		active = { id = state.id, endsAt = state.endsAt or 0 }
+		local info = state.paid
+		if typeof(info) == "table" and typeof(info.remaining) == "number" then
+			local left = math.max(info.remaining, 0)
+			-- La jauge se vide par rapport au plus long temps vu depuis que le boost tourne
+			local total = if paid.endsAt > os.clock() then math.max(paid.total, left) else left
+			paid =
+				{ multiplier = tonumber(info.multiplier) or 1, endsAt = os.clock() + left, total = math.max(total, 1) }
+		end
 		stock = if typeof(state.stock) == "table" then state.stock else {}
 		updateBadge()
 		if panel.Visible then

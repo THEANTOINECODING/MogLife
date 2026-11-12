@@ -122,6 +122,36 @@ local function auraEmitter(layer: Layer): ParticleEmitter
 	return particles
 end
 
+-- Aura d'une tenue Robux sur un mannequin (D128, PremiumDisplayController) : les couches du corps sortent du volume
+-- de `body`, celles des pieds de `feet` ; `rateScale` allège le débit. Renvoie ce qui a été créé (à détruire).
+function OutfitFxController.DisplayAura(
+	setId: string,
+	body: BasePart,
+	feet: Attachment,
+	rateScale: number
+): { Instance }
+	local aura = StyleSets.Auras[setId]
+	local created: { Instance } = {}
+	if not aura then
+		return created
+	end
+	for _, layer in aura.layers do
+		local particles = auraEmitter(layer)
+		particles.Rate = layer.rate * rateScale
+		if layer.anchor == "Feet" then
+			particles.Parent = feet
+		else
+			if not layer.flat and not layer.locked then
+				particles.Shape = Enum.ParticleEmitterShape.Box
+				particles.ShapeStyle = Enum.ParticleEmitterShapeStyle.Volume
+			end
+			particles.Parent = body
+		end
+		table.insert(created, particles)
+	end
+	return created
+end
+
 function OutfitFxController.RefreshPremium(owner: Player)
 	local id = owner:GetAttribute("PremiumSet")
 	local set = typeof(id) == "string" and StyleSets.ById[id] or nil

@@ -106,7 +106,8 @@ for o in keep:
     o.hide_render = True
     o.hide_set(True)
 
-direction = {"front": Vector((0, -1, 0.12)), "back": Vector((0, 1, 0.12)), "three": Vector((0.55, -1, 0.2))}[view]
+direction = {"front": Vector((0, -1, 0.12)), "back": Vector((0, 1, 0.12)), "three": Vector((0.55, -1, 0.2)), "backthree": Vector((0.8, 1, 0.3)),
+             "side": Vector((1, 0.05, 0.1))}[view]
 cam_data = bpy.data.cameras.new("PreviewCam")
 cam_data.type = "ORTHO"
 cam = bpy.data.objects.new("PreviewCam", cam_data)

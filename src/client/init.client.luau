@@ -40,6 +40,7 @@ local ORDER = {
 	"ShopTourController",
 	"SecretController",
 	"StoreController",
+	"PremiumDisplayController",
 	"SignatureFxController",
 	"PremiumMotionController",
 	"MenuController",
