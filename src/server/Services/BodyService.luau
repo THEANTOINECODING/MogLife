@@ -364,7 +364,7 @@ local function buildShell(
 		clone.Massless = true
 		clone.CFrame = target.CFrame * CFrame.new(offset)
 		-- Couleur choisie, visible au travers des zones semi-transparentes de la texture
-		local color = entry.color or entry.tint and Look.Color(look, entry.tint)
+		local color = entry.color or entry.skin or entry.tint and Look.Color(look, entry.tint)
 		if color then
 			-- Cheveux et barbes : couleur unie, sans la texture. Le reste garde son voile, posé en Overlay (D119).
 			Look.Tint(clone, color, entry.tint == "Hair" or entry.color ~= nil)

@@ -180,6 +180,28 @@ function Ui.closeButton(props: { [string]: any }): TextButton
 	Ui.gradient(Ui.shade(color, 1.3), color).Parent = button
 	Ui.stroke(Ui.Ink, 2.5).Parent = button
 	Ui.outline(button, 2)
+	-- Croix dessinée (deux barres blanches cernées) : la police du jeu n'a pas le glyphe ✕, le texte restait vide
+	button.Text = ""
+	local padding = button:FindFirstChildOfClass("UIPadding")
+	if padding then
+		padding:Destroy()
+	end
+	for _, angle in { 45, -45 } do
+		Ui.create("Frame", {
+			Name = "Cross",
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(0.5, 0.5),
+			Size = UDim2.fromScale(0.62, 0.16),
+			Rotation = angle,
+			BackgroundColor3 = Color3.new(1, 1, 1),
+			BorderSizePixel = 0,
+			ZIndex = button.ZIndex + 1,
+			Parent = button,
+		}, {
+			Ui.create("UICorner", { CornerRadius = UDim.new(1, 0) }),
+			Ui.stroke(Ui.Ink, 1.5),
+		})
+	end
 	Ui.juice(button)
 	return button
 end

@@ -26,6 +26,7 @@ local Drip = require(ReplicatedStorage.Shared.Drip)
 local Luxury = require(ReplicatedStorage.Shared.Config.Luxury)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local Ui = require(script.Parent.Parent.Ui)
+local PreviewFx = require(script.Parent.Parent.PreviewFx)
 
 local MIRROR_TAG = "Mirror"
 local ALL_CATEGORIES = { "Hair", "Beard", "Face", "Top", "Bottom", "Accessory", "Trail", "Aura", "Entrance" }
@@ -46,6 +47,7 @@ local viewport: ViewportFrame
 local world: WorldModel
 local previewLabel: TextLabel
 local previewModel: Model? = nil
+local previewFx -- D127 : auras, traînées et entrées imitées dans l'aperçu (PreviewFx)
 local previewKey = ""
 local previewing: string? = nil -- article essayé (nil : sa tenue actuelle)
 local previewSet: string? = nil -- ensemble essayé en un clic
@@ -160,6 +162,7 @@ local function refreshPreview()
 	end
 	model.Parent = world
 	previewModel = model
+	previewFx:Set(items, model)
 	-- Cadrage : tout le corps, quel que soit le stade
 	local head = Outfit.HeadCenter(stage.id, look) :: Vector3
 	local center = head.Y * 0.55
@@ -599,6 +602,7 @@ local function buildGui()
 	}, { Ui.corner(UDim.new(0, 12)) })
 	world = Ui.create("WorldModel", { Parent = viewport })
 	viewport.CurrentCamera = Ui.create("Camera", { FieldOfView = 35, Parent = viewport })
+	previewFx = PreviewFx.new(world, viewport.CurrentCamera :: Camera)
 	previewLabel = Ui.label({
 		Position = UDim2.new(0, 16, 1, -44),
 		Size = UDim2.new(0.36, -16, 0, 26),
@@ -712,6 +716,7 @@ function ShopController.Start()
 		if panel.Visible and previewModel then
 			spin += dt * 0.7
 			previewModel:PivotTo(CFrame.Angles(0, spin, 0))
+			previewFx:Step(dt)
 		end
 	end)
 	Remotes.StatsChanged.OnClientEvent:Connect(function(stats)

@@ -114,6 +114,31 @@ return {
 		MarbleStatue = { Color3.fromRGB(255, 200, 75), Color3.fromRGB(255, 245, 205) },
 		InfernalDemon = { Color3.fromRGB(255, 55, 15), Color3.fromRGB(255, 150, 30) },
 	},
+	-- D127 : couleur de peau prise par le corps quand on porte une pièce de la tenue (le voile de muscles reste
+	-- visible). Le haut colore le torse et les bras, le bas le bassin et les jambes ; la tête, le cou (dans la tête)
+	-- et les mains gardent la couleur de peau du joueur. Une tenue absente de cette liste ne change pas la peau.
+	Skin = {
+		CosmicEmperor = Color3.fromRGB(95, 80, 175),
+		GoldenTitan = Color3.fromRGB(230, 180, 75),
+		NeonPhantom = Color3.fromRGB(125, 150, 185),
+		GymDragon = Color3.fromRGB(70, 150, 85),
+		EternalSun = Color3.fromRGB(250, 195, 110),
+		MechaMogger = Color3.fromRGB(150, 162, 178),
+		MarbleStatue = Color3.fromRGB(236, 233, 224),
+		InfernalDemon = Color3.fromRGB(180, 45, 38),
+	},
+	SkinParts = {
+		Top = { "UpperTorso", "LeftUpperArm", "RightUpperArm", "LeftLowerArm", "RightLowerArm" },
+		Bottom = {
+			"LowerTorso",
+			"LeftUpperLeg",
+			"RightUpperLeg",
+			"LeftLowerLeg",
+			"RightLowerLeg",
+			"LeftFoot",
+			"RightFoot",
+		},
+	},
 	-- D125 : aura de chaque tenue Robux, vue par tous (OutfitFxController) : plusieurs couches de particules et une
 	-- lumière. Le réglage « effets de tenue » la masque.
 	-- anchor : partie du personnage ("UpperTorso", "LowerTorso", "Head") : les particules sortent de tout son volume ;

@@ -904,11 +904,13 @@ def _mecha(K, top):
         A = K.arm(side)
         jo = 0 if sx > 0 else 12
         r = (A.radius(1.5, jo) + A.radius(1.5, 6) + A.radius(1.5, 18)) / 3
-        cx = A.centers[0][0] + sx * r * 0.5
-        z = A.heights[0] - r * 0.45
-        K.make(side + "UpperArm", _rbox((cx, A.centers[0][1], z), (r * 1.6, r * 1.85, r * 0.9), 0.35, taper_top=0.85), "plate")
-        K.make(side + "UpperArm", _rbox((cx + sx * r * 0.2, A.centers[0][1] - r * 1.02, z - r * 0.1), (r * 1.1, 0.05, r * 0.16), 0.4), "trim", "Glow")
-        K.make(side + "UpperArm", _rbox((cx + sx * r * 0.88, A.centers[0][1], z), (0.06, r * 1.4, r * 0.5), 0.4), "extra")
+        # Correctif : le dessus de la manche noire (anneau à 0,72 r, au ras de heights[0]) affleurait au sommet de
+        # l'épaulière (scintillement) et dépassait côté cou ; l'épaulière déborde maintenant vers le cou et 12 % plus haut
+        cx = A.centers[0][0] + sx * r * 0.3
+        z = A.heights[0] - r * 0.33
+        K.make(side + "UpperArm", _rbox((cx, A.centers[0][1], z), (r * 2.2, r * 1.95, r * 0.9), 0.3, taper_top=0.95), "plate")
+        K.make(side + "UpperArm", _rbox((cx + sx * r * 0.4, A.centers[0][1] - r * 1.07, z - r * 0.1), (r * 1.1, 0.05, r * 0.16), 0.4), "trim", "Glow")
+        K.make(side + "UpperArm", _rbox((cx + sx * r * 1.12, A.centers[0][1], z), (0.06, r * 1.4, r * 0.5), 0.4), "extra")
         K.make(side + "UpperArm", A.patch((jo - 5) % 24, (jo - 5) % 24 + 10, 2.5, 7.6, 0.0, 0.06, 0.03), "plate")
         K.make(side + "UpperArm", A.band(7.0, 7.6, 0.06, 0.03), "trim", "Glow")
         B = K.arm(side, lower=True)

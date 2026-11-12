@@ -41,6 +41,7 @@ export type Piece = {
 	-- (D125, Néon à la couleur de StyleSets.Glow), "GlowDeco", "GlowBDeco" : décoration lumineuse
 	glow: boolean?, -- pièce lumineuse (Néon)
 	color: Color3?, -- couleur propre de l'objet (coupe ou barbe achetée), à la place de la teinte (D102)
+	skin: Color3?, -- D127 : peau de la tenue portée (StyleSets.Skin), à la place de la peau du joueur ; garde le voile
 	key: string, -- nom de la pièce sans le corps (<Partie>[_<Groupe>]) : sa jumelle dans un autre corps a le même
 	item: string?, -- objet de style (nil pour le corps)
 }
@@ -268,6 +269,8 @@ function Look.Pieces(bodyKey: string, look: LookData, items: { string }, options
 	local hasHair = opts.noBaseHair == true
 	local hasTop = false
 	local hasBottom = false
+	-- D127 : peau de tenue (StyleSets.Skin) par partie du corps
+	local setSkin: { [string]: Color3 } = {}
 	for _, itemId in items do
 		local item = StyleItems[itemId]
 		if item then
@@ -277,6 +280,11 @@ function Look.Pieces(bodyKey: string, look: LookData, items: { string }, options
 				hasTop = true
 			elseif item.category == "Bottom" then
 				hasBottom = true
+			end
+			local skin = item.setId and StyleSets.Skin[item.setId]
+			local parts = skin and StyleSets.SkinParts[item.category]
+			for _, part in parts or {} do
+				setSkin[part] = skin
 			end
 		end
 	end
@@ -295,6 +303,7 @@ function Look.Pieces(bodyKey: string, look: LookData, items: { string }, options
 				part = part,
 				offset = offset,
 				tint = tint,
+				skin = if tint == "Skin" and group == "" then setSkin[part] else nil,
 				key = key,
 			})
 		end

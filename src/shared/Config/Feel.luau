@@ -79,6 +79,19 @@ return {
 		Life = 2, -- secondes avant de retirer l'émetteur d'un personnage parti
 	},
 
+	-- D127 : aperçu des effets dans la boutique (src/client/PreviewFx.luau). Un ViewportFrame n'affiche ni particules ni
+	-- traînées : l'aperçu les imite avec des images tournées vers la caméra.
+	ShopFx = {
+		MaxParticles = 90, -- au-delà, les nouvelles particules attendent (téléphone)
+		TrailRate = 30, -- morceaux de traînée par seconde
+		TrailDrift = 0.6, -- studs/s : la traînée s'éloigne vers l'arrière
+		BurstEvery = 2.4, -- secondes entre deux « entrées » rejouées
+		BurstMax = 36, -- particules par entrée au plus
+		BurstSpeedScale = 0.22, -- vitesse de l'entrée réduite pour rester dans le cadre
+		BurstGravity = 6, -- studs/s²
+		RateScale = 1, -- multiplie le débit des auras
+	},
+
 	-- Secousse latérale de la caméra (CameraFraming.Jolt) à pleine force
 	Jolt = {
 		Side = 0.35, -- studs

@@ -2,6 +2,23 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-12 (Demande d'Antoine : « une croix dans le bouton rouge de fermeture ; bug de texture aux épaules du Mecha-Mogger ; la peau prend la couleur du skin porté, sauf cou, tête et mains ; il manque des aperçus en boutique, comme l'aura »)
+
+- **D127 — Croix de fermeture, épaulières du Mecha-Mogger, peau de tenue, effets visibles dans l'aperçu de la boutique.**
+  - **Croix** (`Ui.closeButton`) : dessinée avec deux barres blanches cernées. La police du jeu n'a pas le glyphe ✕, le bouton restait un rond rouge vide.
+  - **Épaulières du Mecha-Mogger** (`premium_looks.py`, `_mecha`) : le dessus de la manche noire affleurait au sommet de l'épaulière (scintillement noir) et dépassait côté cou. L'épaulière est plus large vers le cou et dépasse un peu plus haut.
+  - **Peau de tenue** (`StyleSets.Skin`, `StyleSets.SkinParts`, `Look.Pieces` → champ `skin`) : les 8 tenues Robux donnent une couleur au corps (acier, or, marbre, rouge démon, écailles vertes…). Le haut colore le torse et les bras, le bas le bassin, les jambes et les pieds. La tête (cou compris, il fait partie de la tête) et les mains gardent la peau du joueur, et le voile de muscles reste visible.
+    - Les tenues achetées en Cash ne changent pas la peau : ce sont des vêtements. Il suffit de les ajouter à `StyleSets.Skin` pour qu'elles la changent.
+  - **Aperçus de la boutique** (`src/client/PreviewFx.luau`, `Feel.ShopFx`) : un ViewportFrame n'affiche ni particules ni traînées. L'aperçu les imite avec des images tournées vers la caméra : auras, traînées, entrées rejouées toutes les 2,4 s, et aura des tenues Robux. Ce qu'on porte s'affiche aussi.
+  - **Statut** :
+    - testé dans Studio (Play, son coupé) :
+      - aucune erreur ;
+      - Mecha-Mogger porté : torse, bras, jambes et pieds couleur acier ; tête et mains couleur Sand ;
+      - la croix a ses 2 barres ;
+      - PreviewFx avancé à la main : les particules naissent, changent de taille et de transparence, avec les bonnes textures, sans erreur ;
+    - **pas vu à l'image** : Studio était réduit (pas de rendu) ;
+    - **épaulières** : il faut réimporter `MogLife_Update.fbx`.
+
 ## 2026-11-10 (Demande d'Antoine, sans questions : « renseigne-toi sur l'économie, les animations, les effets et le son des combats, ce qui rend un jeu addictif ; review complète et solutions aux problèmes les plus importants ; derniers détails des skins payants (cape molle…) ; refais toutes les coupes et barbes 1000x plus stylées ; couleur de cheveux et barbe au choix, à tout moment, la même pour la paire »)
 
 - **D126 — Review complète et premières solutions, détails des tenues Robux, coupes et barbes refaites, couleur de cheveux libre.** Review et sources dans `REVIEW_2026-11-10.md`.

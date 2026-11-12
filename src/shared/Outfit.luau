@@ -92,7 +92,7 @@ function Outfit.Build(stage: string, items: { string }, options: Options?): Mode
 		-- Mannequin : le corps est blanchi ; sur les objets exposés, ce qui prend la couleur de peau prend celle
 		-- du mannequin, et les cheveux la couleur de cheveux par défaut
 		local isBody = entry.folder == "Bodies"
-		local color = entry.color or if entry.tint then Look.Color(look, entry.tint) else nil
+		local color = entry.color or entry.skin or if entry.tint then Look.Color(look, entry.tint) else nil
 		if whiten and entry.tint == "Skin" then
 			color = MANNEQUIN_COLOR
 		end
