@@ -155,7 +155,7 @@ local function build(display: Display)
 	local top = invisible("Label", Vector3.one, base * CFrame.new(0, head.Y + CONFIG.LabelHeight, 0), model)
 	local board = Ui.create("BillboardGui", {
 		Name = "Tag",
-		Size = UDim2.fromScale(7, 2),
+		Size = UDim2.fromScale(CONFIG.LabelSize.X, CONFIG.LabelSize.Y),
 		MaxDistance = CONFIG.LabelDistance,
 		LightInfluence = 0,
 		Parent = top,

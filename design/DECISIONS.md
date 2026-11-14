@@ -22,8 +22,11 @@ Format : date — décision — raison. La plus récente en haut.
   - **État au 13/11** :
     - Blender : capes vues à l'image (dos, trois quarts dos) sur Bro et GodMogger ; export complet fait.
     - Studio, testé (son coupé) : aucune erreur au démarrage ; boost de Mog accordé par un faux reçu (une seule fois par reçu, cumul 15 + 60 min, décompte) ; badge affiché ; 4 mannequins montés avec leurs particules et leur invite ; sauvegarde d'Antoine restaurée.
-    - **Pas encore vu à l'image** (Studio était réduit, sans rendu) : la fenêtre de la boutique, les mannequins, l'animation des capes.
-    - **À faire par Antoine** : importer `MogLife_Update.fbx` (voir `IMPORT_WARDROBE.md`) ; créer les produits et les passes dans le Creator Hub et renseigner leurs identifiants.
+    - **État au 14/11** (après l'import de `MogLife_Update.fbx` par Antoine) : `StylePieces.luau` activé, pièces installées dans Studio (7 588 pièces de style, aucune manquante, aucune en trop, aucun nom coupé, toutes texturées).
+    - **Vu à l'image dans Studio** (son coupé, sauvegarde restaurée) : la boutique et ses quatre onglets (aperçu 3D qui tourne, coffres, boutons gris « Not on sale yet »), « Wear » qui habille le joueur, la cape du Titan Doré au repos et en course (mesuré : la chaîne se courbe de 0° en haut à environ 35° en bas avec une onde, et retombe en une demi-seconde à l'arrêt), les quatre mannequins sur leur podium.
+    - **Corrigé après ce test** : mannequins trop serrés (podium 14 → 16 studs, mannequins à 5,6 du centre au lieu de 4,2), étiquettes trop grandes qui se chevauchaient (`Store.Display.LabelSize`, 7 × 2 → 4,6 × 1,4 studs, visibles à 32 studs), texte du troisième pack de Mog trop long. **Ces trois corrections ne sont pas revues à l'image** (Studio a été réduit entre-temps) ; seules les nouvelles positions et tailles ont été relues en jeu.
+    - **Pas testé** : le saut (la commande de saut du test n'a pas été prise en compte), la mise en page téléphone debout de la boutique, un achat réel.
+    - **À faire par Antoine** : Ctrl+S dans Studio ; créer les produits et les passes dans le Creator Hub et renseigner leurs identifiants.
 
 ## 2026-11-12 (Demande d'Antoine : « une croix dans le bouton rouge de fermeture ; bug de texture aux épaules du Mecha-Mogger ; la peau prend la couleur du skin porté, sauf cou, tête et mains ; il manque des aperçus en boutique, comme l'aura »)
 

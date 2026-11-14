@@ -43,8 +43,9 @@ return {
 		DropDistance = 120, -- studs : on le retire au-delà
 		CheckEvery = 1, -- secondes entre deux mesures de distance
 		PromptDistance = 9,
-		LabelHeight = 2.2, -- studs au-dessus de la tête
-		LabelDistance = 45, -- studs : l'étiquette disparaît au-delà
+		LabelHeight = 1.5, -- studs au-dessus de la tête
+		LabelSize = Vector2.new(4.6, 1.4), -- studs : assez étroite pour que deux étiquettes voisines ne se touchent pas
+		LabelDistance = 32, -- studs : l'étiquette disparaît au-delà
 		AuraRateScale = 0.6, -- débit de l'aura d'un mannequin par rapport à celle d'un joueur
 		LightRange = 9,
 	},

@@ -1159,9 +1159,9 @@ def shop_frame(cx):
 # D128 : mannequins des tenues Robux (tag PremiumDisplay) : tenue (StyleSets) et direction du regard (yaw local)
 PREMIUM_DISPLAYS = (("GoldenTitan", 45), ("CosmicEmperor", -45), ("GymDragon", 135), ("InfernalDemon", -135))
 PREMIUM_STAGE = "Chad"          # corps porté
-PREMIUM_PODIUM = (14, 0.6)      # diamètre, hauteur
+PREMIUM_PODIUM = (16, 0.6)      # diamètre, hauteur
 PREMIUM_PODIUM_Z = 20           # profondeur dans le magasin (repère local)
-PREMIUM_RADIUS = 4.2            # distance des mannequins au centre du podium
+PREMIUM_RADIUS = 5.6            # distance des mannequins au centre du podium
 
 
 def clothing_store():
