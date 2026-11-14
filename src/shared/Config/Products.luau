@@ -42,10 +42,11 @@ Products.Mog = {
 	{ id = "MogLarge", productId = 0, robux = 399, share = 1.0, icon = "🔥" },
 } :: { Pack }
 
--- ❓ Multiplicateur, durées et prix de départ, à régler (Antoine).
+-- Prix D129 (étude des prix de 12 jeux à succès, design/06_MONETISATION.md) : l'heure coûte 25 % de moins à la minute.
+-- ❓ Multiplicateur et durées de départ, à régler (Antoine).
 Products.Boost = {
-	{ id = "MogBoostShort", productId = 0, robux = 79, multiplier = 2, duration = 15 * 60, icon = "⚡" },
-	{ id = "MogBoostLong", productId = 0, robux = 249, multiplier = 2, duration = 60 * 60, icon = "🚀" },
+	{ id = "MogBoostShort", productId = 0, robux = 49, multiplier = 2, duration = 15 * 60, icon = "⚡" },
+	{ id = "MogBoostLong", productId = 0, robux = 149, multiplier = 2, duration = 60 * 60, icon = "🚀" },
 } :: { BoostPack }
 
 -- Victoire contre le boss qu'on vient de perdre (proposée sur l'écran de défaite, choix d'Antoine). Seulement pour la

@@ -28,3 +28,22 @@ Un éventuel accélérateur plus tard = décision séparée, parcours gratuit te
 - Seule la confirmation officielle de Roblox accorde un produit (vérifiée côté serveur, attribution idempotente).
 
 Revérifier les règles de la plateforme au moment de publier.
+
+## Grille de prix (D129, 15/11/2026)
+
+Prix relevés le 15/11/2026 sur l'API publique de Roblox pour 12 jeux à succès (Blox Fruits, Pet Simulator 99, Gym League, Muscle Legends, Grow a Garden, Steal a Brainrot, Brookhaven, Adopt Me, Arm Wrestle Simulator, Strongman Simulator, 99 Nights in the Forest, Blade Ball) : environ 3 300 produits et 118 passes. Les catégories sont triées par mots-clés dans les noms : les médianes sont des ordres de grandeur, pas des mesures exactes.
+
+| Produit | Ce que font les autres | Notre prix |
+|---|---|---|
+| Boost ×2, 15 min | Blox Fruits 25 ; Strongman 199 (30 min) ; Arm Wrestle 149 (30 min) | **49** |
+| Boost ×2, 60 min | Blox Fruits 99 ; Arm Wrestle 249 ; Strongman 249 à 349 | **149** |
+| Coffre de Cash, petit | Strongman 29 ; Gym League 37 ; Blox Fruits 50 ; Steal a Brainrot 59 | **49** (1 500 Cash) |
+| Coffre de Cash, gros | Strongman 129 ; Gym League 150 ; Blox Fruits 199 | **149** (6 000 Cash) |
+| Coffre de Cash, doré | Strongman 199 ; Steal a Brainrot 379 ; Gym League 412 ; Blox Fruits 499 | **399** (20 000 Cash) |
+| Pack de Mog (10 %, 35 %, 100 % d'un boss) | « passer une étape » : médiane 99, quart supérieur 349 ; 99 Nights 290 et 400 ; Gym League « Skip All » 750 | **49 / 149 / 399** |
+| Victoire contre le boss | « revivre » : 99 Nights 55 à 95 ; Pet Simulator 99 79 ; Blade Ball 99 | **99** |
+| Tenue Robux (passe permanent, aura, +15 % contre les boss) | auras Blox Fruits 88 et 350 ; skins Strongman 499 et 599 ; passe « Cosmetics » de Gym League 549 ; lots Brookhaven 399 ; passes ×2 permanents : médiane 350 | **299 à 599** |
+
+Tenues : Statue de Marbre et Fantôme Néon 299 ; Soleil Éternel et Mecha-Mogger 399 ; Dragon de la Salle et Démon des Enfers 499 ; Titan Doré et Empereur Cosmique 599 (les deux tenues à cape, les plus travaillées). ❓ Ce classement des tenues est une proposition : à ajuster par Antoine.
+
+Règles retenues : trois marches par famille (49, 149, 399), le plus gros pack toujours plus avantageux à l'unité (30, 40 puis 50 Cash par Robux), prix d'entrée bas parce que le jeu n'a pas encore de public. Blade Ball (lots de skins à 1 500 et plus) et les passes à plus de 1 000 Robux sont écartés : ils reposent sur un public déjà acquis. À revoir avec l'outil « Price Optimization » du Creator Hub quand le jeu aura des joueurs.

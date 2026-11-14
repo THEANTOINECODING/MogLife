@@ -2,6 +2,15 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-15 (Demande d'Antoine : « étudie les prix moyens sur les jeux qui fonctionnent bien afin d'appliquer des gammes de prix logiques pour chaque produit », et créer les produits)
+
+- **D129 — Grille de prix Robux.**
+  - **Étude** : prix lus sur l'API publique de Roblox pour 12 jeux à succès (environ 3 300 produits, 118 passes). Tableau et règles dans `06_MONETISATION.md` (« Grille de prix »).
+  - **Changé** : boost de Mog 79 / 249 → **49 / 149** (15 et 60 min). L'ancien prix court était trois fois celui de Blox Fruits et l'heure n'était que 21 % moins chère à la minute.
+  - **Gardé** : coffres de Cash 49 / 149 / 399 (très proches de Gym League : 37 / 150 / 412), packs de Mog 49 / 149 / 399, victoire contre le boss 99.
+  - **Nouveau** : prix conseillés des 8 tenues, de 299 à 599 (`GamePasses.luau`, en commentaire). ❓ Classement des tenues à valider.
+  - **Non fait** : la création des produits et des passes. L'outil de Studio a refusé (permission `developer-product:write` non accordée) ; aucun produit n'a été créé. Les identifiants restent à 0.
+
 ## 2026-11-13 (Demande d'Antoine : « les capes sont vraiment très moches et pas du tout bien animées, refais-les ; un bouton boutique pour les skins payants, les coffres d'argent, des boosts de Mog et le reste des choses payables en Robux ; des mannequins dans le magasin avec certaines tenues payantes ; de manière qualitative et sans tricher »)
 
 - **D128 — Capes refaites (modèle et animation), boutique Robux à onglets, boost de Mog en Robux, mannequins des tenues Robux.**
