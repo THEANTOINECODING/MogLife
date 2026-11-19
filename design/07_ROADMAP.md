@@ -66,6 +66,17 @@ Testeurs externes, vrais mobiles, analytics, corrections, simulation d'économie
 ### Étape G — Publication
 Activation de la traduction automatique Roblox, relecture complète du français, page du jeu en anglais et en français, icône, miniatures honnêtes, cosmétiques payants éventuels (voir 06_MONETISATION.md), vérification des règles.
 
+## Suite préparée le 20/11/2026 (❓ ordre à confirmer par Antoine)
+
+Détail et raisons : [ANALYSE_SUCCES_2026-11-20.md](ANALYSE_SUCCES_2026-11-20.md), partie 3.
+1. Antoine : enregistrer la place (meubles v3), **vérifier l'accès Kids / Select** (Manage Audience), créer les 8 badges restants.
+2. Alpha réelle (iPhone, PC, deux clients), en regardant aussi animations D134, meubles v3 et tableau Mog Rush à l'écran.
+3. Moments à partager : carte avant / après, mode photo.
+4. La force dans le monde : objets à soulever selon le stade, chacun avec son mini-jeu.
+5. Ascension après le GOD MOGGER.
+6. Notifications d'expérience (Golden Pump Hour, Mog Rush).
+7. Mises à jour régulières selon la recette ci-dessous.
+
 ## Mises à jour (après publication)
 
 Chaque mise à jour suit la même recette :

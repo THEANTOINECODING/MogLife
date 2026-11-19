@@ -3,11 +3,19 @@
 Toute nouvelle idée arrive ici. Elle passe dans le design seulement après une décision dans `DECISIONS.md`.
 Test de la vision : l'idée tient-elle dans les trois briques (mini-jeux, contenu en données, personnage) ?
 
+## Propositions du 20/11/2026 (Claude, à décider par Antoine)
+
+Détail dans [ANALYSE_SUCCES_2026-11-20.md](ANALYSE_SUCCES_2026-11-20.md).
+- **La force dans le monde** : 3 à 5 objets de la ville qu'on ne soulève ou ne pousse qu'à partir d'un stade (voiture garée, rocher qui bloque un raccourci, coffre secret…), chacun avec son propre mini-jeu et une récompense. Inspiré des tubes de l'automne 2026 où l'entraînement change ce qu'on peut faire (portée du lancer, vitesse de la monture).
+- **Mode photo** : caméra libre, interface cachée, poses, pour les captures et les clips des créateurs.
+- **Notifications d'expérience** Roblox (avec l'accord du joueur) pour la Golden Pump Hour et le début d'un Mog Rush.
+- **Récompense du champion du Mog Rush** (déjà posée en D132).
+
 ## Propositions du 19/11/2026 (Claude, à décider par Antoine)
 
 Détail et justification dans [ANALYSE_JEU_2026-11-19.md](ANALYSE_JEU_2026-11-19.md) : badges à créer, serveurs privés, pack de départ, récompense du groupe, nouveautés et codes, bonus entre amis, perte de Mog limitée, Kevin gagnable par tous (et sans victoire en Robux), événements à heure fixe, progrès pendant l'absence sans pénalité, Ascension, classement mondial du Mog, mises à jour régulières, carte avant/après.
 
-**Faites (D131) : 1 à 10** (badges bloqués par une autorisation Open Cloud). Restent : Ascension, classement mondial du Mog, mises à jour régulières, carte avant/après.
+**Faites (D131) : 1 à 10** ; badges de stade renseignés et **classement mondial du Mog fait (D132, Mog Rush toutes les 30 min)**. Restent : Ascension, mises à jour régulières, carte avant/après, 8 badges à créer.
 
 ## Secrets du jeu (proposés par Claude le 06/11/2026, Antoine choisit ceux à construire)
 
