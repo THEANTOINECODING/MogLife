@@ -39,17 +39,24 @@ local PurchaseService
 
 local ExerciseService = {}
 
--- Mog de base par répétition d'un exercice au stade du joueur (D130) : au moins OldMachineMogShare du Mog de la
--- meilleure machine déjà débloquée, jamais moins que la valeur propre de l'exercice
+-- Mog de base par répétition d'un exercice au stade du joueur (D130) : une ancienne machine rapporte 75 % de la
+-- machine la plus récente débloquée (par répétition et par seconde), jamais moins que sa valeur propre
 function ExerciseService.MogPerRep(exerciseId: string, stage: number): number
 	local exercise = Exercises[exerciseId]
-	local best = 0
+	local newest = nil
 	for _, other in Exercises do
-		if other.requiredStage <= stage and other.mogPerRep > best then
-			best = other.mogPerRep
+		if other.requiredStage <= stage and (not newest or other.requiredStage > newest.requiredStage) then
+			newest = other
 		end
 	end
-	return math.max(exercise.mogPerRep, best * Balance.OldMachineMogShare)
+	if not newest or newest == exercise then
+		return exercise.mogPerRep
+	end
+	-- Plafond : 75 % de la nouvelle machine par répétition ET par seconde (une machine plus rapide ne la dépasse pas)
+	local share = Balance.OldMachineMogShare
+	local perRep = newest.mogPerRep * share
+	local perSecond = newest.mogPerRep / newest.repInterval * share * exercise.repInterval
+	return math.max(exercise.mogPerRep, math.min(perRep, perSecond))
 end
 
 -- Nom du boss à battre pour débloquer un stade donné (pour les messages « verrouillé »)
@@ -119,7 +126,7 @@ local function startSeries(player: Player, exerciseId: unknown, wanted: BasePart
 		level = data.Stage - exercise.requiredStage,
 		titleKey = `Exercise.{exerciseId}`,
 		onRep = function(p, quality, combo)
-			-- Gain = base (D130 : au moins 75 % de la meilleure machine) × qualité × combo × boost en cours
+			-- Gain = base (D130 : 75 % de la machine la plus récente) × qualité × combo × boost en cours
 			-- × pareur (+20 % si un autre joueur le pare) × bien reposé (meubles de la maison, D111)
 			local stage = (DataService.Get(p) or data).Stage
 			local gain = ExerciseService.MogPerRep(exerciseId, stage)

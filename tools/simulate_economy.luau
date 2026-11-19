@@ -141,16 +141,23 @@ local function winsFight(profile, boss): (boolean, number)
 	return wins >= BOSS.RoundsToWin, BOSS.Rounds
 end
 
--- Même règle que ExerciseService.MogPerRep (D130) : une machine rapporte au moins OldMachineMogShare du Mog par
--- répétition de la meilleure machine débloquée, jamais moins que sa propre valeur
+-- Même règle que ExerciseService.MogPerRep (D130) : une ancienne machine rapporte 75 % de la machine la plus récente
+-- débloquée (par répétition et par seconde), jamais moins que sa propre valeur
 local function mogPerRep(exercise, stage: number): number
-	local best = 0
+	local newest = nil
 	for _, other in Exercises do
-		if other.requiredStage <= stage and other.mogPerRep > best then
-			best = other.mogPerRep
+		if other.requiredStage <= stage and (not newest or other.requiredStage > newest.requiredStage) then
+			newest = other
 		end
 	end
-	return math.max(exercise.mogPerRep, best * Balance.OldMachineMogShare)
+	if not newest or newest == exercise then
+		return exercise.mogPerRep
+	end
+	-- Plafond : 75 % de la nouvelle machine par répétition ET par seconde (une machine plus rapide ne la dépasse pas)
+	local share = Balance.OldMachineMogShare
+	local perRep = newest.mogPerRep * share
+	local perSecond = newest.mogPerRep / newest.repInterval * share * exercise.repInterval
+	return math.max(exercise.mogPerRep, math.min(perRep, perSecond))
 end
 
 local function bestExercise(stage: number)

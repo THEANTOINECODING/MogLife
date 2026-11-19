@@ -77,8 +77,8 @@ return {
 
 	-- Séries d'exercices
 	SeriesLength = 20,
-	-- D130 (demande d'Antoine) : une machine plus ancienne rapporte au moins cette part du Mog par répétition de la
-	-- meilleure machine débloquée (la nouvelle reste la meilleure, les anciennes valent toujours le coup)
+	-- D130 (demande d'Antoine) : une machine plus ancienne rapporte cette part du Mog de la machine la plus récente
+	-- débloquée, par répétition et par seconde (option 1 : la nouvelle reste la meilleure, les anciennes valent le coup)
 	OldMachineMogShare = 0.75,
 	-- Le serveur refuse une répétition arrivée avant repInterval × cette tolérance
 	RepIntervalTolerance = 0.85,
