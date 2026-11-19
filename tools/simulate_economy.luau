@@ -141,11 +141,23 @@ local function winsFight(profile, boss): (boolean, number)
 	return wins >= BOSS.RoundsToWin, BOSS.Rounds
 end
 
+-- Même règle que ExerciseService.MogPerRep (D130) : une machine rapporte au moins OldMachineMogShare du Mog par
+-- répétition de la meilleure machine débloquée, jamais moins que sa propre valeur
+local function mogPerRep(exercise, stage: number): number
+	local best = 0
+	for _, other in Exercises do
+		if other.requiredStage <= stage and other.mogPerRep > best then
+			best = other.mogPerRep
+		end
+	end
+	return math.max(exercise.mogPerRep, best * Balance.OldMachineMogShare)
+end
+
 local function bestExercise(stage: number)
 	local bestId, bestRate = nil, 0
 	for id, exercise in Exercises do
 		if stage >= exercise.requiredStage then
-			local rate = exercise.mogPerRep / exercise.repInterval
+			local rate = mogPerRep(exercise, stage) / exercise.repInterval
 			if rate > bestRate then
 				bestId, bestRate = id, rate
 			end
@@ -398,7 +410,7 @@ local function simulate(baseProfile)
 				then Boosts[boostId].mogMultiplier
 				else 1
 			local spot = if spotted then 1 + Balance.Spot.LifterBonus else 1
-			local gain = exercise.mogPerRep * Balance.Quality[q] * comboMultiplier(streak) * boost * spot
+			local gain = mogPerRep(exercise, stage) * Balance.Quality[q] * comboMultiplier(streak) * boost * spot
 			mog += gain
 			if spotted then
 				partnerMog += gain * Balance.Spot.SpotterShare
@@ -447,6 +459,37 @@ local lines = {
 	"Profils 2, 6, 7 et 8 : mêmes tirages aléatoires pour comparer séparément boosts et pareur.",
 	"Les coûts de style sont affichés sans achat sauf dans le profil 5 ; Pump God approximé par un Mog-off.",
 }
+-- D130 : Mog de base de chaque machine débloquée, par répétition et par seconde (la meilleure par seconde en *)
+local exerciseIds = {}
+for id in Exercises do
+	table.insert(exerciseIds, id)
+end
+table.sort(exerciseIds, function(a, b)
+	return Exercises[a].requiredStage < Exercises[b].requiredStage
+end)
+table.insert(lines, "")
+table.insert(lines, "--- Mog de base par machine (par répétition / par seconde), règle D130 incluse")
+for stage = 1, LAST_STAGE do
+	local bestId = bestExercise(stage)
+	local cells = {}
+	for _, id in exerciseIds do
+		local exercise = Exercises[id]
+		if stage >= exercise.requiredStage then
+			local perRep = mogPerRep(exercise, stage)
+			table.insert(
+				cells,
+				string.format(
+					"%s%s %.1f / %.1f",
+					if id == bestId then "*" else "",
+					id,
+					perRep,
+					perRep / exercise.repInterval
+				)
+			)
+		end
+	end
+	table.insert(lines, string.format("  Stade %d : %s", stage, table.concat(cells, " | ")))
+end
 for _, profile in PROFILES do
 	local r = simulate(profile)
 	table.insert(lines, "")
