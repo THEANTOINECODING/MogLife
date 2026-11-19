@@ -60,10 +60,80 @@ return {
 		ShakeTime = 0.22,
 	},
 
-	-- Course (sprint) : lignes de vitesse derrière le personnage
+	-- Course (sprint) : lignes de vitesse derrière le personnage, buste penché en avant
 	Sprint = {
 		MinSpeed = 20, -- au-dessus : il court
 		LineRate = 22,
+		Lean = 9, -- degrés de buste penché en avant à pleine course (tous gabarits)
+		LeanFrom = 17, -- studs/s : le buste commence à se pencher (marche normale : 16, course : 24)
+	},
+
+	-- D134 : transitions et inertie. Les couches ne sautent plus d'un état à l'autre : chaque facteur rejoint sa
+	-- cible à cette vitesse (par seconde ; 10 = rejoint aux deux tiers en 0,1 s)
+	Smooth = {
+		Walk = 7, -- passage attente ↔ marche
+		Air = 9, -- passage sol ↔ air
+		Lean = 6, -- penché d'élan et virage
+		Look = 5, -- tête qui se tourne vers ce qu'elle regarde
+	},
+
+	-- D134 : inertie du corps (effet cartoon de « retard ») : le buste traîne en arrière quand il démarre, bascule en
+	-- avant quand il s'arrête net, et se penche dans les virages
+	Inertia = {
+		Accel = 0.45, -- degrés de buste par stud/s² d'accélération (le signe suit l'élan)
+		MaxAccel = 11, -- degrés au plus
+		Bank = 7, -- degrés de buste penché dans le virage par radian/s de rotation, à pleine vitesse
+		MaxBank = 12,
+	},
+
+	-- D134 : chaque pas « tombe » : petit coup de buste et rebond des épaules, plus lourd avec le gabarit
+	Stomp = {
+		Chest = 1.2, -- degrés de buste au premier stade...
+		ChestPerBulk = 3.3, -- ...plus celui-ci au gabarit maximal (le Gigachad écrase le sol)
+		Shoulders = 2.5, -- degrés de rebond des bras à chaque pas (gabarit maximal)
+	},
+
+	-- D134 : en l'air (saut, chute) : bras qui s'ouvrent pour l'équilibre, buste qui suit la vitesse verticale
+	Air = {
+		-- (s'ajoute à l'animation de saut de Roblox, qui lève déjà les bras et les genoux : rester mesuré)
+		Arms = 16, -- degrés de bras écartés en l'air
+		ArmsFall = 12, -- en plus en chute rapide (bras qui battent vers le haut)
+		FallFull = 60, -- studs/s de chute pour l'effet plein
+		Chest = 4, -- degrés : buste cambré en montée, penché en avant en descente
+		Legs = 6, -- degrés : genoux remontés en l'air (hanches pliées)
+	},
+
+	-- D134 : atterrissage encaissé par le corps (en plus de l'anneau de poussière) : buste et tête plongent, bras
+	-- projetés vers le bas puis remontent, le tout proportionnel à la vitesse de chute
+	Recoil = {
+		Time = 0.42, -- durée de l'encaissement
+		Attack = 0.05, -- temps pour atteindre le plus bas
+		Chest = 16, -- degrés de buste au plus fort (chute de FallFull studs/s)
+		Neck = 8,
+		Arms = 18,
+		Min = 0.25, -- force minimale d'un atterrissage visible (petits sauts)
+	},
+
+	-- D134 : regard. La tête (et un peu le buste) se tourne vers le joueur le plus proche devant soi ; son propre
+	-- personnage regarde sinon là où regarde la caméra
+	Look = {
+		Distance = 16, -- studs : au-delà, on ne regarde pas les autres
+		MaxYaw = 65, -- degrés de rotation de la tête au plus
+		MaxPitch = 25,
+		Cone = 110, -- degrés : on ne remarque que ceux qui sont dans ce cône devant soi
+		WaistShare = 0.3, -- part du regard prise par le buste (le reste par le cou)
+		PickEvery = 0.35, -- secondes entre deux choix de cible
+		Camera = true, -- son propre personnage suit la caméra sans cible
+		CameraShare = 0.6, -- et seulement en partie (sinon c'est raide)
+	},
+
+	-- D134 : séries des activités. Montée nette, court maintien, descente contrôlée plus lente (comme à la salle),
+	-- et respiration entre les répétitions. Parts de la durée d'une répétition (la somme vaut moins de 1).
+	Reps = {
+		Up = 0.34,
+		Hold = 0.14,
+		Breath = 1.6, -- degrés de respiration du buste entre deux répétitions
+		BreathRate = 0.45, -- respirations par seconde (essoufflé)
 	},
 
 	-- Pareur : applaudit en rythme en regardant le pratiquant, saute de joie sur ses Perfect

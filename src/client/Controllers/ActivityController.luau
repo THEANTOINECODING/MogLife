@@ -14,6 +14,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
+local Motion = require(ReplicatedStorage.Shared.Config.Motion)
 local StyleSets = require(ReplicatedStorage.Shared.Config.StyleSets)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 local CameraFraming = require(script.Parent.Parent.CameraFraming)
@@ -69,17 +70,20 @@ local emotes: { [Player]: Emote } = {}
 local ActivityController = {}
 
 -- Montée, court maintien en haut, descente (courbe douce)
+-- D134 : montée nette, court maintien, descente contrôlée plus lente (Config/Motion.luau, Reps). Courbes douces
+-- jusqu'à l'accélération (smootherstep) : le mouvement démarre et s'arrête sans à-coup.
 local function effort(u: number): number
 	local function smooth(x: number): number
 		x = math.clamp(x, 0, 1)
-		return x * x * (3 - 2 * x)
+		return x * x * x * (x * (6 * x - 15) + 10)
 	end
-	if u < 0.4 then
-		return smooth(u / 0.4)
-	elseif u < 0.55 then
+	local up, hold = Motion.Reps.Up, Motion.Reps.Hold
+	if u < up then
+		return smooth(u / up)
+	elseif u < up + hold then
 		return 1
 	end
-	return smooth(1 - (u - 0.55) / 0.45)
+	return smooth(1 - (u - up - hold) / (1 - up - hold))
 end
 
 -- Décor de la station pris en main (barre, haltère, corde, piano, voiture…) : rendu tel quel à la fin.
@@ -417,6 +421,13 @@ local function step()
 		end
 		animator.rig:Clear()
 		animator.activity:Pose(p, shake, u, now, animator.count, animator.successes)
+		-- D134 : il reprend son souffle entre deux répétitions (le buste se soulève), pas pendant l'effort
+		local rest = 1 - math.clamp(p * 3, 0, 1)
+		if rest > 0 then
+			local breath = math.sin(2 * math.pi * Motion.Reps.BreathRate * (now - animator.startedAt))
+			local waist = animator.rig.pose.Waist or CFrame.identity
+			animator.rig:Set("Waist", waist * CFrame.Angles(math.rad(Motion.Reps.Breath) * breath * rest, 0, 0))
+		end
 		animator.rig:Apply()
 	end
 	local duration = Balance.Emotes.Duration

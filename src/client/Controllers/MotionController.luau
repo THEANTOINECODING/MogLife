@@ -6,6 +6,9 @@
 -- - Poussière à chaque pas (couleur du sol), anneau de poussière à l'atterrissage (et petite secousse de sa propre
 --   caméra pour les gros gabarits), traînée de vitesse en courant.
 -- - Pareur : il applaudit en rythme pendant la série de celui qu'il pare (attribut SpottingFor).
+-- - D134 : transitions lissées (plus d'à-coups entre attente, marche et saut), inertie (penché au démarrage, au
+--   freinage et dans les virages), pas qui tombent lourdement, bras qui s'ouvrent en l'air, atterrissage encaissé
+--   par le buste, regard vers le joueur le plus proche (ou là où regarde sa caméra).
 -- Un personnage déjà animé ailleurs (activité, combat, duel, émote : ActivityController.IsBusy) n'est pas touché.
 
 local Players = game:GetService("Players")
@@ -41,6 +44,19 @@ type State = {
 	trail: Trail?,
 	spotting: boolean,
 	connections: { RBXScriptConnection },
+	-- D134 : facteurs lissés et inertie
+	walk: number, -- 0 à l'arrêt, 1 en marche (lissé)
+	air: number, -- 0 au sol, 1 en l'air (lissé)
+	velocity: Vector3, -- vitesse horizontale lissée
+	accelLean: number, -- degrés (lissés)
+	bank: number, -- degrés (lissés)
+	yaw: number?, -- orientation de la racine à l'image précédente
+	recoilAt: number, -- début du dernier atterrissage encaissé
+	recoil: number, -- force de cet atterrissage (0 à 1)
+	lookYaw: number,
+	lookPitch: number,
+	lookTarget: BasePart?,
+	nextPick: number,
 }
 
 local states: { [Player]: State } = {}
@@ -138,6 +154,18 @@ local function setup(who: Player, character: Model)
 		dustPoint = point,
 		spotting = false,
 		connections = {},
+		walk = 0,
+		air = 0,
+		velocity = Vector3.zero,
+		accelLean = 0,
+		bank = 0,
+		yaw = nil,
+		recoilAt = -math.huge,
+		recoil = 0,
+		lookYaw = 0,
+		lookPitch = 0,
+		lookTarget = nil,
+		nextPick = 0,
 	}
 	-- Traînée de vitesse en courant : un ruban pâle entre les deux épaules
 	local torso = character:FindFirstChild("UpperTorso") :: BasePart?
@@ -169,7 +197,16 @@ local function setup(who: Player, character: Model)
 				falling = 0
 			elseif new == Enum.HumanoidStateType.Landed then
 				local root = character:FindFirstChild("HumanoidRootPart") :: BasePart?
-				if not root or falling < Motion.Landing.MinFall then
+				if not root then
+					return
+				end
+				-- D134 : le buste encaisse (même un petit saut, plus fort avec la vitesse de chute)
+				local strength = math.clamp(falling / Motion.Air.FallFull, 0, 1)
+				if strength >= 0.1 then
+					state.recoilAt = os.clock()
+					state.recoil = math.max(strength, Motion.Recoil.Min)
+				end
+				if falling < Motion.Landing.MinFall then
 					return
 				end
 				local b = bulk(who)
@@ -231,6 +268,61 @@ end
 
 local function deg(x: number): number
 	return math.rad(x)
+end
+
+-- Rapproche `current` de `target` (vitesse en 1/s, indépendant du nombre d'images par seconde)
+local function approach(current: number, target: number, rate: number, dt: number): number
+	return current + (target - current) * (1 - math.exp(-rate * dt))
+end
+
+-- Encaissement d'un atterrissage : monte vite au plus bas puis se relâche en douceur (0 à 1)
+local function recoilCurve(state: State, now: number): number
+	local t = now - state.recoilAt
+	local cfg = Motion.Recoil
+	if t < 0 or t > cfg.Time then
+		return 0
+	end
+	if t < cfg.Attack then
+		return state.recoil * (t / cfg.Attack)
+	end
+	local k = 1 - (t - cfg.Attack) / (cfg.Time - cfg.Attack)
+	return state.recoil * k * k
+end
+
+-- Cible du regard : la tête du joueur le plus proche devant soi (choisie quelques fois par seconde)
+local function pickLookTarget(state: State, who: Player, root: BasePart, now: number)
+	if now < state.nextPick then
+		return
+	end
+	state.nextPick = now + Motion.Look.PickEvery * (0.8 + math.random() * 0.4)
+	local best, bestDistance = nil, Motion.Look.Distance
+	local cosCone = math.cos(math.rad(Motion.Look.Cone / 2))
+	for other, otherState in states do
+		if other ~= who then
+			local head = otherState.character:FindFirstChild("Head") :: BasePart?
+			if head then
+				local offset = head.Position - root.Position
+				local distance = offset.Magnitude
+				if distance < bestDistance and distance > 0.5 then
+					local flat = Vector3.new(offset.X, 0, offset.Z)
+					if flat.Magnitude > 0.1 and root.CFrame.LookVector:Dot(flat.Unit) >= cosCone then
+						best, bestDistance = head, distance
+					end
+				end
+			end
+		end
+	end
+	state.lookTarget = best
+end
+
+-- Angles (radians) pour regarder vers `point` depuis la tête, dans le repère de la racine
+local function lookAngles(root: BasePart, head: BasePart, point: Vector3): (number, number)
+	local dir = root.CFrame:VectorToObjectSpace(point - head.Position)
+	local flat = math.sqrt(dir.X * dir.X + dir.Z * dir.Z)
+	if flat < 0.05 then
+		return 0, 0
+	end
+	return math.atan2(-dir.X, -dir.Z), math.atan2(dir.Y, flat)
 end
 
 -- Attitude au repos d'une tenue haut de gamme (D122) : angles en degrés, nil sans tenue
@@ -336,27 +428,99 @@ local function step(dt: number)
 			state.written = {}
 		end
 
-		-- Démarche ou respiration
-		local walk = math.clamp(speed / 8, 0, 1)
+		-- Démarche ou respiration, lissées (D134 : plus d'à-coups au démarrage ni à l'arrêt)
+		local smooth = Motion.Smooth
+		state.walk = approach(state.walk, math.clamp(speed / 8, 0, 1), smooth.Walk, dt)
+		state.air = approach(state.air, if grounded then 0 else 1, smooth.Air, dt)
+		local walk = state.walk * (1 - state.air)
+		local air = state.air
 		state.phase += dt * speed * Motion.Walk.StepRate * 2 * math.pi
 		local swing = math.sin(state.phase)
+		-- Un pas « tombe » deux fois par cycle : pointe nette au contact du pied
+		local contact = 1 - math.abs(math.cos(state.phase))
+		contact = contact * contact * contact
 		local breath = math.sin(2 * math.pi * Motion.Idle.BreathRate * now)
-		local idle = 1 - walk
+		local idle = (1 - state.walk) * (1 - air)
+		local sprintCfg = Motion.Sprint
+		local sprint = math.clamp((speed - sprintCfg.LeanFrom) / (sprintCfg.MinSpeed - sprintCfg.LeanFrom), 0, 1)
+			* (1 - air)
+
+		-- Inertie : accélération dans le sens de la marche, rotation de la racine
+		local flatVelocity = Vector3.new(velocity.X, 0, velocity.Z)
+		local previous = state.velocity
+		state.velocity = flatVelocity
+		local accel = if dt > 0 then (flatVelocity - previous) / dt else Vector3.zero
+		local forward = root.CFrame.LookVector
+		local forwardAccel = accel:Dot(Vector3.new(forward.X, 0, forward.Z))
+		local yaw = math.atan2(-forward.X, -forward.Z)
+		local yawRate = 0
+		if state.yaw and dt > 0 then
+			local delta = (yaw - state.yaw + math.pi) % (2 * math.pi) - math.pi
+			yawRate = delta / dt
+		end
+		state.yaw = yaw
+		local inertia = Motion.Inertia
+		local targetLean = if grounded
+			then math.clamp(forwardAccel * inertia.Accel, -inertia.MaxAccel, inertia.MaxAccel)
+			else 0
+		local targetBank = if grounded
+			then math.clamp(yawRate * inertia.Bank * state.walk, -inertia.MaxBank, inertia.MaxBank)
+			else 0
+		state.accelLean = approach(state.accelLean, targetLean, smooth.Lean, dt)
+		state.bank = approach(state.bank, targetBank, smooth.Lean, dt)
+
+		-- Saut et chute : bras ouverts, buste qui suit la vitesse verticale ; atterrissage encaissé
+		local vertical = math.clamp(velocity.Y / Motion.Air.FallFull, -1, 1)
+		local falling = math.max(-vertical, 0)
+		local recoil = recoilCurve(state, now)
+
+		-- Regard : joueur le plus proche devant soi, sinon (son propre personnage) là où regarde la caméra
+		local head = character:FindFirstChild("Head") :: BasePart?
+		local wantYaw, wantPitch = 0, 0
+		if head then
+			pickLookTarget(state, who, root, now)
+			local target = state.lookTarget
+			if target and target.Parent then
+				wantYaw, wantPitch = lookAngles(root, head, target.Position)
+			elseif who == localPlayer and Motion.Look.Camera and camera then
+				local point = head.Position + camera.CFrame.LookVector * 20
+				wantYaw, wantPitch = lookAngles(root, head, point)
+				wantYaw *= Motion.Look.CameraShare
+				wantPitch *= Motion.Look.CameraShare
+			end
+			-- Derrière soi : on ne se tord pas le cou, on revient de face
+			if math.abs(wantYaw) > math.rad(Motion.Look.Cone) then
+				wantYaw, wantPitch = 0, 0
+			end
+		end
+		local look = Motion.Look
+		wantYaw = math.clamp(wantYaw, -math.rad(look.MaxYaw), math.rad(look.MaxYaw)) * (1 - air)
+		wantPitch = math.clamp(wantPitch, -math.rad(look.MaxPitch), math.rad(look.MaxPitch)) * (1 - air)
+		state.lookYaw = approach(state.lookYaw, wantYaw, smooth.Look, dt)
+		state.lookPitch = approach(state.lookPitch, wantPitch, smooth.Look, dt)
+
 		-- Tenue haut de gamme : son attitude au repos (D122), qui s'efface en marchant
 		local stance = stanceOf(who, now)
 		local st = idle * idle
 		local breathAmp = Motion.Idle.Breath * (0.5 + b) * (if stance then 1 + (stance.breath - 1) * st else 1)
+		local stomp = (Motion.Stomp.Chest + Motion.Stomp.ChestPerBulk * b) * contact * walk
 		layer(
 			state,
 			"Waist",
 			CFrame.Angles(
 				deg(
-					Motion.Walk.ChestOut * b * walk
+					Motion.Walk.ChestOut * b * walk * (1 - sprint)
+						- Motion.Sprint.Lean * sprint
 						+ breathAmp * breath * idle * 0.5
 						+ (if stance then stance.waistP * st else 0)
+						+ state.accelLean
+						- stomp
+						+ Motion.Air.Chest * vertical * air
+						- Motion.Recoil.Chest * recoil
 				),
-				deg(Motion.Walk.Twist * b * walk * swing + (if stance then stance.waistY * st else 0)),
-				0
+				deg(Motion.Walk.Twist * b * walk * swing + (if stance then stance.waistY * st else 0))
+					+ state.lookYaw * look.WaistShare,
+				deg(state.bank)
 			)
 		)
 		layer(
@@ -367,13 +531,19 @@ local function step(dt: number)
 					Motion.Walk.ChinUp * b * walk
 						- breathAmp * breath * idle * 0.3
 						+ (if stance then stance.neckP * st else 0)
-				),
-				deg(if stance then stance.neckY * st else 0),
+						+ Motion.Sprint.Lean * sprint * 0.6
+						+ stomp * 0.5
+						- Motion.Recoil.Neck * recoil
+				) + state.lookPitch,
+				deg(if stance then stance.neckY * st else 0) + state.lookYaw * (1 - look.WaistShare),
 				0
 			)
 		)
 		local armsOut = (Motion.Walk.ArmsOut * walk + Motion.Idle.ArmsOut * idle) * b
 			+ (if stance then stance.arms * st else 0)
+			+ (Motion.Air.Arms + Motion.Air.ArmsFall * falling) * air
+			+ Motion.Recoil.Arms * recoil
+			+ Motion.Stomp.Shoulders * b * contact * walk
 		local lift = Motion.Idle.ShoulderLift * (0.5 + b) * breath * idle
 		layer(state, "LeftShoulder", CFrame.Angles(0, 0, deg(-armsOut - lift)))
 		layer(state, "RightShoulder", CFrame.Angles(0, 0, deg(armsOut + lift)))
@@ -382,6 +552,10 @@ local function step(dt: number)
 			"Root",
 			CFrame.Angles(0, 0, deg(Motion.Walk.Sway * b * walk * swing + (if stance then stance.hip * st else 0)))
 		)
+		-- Genoux remontés en l'air (hanches pliées vers l'avant)
+		local tuck = deg(Motion.Air.Legs * air * (0.4 + 0.6 * math.max(vertical, 0) + 0.3 * falling))
+		layer(state, "LeftHip", CFrame.Angles(tuck, 0, 0))
+		layer(state, "RightHip", CFrame.Angles(tuck * 0.7, 0, 0))
 
 		-- Poussière des pas
 		if grounded and speed >= Motion.Dust.MinSpeed then
