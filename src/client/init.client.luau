@@ -43,6 +43,7 @@ local ORDER = {
 	"PremiumDisplayController",
 	"SignatureFxController",
 	"PremiumMotionController",
+	"RewardsController",
 	"MenuController",
 }
 

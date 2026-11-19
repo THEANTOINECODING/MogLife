@@ -34,7 +34,8 @@ local List: { Stage } = {
 			mogRequired = 50,
 			minigame = "Reaction",
 			interval = 1.4,
-			skill = { perfect = 0.1, good = 0.45 },
+			-- D131 : le premier boss doit se gagner même maladroit (simulation : un joueur à 15 % de Perfect perdait)
+			skill = { perfect = 0.05, good = 0.4 },
 			firstWinCash = 20,
 			styleReward = "PajamaTop",
 		},

@@ -11,6 +11,7 @@ local UserInputService = game:GetService("UserInputService")
 
 local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Boosts = require(ReplicatedStorage.Shared.Config.Boosts)
+local Rewards = require(ReplicatedStorage.Shared.Config.Rewards)
 local Stages = require(ReplicatedStorage.Shared.Config.Stages)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Format = require(ReplicatedStorage.Shared.Format)
@@ -23,6 +24,7 @@ local SHOP_TAG = "BoostShop"
 local player = Players.LocalPlayer
 
 local MinigameController
+local UIController
 local SnackController
 local StoreController
 
@@ -48,6 +50,12 @@ local paid = { multiplier = 1, endsAt = 0, total = 1 } -- endsAt sur l'horloge l
 local paidBadge: TextButton
 local paidLabel: TextLabel
 local paidBar: Frame
+-- D131 : bonus d'équipe (amis présents) et Golden Pump Hour, rangés sous les autres badges
+local friendBadge: Frame
+local friendLabel: TextLabel
+local goldenBadge: Frame
+local goldenLabel: TextLabel
+local goldenBar: Frame
 
 local BoostController = {}
 
@@ -318,6 +326,45 @@ local function updateBadge()
 		paidBadge.Position = badge.Position + UDim2.fromOffset(0, below)
 		paidBadge.Size = badge.Size
 	end
+
+	-- Badges suivants : empilés sous ceux qui sont visibles
+	local step = badge.Size.Y.Offset + 4
+	local below = 0
+	for _, shown in { badge, restBadge, paidBadge } do
+		if shown.Visible then
+			below += step
+		end
+	end
+	local friendBonus = tonumber(player:GetAttribute("FriendBonus")) or 0
+	friendBadge.Visible = friendBonus > 0
+	if friendBadge.Visible then
+		friendLabel.Text = Texts.Get("Rewards.FriendBadge", { percent = friendBonus })
+		friendBadge.Position = badge.Position + UDim2.fromOffset(0, below)
+		friendBadge.Size = badge.Size
+		below += step
+	end
+	local now = workspace:GetServerTimeNow()
+	local starts = tonumber(workspace:GetAttribute("GoldenHourStart")) or math.huge
+	local ends = tonumber(workspace:GetAttribute("GoldenHourEnd")) or math.huge
+	local golden = Rewards.GoldenHour
+	local goldenRunning = now >= starts and now < ends
+	goldenBadge.Visible = goldenRunning or (starts > now and starts - now <= golden.AnnounceBefore)
+	if goldenBadge.Visible then
+		goldenLabel.Text = if goldenRunning
+			then Texts.Get("Rewards.GoldenActive", { multiplier = golden.Multiplier, time = clock(ends - now) })
+			else Texts.Get("Rewards.GoldenSoon", { time = clock(starts - now) })
+		goldenBar.Size =
+			UDim2.fromScale(if goldenRunning then math.clamp((ends - now) / golden.Duration, 0, 1) else 0, 1)
+		goldenBadge.Position = badge.Position + UDim2.fromOffset(0, below)
+		goldenBadge.Size = badge.Size
+	end
+
+	-- D131 : une fenêtre d'un autre écran est ouverte (semaine, nouveautés, boutique…) : les badges ne la couvrent pas
+	if UIController.IsWindowOpen() and not panel.Visible and not bag.Visible then
+		for _, shown in { badge, restBadge, paidBadge, friendBadge, goldenBadge } do
+			shown.Visible = false
+		end
+	end
 end
 
 -- Contenu commun aux deux badges : jauge en bas et texte
@@ -392,6 +439,31 @@ local function buildGui()
 			StoreController.Open("Boosts")
 		end
 	end)
+
+	friendBadge = Ui.create("Frame", {
+		Name = "FriendBonus",
+		AnchorPoint = Vector2.new(0.5, 0),
+		BackgroundColor3 = Color3.fromRGB(16, 60, 40),
+		BackgroundTransparency = 0.1,
+		Visible = false,
+		Parent = gui,
+	}, { Ui.corner(UDim.new(0, 8)), Ui.stroke(Color3.fromRGB(90, 230, 140), 1.5, 0.2) })
+	local friendBar
+	friendLabel, friendBar = badgeContent(friendBadge)
+	friendLabel.TextColor3 = Color3.fromRGB(170, 255, 200)
+	friendBar.BackgroundColor3 = Color3.fromRGB(90, 230, 140)
+
+	goldenBadge = Ui.create("Frame", {
+		Name = "GoldenHour",
+		AnchorPoint = Vector2.new(0.5, 0),
+		BackgroundColor3 = Color3.fromRGB(90, 60, 0),
+		BackgroundTransparency = 0.05,
+		Visible = false,
+		Parent = gui,
+	}, { Ui.corner(UDim.new(0, 8)), Ui.stroke(Color3.fromRGB(255, 220, 80), 2, 0) })
+	goldenLabel, goldenBar = badgeContent(goldenBadge)
+	goldenLabel.TextColor3 = Color3.fromRGB(255, 235, 140)
+	goldenBar.BackgroundColor3 = Color3.fromRGB(255, 200, 40)
 
 	panel = Ui.panel({
 		Name = "Panel",
@@ -483,6 +555,7 @@ end
 
 function BoostController.Init(controllers)
 	MinigameController = controllers.MinigameController
+	UIController = controllers.UIController
 	SnackController = controllers.SnackController
 	StoreController = controllers.StoreController
 end

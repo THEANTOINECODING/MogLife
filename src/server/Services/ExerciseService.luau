@@ -36,6 +36,7 @@ local SocialService
 local FurnitureService
 local WeeklyService
 local PurchaseService
+local RewardsService
 
 local ExerciseService = {}
 
@@ -135,6 +136,8 @@ local function startSeries(player: Player, exerciseId: unknown, wanted: BasePart
 				* BoostService.Multiplier(p)
 				* SocialService.LifterMultiplier(p)
 				* FurnitureService.RestMultiplier(p)
+				* RewardsService.FriendMultiplier(p) -- D131 : bonus d'équipe (amis Roblox présents)
+				* RewardsService.GoldenMultiplier() -- D131 : Golden Pump Hour
 			StatsService.Add(p, "Mog", gain)
 			Analytics.Step(p, DataService.Get(p), "FirstRep")
 			SocialService.OnLifterRep(p, gain, quality)
@@ -145,7 +148,10 @@ local function startSeries(player: Player, exerciseId: unknown, wanted: BasePart
 			end
 			return gain
 		end,
-		onEnd = function(p, reason, _reps, score)
+		onEnd = function(p, reason, reps, score)
+			if (tonumber(reps) or 0) > 0 then
+				task.spawn(RewardsService.OnSeriesDone, p) -- D131 : récompense de l'ami qui l'a invité
+			end
 			if occupants[station] == p then
 				setOccupant(station, nil)
 			end
@@ -293,6 +299,7 @@ function ExerciseService.Init(services)
 	FurnitureService = services.FurnitureService
 	WeeklyService = services.WeeklyService
 	PurchaseService = services.PurchaseService
+	RewardsService = services.RewardsService
 end
 
 function ExerciseService.Start()

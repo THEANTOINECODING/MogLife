@@ -57,6 +57,20 @@ Products.BossWin = {
 	OfferDelay = 4, -- secondes avant d'afficher l'offre (laisser la fin du combat se jouer)
 	-- Si le boss payé n'est plus à battre au moment du reçu (cas rare : reconnexion), le joueur reçoit ce Cash
 	FallbackCash = 6_000,
+	-- D131 : jamais proposée contre ces boss (le premier boss doit se gagner, pas s'acheter)
+	ExcludedBosses = { Kevin = true },
+}
+
+-- Pack de départ (D131) : achetable une seule fois (Unlocks.DayOne), proposé une fois après la première victoire
+-- contre un boss, puis toujours dans la fenêtre des nouveautés tant qu'il n'est pas acheté.
+Products.StarterPack = {
+	productId = 3733605911,
+	robux = 79,
+	cash = 3_000,
+	boostMultiplier = 2,
+	boostDuration = 15 * 60,
+	unlock = "DayOne", -- titre exclusif « Day One »
+	OfferDelay = 6, -- secondes après la victoire (laisser la célébration se jouer)
 }
 
 Products.MaxReceipts = 200 -- reçus gardés dans la sauvegarde (les plus anciens sont oubliés)

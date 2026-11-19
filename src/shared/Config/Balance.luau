@@ -28,6 +28,15 @@ return {
 		Secrets = {}, -- secrets de la ville trouvés : secretId -> true (D121, Config/Secrets.luau)
 		Receipts = {}, -- achats Robux déjà accordés : PurchaseId -> os.time() (D122, PurchaseService, jamais deux fois)
 		Records = {}, -- meilleure note de série par exercice (0 à 100)
+		-- D131 : récompenses débloquées une fois (titres exclusifs) : "DayOne" (pack de départ), "GymFamily" (groupe),
+		-- "Recruiter" (ami invité) -> true
+		Unlocks = {},
+		Codes = {}, -- codes déjà utilisés -> true (Config/Rewards.luau)
+		NewsSeen = 0, -- dernière version des nouveautés vue (Rewards.News.Version)
+		LastSeen = 0, -- os.time() de la dernière présence connue (gain pendant l'absence, Rewards.Away)
+		ReferredBy = 0, -- UserId de l'ami qui a invité ce joueur (0 = personne) ; ReferralPaid = récompense versée
+		ReferralPaid = false,
+		BossLossStreak = {}, -- défaites d'affilée contre chaque boss (D131 : plus de perte de Mog au-delà)
 		Tips = {}, -- conseils du mentor déjà donnés
 		-- Réglages du joueur (Config/Settings.luau), tous activés par défaut
 		Settings = {
@@ -593,6 +602,9 @@ return {
 		-- Mog perdu en cas de défaite (Mog-off perdu ou défaite automatique, D110 : « il faut perdre beaucoup »).
 		-- Jamais sous le Mog qu'il fallait pour atteindre le stade du joueur (StatsService.MogFloor).
 		DefeatMogShare = 0.15,
+		-- D131 (demande d'Antoine, analyse du 19/11) : après ce nombre de défaites d'affilée contre le même boss, un vrai
+		-- combat perdu ne coûte plus de Mog, jusqu'à la victoire. Ne touche pas la défaite automatique (défi trop tôt).
+		MogLossDefeatsMax = 2,
 		MogOffLossCap = { 20, 50, 120, 250, 500, 1_000 },
 		PauseBetweenRounds = 3, -- secondes entre deux manches (annonce de la manche suivante)
 		VictoryLaunchDelay = 3.2, -- le boss vaincu s'envole après la fin du duel (BossFights.FinishTime, D85)

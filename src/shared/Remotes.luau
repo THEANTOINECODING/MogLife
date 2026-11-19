@@ -77,6 +77,9 @@ local NAMES = {
 	"PurchaseDone", -- serveur -> client : ({ kind: "Cash" | "Mog", amount: number } ou { kind: "Boost", multiplier, minutes }) achat Robux accordé (D122, D128)
 	"BossWinOffer", -- serveur -> client : ({ bossId, productId, robux, delay, window }) passer ce boss en Robux (D122)
 	"BuyBossWin", -- client -> serveur : (bossId: string) accepte l'offre : le serveur ouvre la fenêtre d'achat
+	"RewardsState", -- serveur -> client : ({ newsVersion, newsSeen, starterOwned, starterProduct, starterRobux, groupId, groupClaimed }) (D131)
+	"RewardsAction", -- client -> serveur : (action: "SeeNews" | "ClaimGroup" | "Redeem" | "BuyStarter", arg?) (D131)
+	"RewardsPopup", -- serveur -> client : ({ kind: "Starter" | "Away", ... }) offre du pack de départ, gain pendant l'absence
 }
 
 local isServer = RunService:IsServer()
@@ -176,4 +179,7 @@ return remotes :: {
 	PurchaseDone: RemoteEvent,
 	BossWinOffer: RemoteEvent,
 	BuyBossWin: RemoteEvent,
+	RewardsState: RemoteEvent,
+	RewardsAction: RemoteEvent,
+	RewardsPopup: RemoteEvent,
 }

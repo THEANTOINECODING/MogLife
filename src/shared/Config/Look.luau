@@ -160,6 +160,10 @@ local Look = {
 		{ id = "IronGrip", duelWins = 25 },
 		{ id = "Unmoggable", duelWins = 100 },
 		{ id = "GodMogger", godWins = 1 }, -- vaincre le Dieu du Pump au Colisée (D93)
+		-- D131 : débloqués par une récompense unique (data.Unlocks)
+		{ id = "DayOne", unlock = "DayOne" }, -- pack de départ
+		{ id = "GymFamily", unlock = "GymFamily" }, -- groupe Roblox du jeu
+		{ id = "Recruiter", unlock = "Recruiter" }, -- un ami invité a fait sa première série
 		-- Titres secrets (D121, Config/Secrets.luau) : cachés dans le menu tant que le secret n'est pas trouvé
 		{ id = "GhostLifter", secret = "GhostLifter" },
 		{ id = "StatueBeliever", secret = "StatueBeliever" },

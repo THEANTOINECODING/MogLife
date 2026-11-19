@@ -71,6 +71,8 @@ ICONS = {
     "MogBoostShort": ((60, 150, 255), (20, 40, 140), bolt),
     "MogBoostLong": ((150, 70, 255), (50, 10, 130), bolt),
     "BossWin": ((200, 40, 60), (60, 0, 20), crown),
+    # D131 : pack de départ (pièces + étoile)
+    "StarterPack": ((180, 80, 255), (60, 10, 120), lambda d: (coins(d, 3), d.polygon(star(330, 170, 110, 46), fill=(255, 255, 255), outline=(30, 20, 40), width=8))),
 }
 PASS_COLORS = {
     "CosmicEmperor": ((60, 20, 140), (10, 0, 40)),
@@ -83,7 +85,46 @@ PASS_COLORS = {
     "InfernalDemon": ((240, 70, 20), (80, 0, 0)),
 }
 
+# Badges (D131) : médaille ronde, une couleur par stade ou boss, symbole sans texte
+BADGES = {
+    "Stage_GymRat": ((120, 200, 120), (40, 110, 50), "star"),
+    "Stage_Bro": ((90, 170, 255), (30, 70, 170), "star"),
+    "Stage_Alpha": ((255, 160, 60), (170, 70, 10), "star"),
+    "Stage_Chad": ((200, 90, 255), (90, 20, 150), "star"),
+    "Stage_Gigachad": ((255, 80, 80), (130, 10, 20), "star"),
+    "Stage_GodMogger": ((255, 220, 80), (170, 110, 0), "crown"),
+    "Boss_Kevin": ((170, 170, 190), (70, 70, 90), "bolt"),
+    "Boss_Brayan": ((255, 170, 90), (170, 80, 20), "bolt"),
+    "Boss_CoachTurbo": ((90, 220, 220), (20, 100, 110), "bolt"),
+    "Boss_NoLegs": ((150, 230, 90), (60, 120, 20), "bolt"),
+    "Boss_BlockKing": ((120, 120, 255), (40, 40, 150), "crown"),
+    "Boss_PumpGod": ((255, 230, 120), (200, 120, 0), "crown"),
+    "FirstS": ((255, 90, 200), (140, 20, 110), "star"),
+}
+
+
+def medal(top, bottom, symbol):
+    img = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    grad, _ = base(top, bottom)
+    mask = Image.new("L", (SIZE, SIZE), 0)
+    ImageDraw.Draw(mask).ellipse([16, 16, SIZE - 16, SIZE - 16], fill=255)
+    img.paste(grad, (0, 0), mask)
+    d = ImageDraw.Draw(img)
+    d.ellipse([16, 16, SIZE - 16, SIZE - 16], outline=(30, 20, 40), width=14)
+    d.ellipse([60, 60, SIZE - 60, SIZE - 60], outline=(255, 255, 255, 140), width=6)
+    if symbol == "star":
+        d.polygon(star(256, 266, 150, 64), fill=(255, 255, 255), outline=(30, 20, 40), width=8)
+    elif symbol == "crown":
+        crown(d)
+    else:
+        bolt(d)
+    return img
+
+
 if __name__ == "__main__":
+    os.makedirs(OUT, exist_ok=True)
+    for name, (top, bottom, symbol) in BADGES.items():
+        medal(top, bottom, symbol).save(os.path.join(OUT, f"Badge_{name}.png"))
     os.makedirs(OUT, exist_ok=True)
     for name, (top, bottom, draw) in ICONS.items():
         img, d = base(top, bottom)

@@ -105,7 +105,8 @@ function Look.UnlockedTitles(
 	trophies: number,
 	duelWins: number,
 	godWins: number?,
-	secrets: { [string]: boolean }?
+	secrets: { [string]: boolean }?,
+	unlocks: { [string]: boolean }?
 ): { [string]: boolean }
 	local unlocked = {}
 	for _, entry in LookConfig.RewardTitles do
@@ -114,6 +115,7 @@ function Look.UnlockedTitles(
 			or (entry.duelWins and duelWins >= entry.duelWins)
 			or (entry.godWins and (godWins or 0) >= entry.godWins)
 			or (entry.secret and secrets ~= nil and secrets[entry.secret] == true)
+			or (entry.unlock and unlocks ~= nil and unlocks[entry.unlock] == true)
 		then
 			unlocked[entry.id] = true
 		end

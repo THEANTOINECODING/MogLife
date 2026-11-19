@@ -397,6 +397,16 @@ function UIController.IsStatsHidden(): boolean
 	return next(hideReasons) ~= nil
 end
 
+-- Une fenêtre (boutique, semaine, nouveautés…) est-elle ouverte ? Sans compter une série ni un combat (D131)
+function UIController.IsWindowOpen(): boolean
+	for reason in hideReasons do
+		if reason ~= "Run" and reason ~= "Fight" then
+			return true
+		end
+	end
+	return false
+end
+
 -- Prévenir `listener` à chaque fois que le HUD est rangé ou revient (le menu de gauche suit le même rythme)
 function UIController.OnStatsHiddenChanged(listener: () -> ())
 	table.insert(hiddenListeners, listener)

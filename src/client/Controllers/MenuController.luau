@@ -31,6 +31,7 @@ local ShopController
 local StoreController
 local EmoteController
 local WeeklyController
+local RewardsController
 local HouseController
 local SettingsController
 local SoundController
@@ -309,6 +310,19 @@ local function buildGui()
 			end,
 		},
 		{
+			-- Nouveautés, pack de départ, groupe et codes (D131) : pastille tant que la version n'est pas vue
+			id = "News",
+			icon = Texts.Get("Menu.IconNews"),
+			caption = Texts.Get("Menu.News"),
+			color = Color3.fromRGB(30, 170, 210),
+			action = function()
+				RewardsController.Open()
+			end,
+			badge = function()
+				return RewardsController.HasNews()
+			end,
+		},
+		{
 			-- Inviter des amis (D126) : ouvre l'invitation Roblox ; caché si le compte ne peut pas inviter
 			id = "Invite",
 			icon = Texts.Get("Menu.IconInvite"),
@@ -358,6 +372,7 @@ function MenuController.Init(controllers)
 	StoreController = controllers.StoreController
 	EmoteController = controllers.EmoteController
 	WeeklyController = controllers.WeeklyController
+	RewardsController = controllers.RewardsController
 	HouseController = controllers.HouseController
 	SettingsController = controllers.SettingsController
 	SoundController = controllers.SoundController

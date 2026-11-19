@@ -44,6 +44,7 @@ local TutorialService
 local WeeklyService
 local PumpGodService
 local PurchaseService
+local RewardsService
 
 -- Un même boss peut avoir plusieurs emplacements (Kevin dans le garage de chaque maison)
 local spots: { [string]: { BasePart } } = {}
@@ -52,6 +53,30 @@ local fights: { [Player]: Fight } = {}
 local lastChallenge: { [Player]: number } = {}
 
 local BossService = {}
+
+-- D131 : après BOSS.MogLossDefeatsMax défaites d'affilée contre ce boss, un vrai combat perdu ne coûte plus de Mog
+local function lossFree(data, bossId: string): boolean
+	local streaks = data.BossLossStreak
+	return typeof(streaks) == "table" and (streaks[bossId] or 0) >= BOSS.MogLossDefeatsMax
+end
+
+-- Compte les défaites d'affilée contre un boss (remis à zéro à la victoire)
+function BossService.RecordFightResult(player: Player, bossId: string, won: boolean)
+	local data = DataService.Get(player)
+	if not data then
+		return
+	end
+	if typeof(data.BossLossStreak) ~= "table" then
+		data.BossLossStreak = {}
+	end
+	data.BossLossStreak[bossId] = if won then nil else (data.BossLossStreak[bossId] or 0) + 1
+end
+
+-- Le prochain vrai combat perdu contre ce boss coûtera-t-il du Mog ? (Dieu du Pump compris)
+function BossService.IsLossFree(player: Player, bossId: string): boolean
+	local data = DataService.Get(player)
+	return data ~= nil and lossFree(data, bossId)
+end
 
 -- Première victoire : stade suivant, Cash du boss, récompense de style (idempotent : BossesBeaten). Partagée par le
 -- Mog-off gagné et la victoire achetée en Robux (D122). Renvoie le message « Victory » à envoyer au joueur, ou nil.
@@ -66,6 +91,11 @@ local function grantFirstWin(player: Player, bossId: string): { [string]: any }?
 	end
 	data.BossesBeaten[bossId] = true
 	data.Stage = stageIndex + 1
+	if typeof(data.BossLossStreak) == "table" then
+		data.BossLossStreak[bossId] = nil
+	end
+	-- D131 : pack de départ proposé une fois, après la première victoire contre un boss
+	task.spawn(RewardsService.OfferStarterPack, player)
 	Analytics.Step(player, data, "FirstBossWin")
 	if data.Stage >= 3 then
 		Analytics.Step(player, data, "SecondStage")
@@ -114,8 +144,9 @@ local function assess(player: Player, bossId: string)
 			then 0
 			else cashLoss(data.Cash, data.Stage, BOSS.MogOffLossPercent, BOSS.MogOffLossCap),
 		-- Mog perdu (D110 : 15 %, jamais sous le Mog du stade atteint) ; aucun en revanche. Au Colisée : PumpGod.
-		mogLoss = if boss.arena
-			then math.floor(data.Mog * PumpGod.DefeatMogShare)
+		mogLoss = if lossFree(data, bossId)
+			then 0
+			elseif boss.arena then math.floor(data.Mog * PumpGod.DefeatMogShare)
 			elseif beaten then 0
 			else StatsService.MogLoss(data, BOSS.DefeatMogShare),
 		autoMogLoss = StatsService.MogLoss(data, BOSS.DefeatMogShare),
@@ -149,6 +180,7 @@ local function finishFight(player: Player, fight: Fight)
 	})
 
 	Analytics.Event(player, if won then "BossWon" else "BossLost", fight.wins, fight.bossId)
+	BossService.RecordFightResult(player, fight.bossId, won)
 	if not won then
 		if fight.stakes > 0 then
 			StatsService.Add(player, "Cash", -fight.stakes)
@@ -451,7 +483,7 @@ local function onChallenge(player: Player, bossId: unknown)
 		bossDone = false,
 		token = 0,
 		stakes = state.fightLoss,
-		mogStakes = if state.beaten then 0 else BOSS.DefeatMogShare,
+		mogStakes = if state.beaten or state.mogLoss == 0 then 0 else BOSS.DefeatMogShare,
 	}
 	fights[player] = fight
 	player:SetAttribute("InFight", true) -- tout le combat, manches et entractes compris (le client range les événements)
@@ -572,6 +604,7 @@ function BossService.Init(services)
 	WeeklyService = services.WeeklyService
 	PumpGodService = services.PumpGodService
 	PurchaseService = services.PurchaseService
+	RewardsService = services.RewardsService
 end
 
 -- Première rencontre avec chaque boss : présentation en cinématique (D53), une seule fois par joueur

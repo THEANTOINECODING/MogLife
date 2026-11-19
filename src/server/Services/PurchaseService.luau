@@ -158,7 +158,7 @@ end
 
 -- Appelé par BossService et PumpGodService après une défaite contre le boss du stade du joueur
 function PurchaseService.OfferBossWin(player: Player, bossId: string)
-	if BOSS_WIN.productId == 0 then
+	if BOSS_WIN.productId == 0 or BOSS_WIN.ExcludedBosses[bossId] then
 		return
 	end
 	local data = DataService.Get(player)
@@ -186,7 +186,12 @@ local function onBuyBossWin(player: Player, bossId: unknown)
 		return
 	end
 	local data = DataService.Get(player)
-	if not data or blockingBoss(data) ~= bossId or MinigameService.IsBusy(player) then
+	if
+		not data
+		or blockingBoss(data) ~= bossId
+		or BOSS_WIN.ExcludedBosses[bossId]
+		or MinigameService.IsBusy(player)
+	then
 		return
 	end
 	pendingBoss[player] = bossId

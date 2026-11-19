@@ -238,6 +238,7 @@ local function simulate(baseProfile)
 	local boostId, boostEnds = nil, 0
 	local partnerMog, boughtBoosts, defeats, mogLost = 0, 0, 0, 0
 	local blocked
+	local lossStreak = {} -- D131 : défaites d'affilée par boss (plus de perte de Mog au-delà de MogLossDefeatsMax)
 
 	local function mark(name)
 		table.insert(milestones, { name = name, at = t, cash = cash, styles = affordableStyle(cash, owned) })
@@ -297,6 +298,7 @@ local function simulate(baseProfile)
 			end
 			t += fightTime + (rounds - 1) * BOSS.PauseBetweenRounds
 			if won then
+				lossStreak[boss.id] = nil
 				stage += 1
 				cash += boss.firstWinCash
 				cashEarned += boss.firstWinCash
@@ -311,6 +313,10 @@ local function simulate(baseProfile)
 				local previous = Stages.List[stage - 1] and Stages.List[stage - 1].boss
 				local floorMog = if previous then previous.mogRequired else 0
 				local mogLoss = math.max(math.min(mog * BOSS.DefeatMogShare, mog - floorMog), 0)
+				if (lossStreak[boss.id] or 0) >= BOSS.MogLossDefeatsMax then
+					mogLoss = 0
+				end
+				lossStreak[boss.id] = (lossStreak[boss.id] or 0) + 1
 				mog -= mogLoss
 				mogLost += mogLoss
 				if profile.improves then

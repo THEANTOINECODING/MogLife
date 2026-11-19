@@ -42,6 +42,7 @@ local PIT = Balance.Colosseum.PitRadius
 local ColosseumService
 local DataService
 local PurchaseService
+local BossService
 local MinigameService
 local StatsService
 local StatueService
@@ -1616,12 +1617,18 @@ function finish(fight: Fight, reason: string)
 	local mogLost = 0
 	if reason == "Defeat" or reason == "Left" then
 		local data = DataService.Get(fight.player)
-		if data and typeof(data.Mog) == "number" and data.Mog > 0 then
+		-- D131 : plus de perte après Balance.Boss.MogLossDefeatsMax défaites d'affilée (jusqu'à la victoire)
+		local free = BossService.IsLossFree(fight.player, "PumpGod")
+		BossService.RecordFightResult(fight.player, "PumpGod", false)
+		if data and not free and typeof(data.Mog) == "number" and data.Mog > 0 then
 			mogLost = math.floor(data.Mog * PumpGod.DefeatMogShare)
 			if mogLost > 0 then
 				StatsService.Add(fight.player, "Mog", -mogLost)
 			end
 		end
+	end
+	if reason == "Victory" then
+		BossService.RecordFightResult(fight.player, "PumpGod", true)
 	end
 	local prize = if reason == "Victory" then reward(fight.player) else nil
 	-- D122 : le Dieu du Pump qu'on n'arrive pas à battre peut être passé en Robux (première victoire seulement)
@@ -1868,6 +1875,7 @@ function PumpGodService.Init(services)
 	TutorialService = services.TutorialService
 	StyleService = services.StyleService
 	PurchaseService = services.PurchaseService
+	BossService = services.BossService
 end
 
 function PumpGodService.Start()
