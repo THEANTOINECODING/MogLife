@@ -77,6 +77,9 @@ return {
 
 	-- Séries d'exercices
 	SeriesLength = 20,
+	-- D130 (demande d'Antoine) : une machine plus ancienne rapporte au moins cette part du Mog par répétition de la
+	-- meilleure machine débloquée (la nouvelle reste la meilleure, les anciennes valent toujours le coup)
+	OldMachineMogShare = 0.75,
 	-- Le serveur refuse une répétition arrivée avant repInterval × cette tolérance
 	RepIntervalTolerance = 0.85,
 	-- Un run sans répétition pendant Intervals × sa cadence + Extra secondes s'arrête (client figé, D113)

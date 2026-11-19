@@ -2,6 +2,10 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-19 (Demande d'Antoine : « la nouvelle machine gagne plus de Mog que les précédentes, je veux que ça reste le cas, mais que les autres machines gagnent tout de même plus de Mog, soit Mog(nouvelle machine) − 25 % »)
+
+- **D130 — Les anciennes machines suivent la meilleure.** Le Mog de base par répétition d'une machine vaut au moins 75 % de celui de la meilleure machine débloquée par le joueur (`Balance.OldMachineMogShare = 0.75`, `ExerciseService.MogPerRep`), jamais moins que sa propre valeur. Exemple au stade 6 : toutes les machines à 18 par répétition, la Corde à sauter à 24. Interprétation : le −25 % porte sur le Mog par répétition, pas par seconde (les cadences diffèrent un peu). Vérifié en jeu : valeurs lues pour chaque stade. Pas testé : une vraie série sur une ancienne machine. `tools/simulate_economy.luau` ne prend pas encore cette règle en compte.
+
 ## 2026-11-15 (Demande d'Antoine : « étudie les prix moyens sur les jeux qui fonctionnent bien afin d'appliquer des gammes de prix logiques pour chaque produit », et créer les produits)
 
 - **D129 — Grille de prix Robux.**

@@ -39,6 +39,19 @@ local PurchaseService
 
 local ExerciseService = {}
 
+-- Mog de base par répétition d'un exercice au stade du joueur (D130) : au moins OldMachineMogShare du Mog de la
+-- meilleure machine déjà débloquée, jamais moins que la valeur propre de l'exercice
+function ExerciseService.MogPerRep(exerciseId: string, stage: number): number
+	local exercise = Exercises[exerciseId]
+	local best = 0
+	for _, other in Exercises do
+		if other.requiredStage <= stage and other.mogPerRep > best then
+			best = other.mogPerRep
+		end
+	end
+	return math.max(exercise.mogPerRep, best * Balance.OldMachineMogShare)
+end
+
 -- Nom du boss à battre pour débloquer un stade donné (pour les messages « verrouillé »)
 function ExerciseService.UnlockingBossId(requiredStage: number): string?
 	local stage = Stages.List[requiredStage - 1]
@@ -106,9 +119,10 @@ local function startSeries(player: Player, exerciseId: unknown, wanted: BasePart
 		level = data.Stage - exercise.requiredStage,
 		titleKey = `Exercise.{exerciseId}`,
 		onRep = function(p, quality, combo)
-			-- Gain = base × qualité × combo × boost en cours × pareur (+20 % si un autre joueur le pare)
-			-- × bien reposé (meubles de la maison, D111)
-			local gain = exercise.mogPerRep
+			-- Gain = base (D130 : au moins 75 % de la meilleure machine) × qualité × combo × boost en cours
+			-- × pareur (+20 % si un autre joueur le pare) × bien reposé (meubles de la maison, D111)
+			local stage = (DataService.Get(p) or data).Stage
+			local gain = ExerciseService.MogPerRep(exerciseId, stage)
 				* Balance.Quality[quality]
 				* combo
 				* BoostService.Multiplier(p)
