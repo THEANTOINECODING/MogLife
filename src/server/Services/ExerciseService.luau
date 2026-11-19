@@ -37,6 +37,7 @@ local FurnitureService
 local WeeklyService
 local PurchaseService
 local RewardsService
+local MogRushService
 
 local ExerciseService = {}
 
@@ -139,6 +140,7 @@ local function startSeries(player: Player, exerciseId: unknown, wanted: BasePart
 				* RewardsService.FriendMultiplier(p) -- D131 : bonus d'équipe (amis Roblox présents)
 				* RewardsService.GoldenMultiplier() -- D131 : Golden Pump Hour
 			StatsService.Add(p, "Mog", gain)
+			MogRushService.Record(p, gain) -- D132 : classement mondial de la manche de 30 min
 			Analytics.Step(p, DataService.Get(p), "FirstRep")
 			SocialService.OnLifterRep(p, gain, quality)
 			-- Les muscles travaillés gonflent (D40)
@@ -300,6 +302,7 @@ function ExerciseService.Init(services)
 	WeeklyService = services.WeeklyService
 	PurchaseService = services.PurchaseService
 	RewardsService = services.RewardsService
+	MogRushService = services.MogRushService
 end
 
 function ExerciseService.Start()

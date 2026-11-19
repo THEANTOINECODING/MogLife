@@ -9,11 +9,11 @@ return {
 
 	-- Stade atteint (index dans Stages.List -> numéro du badge) : 2 = Gym Rat … 7 = GOD MOGGER
 	Stages = {
-		GymRat = 0,
-		Bro = 0,
-		Alpha = 0,
-		Chad = 0,
-		Gigachad = 0,
+		GymRat = 2754409780445220,
+		Bro = 3105775304491543,
+		Alpha = 1115700757352744,
+		Chad = 2569466250346366,
+		Gigachad = 2843096376638918,
 		GodMogger = 0,
 	},
 

@@ -405,11 +405,21 @@ function RewardsController.Start()
 			end)
 		end
 	end)
-	-- Les cartes attendent un moment libre, une à la fois
+	-- Les cartes attendent un moment libre, une à la fois. Une carte affichée s'efface le temps qu'une fenêtre
+	-- s'ouvre par-dessus (ex. défis de la semaine à l'arrivée) puis revient.
+	local suspended = false
 	task.spawn(function()
 		while true do
-			task.wait(1)
-			if #queue > 0 and not card.Visible and free() then
+			task.wait(0.5)
+			if card.Visible and not free() then
+				card.Visible = false
+				suspended = true
+			elseif suspended then
+				if free() then
+					card.Visible = true
+					suspended = false
+				end
+			elseif #queue > 0 and not card.Visible and free() then
 				showCard(table.remove(queue, 1) :: any)
 			end
 		end

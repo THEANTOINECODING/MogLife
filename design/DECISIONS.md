@@ -2,6 +2,18 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-20 (Demande d'Antoine : 5 numéros de badges ; « le tableau mondial des Mog, réinitialisé toutes les 30 min, impressionnant et esthétiquement beau »)
+
+- **Badges (D126)** : numéros des badges de stade Gym Rat, Bro, Alpha, Chad et Gigachad renseignés (`Config/Badges.luau`). Les 8 autres (GOD MOGGER, 6 boss, premier S) attendent : 5 créations gratuites par jour et par expérience, 100 R$ au-delà.
+- **D132 — Mog Rush : classement mondial du Mog, manche de 30 minutes.**
+  - **Règle** : compte le Mog gagné aux exercices pendant la manche (après boosts, amis, Golden Hour), pas les packs de Mog en Robux (le classement ne s'achète pas). Manches calées sur l'horloge (xx:00 et xx:30 UTC), donc identiques sur tous les serveurs. Un joueur qui change de serveur garde son score de la manche.
+  - **Technique** (`MogRushService`, `Config/MogRush.luau`) : un OrderedDataStore par manche (`IncrementAsync` toutes les 30 s, lecture des 10 premiers toutes les 45 s), mêlé aux scores frais des joueurs du serveur. Studio a son propre classement (`MogRush_v1_Studio`) : les tests ne touchent jamais le vrai. À la fin d'une manche : « NEW RUSH! » sur le tableau, message à tous, puis annonce du champion une minute plus tard (le temps que tous les serveurs envoient).
+  - **Tableau** (`MogRushController`, construit par chaque client, sans collision) : 4 écrans géants dos à dos au-dessus de la fontaine de la place (un par avenue), cadre doré, liserés néon, couronne qui tourne, pointe lumineuse et poussière d'or qui monte de la fontaine, flottement lent. Écran : titre « MOG RUSH » avec reflet qui balaie, compte à rebours (rouge clignotant la dernière minute) et barre qui se vide, 10 lignes (or, argent, bronze, avatars, ligne du joueur en bleu), lignes qui glissent quand le classement change, scores qui défilent, ma place, champions de la manche précédente. Annonces : « You're #N in the world Mog Rush! » en entrant dans le top 10, et à la 1ʳᵉ place.
+  - **Vérifié en jeu (Studio, son coupé)** : une vraie série de 6 répétitions apparaît sur le tableau (« #1 · 188 Mog ») et dans le classement mondial de Studio (188 lus dans le DataStore) ; mise en page vérifiée avec 10 joueurs fictifs (écran affiché à plat, capture). Sauvegarde restaurée (Mog, et Cash du gain d'absence versé au lancement).
+  - **Pas vérifié** : le modèle 3D à l'écran (la capture de Studio ne rend pas la 3D en ce moment : écran blanc) ; un vrai changement de manche ; plusieurs serveurs.
+  - ❓ Antoine : récompense pour le champion de chaque manche (titre, aura de 30 min ?) ; aujourd'hui, seulement la gloire.
+- **Correction** : la carte du pack de départ ou du gain d'absence s'efface quand une fenêtre s'ouvre par-dessus (défis de la semaine à l'arrivée) et revient ensuite.
+
 ## 2026-11-19 (Demande d'Antoine : « fais les rapides et les moyennes », améliorations 1 à 10 de `ANALYSE_JEU_2026-11-19.md`)
 
 - **D131 — Récompenses et rendez-vous : pack de départ, groupe, nouveautés et codes, amis, Golden Pump Hour, gain pendant l'absence, défaites contre les boss adoucies.** ❓ Tous les montants sont des hypothèses de départ (`Config/Rewards.luau`, `Products.StarterPack`), à régler pendant l'alpha.

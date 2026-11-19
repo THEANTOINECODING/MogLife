@@ -80,6 +80,7 @@ local NAMES = {
 	"RewardsState", -- serveur -> client : ({ newsVersion, newsSeen, starterOwned, starterProduct, starterRobux, groupId, groupClaimed }) (D131)
 	"RewardsAction", -- client -> serveur : (action: "SeeNews" | "ClaimGroup" | "Redeem" | "BuyStarter", arg?) (D131)
 	"RewardsPopup", -- serveur -> client : ({ kind: "Starter" | "Away", ... }) offre du pack de départ, gain pendant l'absence
+	"MogRushState", -- serveur -> client : ({ round, endsAt, top, podium, you = { score, rank? } }) tableau mondial (D132)
 }
 
 local isServer = RunService:IsServer()
@@ -182,4 +183,5 @@ return remotes :: {
 	RewardsState: RemoteEvent,
 	RewardsAction: RemoteEvent,
 	RewardsPopup: RemoteEvent,
+	MogRushState: RemoteEvent,
 }

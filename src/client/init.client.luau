@@ -44,6 +44,7 @@ local ORDER = {
 	"SignatureFxController",
 	"PremiumMotionController",
 	"RewardsController",
+	"MogRushController",
 	"MenuController",
 }
 
