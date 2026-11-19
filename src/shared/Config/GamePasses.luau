@@ -8,13 +8,13 @@
 return {
 	-- Ensemble (StyleSets, id) -> identifiant du Game Pass
 	StyleSets = {
-		CosmicEmperor = 0, -- 599 R$
-		GoldenTitan = 0, -- 599 R$
-		NeonPhantom = 0, -- 299 R$
-		GymDragon = 0, -- 499 R$ (D122)
-		EternalSun = 0, -- 399 R$
-		MechaMogger = 0, -- 399 R$
-		MarbleStatue = 0, -- 299 R$
-		InfernalDemon = 0, -- 499 R$
+		CosmicEmperor = 2092438182, -- 599 R$
+		GoldenTitan = 2093512155, -- 599 R$
+		NeonPhantom = 2094484138, -- 299 R$
+		GymDragon = 2094370204, -- 499 R$ (D122)
+		EternalSun = 2092636210, -- 399 R$
+		MechaMogger = 2094406171, -- 399 R$
+		MarbleStatue = 2092726212, -- 299 R$
+		InfernalDemon = 2093134096, -- 499 R$
 	},
 }

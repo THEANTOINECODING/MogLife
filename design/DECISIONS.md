@@ -9,7 +9,7 @@ Format : date — décision — raison. La plus récente en haut.
   - **Changé** : boost de Mog 79 / 249 → **49 / 149** (15 et 60 min). L'ancien prix court était trois fois celui de Blox Fruits et l'heure n'était que 21 % moins chère à la minute.
   - **Gardé** : coffres de Cash 49 / 149 / 399 (très proches de Gym League : 37 / 150 / 412), packs de Mog 49 / 149 / 399, victoire contre le boss 99.
   - **Nouveau** : prix conseillés des 8 tenues, de 299 à 599 (`GamePasses.luau`, en commentaire). ❓ Classement des tenues à valider.
-  - **Non fait** : la création des produits et des passes. L'outil de Studio a refusé (permission `developer-product:write` non accordée) ; aucun produit n'a été créé. Les identifiants restent à 0.
+  - **Créés le 19/11** (via Open Cloud, après autorisation d'Antoine) : 9 produits de développeur (coffres 49/149/399, packs de Mog 49/149/399, boosts 49/149, victoire contre le boss 99) et 8 passes de tenues (299 à 599), avec des icônes provisoires sans texte (`tools/make_store_icons.py`, `assets/export/icons/`). Identifiants dans `Products.luau` et `GamePasses.luau`. Vérifié en jeu : les 17 prix lus sur Roblox correspondent, la boutique affiche « Buy: R$ 49 / 149 / 399 ». Pas testé : un achat réel. ❓ Icônes définitives à faire.
 
 ## 2026-11-13 (Demande d'Antoine : « les capes sont vraiment très moches et pas du tout bien animées, refais-les ; un bouton boutique pour les skins payants, les coffres d'argent, des boosts de Mog et le reste des choses payables en Robux ; des mannequins dans le magasin avec certaines tenues payantes ; de manière qualitative et sans tricher »)
 

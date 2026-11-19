@@ -1,7 +1,6 @@
 -- Produits Robux à achat répétable (Developer Products, D122, choix d'Antoine) : packs de Cash, packs de Mog,
--- boosts de Mog (D128) et victoire contre un boss qu'on n'arrive pas à battre. Identifiants à créer par Antoine dans le Creator Hub
--- (Créations > le jeu > Monétisation > Produits de développeur). Tant qu'un identifiant vaut 0, le produit reste
--- caché dans le jeu. Le prix réel est celui du Creator Hub ; `robux` n'est qu'un prix conseillé.
+-- boosts de Mog (D128) et victoire contre un boss qu'on n'arrive pas à battre. Identifiants créés le 19/11/2026 via Open Cloud (D129,
+-- icônes provisoires de tools/make_store_icons.py). Tant qu'un identifiant vaut 0, le produit reste caché dans le jeu. Le prix réel est celui du Creator Hub ; `robux` n'est qu'un prix conseillé.
 -- Seule la confirmation officielle de Roblox (ProcessReceipt, PurchaseService) accorde un produit.
 -- ❓ Montants et prix de départ, à ajuster.
 
@@ -31,28 +30,28 @@ local Stages = require(script.Parent.Stages)
 local Products = {}
 
 Products.Cash = {
-	{ id = "CashSmall", productId = 0, robux = 49, amount = 1_500, icon = "💵" },
-	{ id = "CashMedium", productId = 0, robux = 149, amount = 6_000, icon = "💰" },
-	{ id = "CashLarge", productId = 0, robux = 399, amount = 20_000, icon = "🏦" },
+	{ id = "CashSmall", productId = 3733587000, robux = 49, amount = 1_500, icon = "💵" },
+	{ id = "CashMedium", productId = 3733587153, robux = 149, amount = 6_000, icon = "💰" },
+	{ id = "CashLarge", productId = 3733587176, robux = 399, amount = 20_000, icon = "🏦" },
 } :: { Pack }
 
 Products.Mog = {
-	{ id = "MogSmall", productId = 0, robux = 49, share = 0.1, icon = "💪" },
-	{ id = "MogMedium", productId = 0, robux = 149, share = 0.35, icon = "🗿" },
-	{ id = "MogLarge", productId = 0, robux = 399, share = 1.0, icon = "🔥" },
+	{ id = "MogSmall", productId = 3733587197, robux = 49, share = 0.1, icon = "💪" },
+	{ id = "MogMedium", productId = 3733587217, robux = 149, share = 0.35, icon = "🗿" },
+	{ id = "MogLarge", productId = 3733587238, robux = 399, share = 1.0, icon = "🔥" },
 } :: { Pack }
 
 -- Prix D129 (étude des prix de 12 jeux à succès, design/06_MONETISATION.md) : l'heure coûte 25 % de moins à la minute.
 -- ❓ Multiplicateur et durées de départ, à régler (Antoine).
 Products.Boost = {
-	{ id = "MogBoostShort", productId = 0, robux = 49, multiplier = 2, duration = 15 * 60, icon = "⚡" },
-	{ id = "MogBoostLong", productId = 0, robux = 149, multiplier = 2, duration = 60 * 60, icon = "🚀" },
+	{ id = "MogBoostShort", productId = 3733587261, robux = 49, multiplier = 2, duration = 15 * 60, icon = "⚡" },
+	{ id = "MogBoostLong", productId = 3733587287, robux = 149, multiplier = 2, duration = 60 * 60, icon = "🚀" },
 } :: { BoostPack }
 
 -- Victoire contre le boss qu'on vient de perdre (proposée sur l'écran de défaite, choix d'Antoine). Seulement pour la
 -- première victoire (le boss qui garde le stade du joueur), jamais en revanche, jamais au bras de fer.
 Products.BossWin = {
-	productId = 0,
+	productId = 3733587306,
 	robux = 99,
 	OfferWindow = 120, -- secondes après la défaite pendant lesquelles l'offre reste valable
 	OfferDelay = 4, -- secondes avant d'afficher l'offre (laisser la fin du combat se jouer)
