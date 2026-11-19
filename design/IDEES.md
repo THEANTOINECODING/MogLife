@@ -3,6 +3,10 @@
 Toute nouvelle idée arrive ici. Elle passe dans le design seulement après une décision dans `DECISIONS.md`.
 Test de la vision : l'idée tient-elle dans les trois briques (mini-jeux, contenu en données, personnage) ?
 
+## Propositions du 19/11/2026 (Claude, à décider par Antoine)
+
+Détail et justification dans [ANALYSE_JEU_2026-11-19.md](ANALYSE_JEU_2026-11-19.md) : badges à créer, serveurs privés, pack de départ, récompense du groupe, nouveautés et codes, bonus entre amis, perte de Mog limitée, Kevin gagnable par tous (et sans victoire en Robux), événements à heure fixe, progrès pendant l'absence sans pénalité, Ascension, classement mondial du Mog, mises à jour régulières, carte avant/après.
+
 ## Secrets du jeu (proposés par Claude le 06/11/2026, Antoine choisit ceux à construire)
 
 **Construits (D121, choix d'Antoine) : 3, 6, 7 et 8.** Les autres restent des idées.
