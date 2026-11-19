@@ -13,6 +13,12 @@ Format : date — décision — raison. La plus récente en haut.
   - **Pas vérifié** : le modèle 3D à l'écran (la capture de Studio ne rend pas la 3D en ce moment : écran blanc) ; un vrai changement de manche ; plusieurs serveurs.
   - ❓ Antoine : récompense pour le champion de chaque manche (titre, aura de 30 min ?) ; aujourd'hui, seulement la gloire.
 - **Correction** : la carte du pack de départ ou du gain d'absence s'efface quand une fenêtre s'ouvre par-dessus (défis de la semaine à l'arrivée) et revient ensuite.
+- **D133 — Meubles v3 : les 21 meubles refaits, en vraies matières Roblox** (demande : « refaire l'entièreté des meubles pour qu'ils soient extrêmement plus qualitatifs »).
+  - **Modèles** (`tools/blender/props_furniture_v3.py`) : formes arrondies (biseaux, coussins bombés, coutures, pieds tournés), ombrage lissé à 35°, 844 à 6 248 triangles par meuble (sous la limite mobile). Chaque meuble est découpé par matière : tissu, moquette, cuir, bois, parquet, or (Foil), métal, marbre, verre, néon, carton, caoutchouc, plus la palette partagée pour les motifs. Statue redessinée (torse en V, biceps, mâchoire carrée), affiche avec un culturiste en relief, tapis zèbre en vraies rayures, lit-voiture et matelas ramenés à la taille de leur emplacement.
+  - **Technique** : export `assets/export/props/Props_Furniture.fbx` (139 morceaux) ; envoyé sur Roblox (asset « MogLife Furniture v3 », 96441312108551, sur le compte d'Antoine) puis rangé par `tools/install_furniture.luau` : une pièce principale invisible `Furniture_<Id>` (boîte englobante : pose au sol, collision, placement inchangés) qui porte les morceaux (attribut `AccentOffset`). `src/shared/PropAccents.luau` replace les morceaux après une pose (`PropService.Place`) ou une copie (aperçus 3D des magasins, `Preview3D`). Les anciens modèles v2 sont gardés dans `ServerStorage.Props_FurnitureV2_Backup`.
+  - **Vérifié en jeu (Studio, son coupé)** : les 21 meubles posés en vitrine ont leurs morceaux exactement dans leur boîte ; le trophée posé dans la maison d'Antoine repose sur le sol (bas à y = 0,60, sol à 0,60) avec ses 5 morceaux.
+  - **Pas vérifié** : l'aspect à l'écran dans Roblox (capture de Studio en panne : 3D blanche), seulement en rendu Blender.
+  - **À faire par Antoine** : enregistrer la place (Ctrl+S) — les modèles vivent dans la place, pas dans les fichiers.
 
 ## 2026-11-19 (Demande d'Antoine : « fais les rapides et les moyennes », améliorations 1 à 10 de `ANALYSE_JEU_2026-11-19.md`)
 

@@ -15,8 +15,10 @@
 -- Si une carte est régénérée avec les blocs de secours (« Fallback »), ils sont retirés quand le modèle existe.
 
 local CollectionService = game:GetService("CollectionService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerStorage = game:GetService("ServerStorage")
 
+local PropAccents = require(ReplicatedStorage.Shared.PropAccents)
 local PropColliders = require(script.Parent.Parent.PropColliders)
 
 local SLOT_TAG = "PropSlot"
@@ -80,8 +82,10 @@ function PropService.Place(name: string, base: CFrame, options: { [string]: any 
 	local clone = template:Clone()
 	clone.Anchored = true
 	local height = opts.height
+	local resize = 1
 	if typeof(height) == "number" and height > 0 and clone.Size.Y > 0 then
-		clone.Size *= height / clone.Size.Y
+		resize = height / clone.Size.Y
+		clone.Size *= resize
 	end
 	clone.CanCollide = opts.collide ~= false
 	clone.CanTouch = false
@@ -96,6 +100,16 @@ function PropService.Place(name: string, base: CFrame, options: { [string]: any 
 	local offsetZ = if opts.align == "Back" then -clone.Size.Z / 2 else 0
 	local offsetY = if opts.centered then 0 else clone.Size.Y / 2
 	clone.CFrame = base * CFrame.new(0, offsetY, offsetZ)
+	-- Morceaux en vraies matières (meubles v3, D133) : ils suivent la pièce principale, sans collision propre
+	for _, child in clone:GetChildren() do
+		if PropAccents.IsAccent(child) then
+			local accent = child :: BasePart
+			accent.Anchored = true
+			accent.CanCollide = false
+			accent.CanTouch = false
+		end
+	end
+	PropAccents.Sync(clone, resize)
 	addColliders(clone, name, clone.Size.Y / template.Size.Y)
 	return clone
 end
@@ -192,14 +206,22 @@ function PropService.PublishPreviews(): number
 	local source = ServerStorage:FindFirstChild("Props")
 	if source then
 		for _, item in source:GetDescendants() do
-			if not item:IsA("BasePart") or folder:FindFirstChild(item.Name) then
+			-- Un morceau en vraie matière voyage avec sa pièce principale
+			if not item:IsA("BasePart") or folder:FindFirstChild(item.Name) or PropAccents.IsAccent(item) then
 				continue
 			end
 			for _, prefix in PREVIEW_PREFIXES do
 				if string.sub(item.Name, 1, #prefix) == prefix then
 					local copy = item:Clone()
 					for _, child in copy:GetChildren() do
-						child:Destroy()
+						if PropAccents.IsAccent(child) then
+							local accent = child :: BasePart
+							accent.CanCollide = false
+							accent.CanQuery = false
+							accent.CanTouch = false
+						else
+							child:Destroy()
+						end
 					end
 					copy.Anchored = true
 					copy.CanCollide = false

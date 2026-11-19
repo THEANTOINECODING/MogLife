@@ -7,6 +7,7 @@
 
 local RunService = game:GetService("RunService")
 
+local PropAccents = require(game:GetService("ReplicatedStorage").Shared.PropAccents)
 local Ui = require(script.Parent.Ui)
 
 local SPIN_SPEED = math.rad(28) -- degrés par seconde
@@ -86,6 +87,7 @@ function Preview3D.Show(view: View, source: Instance)
 	end
 	if copy:IsA("BasePart") then
 		copy.CFrame = CFrame.new()
+		PropAccents.Sync(copy) -- morceaux en vraies matières (meubles v3)
 	end
 	holder.Parent = view.frame
 	local box, size = holder:GetBoundingBox()
