@@ -316,8 +316,10 @@ local function addShake(part: Instance)
 	end
 end
 
--- Posé : le parachute s'affaisse et disparaît, petit nuage de poussière
-local function land(entry: Shake)
+-- Posé : le parachute s'affaisse et disparaît, petit nuage de poussière.
+-- Un shake déjà posé depuis un moment (joueur arrivé après, ou shake qui réapparaît en marchant : la carte se charge
+-- par morceaux) se pose sans bruit ni poussière ; sinon le son partait « au hasard » en marchant.
+local function land(entry: Shake, late: boolean)
 	entry.landed = true
 	entry.target:Destroy()
 	for _, piece in entry.canopy do
@@ -329,6 +331,9 @@ local function land(entry: Shake)
 		Debris:AddItem(piece.part, 1)
 	end
 	entry.canopy = {}
+	if late then
+		return
+	end
 	local puff =
 		fxPart({ Size = Vector3.one * 0.2, Transparency = 1, Position = entry.ground + Vector3.new(0, 0.4, 0) })
 	emitter(puff, {
@@ -381,7 +386,7 @@ local function updateShakes(now: number, serverNow: number)
 			entry.target.Transparency = 0.45 + math.sin(now * (6 + 10 * (1 - left / fall))) * 0.2
 		else
 			if not entry.landed then
-				land(entry)
+				land(entry, -left > Events.FreeShakes.LandLate)
 			end
 			entry.cup.Transparency = 0
 			entry.cup.CFrame = CFrame.new(

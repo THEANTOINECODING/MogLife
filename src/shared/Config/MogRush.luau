@@ -7,13 +7,21 @@ return {
 	RoundSeconds = 30 * 60,
 	StoreName = "MogRush_v1", -- un OrderedDataStore, une portée par manche (ne pas renommer en cours de manche)
 	TopSize = 10, -- lignes du tableau
+	RankRead = 100, -- places lues dans chaque classement mondial : le rang du joueur est connu jusque-là (max 100)
 	PodiumSize = 3, -- champions de la manche précédente affichés en bas
 	FlushEvery = 30, -- secondes entre deux envois du Mog gagné vers le classement mondial
 	ReadEvery = 45, -- secondes entre deux lectures du classement mondial
 	PodiumReadDelay = 50, -- après la fin d'une manche, attente avant de lire ses champions (les serveurs envoient)
 	SendEvery = 5, -- secondes entre deux envois du tableau aux joueurs (le Mog local avance plus vite)
 
-	-- Tableau géant au-dessus de la fontaine de la place (4 écrans dos à dos, un par avenue)
+	-- Classement mondial du Mog total (deux faces du tableau sur quatre, demande d'Antoine du 21/11) : Mog actuel de
+	-- chaque joueur, tous serveurs, jamais remis à zéro. Écrit au rythme de FlushEvery, lu au rythme de ReadEvery.
+	World = {
+		StoreName = "MogWorld_v1", -- ne pas renommer : le classement repartirait de zéro
+	},
+
+	-- Tableau géant au-dessus de la fontaine de la place (4 écrans dos à dos, un par avenue) : faces 1 et 3 = Mog
+	-- Rush, faces 2 et 4 = Mog total (FaceKinds)
 	Board = {
 		Center = Vector3.new(0, 27, 0), -- bas des écrans à 14 studs (la fontaine monte à 11)
 		ScreenWidth = 22,
@@ -23,5 +31,6 @@ return {
 		CrownSpin = 12, -- secondes par tour de la couronne
 		PixelsPerStud = 40, -- résolution des écrans
 		MaxDistance = 260, -- au-delà, l'écran ne se dessine plus (téléphones)
+		FaceKinds = { "Rush", "World", "Rush", "World" }, -- en alternance : chaque avenue voit les deux en tournant
 	},
 }

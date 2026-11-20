@@ -32,6 +32,7 @@ return {
 		DropOver = 18, -- les largages s'étalent sur les premières secondes de l'événement
 		FallTime = 6, -- durée de la descente en parachute
 		FallHeight = 70,
+		LandLate = 1, -- secondes : un shake posé depuis plus longtemps (vu en arrivant) se pose sans bruit
 		Model = "ProteinShaker",
 		Scale = 1.6,
 	},

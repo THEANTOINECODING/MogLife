@@ -9,6 +9,9 @@
 -- - Rangée pendant une série, un combat, un duel (MinigameController, ScreenGui « Menu »), quand une fenêtre est
 --   ouverte (UIController.SetStatsHidden) et pendant le tutoriel (sa carte occupe le même coin).
 -- - Manette : Select met la sélection sur la première case (la croix choisit, A ouvre, B ou Select ressort).
+-- - Repliable (demande d'Antoine, 21/11) : une languette à flèche collée à droite de la colonne la fait glisser hors
+--   de l'écran (◀) puis revenir (▶). Repliée, la languette reste au bord gauche et garde une pastille rouge si une
+--   case en a une. Le choix vaut pour la session.
 
 local CollectionService = game:GetService("CollectionService")
 local ContextActionService = game:GetService("ContextActionService")
@@ -17,6 +20,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local SocialService = game:GetService("SocialService")
+local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
@@ -52,6 +56,12 @@ local gui: ScreenGui
 local rail: Frame
 local tiles: { [string]: TextButton } = {}
 local entries: { Entry } = {}
+local handle: TextButton
+local handleArrow: TextLabel
+local handleBadge: Frame
+local collapsed = false
+local SLIDE = TweenInfo.new(0.32, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+local SLIDE_IN = TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
 local gear: TextButton
 local builtSize = 0
 local focused = false
@@ -123,6 +133,40 @@ local function build(size: number)
 	gear.Size = UDim2.fromOffset(gearSize, gearSize)
 end
 
+-- Colonne et languette : dépliée (colonne au bord, languette juste à droite) ou repliée (colonne hors de l'écran,
+-- languette au bord). `info` = animation, nil = placement immédiat.
+local railY, railWidth = 0, 0
+local function placeRail(info: TweenInfo?)
+	if not rail or not handle then
+		return
+	end
+	local handleW = handle.Size.X.Offset
+	local handleH = handle.Size.Y.Offset
+	local railX = if collapsed then -(railWidth + handleW + 24) else 12
+	local handleX = if collapsed then 0 else 12 + railWidth + 6
+	local railTarget = UDim2.fromOffset(railX, railY)
+	local handleTarget = UDim2.fromOffset(handleX, railY + math.max(rail.Size.Y.Offset / 2 - handleH / 2, 0))
+	handleArrow.Text = Texts.Get(if collapsed then "Menu.Expand" else "Menu.Collapse")
+	if info then
+		TweenService:Create(rail, info, { Position = railTarget }):Play()
+		TweenService:Create(handle, info, { Position = handleTarget }):Play()
+	else
+		rail.Position = railTarget
+		handle.Position = handleTarget
+	end
+end
+
+local function setCollapsed(on: boolean)
+	if on == collapsed then
+		return
+	end
+	collapsed = on
+	if on then
+		setFocus(false)
+	end
+	placeRail(if on then SLIDE_IN else SLIDE)
+end
+
 local function layout()
 	if not rail then
 		return
@@ -169,8 +213,11 @@ local function layout()
 		end
 	end
 	local y = math.max(top, math.min(area.Y / 2 - height / 2, limit - height))
-	rail.Position = UDim2.fromOffset(12, y)
-	rail.Size = UDim2.fromOffset(columns * size + (columns - 1) * gap, height)
+	local width = columns * size + (columns - 1) * gap
+	rail.Size = UDim2.fromOffset(width, height)
+	railY = y
+	railWidth = width
+	placeRail(nil)
 	for index, tile in visible do
 		local column = (index - 1) % columns
 		local row = (index - 1) // columns
@@ -194,6 +241,20 @@ local function animate()
 			return
 		end
 		local t = os.clock() - t0
+		local anyBadge = false
+		for _, entry in entries do
+			if entry.badge ~= nil and entry.badge() then
+				anyBadge = true
+			end
+		end
+		handleBadge.Visible = collapsed and anyBadge
+		if handleBadge.Visible then
+			local scale = handleBadge:FindFirstChildOfClass("UIScale") :: UIScale
+			scale.Scale = 1 + math.max(math.sin(t * 6), 0) * 0.2
+		end
+		if collapsed then
+			return
+		end
 		for _, entry in entries do
 			local tile = tiles[entry.id]
 			if not tile then
@@ -218,6 +279,7 @@ end
 local function refreshVisible()
 	-- Pendant le tutoriel, sa carte occupe ce coin et le joueur apprend les bases : le menu apparaît à la fin
 	rail.Visible = not UIController.IsStatsHidden() and not tutorialActive
+	handle.Visible = rail.Visible
 	if not rail.Visible then
 		setFocus(false)
 	end
@@ -249,6 +311,39 @@ local function buildGui()
 		TextStrokeTransparency = 1,
 		Parent = gear,
 	})
+	-- Languette pour replier / déplier la colonne (cible tactile d'au moins 44 pixels de haut)
+	local touch = UserInputService.TouchEnabled
+	handle = Ui.create("TextButton", {
+		Name = "Collapse",
+		Size = UDim2.fromOffset(if touch then 32 else 28, if touch then 58 else 52),
+		BackgroundColor3 = Color3.fromRGB(42, 35, 64),
+		BackgroundTransparency = 0.1,
+		AutoButtonColor = false,
+		Text = "",
+		Parent = gui,
+	}, { Ui.corner(UDim.new(0, 12)), Ui.stroke(Ui.Ink, 2.5) })
+	handleArrow = Ui.label({
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.fromScale(0.5, 0.5),
+		Size = UDim2.fromScale(0.8, 0.5),
+		Text = Texts.Get("Menu.Collapse"),
+		TextStrokeTransparency = 1,
+		Parent = handle,
+	})
+	handleBadge = Ui.create("Frame", {
+		Name = "Badge",
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Position = UDim2.new(1, -2, 0, 4),
+		Size = UDim2.fromOffset(14, 14),
+		BackgroundColor3 = Color3.fromRGB(255, 50, 60),
+		Visible = false,
+		Parent = handle,
+	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 2), Ui.create("UIScale", {}) })
+	Ui.juice(handle, tapSound)
+	handle.Activated:Connect(function()
+		setCollapsed(not collapsed)
+	end)
+
 	Ui.juice(gear, tapSound)
 	gear.Activated:Connect(function()
 		setFocus(false)
@@ -386,7 +481,7 @@ end
 -- Position de la case `id` à l'écran (le tutoriel ou une flèche peuvent la montrer) ; nil si elle est cachée
 function MenuController.GetTile(id: string): TextButton?
 	local tile = tiles[id]
-	return if tile and tile.Visible then tile else nil
+	return if tile and tile.Visible and not collapsed then tile else nil
 end
 
 function MenuController.Start()
@@ -405,6 +500,9 @@ function MenuController.Start()
 			return Enum.ContextActionResult.Pass
 		end
 		if gui.Enabled and rail.Visible then
+			if collapsed then
+				setCollapsed(false)
+			end
 			setFocus(not focused)
 			return Enum.ContextActionResult.Sink
 		end

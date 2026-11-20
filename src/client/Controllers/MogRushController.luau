@@ -3,6 +3,10 @@
 -- localement : flottement, couronne qui tourne, reflet qui balaie le titre, lignes qui glissent quand le classement
 -- change, scores qui défilent, compte à rebours qui rougit la dernière minute, flash « NEW RUSH! » au changement.
 -- Les données viennent du serveur (remote MogRushState, MogRushService).
+-- Deux sortes de faces en alternance (MogRush.Board.FaceKinds, demande d'Antoine du 21/11) : « Rush » (manche de
+-- 30 min, compte à rebours, champions de la manche d'avant) et « World » (Mog total de tous les joueurs, jamais remis
+-- à zéro, nuit bleue). En bas de chaque face, la ligne du joueur : son rang (jusqu'à la 100e place), son avatar, son
+-- score.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -36,6 +40,11 @@ local RANK_COLORS = {
 }
 local ROW_COLOR = Color3.fromRGB(44, 30, 78)
 local ROW_YOU = Color3.fromRGB(30, 110, 150)
+-- Faces « World » : nuit bleue, argent et cyan
+local WORLD_NIGHT = Color3.fromRGB(6, 14, 38)
+local WORLD_NIGHT_2 = Color3.fromRGB(18, 48, 108)
+local WORLD_ROW = Color3.fromRGB(24, 42, 92)
+local ICE = Color3.fromRGB(200, 240, 255)
 
 -- Dimensions de l'écran en pixels (SurfaceGui en pixels par stud)
 
@@ -63,7 +72,15 @@ type Row = {
 	slot: number,
 }
 
+type YouRow = {
+	frame: Frame,
+	rank: TextLabel,
+	score: TextLabel,
+	glow: UIStroke,
+}
+
 type Face = {
+	kind: string, -- "Rush" ou "World"
 	gui: SurfaceGui,
 	rows: { [number]: Row }, -- par userId
 	timer: TextLabel,
@@ -71,10 +88,12 @@ type Face = {
 	barFill: Frame,
 	shine: UIGradient,
 	titleScale: UIScale,
-	you: TextLabel,
-	podium: TextLabel,
+	you: YouRow,
+	status: TextLabel?,
+	podium: TextLabel?,
 	empty: TextLabel,
 	flash: TextLabel,
+	fill: UIGradient,
 }
 
 local model: Model? = nil
@@ -301,7 +320,65 @@ local function slotHeight(slot: number): number
 	return if slot <= 3 then BIG_ROW else SMALL_ROW
 end
 
-local function buildFace(screen: BasePart, parent: Instance): Face
+-- Ligne du joueur en bas d'une face : rang, avatar, nom, score, liseré cyan qui respire
+local function buildYouRow(back: Frame, y: number): YouRow
+	local height = 62
+	local frame = Ui.create("Frame", {
+		Name = "You",
+		Size = UDim2.new(1, -60, 0, height),
+		Position = UDim2.new(0, 30, 1, y),
+		BackgroundColor3 = ROW_YOU,
+		Parent = back,
+	}, { Ui.corner(UDim.new(0, 18)) })
+	Ui.gradient(Color3.fromRGB(70, 200, 255), Color3.fromRGB(20, 90, 140), 90).Parent = frame
+	local glow = Ui.stroke(CYAN, 4, 0)
+	glow.Parent = frame
+	local disc = Ui.create("Frame", {
+		Size = UDim2.fromOffset(height * 1.7, height - 14),
+		Position = UDim2.fromOffset(10, 7),
+		BackgroundColor3 = Color3.fromRGB(10, 30, 60),
+		Parent = frame,
+	}, { Ui.corner(UDim.new(1, 0)) })
+	local rank = text({
+		Text = "",
+		Size = UDim2.fromScale(0.86, 0.78),
+		Position = UDim2.fromScale(0.07, 0.11),
+		TextColor3 = Color3.new(1, 1, 1),
+		Parent = disc,
+	})
+	rank.AutoLocalize = false
+	local avatarX = 10 + height * 1.7 + 10
+	Ui.create("ImageLabel", {
+		Size = UDim2.fromOffset(height - 10, height - 10),
+		Position = UDim2.fromOffset(avatarX, 5),
+		BackgroundColor3 = Color3.fromRGB(20, 60, 100),
+		Image = `rbxthumb://type=AvatarHeadShot&id={player.UserId}&w=150&h=150`,
+		Parent = frame,
+	}, { Ui.corner(UDim.new(1, 0)), Ui.stroke(Color3.new(1, 1, 1), 3) })
+	local name = text({
+		Text = player.DisplayName,
+		TextXAlignment = Enum.TextXAlignment.Left,
+		Size = UDim2.new(0.5, -(avatarX + height), 0.62, 0),
+		Position = UDim2.new(0, avatarX + height + 4, 0.19, 0),
+		Parent = frame,
+	})
+	name.AutoLocalize = false
+	Ui.outline(name, 3, Color3.fromRGB(0, 30, 60))
+	local score = text({
+		Text = "0",
+		TextXAlignment = Enum.TextXAlignment.Right,
+		Size = UDim2.fromScale(0.34, 0.62),
+		Position = UDim2.new(0.66, -14, 0.19, 0),
+		TextColor3 = GOLD,
+		Parent = frame,
+	})
+	score.AutoLocalize = false
+	Ui.outline(score, 3, Color3.new(0, 0, 0))
+	return { frame = frame, rank = rank, score = score, glow = glow }
+end
+
+local function buildFace(screen: BasePart, parent: Instance, kind: string): Face
+	local world = kind == "World"
 	local gui = Instance.new("SurfaceGui")
 	gui.Name = `MogRush_{screen.Name}`
 	gui.Adornee = screen
@@ -320,11 +397,15 @@ local function buildFace(screen: BasePart, parent: Instance): Face
 		BorderSizePixel = 0,
 		Parent = gui,
 	})
-	Ui.gradient(NIGHT_2, NIGHT, 90).Parent = back
+	if world then
+		Ui.gradient(WORLD_NIGHT_2, WORLD_NIGHT, 90).Parent = back
+	else
+		Ui.gradient(NIGHT_2, NIGHT, 90).Parent = back
+	end
 
-	-- Titre : « MOG RUSH » en or, avec un reflet qui le balaie
+	-- Titre : « MOG RUSH » en or (« WORLD TOP » en argent et or), avec un reflet qui le balaie
 	local title = text({
-		Text = Texts.Get("MogRush.Title"),
+		Text = Texts.Get(if world then "MogWorld.Title" else "MogRush.Title"),
 		Size = UDim2.new(1, -60, 0, 108),
 		Position = UDim2.fromOffset(30, 10),
 		TextColor3 = Color3.new(1, 1, 1),
@@ -333,28 +414,36 @@ local function buildFace(screen: BasePart, parent: Instance): Face
 	local titleStroke = Ui.outline(title, 6, Color3.fromRGB(70, 30, 0))
 	titleStroke.Transparency = 0
 	local shine = Instance.new("UIGradient")
-	shine.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, GOLD),
-		ColorSequenceKeypoint.new(0.42, GOLD),
-		ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 235)),
-		ColorSequenceKeypoint.new(0.58, GOLD),
-		ColorSequenceKeypoint.new(1, GOLD_DEEP),
-	})
+	shine.Color = if world
+		then ColorSequence.new({
+			ColorSequenceKeypoint.new(0, ICE),
+			ColorSequenceKeypoint.new(0.42, CYAN),
+			ColorSequenceKeypoint.new(0.5, Color3.new(1, 1, 1)),
+			ColorSequenceKeypoint.new(0.58, GOLD),
+			ColorSequenceKeypoint.new(1, GOLD_DEEP),
+		})
+		else ColorSequence.new({
+			ColorSequenceKeypoint.new(0, GOLD),
+			ColorSequenceKeypoint.new(0.42, GOLD),
+			ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 235)),
+			ColorSequenceKeypoint.new(0.58, GOLD),
+			ColorSequenceKeypoint.new(1, GOLD_DEEP),
+		})
 	shine.Rotation = 20
 	shine.Parent = title
 	local titleScale = Instance.new("UIScale")
 	titleScale.Parent = title
 	text({
-		Text = Texts.Get("MogRush.Subtitle"),
+		Text = Texts.Get(if world then "MogWorld.Subtitle" else "MogRush.Subtitle"),
 		Size = UDim2.new(1, -120, 0, 44),
 		Position = UDim2.fromOffset(60, 120),
-		TextColor3 = CYAN,
+		TextColor3 = if world then GOLD else CYAN,
 		Parent = back,
 	})
 
-	-- Compte à rebours et barre qui se vide
+	-- Compte à rebours et barre qui se vide (World : devise fixe et barre pleine qui scintille)
 	local timer = text({
-		Text = "",
+		Text = if world then Texts.Get("MogWorld.Tagline") else "",
 		Size = UDim2.new(1, -80, 0, 46),
 		Position = UDim2.fromOffset(40, HEADER_H),
 		Parent = back,
@@ -372,7 +461,15 @@ local function buildFace(screen: BasePart, parent: Instance): Face
 		Parent = bar,
 	}, { Ui.corner(UDim.new(1, 0)) })
 	local fillGradient = Instance.new("UIGradient")
-	fillGradient.Color = ColorSequence.new(MAGENTA, GOLD)
+	fillGradient.Color = if world
+		then ColorSequence.new({
+			ColorSequenceKeypoint.new(0, CYAN),
+			ColorSequenceKeypoint.new(0.45, GOLD),
+			ColorSequenceKeypoint.new(0.5, Color3.new(1, 1, 1)),
+			ColorSequenceKeypoint.new(0.55, GOLD),
+			ColorSequenceKeypoint.new(1, CYAN),
+		})
+		else ColorSequence.new(MAGENTA, GOLD)
 	fillGradient.Parent = barFill
 
 	-- Zone des lignes
@@ -385,7 +482,7 @@ local function buildFace(screen: BasePart, parent: Instance): Face
 		Parent = back,
 	})
 	local empty = text({
-		Text = Texts.Get("MogRush.Empty"),
+		Text = Texts.Get(if world then "MogWorld.Empty" else "MogRush.Empty"),
 		Size = UDim2.new(1, -80, 0, 60),
 		Position = UDim2.fromOffset(40, ROWS_TOP + ROWS_H / 2 - 30),
 		TextColor3 = Color3.fromRGB(200, 190, 230),
@@ -393,35 +490,48 @@ local function buildFace(screen: BasePart, parent: Instance): Face
 		Parent = back,
 	})
 
-	-- Pied : ma place, et les champions de la manche précédente
-	local you = text({
-		Text = "",
-		Size = UDim2.new(1, -60, 0, 62),
-		Position = UDim2.new(0, 30, 1, -FOOTER_H + 2),
-		Parent = back,
-	})
-	Ui.outline(you, 3, Color3.new(0, 0, 0))
-	text({
-		Text = Texts.Get("MogRush.LastChampions"),
-		Size = UDim2.new(1, -160, 0, 30),
-		Position = UDim2.new(0, 80, 1, -FOOTER_H + 68),
-		TextColor3 = Color3.fromRGB(200, 190, 230),
-		Parent = back,
-	})
-	-- Noms des joueurs : jamais traduits
-	local podiumLabel = text({
-		Text = "",
-		Size = UDim2.new(1, -60, 0, 44),
-		Position = UDim2.new(0, 30, 1, -FOOTER_H + 98),
-		TextColor3 = GOLD,
-		Parent = back,
-	})
-	podiumLabel.AutoLocalize = false
+	-- Pied : ma ligne (rang, avatar, score), puis les champions de la manche d'avant (Rush) ou la devise (World)
+	local you = buildYouRow(back, -FOOTER_H + 2)
+	local status, podiumLabel = nil, nil
+	if world then
+		status = text({
+			Text = "",
+			Size = UDim2.new(1, -120, 0, 30),
+			Position = UDim2.new(0, 60, 1, -FOOTER_H + 72),
+			TextColor3 = ICE,
+			Parent = back,
+		})
+		local never = text({
+			Text = Texts.Get("MogWorld.Never"),
+			Size = UDim2.new(1, -60, 0, 44),
+			Position = UDim2.new(0, 30, 1, -FOOTER_H + 104),
+			TextColor3 = GOLD,
+			Parent = back,
+		})
+		Ui.outline(never, 3, Color3.fromRGB(60, 30, 0))
+	else
+		text({
+			Text = Texts.Get("MogRush.LastChampions"),
+			Size = UDim2.new(1, -160, 0, 30),
+			Position = UDim2.new(0, 80, 1, -FOOTER_H + 68),
+			TextColor3 = Color3.fromRGB(200, 190, 230),
+			Parent = back,
+		})
+		-- Noms des joueurs : jamais traduits
+		podiumLabel = text({
+			Text = "",
+			Size = UDim2.new(1, -60, 0, 44),
+			Position = UDim2.new(0, 30, 1, -FOOTER_H + 98),
+			TextColor3 = GOLD,
+			Parent = back,
+		})
+		podiumLabel.AutoLocalize = false
+	end
 	local hint = text({
-		Text = Texts.Get("MogRush.Hint"),
+		Text = Texts.Get(if world then "MogWorld.Hint" else "MogRush.Hint"),
 		Size = UDim2.new(1, -120, 0, 30),
 		Position = UDim2.new(0, 60, 1, -FOOTER_H + 144),
-		TextColor3 = Color3.fromRGB(190, 175, 230),
+		TextColor3 = if world then Color3.fromRGB(150, 190, 235) else Color3.fromRGB(190, 175, 230),
 		Parent = back,
 	})
 	hint.Name = "Hint"
@@ -429,6 +539,7 @@ local function buildFace(screen: BasePart, parent: Instance): Face
 	-- Flash du changement de manche
 	local flash = text({
 		Text = Texts.Get("MogRush.NewRoundFlash"),
+		Visible = not world,
 		Size = UDim2.fromScale(1, 0.3),
 		Position = UDim2.fromScale(0, 0.35),
 		TextColor3 = GOLD,
@@ -441,6 +552,7 @@ local function buildFace(screen: BasePart, parent: Instance): Face
 
 	gui.Parent = parent
 	return {
+		kind = kind,
 		gui = gui,
 		rows = {},
 		timer = timer,
@@ -449,10 +561,12 @@ local function buildFace(screen: BasePart, parent: Instance): Face
 		shine = shine,
 		titleScale = titleScale,
 		you = you,
+		status = status,
 		podium = podiumLabel,
 		empty = empty,
 		flash = flash,
 		list = list,
+		fill = fillGradient,
 	} :: any
 end
 
@@ -461,7 +575,7 @@ local function newRow(face: any, entry, slot: number): Row
 	local frame = Ui.create("Frame", {
 		Size = UDim2.new(1, 0, 0, height),
 		Position = UDim2.new(1.1, 0, 0, slotY(slot)), -- entre par la droite
-		BackgroundColor3 = ROW_COLOR,
+		BackgroundColor3 = if face.kind == "World" then WORLD_ROW else ROW_COLOR,
 		Parent = face.list,
 	}, { Ui.corner(UDim.new(0, 18)) })
 	local glow = Ui.stroke(GOLD, 4, 1)
@@ -535,7 +649,7 @@ local function updateRows(face: any, top: { any })
 		row.target = entry.score
 		row.name.Text = entry.name
 		local mine = entry.userId == player.UserId
-		row.frame.BackgroundColor3 = if mine then ROW_YOU else ROW_COLOR
+		row.frame.BackgroundColor3 = if mine then ROW_YOU elseif face.kind == "World" then WORLD_ROW else ROW_COLOR
 		row.glow.Transparency = if slot == 1 or mine then 0 else 1
 		row.glow.Color = if mine then CYAN else GOLD
 		if row.slot ~= slot or row.frame.Position.X.Scale ~= 0 then
@@ -580,17 +694,33 @@ local function podiumText(podium: { any }): string
 	return table.concat(parts, "   ")
 end
 
-local function youText(you): string
-	if you.rank then
-		return Texts.Get("MogRush.YouRanked", { rank = you.rank, mog = Format.Short(you.score) })
-	elseif you.score > 0 then
-		return Texts.Get("MogRush.YouScore", { mog = Format.Short(you.score) })
+-- Ma ligne : « #12 » dans les 100 premiers, « 100+ » au-delà, « — » sans score
+local function setYou(row: YouRow, you)
+	local score = if typeof(you) == "table" and typeof(you.score) == "number" then you.score else 0
+	local rank = if typeof(you) == "table" then you.rank else nil
+	if typeof(rank) == "number" then
+		row.rank.Text = Texts.Get("MogRush.Rank", { rank = rank })
+	elseif score >= 1 then
+		row.rank.Text = Texts.Get("MogRush.RankOutside", { count = MogRush.RankRead })
+	else
+		row.rank.Text = Texts.Get("MogRush.RankNone")
 	end
-	return Texts.Get("MogRush.YouNone")
+	row.score.Text = Format.Short(score)
+end
+
+local function worldStatus(you): string
+	local rank = typeof(you) == "table" and you.rank
+	if typeof(rank) == "number" then
+		return Texts.Get(if rank == 1 then "MogWorld.StatusFirst" else "MogWorld.StatusRanked", { rank = rank })
+	end
+	return Texts.Get("MogWorld.StatusOutside", { count = MogRush.RankRead })
 end
 
 local function playFlash()
 	for _, face in faces do
+		if face.kind ~= "Rush" then
+			continue
+		end
 		local flash = face.flash
 		local stroke = flash:FindFirstChildOfClass("UIStroke")
 		flash.TextTransparency = 0
@@ -620,17 +750,28 @@ local function onState(newState)
 		playFlash()
 	end
 	lastRound = newState.round
+	local world = if typeof(newState.world) == "table" then newState.world else { top = {}, you = {} }
 	for _, face in faces do
-		updateRows(face, newState.top)
-		face.you.Text = youText(newState.you)
-		face.podium.Text = podiumText(newState.podium or {})
+		if face.kind == "World" then
+			updateRows(face, if typeof(world.top) == "table" then world.top else {})
+			setYou(face.you, world.you)
+			if face.status then
+				face.status.Text = worldStatus(world.you)
+			end
+		else
+			updateRows(face, newState.top)
+			setYou(face.you, newState.you)
+			if face.podium then
+				face.podium.Text = podiumText(newState.podium or {})
+			end
+		end
 	end
 	-- Petite annonce quand on entre dans le top 10 ou qu'on prend la 1re place
 	local rank = newState.you and newState.you.rank
 	if not firstState and UIController and rank and rank ~= lastRank then
 		if rank == 1 then
 			UIController.Toast(Texts.Get("MogRush.ToastFirst"))
-		elseif lastRank == nil then
+		elseif rank <= MogRush.TopSize and (lastRank == nil or lastRank > MogRush.TopSize) then
 			UIController.Toast(Texts.Get("MogRush.ToastTop", { rank = rank }))
 		end
 	end
@@ -664,7 +805,11 @@ local function step(dt: number)
 		-- Reflet du titre et léger battement
 		face.shine.Offset = Vector2.new(((t * 0.45) % 2.4) - 1.2, 0)
 		face.titleScale.Scale = 1 + 0.025 * math.sin(t * 3)
-		if s then
+		face.you.glow.Thickness = 3 + 1.5 * (0.5 + 0.5 * math.sin(t * 3))
+		if face.kind == "World" then
+			face.fill.Offset = Vector2.new(((t * 0.35) % 2) - 1, 0)
+		end
+		if s and face.kind == "Rush" then
 			local left = math.max(s.endsAt - Workspace:GetServerTimeNow(), 0)
 			local minutes = math.floor(left / 60)
 			local seconds = math.floor(left % 60)
@@ -674,6 +819,8 @@ local function step(dt: number)
 				then Color3.fromRGB(255, 90 + 80 * (0.5 + 0.5 * math.sin(t * 8)), 90)
 				else Color3.new(1, 1, 1)
 			face.barFill.Size = UDim2.fromScale(math.clamp(left / MogRush.RoundSeconds, 0, 1), 1)
+		end
+		if s then
 			-- Scores qui défilent vers leur valeur
 			for _, row in face.rows do
 				if row.shown ~= row.target then
@@ -703,7 +850,7 @@ function MogRushController.Start()
 	local playerGui = player:WaitForChild("PlayerGui")
 	for index = 1, 4 do
 		local screen = m:FindFirstChild(`Screen{index}`) :: BasePart
-		table.insert(faces, buildFace(screen, playerGui))
+		table.insert(faces, buildFace(screen, playerGui, BOARD.FaceKinds[index] or "Rush"))
 	end
 	Remotes.MogRushState.OnClientEvent:Connect(onState)
 	RunService.RenderStepped:Connect(step)

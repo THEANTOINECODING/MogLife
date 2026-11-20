@@ -8,6 +8,12 @@
 -- - SewerGains : vapeur et lueur verte sous la plaque, le rat compte ses pompes, se dresse et gonfle les bras.
 -- - NeverForget : la glace du coiffeur scintille, le reflet du Normie apparaît, fait coucou puis se dissout.
 -- Purement visuel : le serveur a déjà tout validé (SecretService).
+-- D135 (demande d'Antoine du 21/11 : « améliore énormément l'animation des secrets ») : les quatre scènes suivent
+-- les principes de l'animation (anticipation, écrasement et étirement, dépassement, mouvements secondaires, sortie) :
+-- le fantôme sort du sol en tire-bouchon, regarde l'haltère, fait trois curls avec le bras et le buste, s'accroupit
+-- puis s'envole en spirale ; la statue s'effrite, ses yeux s'allument, elle cligne et chaque pompe du biceps lance un
+-- anneau doré ; le rat renifle, force sur sa dernière pompe, fait un salto arrière puis gonfle les bras ; le reflet
+-- se dessine de bas en haut, salue vraiment du bras et se dissout du haut vers le bas.
 
 local CollectionService = game:GetService("CollectionService")
 local Lighting = game:GetService("Lighting")
@@ -271,6 +277,81 @@ local function animate(duration: number, step: (number, number) -> (), done: (()
 	end)
 end
 
+-- ------------------------------------------------------------------ principes d'animation (D135)
+-- Anticipation (on se prépare avant d'agir), écrasement et étirement (volume conservé), dépassement puis retour
+-- (overshoot), mouvements secondaires en retard (queue, bras), et chaque scène a une vraie sortie.
+
+-- Arrivée avec dépassement : monte un peu au-dessus de 1 puis revient (0 à 1)
+local function backOut(t: number, overshoot: number?): number
+	t = math.clamp(t, 0, 1)
+	local s = overshoot or 1.7
+	local u = t - 1
+	return 1 + (s + 1) * u * u * u + s * u * u
+end
+
+-- Ressort amorti : 0 au départ, 1 à la fin, avec quelques rebonds qui s'éteignent
+local function spring(t: number, bounces: number?): number
+	t = math.clamp(t, 0, 1)
+	return 1 - math.exp(-6 * t) * math.cos(t * math.pi * 2 * (bounces or 2))
+end
+
+-- Fenêtre de temps : 0 avant `a`, 1 après `b`, lissé entre les deux
+local function window(t: number, a: number, b: number): number
+	return ease((t - a) / (b - a))
+end
+
+-- Écrasement / étirement à volume constant : `amount` > 0 étire en hauteur, < 0 écrase
+local function squash(amount: number): Vector3
+	local y = math.max(1 + amount, 0.2)
+	local xz = 1 / math.sqrt(y)
+	return Vector3.new(xz, y, xz)
+end
+
+-- Anneau lumineux dans le plan de `frame` (axe X = normale), qui s'élargit et s'efface
+local function ring(frame: CFrame, color: Color3, from: number, to: number, duration: number, thickness: number?)
+	local disc = fxPart({
+		Shape = Enum.PartType.Cylinder,
+		Size = Vector3.new(thickness or 0.08, from, from),
+		CFrame = frame,
+		Color = color,
+		Material = Enum.Material.Neon,
+		Transparency = 0.15,
+	})
+	local tween = TweenService:Create(disc, TweenInfo.new(duration, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+		Size = Vector3.new(thickness or 0.08, to, to),
+		Transparency = 1,
+	})
+	tween.Completed:Connect(function()
+		disc:Destroy()
+	end)
+	tween:Play()
+end
+
+-- Petits éclats qui tombent en tournant (pierre de la statue, gouttes) puis disparaissent
+local function debris(origin: Vector3, color: Color3, material: Enum.Material, count: number, spread: number)
+	for _ = 1, count do
+		local size = 0.12 + math.random() * 0.18
+		local bit = fxPart({
+			Size = Vector3.new(size, size, size),
+			CFrame = CFrame.new(
+				origin + Vector3.new((math.random() - 0.5) * spread, 0, (math.random() - 0.5) * spread)
+			) * CFrame.Angles(math.random() * 6, math.random() * 6, 0),
+			Color = color,
+			Material = material,
+		})
+		local fall = 1.5 + math.random() * 2
+		local info = TweenInfo.new(0.5 + math.random() * 0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+		local tween = TweenService:Create(bit, info, {
+			CFrame = CFrame.new(0, -fall, 0) * bit.CFrame * CFrame.Angles(math.random() * 4, 0, math.random() * 4),
+			Transparency = 1,
+		})
+		tween.Completed:Connect(function()
+			bit:Destroy()
+		end)
+		tween:Play()
+	end
+end
+
 -- Est-ce à ce joueur de voir le plan de caméra du secret ? (celui qui l'a trouvé, s'il n'est pas déjà occupé)
 local function isFinder(data): boolean
 	return data.player == player and not MinigameController.IsGameplayLocked() and not CutsceneController.IsPlaying()
@@ -377,47 +458,111 @@ local function floatGhosts()
 	end
 end
 
--- Le fantôme : un corps ovale translucide dans un halo, une queue, deux bras, de grands yeux et une bouche en « o »
-local function buildGhost(
-	at: CFrame
-): { body: Part, parts: { [Part]: CFrame }, base: { [Part]: number }, all: { Part } }
-	local parts: { [Part]: CFrame } = {}
-	local base: { [Part]: number } = {}
+-- Le fantôme : un corps ovale translucide dans un halo, une queue en deux volutes, deux bras, de grands yeux et une
+-- bouche en « o ». Chaque pièce garde sa place et sa taille de repos (rôle : corps, bras, queue, œil, bouche) pour
+-- être écrasée, étirée et articulée image par image.
+type GhostPiece = {
+	part: Part,
+	offset: CFrame,
+	size: Vector3,
+	opacity: number,
+	role: string,
+	side: number,
+}
+type Ghost = { body: Part, pieces: { GhostPiece }, all: { Part } }
+
+local GHOST_SHOULDER = Vector3.new(0.95, 0.45, -0.1) -- épaule droite (repère du fantôme) ; la gauche en miroir
+
+local function buildGhost(at: CFrame): Ghost
+	local pieces: { GhostPiece } = {}
 	local all: { Part } = {}
-	local function add(part: Part, offset: CFrame, opacity: number)
-		parts[part] = offset
-		base[part] = opacity
+	local function add(part: Part, offset: CFrame, opacity: number, role: string, side: number?)
+		table.insert(pieces, {
+			part = part,
+			offset = offset,
+			size = part.Size,
+			opacity = opacity,
+			role = role,
+			side = side or 0,
+		})
 		table.insert(all, part)
 	end
 	local skin = Color3.fromRGB(228, 238, 255)
 	local ink = Color3.fromRGB(25, 30, 55)
 	local plain = Enum.Material.SmoothPlastic
 	local body = ellipsoid(Vector3.new(2.2, 3.2, 2.2), skin, plain, 1)
-	add(body, CFrame.new(), 0.12)
-	add((ellipsoid(Vector3.new(2.9, 3.9, 2.9), GHOST_BLUE, Enum.Material.ForceField, 1)), CFrame.new(), 0)
-	-- Queue en volute qui se perd vers le bas
-	add((ellipsoid(Vector3.new(1.5, 1.6, 1.5), skin, plain, 1)), CFrame.new(0, -1.8, 0.25), 0.3)
-	add((ellipsoid(Vector3.new(0.8, 1, 0.8), skin, plain, 1)), CFrame.new(0.2, -2.6, 0.55), 0.5)
+	add(body, CFrame.new(), 0.12, "body")
+	add((ellipsoid(Vector3.new(2.9, 3.9, 2.9), GHOST_BLUE, Enum.Material.ForceField, 1)), CFrame.new(), 0, "body")
+	-- Queue en volute qui se perd vers le bas (elle suit le corps avec du retard)
+	add((ellipsoid(Vector3.new(1.5, 1.6, 1.5), skin, plain, 1)), CFrame.new(0, -1.8, 0.25), 0.3, "tail", 1)
+	add((ellipsoid(Vector3.new(0.8, 1, 0.8), skin, plain, 1)), CFrame.new(0.2, -2.6, 0.55), 0.5, "tail", 2)
 	for _, sx in { -1, 1 } do
-		add(
-			(ellipsoid(Vector3.new(0.65, 1.3, 0.65), skin, plain, 1)),
-			CFrame.new(sx * 1.15, 0.05, -0.1) * CFrame.Angles(0, 0, sx * math.rad(-35)),
-			0.15
-		)
-		add((ellipsoid(Vector3.new(0.42, 0.62, 0.22), ink, plain, 1)), CFrame.new(sx * 0.42, 0.7, -1.0), 0)
+		-- Bras : pendant depuis l'épaule (pivot), légèrement écarté
+		add((ellipsoid(Vector3.new(0.65, 1.3, 0.65), skin, plain, 1)), CFrame.new(0, -0.55, 0), 0.15, "arm", sx)
+		add((ellipsoid(Vector3.new(0.42, 0.62, 0.22), ink, plain, 1)), CFrame.new(sx * 0.42, 0.7, -1.0), 0, "eye", sx)
 		-- Reflet dans l'œil
 		add(
 			(ellipsoid(Vector3.new(0.14, 0.16, 0.1), Color3.new(1, 1, 1), Enum.Material.Neon, 1)),
 			CFrame.new(sx * 0.42 + 0.08, 0.84, -1.1),
-			0
+			0,
+			"glint",
+			sx
 		)
 	end
-	add((ellipsoid(Vector3.new(0.36, 0.46, 0.2), ink, plain, 1)), CFrame.new(0, 0.05, -1.04), 0)
-	for part, offset in parts do
-		part.CFrame = at * offset
+	add((ellipsoid(Vector3.new(0.36, 0.46, 0.2), ink, plain, 1)), CFrame.new(0, 0.05, -1.04), 0, "mouth")
+	for _, piece in pieces do
+		piece.part.CFrame = at * piece.offset
 	end
-	light(body, GHOST_BLUE, 1.6, 14, 3)
-	return { body = body, parts = parts, base = base, all = all }
+	light(body, GHOST_BLUE, 1.6, 14, 4)
+	return { body = body, pieces = pieces, all = all }
+end
+
+-- Pose du fantôme à cette image. `pose` : stretch (écrasement / étirement), lean (buste, radians), curl (0 à 1 du
+-- bras droit), wave (bras gauche), blink (0 à 1), look (yeux vers le bas, 0 à 1), mouth (bouche ouverte, 0 à 1),
+-- sway (balancement de la queue, radians), fade (0 visible, 1 invisible).
+local function poseGhost(ghost: Ghost, frame: CFrame, pose: { [string]: number })
+	local scale = squash(pose.stretch or 0)
+	local body = frame * CFrame.Angles(pose.lean or 0, 0, 0)
+	local fade = pose.fade or 0
+	for _, piece in ghost.pieces do
+		local offset = piece.offset
+		local size = piece.size * scale
+		local cf
+		if piece.role == "arm" then
+			-- Bras : rotation autour de l'épaule ; droit = curl (avant-bras qui monte), gauche = petit salut
+			local shoulder = Vector3.new(GHOST_SHOULDER.X * piece.side, GHOST_SHOULDER.Y, GHOST_SHOULDER.Z) * scale
+			local swing = if piece.side > 0
+				then CFrame.Angles(math.rad(150) * (pose.curl or 0), 0, math.rad(25))
+				else CFrame.Angles(0, 0, -math.rad(30) - math.rad(40) * (pose.wave or 0))
+			cf = body * CFrame.new(shoulder) * swing * offset
+		elseif piece.role == "tail" then
+			-- Queue : suit le corps avec du retard (plus de balancement au bout)
+			local lag = (pose.sway or 0) * piece.side
+			cf = frame * CFrame.Angles(lag * 0.4, 0, lag) * CFrame.new(offset.Position * scale)
+		elseif piece.role == "eye" or piece.role == "glint" then
+			local look = pose.look or 0
+			local blink = 1 - (pose.blink or 0) * 0.92
+			cf = body * CFrame.new(offset.Position * scale + Vector3.new(0, -0.12 * look, 0))
+			size = Vector3.new(size.X, size.Y * blink, size.Z)
+		elseif piece.role == "mouth" then
+			local open = pose.mouth or 0
+			size = Vector3.new(size.X * (1 + open * 0.5), size.Y * (1 + open * 0.9), size.Z)
+			cf = body * CFrame.new(offset.Position * scale)
+		else
+			cf = body * CFrame.new(offset.Position * scale) * offset.Rotation
+		end
+		piece.part.Size = size
+		piece.part.CFrame = cf
+		piece.part.Transparency = piece.opacity + (1 - piece.opacity) * fade
+	end
+end
+
+-- Position de la main droite (bout du bras) dans le monde, pour tenir l'haltère
+local function ghostHand(frame: CFrame, pose: { [string]: number }): Vector3
+	local scale = squash(pose.stretch or 0)
+	local body = frame * CFrame.Angles(pose.lean or 0, 0, 0)
+	local swing = CFrame.Angles(math.rad(150) * (pose.curl or 0), 0, math.rad(25))
+	return (body * CFrame.new(GHOST_SHOULDER * scale) * swing * CFrame.new(0, -1.2, 0)).Position
 end
 
 local function ghostFx(data)
@@ -446,43 +591,91 @@ local function ghostFx(data)
 	local facing = CFrame.lookAt(center, center + toward.Unit)
 	local ghost = buildGhost(facing * CFrame.new(0, -3, 0))
 	local at = anchorAt(data.position, duration + 1.5)
-	burst(at, SMOKE, GHOST_BLUE, 18, 1.4, 4)
+	-- Le sol s'ouvre : volutes en spirale et anneau froid avant qu'il sorte
+	burst(at, SMOKE, GHOST_BLUE, 22, 1.4, 4)
+	ring(CFrame.new(center - Vector3.new(0, 3, 0)) * CFrame.Angles(0, 0, math.rad(90)), GHOST_BLUE, 1, 9, 0.8)
 	sfx("EventWhoosh", 0.7)
-	task.delay(0.9, function()
-		bubble(ghost.body, Texts.Get("Secret.GhostLifter.Line"), 2.6, duration - 1.4)
+	task.delay(1.0, function()
+		bubble(ghost.body, Texts.Get("Secret.GhostLifter.Line"), 2.8, duration - 1.8)
 	end)
-	local spunUp = false
+
+	-- Découpage (D135) : sortie du sol en tire-bouchon (0 → 0,8 s) ; il remarque l'haltère (→ 1,05) ; trois curls
+	-- qui pèsent (→ curlEnd) ; anticipation, il s'accroupit (0,3 s) ; envol en spirale, étiré, qui s'efface.
+	local rise = 0.8
+	local curlStart = 1.05
+	local launch = duration - 0.95
+	local crouch = launch - 0.3
+	local curlPeriod = (crouch - curlStart) / 3
+	local launched = false
+	local lastCurl = 0
 	animate(duration, function(t)
-		-- 0 à 0,5 s : il sort du sol ; 0,5 à 2,6 s : trois curls ; ensuite : il s'envole en tournoyant
-		local rise = ease(t / 0.5)
-		local fly = ease((t - (duration - 1)) / 0.9)
-		local spin = fly * math.pi * 4
-		local bob = math.sin(t * 4) * 0.25
-		local frame = facing * CFrame.new(0, -3 + 3 * rise + bob + fly * 7, 0) * CFrame.Angles(0, spin, 0)
-		local fade = math.clamp((1 - rise) + fly, 0, 1)
-		for part, offset in ghost.parts do
-			part.CFrame = frame * offset
-			local opacity = ghost.base[part] or 0
-			part.Transparency = opacity + (1 - opacity) * fade
+		local pose: { [string]: number } = {}
+		-- Sortie du sol : étiré en montant, écrasé en se posant, puis il se stabilise (dépassement)
+		local up = backOut(t / rise, 1.2)
+		local settle = window(t, rise * 0.7, rise + 0.25)
+		pose.stretch = 0.45 * (1 - settle) * math.min(t / 0.2, 1)
+			- 0.18 * math.sin(math.clamp((t - rise * 0.75) / 0.3, 0, 1) * math.pi)
+		local spinIn = (1 - ease(t / rise)) * math.pi * 2
+		local bob = math.sin(t * 3.2) * 0.18
+		pose.sway = math.sin(t * 3.2 - 0.9) * 0.22
+		-- Il regarde l'haltère, cligne, puis le regarde de nouveau en face
+		pose.look = window(t, rise, rise + 0.15) * (1 - window(t, curlStart + 0.1, curlStart + 0.3))
+		pose.blink = math.clamp(1 - math.abs(t - (rise + 0.1)) / 0.07, 0, 1)
+			+ math.clamp(1 - math.abs(t - (crouch - 0.2)) / 0.07, 0, 1)
+		pose.wave = 0
+		-- Curls : montée rapide, descente lente ; le buste part en arrière à chaque montée, la bouche souffle
+		local curl = 0
+		if t >= curlStart and t < crouch then
+			local u = ((t - curlStart) % curlPeriod) / curlPeriod
+			curl = if u < 0.4 then ease(u / 0.4) else 1 - ease((u - 0.4) / 0.6)
+			local index = math.floor((t - curlStart) / curlPeriod) + 1
+			if index > lastCurl and u > 0.35 then
+				lastCurl = index
+				pop(ghost.body, tostring(index), 3.2, GHOST_BLUE)
+			end
 		end
+		pose.curl = curl
+		pose.lean = math.rad(12) * curl
+		pose.mouth = curl
+		pose.stretch += 0.06 * curl - 0.05 * (1 - curl) * window(t, curlStart, curlStart + 0.2)
+		-- Anticipation puis envol : il s'écrase, puis jaillit en s'étirant, en spirale
+		local squat = window(t, crouch, launch) * (1 - window(t, launch, launch + 0.12))
+		local fly = window(t, launch, duration)
+		pose.stretch += -0.35 * squat + 0.7 * math.sin(math.min(fly * 1.6, 1) * math.pi * 0.5) * (1 - fly * 0.5)
+		pose.wave = squat
+		local spiral = fly * fly
+		local orbit = Vector3.new(math.cos(spiral * 9) * 1.6 * spiral, 0, math.sin(spiral * 9) * 1.6 * spiral)
+		local height = -3 + 3 * up + bob * settle - 0.45 * squat + spiral * 11
+		pose.fade = math.clamp((1 - math.min(t / 0.35, 1)) * 0.8 + window(t, launch + 0.35, duration), 0, 1)
+		local frame = facing
+			* CFrame.new(orbit + Vector3.new(0, height, 0))
+			* CFrame.Angles(0, spinIn + spiral * math.pi * 6, math.sin(t * 2.1) * 0.06)
+		poseGhost(ghost, frame, pose)
 		if dumbbell and dumbbell.Parent and hold then
-			-- Dans sa main droite : l'haltère monte et descend (trois curls), puis s'envole avec lui
-			local curl = if t > 0.5 and t < duration - 1 then (1 - math.cos((t - 0.5) * math.pi * 2 / 0.7)) / 2 else 0
-			local hand = frame * CFrame.new(1.5, -0.3 + curl * 1.3, -0.6 - curl * 0.5)
-			local grab = ease((t - 0.3) / 0.3)
-			dumbbell.CFrame = hold:Lerp(CFrame.new(hand.Position) * hold.Rotation, grab) * CFrame.Angles(0, spin, 0)
-			dumbbell.Transparency = math.clamp(0.4 + 0.6 * fly, 0, 1)
+			-- Dans sa main droite : il l'attrape, l'haltère suit le curl, puis s'envole avec lui
+			local grab = window(t, rise + 0.15, curlStart)
+			local hand = ghostHand(frame, pose)
+			dumbbell.CFrame = hold:Lerp(CFrame.new(hand) * hold.Rotation, grab)
+				* CFrame.Angles(0, spiral * math.pi * 6, 0)
+			dumbbell.Transparency = math.clamp(0.4 + 0.6 * window(t, launch + 0.35, duration), 0, 1)
 		end
-		if fly > 0 and not spunUp then
-			spunUp = true
+		if fly > 0 and not launched then
+			launched = true
 			sfx("EventWhoosh", 1.2)
 			shake(data, 0.35, 0.4)
-			local trail = stream(ghost.body, SPARKLE, GHOST_BLUE, 40, 0.6, 2, 1)
+			ring(
+				CFrame.new(frame.Position - Vector3.new(0, 1.6, 0)) * CFrame.Angles(0, 0, math.rad(90)),
+				GHOST_BLUE,
+				1,
+				7,
+				0.6
+			)
+			local trail = stream(ghost.body, SPARKLE, GHOST_BLUE, 50, 0.6, 2, 0.9)
 			trail.LightEmission = 1
 		end
 	end, function()
 		local last = anchorAt(ghost.body.Position, 2)
-		burst(last, SPARKLE, Color3.new(1, 1, 1), 40, 0.7, 10)
+		burst(last, SPARKLE, Color3.new(1, 1, 1), 45, 0.7, 10)
 		burst(last, SMOKE, GHOST_BLUE, 20, 1.6, 5)
 		for _, part in ghost.all do
 			part:Destroy()
@@ -498,12 +691,12 @@ local function ghostFx(data)
 	local side = facing.RightVector
 	local close = eyeOn(data.position, data.position + side * 4 + toward.Unit * 2.5 + Vector3.new(0, 1, 0), ignore)
 	local eye = eyeOn(camAt, camAt + side * 9 + toward.Unit * 3 + Vector3.new(0, 1.5, 0), ignore)
-	local sky = camAt + Vector3.new(0, 7, 0)
+	local sky = camAt + Vector3.new(0, 9, 0)
 	film(data, {
 		{
 			from = CFrame.lookAt(close + (close - data.position).Unit * 1.5, data.position),
 			to = CFrame.lookAt(close, data.position),
-			duration = 0.6,
+			duration = 0.8,
 			focus = data.position,
 			fovFrom = 55,
 			fovTo = 45,
@@ -511,7 +704,7 @@ local function ghostFx(data)
 		{
 			from = CFrame.lookAt(close, data.position),
 			to = CFrame.lookAt(eye, camAt),
-			duration = duration - 1.6,
+			duration = duration - 1.9,
 			focus = camAt,
 			fovFrom = 45,
 			fovTo = 52,
@@ -522,7 +715,7 @@ local function ghostFx(data)
 			duration = 1.1,
 			focus = sky,
 			fovFrom = 52,
-			fovTo = 68,
+			fovTo = 70,
 		},
 	}, Color3.fromRGB(190, 215, 255))
 end
@@ -557,61 +750,124 @@ local function watchPedestal(pedestal: Instance)
 	pedestal.ChildAdded:Connect(hook)
 end
 
--- Le serveur anime la statue (elle se tourne, double biceps) ; ici : les yeux dorés, le clin d'œil, l'onde dorée
+-- Le serveur anime la statue (frisson, elle se tourne, prépare puis gonfle un double biceps qui pompe, revient) ;
+-- ici : la pierre qui s'effrite au réveil, les yeux qui s'allument, le clin d'œil, les ondes et anneaux dorés
+-- calés sur chaque pompe, la poussière qui retombe à la fin. Les moments suivent Secrets.StatueBeliever.Beats.
 local function statueFx(data)
 	local pedestal = data.pedestal
 	if typeof(pedestal) ~= "Instance" or not pedestal:IsA("BasePart") or not near(pedestal.Position) then
 		return
 	end
-	local duration = Secrets.StatueBeliever.Scene
+	local cfg = Secrets.StatueBeliever
+	local beats = cfg.Beats
+	local duration = cfg.Scene
 	local statue = statueOf(pedestal)
 	local top = pedestal.Position + Vector3.new(0, pedestal.Size.Y / 2, 0)
-	shockwave(top + Vector3.new(0, 0.1, 0), GOLD, 12, 0.9)
-	sfx("SceneImpact", 0.8)
+	shockwave(top + Vector3.new(0, 0.1, 0), GOLD, 9, 0.7)
+	sfx("SceneImpact", 0.6)
 	if not statue then
 		burst(anchorAt(top + Vector3.new(0, 5, 0), 2.5), SPARKLE, GOLD, 30, 0.8, 8)
 		return
 	end
-	local _, size = statue:GetBoundingBox()
+	local center, size = statue:GetBoundingBox()
 	local head = statue:FindFirstChild("Head")
 	if not head or not head:IsA("BasePart") then
 		return
 	end
+	local stone = head.Color
+	-- Réveil : la pierre s'effrite (éclats et poussière qui tombent des épaules)
+	debris(center.Position + Vector3.new(0, size.Y * 0.3, 0), stone, Enum.Material.Slate, 10, size.X * 0.6)
+	burst(
+		anchorAt(center.Position + Vector3.new(0, size.Y * 0.35, 0), 2),
+		SMOKE,
+		Color3.fromRGB(215, 205, 185),
+		14,
+		1.2,
+		3
+	)
 	-- Deux éclats dorés à la place des yeux ; le droit se ferme (le clin d'œil)
 	local eyes: { { part: Part, mesh: SpecialMesh, side: number } } = {}
 	for _, sx in { -1, 1 } do
 		local eye, mesh = ellipsoid(Vector3.new(0.28, 0.28, 0.1) * (head.Size.Y / 1.2), GOLD, Enum.Material.Neon, 1)
 		table.insert(eyes, { part = eye, mesh = mesh, side = sx })
 	end
-	light(head, GOLD, 3, 12, duration)
-	local winked, flexed = false, false
+	local glow = light(head, GOLD, 0, 12, duration)
+	local hands: { BasePart } = {}
+	for _, name in { "RightHand", "LeftHand" } do
+		local hand = statue:FindFirstChild(name, true)
+		if hand and hand:IsA("BasePart") then
+			table.insert(hands, hand)
+		end
+	end
+	local ignited, winked, flexed = false, false, false
+	local pumps = 0
 	animate(duration, function(t)
 		if not head.Parent then
 			return
 		end
-		local wink = math.clamp(1 - math.abs(t - 0.95) / 0.18, 0, 1) -- le droit se ferme vers 0,95 s
-		local shown = ease((t - 0.45) / 0.2) * (1 - ease((t - (duration - 0.5)) / 0.4))
+		-- Yeux : ils s'allument d'un coup (éclat plus gros que nature puis retour), le droit cligne
+		local ignite = window(t, beats.Eyes, beats.Eyes + 0.12)
+		local flare = 1 + 0.9 * math.max(0, 1 - math.abs(t - beats.Eyes - 0.08) / 0.12)
+		local wink = math.clamp(1 - math.abs(t - beats.Wink) / 0.16, 0, 1)
+		local shown = ignite * (1 - window(t, duration - 0.5, duration - 0.1))
+		glow.Brightness = 3.5 * shown * flare
 		for _, eye in eyes do
 			eye.part.CFrame = head.CFrame
 				* CFrame.new(eye.side * head.Size.X * 0.18, head.Size.Y * 0.06, -head.Size.Z * 0.5)
 			eye.part.Transparency = 1 - shown
-			eye.mesh.Scale = Vector3.new(1, if eye.side > 0 then 1 - wink * 0.9 else 1, 1)
+			eye.mesh.Scale = Vector3.new(flare, flare * (if eye.side > 0 then 1 - wink * 0.92 else 1), 1)
+		end
+		if ignite > 0 and not ignited then
+			ignited = true
+			for _, eye in eyes do
+				burst(anchorAt(eye.part.Position, 1.5), SPARKLE, GOLD, 8, 0.35, 4)
+			end
 		end
 		if wink > 0.95 and not winked then
 			winked = true
-			pop(head, "😉", head.Size.Y * 1.2, nil)
+			pop(head, "😉", head.Size.Y * 1.3, nil)
+			burst(anchorAt(eyes[2].part.Position, 1.5), SPARKLE, Color3.new(1, 1, 1), 10, 0.3, 3)
 		end
-		if t > 1.65 and not flexed then
+		-- Double biceps : grosse onde au moment où les bras montent, puis un anneau doré qui monte à chaque pompe
+		if t > beats.Flex and not flexed then
 			flexed = true
-			shockwave(top + Vector3.new(0, 0.1, 0), GOLD, 16, 1)
-			burst(anchorAt(top + Vector3.new(0, size.Y * 0.8, 0), 2.5), SPARKLE, GOLD, 40, 0.8, 9)
+			shockwave(top + Vector3.new(0, 0.1, 0), GOLD, 18, 1.1)
+			ring(
+				CFrame.new(top + Vector3.new(0, 0.2, 0)) * CFrame.Angles(0, 0, math.rad(90)),
+				GOLD,
+				size.X,
+				size.X * 4,
+				0.9,
+				0.2
+			)
+			burst(anchorAt(top + Vector3.new(0, size.Y * 0.8, 0), 2.5), SPARKLE, GOLD, 45, 0.8, 9)
 			sfx("SceneImpact", 1.1)
-			shake(data, 0.6, 0.45)
+			shake(data, 0.7, 0.5)
+		end
+		if t > beats.Flex then
+			local pump = math.floor((t - beats.Flex) * cfg.PumpRate / math.pi)
+			if pump > pumps and t < duration - 0.8 then
+				pumps = pump
+				local y = top.Y + size.Y * (0.35 + 0.12 * pump)
+				ring(
+					CFrame.new(Vector3.new(center.X, y, center.Z)) * CFrame.Angles(0, 0, math.rad(90)),
+					GOLD,
+					size.X * 0.9,
+					size.X * 2.4,
+					0.6,
+					0.12
+				)
+				for _, hand in hands do
+					burst(anchorAt(hand.Position, 1.2), SPARKLE, GOLD, 6, 0.4, 3)
+				end
+			end
 		end
 	end, function()
 		for _, eye in eyes do
 			eye.part:Destroy()
 		end
+		-- Retour à la pierre : un peu de poussière retombe
+		burst(anchorAt(top + Vector3.new(0, size.Y * 0.5, 0), 2), SMOKE, Color3.fromRGB(215, 205, 185), 8, 1, 2)
 	end)
 	-- Le joueur se tient juste devant la statue : on filme de trois quarts (jamais depuis sa place), zoom sur le clin
 	-- d'œil, puis contre-plongée large pour le double biceps
@@ -626,18 +882,18 @@ local function statueFx(data)
 		{
 			from = CFrame.lookAt(near3q + (near3q - face).Unit * 3, face),
 			to = CFrame.lookAt(near3q, face),
-			duration = 1.3,
+			duration = beats.Wink + 0.3,
 			focus = face,
 			fovFrom = 55,
-			fovTo = 34,
+			fovTo = 32,
 		},
 		{
 			from = CFrame.lookAt(near3q, face),
 			to = CFrame.lookAt(wide, chest),
-			duration = duration - 1.3,
+			duration = duration - beats.Wink - 0.3,
 			focus = chest,
-			fovFrom = 34,
-			fovTo = 62,
+			fovFrom = 32,
+			fovTo = 64,
 		},
 	}, Color3.fromRGB(255, 235, 190))
 end
@@ -649,66 +905,137 @@ local function ratFx(data)
 	if typeof(rat) ~= "Instance" or not rat:IsA("BasePart") or not near(rat.Position) then
 		return
 	end
-	local duration = if typeof(data.duration) == "number" then data.duration else 5
+	local cfg = Secrets.SewerGains
+	local duration = if typeof(data.duration) == "number" then data.duration else cfg.Show
 	local base = rat.CFrame
+	local baseSize = rat.Size
 	local hole = anchorAt(base.Position - Vector3.new(0, rat.Size.Y * 0.5, 0), duration + 2)
 	-- Bouffée de vapeur à l'ouverture, puis de fines volutes (elles ne doivent pas cacher le rat)
 	burst(hole, SMOKE, Color3.fromRGB(220, 240, 220), 12, 1.1, 6)
 	local wisps = stream(hole, SMOKE, Color3.fromRGB(200, 230, 200), 3, 0.5, 3, duration - 0.5)
 	wisps.Transparency = NumberSequence.new(0.7, 1)
 	light(hole, SEWER_GREEN, 2.5, 12, duration - 0.3)
+	ring(CFrame.new(hole.Position + Vector3.new(0, 0.3, 0)) * CFrame.Angles(0, 0, math.rad(90)), SEWER_GREEN, 1, 6, 0.7)
 	sfx("EventLand", 1.3)
+
+	-- Découpage (D135) : il renifle à gauche et à droite ; pompes de plus en plus dures (la dernière tremble et
+	-- transpire) ; il prend son élan, salto arrière, réception écrasée ; il se dresse et gonfle les bras, chaque
+	-- pompe de biceps le fait grossir un instant ; il salue d'un dernier saut avant de redescendre (serveur).
+	local pushups = cfg.Pushups
+	local sniffEnd = 0.75
+	local pushPeriod = 0.62
+	local strainExtra = 0.35 -- la dernière pompe dure plus longtemps
+	local pushEnd = sniffEnd + pushups * pushPeriod + strainExtra
+	local flipStart = pushEnd + 0.15 -- petite pause, il s'accroupit
+	local flipEnd = flipStart + 0.5
 	local count = 0
-	local pushups = Secrets.SewerGains.Pushups
-	local flexAt = 0.5 + pushups * 0.7
-	local flexed = false
+	local flipped, landed, flexed = false, false, false
+	local lastPump = 0
 	animate(duration, function(t)
 		if not rat.Parent then
 			return
 		end
 		local frame = base
-		if t < flexAt then
-			-- Pompes : le corps descend et remonte, le nez vers le sol ; on compte à chaque remontée
-			local phase = math.max(t - 0.5, 0) / 0.7
-			local push = (1 - math.cos(phase * math.pi * 2)) / 2
-			frame = base * CFrame.new(0, -push * 0.3, 0) * CFrame.Angles(math.rad(-push * 10), 0, 0)
-			local done = math.floor(phase + 0.5)
-			if t > 0.5 and done > count and count < pushups then
-				count = done
-				pop(rat, tostring(count), rat.Size.Y + 0.8, GOLD)
+		local stretch = 0
+		if t < sniffEnd then
+			-- Il renifle : la tête balaie à gauche puis à droite, petits coups de nez rapides
+			local look = math.sin(t / sniffEnd * math.pi * 2) * math.rad(35)
+			local sniff = math.abs(math.sin(t * 28)) * 0.04
+			frame = base * CFrame.Angles(math.rad(-4) - sniff * 2, look, 0)
+			stretch = sniff
+		elseif t < pushEnd then
+			-- Pompes : on descend lentement, on remonte vite ; la dernière force (lente, tremblante)
+			local local_t = t - sniffEnd
+			local index = math.min(math.floor(local_t / pushPeriod) + 1, pushups)
+			local last = index == pushups
+			local period = if last then pushPeriod + strainExtra else pushPeriod
+			local u = math.clamp((local_t - (index - 1) * pushPeriod) / period, 0, 1)
+			local push = if u < 0.55 then ease(u / 0.55) else 1 - ease((u - 0.55) / 0.45)
+			local tremble = if last and u > 0.35 and u < 0.85 then math.sin(t * 70) * 0.03 else 0
+			frame = base * CFrame.new(tremble, -push * 0.32, 0) * CFrame.Angles(math.rad(-push * 12), 0, 0)
+			stretch = -0.22 * push
+			if u > 0.8 and index > count then
+				count = index
+				local final = count == pushups
+				pop(rat, tostring(count) .. (if final then "!" else ""), rat.Size.Y + 0.8 + count * 0.15, GOLD)
+				if final then
+					pop(rat, "💦", rat.Size.Y + 0.4, nil)
+				end
 			end
+		elseif t < flipStart then
+			-- Élan : il s'écrase sur ses pattes
+			local crouch = window(t, pushEnd, flipStart)
+			frame = base * CFrame.new(0, -0.15 * crouch, 0)
+			stretch = -0.3 * crouch
+		elseif t < flipEnd then
+			-- Salto arrière : arc en l'air, étiré en montant
+			if not flipped then
+				flipped = true
+				sfx("EventWhoosh", 1.5)
+			end
+			local u = (t - flipStart) / (flipEnd - flipStart)
+			local height = 4 * u * (1 - u) * 2.2
+			frame = base * CFrame.new(0, height, 0) * CFrame.Angles(ease(u) * math.pi * 2, 0, 0)
+			stretch = 0.25 * (1 - math.abs(u * 2 - 1))
 		else
-			-- Il se dresse sur ses pattes arrière et gonfle les bras, en sautillant
-			local stand = ease((t - flexAt) / 0.3)
-			local hop = math.abs(math.sin((t - flexAt) * 9)) * 0.25 * stand
-			frame = base * CFrame.new(0, hop + stand * rat.Size.Z * 0.3, 0) * CFrame.Angles(math.rad(70 * stand), 0, 0)
-			if not flexed and stand > 0.9 then
+			-- Réception écrasée, puis il se dresse sur ses pattes arrière et gonfle les bras
+			if not landed then
+				landed = true
+				burst(
+					anchorAt(base.Position - Vector3.new(0, 0.3, 0), 1.5),
+					SMOKE,
+					Color3.fromRGB(200, 195, 180),
+					8,
+					0.6,
+					3
+				)
+				shake(data, 0.25, 0.25)
+			end
+			local since = t - flipEnd
+			local impact = math.max(0, 1 - since / 0.18)
+			local stand = spring(since / 0.6, 1.5)
+			local pumpWave = math.abs(math.sin(since * 7))
+			local hop = math.abs(math.sin(since * 9)) * 0.18 * math.min(stand, 1)
+			-- Salut final : un dernier saut avant que le serveur le fasse redescendre
+			local bye = window(t, duration - 0.45, duration - 0.15)
+			frame = base
+				* CFrame.new(0, hop + stand * baseSize.Z * 0.3 + bye * 0.8, 0)
+				* CFrame.Angles(math.rad(70) * stand, bye * math.pi, 0)
+			stretch = -0.35 * impact + 0.1 * pumpWave * math.min(stand, 1)
+			if stand > 0.85 and not flexed then
 				flexed = true
 				pop(rat, "💪", rat.Size.Y + 1.4, nil)
-				burst(anchorAt(rat.Position + Vector3.new(0, 1, 0), 2), SPARKLE, GOLD, 18, 0.5, 5)
-				bubble(rat, Texts.Get("Secret.SewerGains.Line"), rat.Size.Y + 2.2, duration - t - 0.2)
+				burst(anchorAt(rat.Position + Vector3.new(0, 1, 0), 2), SPARKLE, GOLD, 22, 0.5, 5)
+				bubble(rat, Texts.Get("Secret.SewerGains.Line"), rat.Size.Y + 2.2, duration - t - 0.3)
 				sfx("SceneImpact", 1.6)
 				shake(data, 0.3, 0.35)
 			end
+			local pump = math.floor(since * 7 / math.pi)
+			if flexed and pump > lastPump and t < duration - 0.5 then
+				lastPump = pump
+				burst(anchorAt(rat.Position + Vector3.new(0, 0.6, 0), 1), SPARKLE, GOLD, 4, 0.3, 2)
+			end
 		end
+		rat.Size = baseSize * squash(stretch)
 		rat.CFrame = frame
 	end, function()
 		if rat.Parent then
+			rat.Size = baseSize
 			rat.CFrame = base
 		end
 	end)
 	-- Caméra au ras du sol, à hauteur de rat (point de vue dégagé : le joueur est souvent juste au-dessus de la plaque)
 	local look = base.LookVector
 	local at = base.Position + Vector3.new(0, 0.5, 0)
-	local up = at + Vector3.new(0, 1, 0)
+	local up = at + Vector3.new(0, 1.4, 0)
 	local ignore: { Instance } = { rat }
 	local low = eyeOn(at, at + look * 5 + base.RightVector * 1.8 + Vector3.new(0, 0.8, 0), ignore)
-	local front = eyeOn(up, at + look * 4.2 + Vector3.new(0, 0.3, 0), ignore)
+	local front = eyeOn(up, at + look * 4.6 + Vector3.new(0, 0.6, 0), ignore)
 	film(data, {
 		{
 			from = CFrame.lookAt(at + look * 7 + Vector3.new(0, 3, 0), at),
 			to = CFrame.lookAt(low, at),
-			duration = flexAt,
+			duration = pushEnd,
 			focus = at,
 			fovFrom = 60,
 			fovTo = 42,
@@ -716,15 +1043,17 @@ local function ratFx(data)
 		{
 			from = CFrame.lookAt(low, at),
 			to = CFrame.lookAt(front, up),
-			duration = duration - flexAt,
+			duration = duration - pushEnd,
 			focus = up,
 			fovFrom = 42,
-			fovTo = 55,
+			fovTo = 58,
 		},
 	}, Color3.fromRGB(205, 255, 205))
 end
 
 -- ------------------------------------------------------------------ miroir du passé
+
+type MirrorPiece = { part: BasePart, rest: CFrame, opacity: number, height: number, arm: string? }
 
 local function mirrorFx(data)
 	local mirror = data.mirror
@@ -742,16 +1071,26 @@ local function mirrorFx(data)
 	if not model then
 		return
 	end
-	local duration = if typeof(data.duration) == "number" then data.duration else 5
+	local duration = if typeof(data.duration) == "number" then data.duration else Secrets.NeverForget.Show
 	local front = mirror.CFrame.LookVector
-	-- La glace scintille : une nappe de lumière qui ondule devant le miroir
+	local glassFrame = mirror.CFrame * CFrame.new(0, 0, -mirror.Size.Z / 2 - 0.06)
+	-- La glace : une nappe de lumière devant le miroir, et des ondes comme à la surface de l'eau
 	local sheen = fxPart({
 		Size = Vector3.new(mirror.Size.X * 0.9, mirror.Size.Y * 0.9, 0.05),
-		CFrame = mirror.CFrame * CFrame.new(0, 0, -mirror.Size.Z / 2 - 0.06),
+		CFrame = glassFrame,
 		Color = Color3.fromRGB(150, 205, 255),
 		Material = Enum.Material.Neon,
 		Transparency = 1,
 	})
+	local rippleFrame = CFrame.lookAt(glassFrame.Position, glassFrame.Position + front)
+		* CFrame.new(0, 0, -0.05)
+		* CFrame.Angles(0, math.rad(90), 0)
+	local reach = math.min(mirror.Size.X, mirror.Size.Y) * 0.9
+	for index = 0, 2 do
+		task.delay(index * 0.18, function()
+			ring(rippleFrame, Color3.fromRGB(190, 230, 255), 0.4, reach, 0.9, 0.05)
+		end)
+	end
 	burst(sheen, SPARKLE, Color3.new(1, 1, 1), 30, 0.5, 3)
 	light(sheen, GHOST_BLUE, 2, 12, duration)
 	sfx("SnackPower", 0.8)
@@ -765,47 +1104,104 @@ local function mirrorFx(data)
 	local feet = Vector3.new(probe.X, floor, probe.Z)
 	local base = CFrame.lookAt(feet, feet + front)
 	model:PivotTo(base)
-	local parts: { [BasePart]: number } = {}
+
+	-- Chaque pièce : sa place au repos dans le repère du reflet, sa transparence, sa hauteur (apparition de bas en
+	-- haut) et son rôle (bras droit qui salue : épaule et coude)
+	local pieces: { MirrorPiece } = {}
+	local _, size = model:GetBoundingBox()
+	local shoulder: CFrame? = nil
+	local elbow: CFrame? = nil
 	for _, item in model:GetDescendants() do
 		if item:IsA("BasePart") then
-			parts[item] = math.max(item.Transparency, 0.3)
+			local rest = base:ToObjectSpace(item.CFrame)
+			local bodyPart = item:GetAttribute("BodyPart")
+			local arm = if bodyPart == "RightUpperArm"
+					or bodyPart == "RightLowerArm"
+					or bodyPart == "RightHand"
+				then bodyPart :: string
+				else nil
+			if bodyPart == "RightUpperArm" and not shoulder then
+				shoulder = CFrame.new(rest.Position + Vector3.new(0, item.Size.Y * 0.4, 0))
+			elseif bodyPart == "RightLowerArm" and not elbow then
+				elbow = CFrame.new(rest.Position + Vector3.new(0, item.Size.Y * 0.45, 0))
+			end
+			table.insert(pieces, {
+				part = item,
+				rest = rest,
+				opacity = math.max(item.Transparency, 0.3),
+				height = math.clamp(rest.Position.Y / math.max(size.Y, 0.1), 0, 1),
+				arm = arm,
+			})
 			item.Transparency = 1
 			item.CastShadow = false
 		end
 	end
 	model.Parent = workspace
-	local _, size = model:GetBoundingBox()
+	-- Ligne lumineuse qui balaie le reflet de bas en haut pendant qu'il apparaît
+	local scan = fxPart({
+		Size = Vector3.new(size.X * 1.1, 0.06, size.Z * 1.1),
+		CFrame = base,
+		Color = Color3.fromRGB(200, 235, 255),
+		Material = Enum.Material.Neon,
+		Transparency = 1,
+	})
 	local root = model.PrimaryPart or model:FindFirstChildWhichIsA("BasePart", true)
 	if root then
-		task.delay(0.6, function()
-			bubble(root, Texts.Get("Secret.NeverForget.Line"), size.Y * 0.5 + 1.2, duration - 1.2)
+		task.delay(1.3, function()
+			bubble(root, Texts.Get("Secret.NeverForget.Line"), size.Y * 0.5 + 1.2, duration - 2.4)
 		end)
 	end
-	local waved = 0
+
+	-- Découpage (D135) : ondes sur la glace (0 → 0,4 s) ; le reflet se dessine de bas en haut (→ 1,3 s) ; il salue du
+	-- bras droit (le bras monte, l'avant-bras balance) en sautillant ; il se dissout du haut vers le bas en paillettes.
+	local appearStart, appearEnd = 0.4, 1.3
+	local vanishStart = duration - 1.1
+	local parts: { BasePart } = {}
+	local cframes: { CFrame } = {}
 	animate(duration, function(t)
-		-- La glace s'allume puis pulse ; le reflet apparaît, se balance (coucou), sautille et se dissout
-		local appear = ease((t - 0.3) / 0.6)
-		local vanish = ease((t - (duration - 0.6)) / 0.6)
-		sheen.Transparency = 1 - (0.25 + math.sin(t * 5) * 0.1) * (1 - vanish) * ease(t / 0.3)
-		for part, target in parts do
-			part.Transparency = 1 - (1 - target) * appear * (1 - vanish)
+		sheen.Transparency = 1
+			- (0.25 + math.sin(t * 5) * 0.1) * ease(t / 0.3) * (1 - window(t, vanishStart + 0.4, duration))
+		local sweep = window(t, appearStart, appearEnd)
+		scan.CFrame = base * CFrame.new(0, size.Y * sweep, 0)
+		scan.Transparency = if t > appearStart and t < appearEnd then 0.2 else 1
+		-- Salut : le bras monte avec un dépassement, puis l'avant-bras balance
+		local raise = backOut((t - appearEnd) / 0.45) * (1 - window(t, vanishStart - 0.3, vanishStart))
+		raise = math.max(raise, 0)
+		local wave = math.sin((t - appearEnd) * 9) * math.rad(28) * math.min(raise, 1)
+		local hop = math.abs(math.sin(t * 4.5)) * 0.18 * sweep * (1 - window(t, vanishStart - 0.3, vanishStart))
+		local sway = math.sin(t * 2.2) * math.rad(4) * sweep
+		local body = base * CFrame.new(0, hop, 0) * CFrame.Angles(0, 0, sway)
+		table.clear(parts)
+		table.clear(cframes)
+		for _, piece in pieces do
+			-- Apparition de bas en haut ; dissolution du haut vers le bas, chaque pièce s'envole un peu
+			local shown = window(sweep, piece.height - 0.12, piece.height + 0.02)
+			local gone = window(t, vanishStart + (1 - piece.height) * 0.6, vanishStart + (1 - piece.height) * 0.6 + 0.4)
+			piece.part.Transparency = 1 - (1 - piece.opacity) * shown * (1 - gone)
+			local cf = piece.rest
+			if piece.arm and shoulder then
+				local upper = shoulder * CFrame.Angles(0, 0, math.rad(150) * raise) * shoulder:Inverse()
+				if piece.arm ~= "RightUpperArm" and elbow then
+					cf = upper * elbow * CFrame.Angles(0, 0, wave) * elbow:Inverse() * cf
+				else
+					cf = upper * cf
+				end
+			end
+			table.insert(parts, piece.part)
+			table.insert(cframes, body * CFrame.new(0, gone * 1.2, 0) * cf)
 		end
-		local hop = math.abs(math.sin(t * 4)) * 0.2 * appear
-		model:PivotTo(base * CFrame.new(0, hop, 0) * CFrame.Angles(0, 0, math.sin(t * 6) * math.rad(7) * appear))
-		local wave = math.floor(t / 0.9)
-		if root and appear > 0.9 and wave > waved and t < duration - 0.8 then
-			waved = wave
-			pop(root, "👋", size.Y * 0.2, nil)
-		end
+		workspace:BulkMoveTo(parts, cframes, Enum.BulkMoveMode.FireCFrameChanged)
 	end, function()
-		burst(anchorAt(feet + Vector3.new(0, size.Y * 0.5, 0), 2), SPARKLE, GHOST_BLUE, 40, 0.6, 6)
+		burst(anchorAt(feet + Vector3.new(0, size.Y * 0.5, 0), 2), SPARKLE, GHOST_BLUE, 45, 0.6, 6)
+		ring(rippleFrame, Color3.fromRGB(190, 230, 255), reach, 0.3, 0.5, 0.05)
 		model:Destroy()
 		sheen:Destroy()
+		scan:Destroy()
 	end)
 	-- De biais (35°) devant la glace, jamais dans le dos du joueur : il se tient juste devant le miroir et le
 	-- cacherait ; s'il passe quand même dans le champ, il s'efface
 	local target = feet + Vector3.new(0, size.Y * 0.55, 0)
-	local ignore: { Instance } = { mirror, sheen, model }
+	local ignore: { Instance } = { mirror, sheen, model, scan }
 	local angled = CFrame.Angles(0, math.rad(35), 0):VectorToWorldSpace(front)
 	local start = eyeOn(target, target + angled * 7 + Vector3.new(0, 1.2, 0), ignore)
 	local finish = eyeOn(target, target + angled * 4.5 + Vector3.new(0, 0.4, 0), ignore)

@@ -42,12 +42,17 @@ local function place(
 	color: Color3?,
 	flat: boolean?,
 	glow: boolean?,
-	bodyColor: Color3?
+	bodyColor: Color3?,
+	bodyPart: string?
 )
 	if not template or not template:IsA("BasePart") then
 		return
 	end
 	local clone = template:Clone()
+	-- Partie du corps qu'il habille (scènes qui animent un bras, ex. le reflet du miroir, D135)
+	if bodyPart then
+		clone:SetAttribute("BodyPart", bodyPart)
+	end
 	clone.Anchored = true
 	clone.CanCollide = false
 	clone.CanTouch = false
@@ -106,7 +111,8 @@ function Outfit.Build(stage: string, items: { string }, options: Options?): Mode
 			color,
 			entry.tint == "Hair" or entry.color ~= nil,
 			entry.glow,
-			if opts.setSkin then entry.skin else nil
+			if opts.setSkin then entry.skin else nil,
+			entry.part
 		)
 	end
 	model.WorldPivot = CFrame.new()

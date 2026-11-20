@@ -238,7 +238,9 @@ local function shakeStatue(statue: Model, strength: number)
 	end)
 end
 
--- Elle se tourne vers le joueur, cligne de l'œil (côté client), fait un double biceps qui pompe, puis revient
+-- Elle frissonne, se tourne vers le joueur (avec un léger dépassement), le regarde en penchant la tête (clin d'œil
+-- côté client), prépare son geste (bras qui descendent, buste en arrière), gonfle un double biceps qui pompe en
+-- bombant le torse, puis se relâche et reprend sa place. Moments : Secrets.StatueBeliever.Beats (D135).
 local function performStatue(statue: Model, toward: Vector3, duration: number): CFrame?
 	local root = statue:FindFirstChild("HumanoidRootPart")
 	if statueBusy[statue] or not root or not root:IsA("BasePart") then
@@ -249,12 +251,23 @@ local function performStatue(statue: Model, toward: Vector3, duration: number): 
 	local flat = Vector3.new(toward.X - base.X, 0, toward.Z - base.Z)
 	local turned = if flat.Magnitude > 0.1 then CFrame.lookAt(base.Position, base.Position + flat.Unit) else base
 	local rig = statueJoints(statue)
-	local pose = Secrets.StatueBeliever.Pose
+	local cfg = Secrets.StatueBeliever
+	local pose = cfg.Pose
+	local beats = cfg.Beats
 	local function set(name: string, angles: CFrame)
 		local joint = rig[name]
 		if joint and joint.Parent then
 			joint.Transform = angles
 		end
+	end
+	-- Arrivée avec dépassement (0 à 1, monte un peu au-dessus de 1 puis revient)
+	local function backOut(t: number): number
+		t = math.clamp(t, 0, 1)
+		local u = t - 1
+		return 1 + 2.4 * u * u * u + 1.4 * u * u
+	end
+	local function window(t: number, a: number, b: number): number
+		return smooth((t - a) / (b - a))
 	end
 	local start = os.clock()
 	local connection
@@ -273,17 +286,41 @@ local function performStatue(statue: Model, toward: Vector3, duration: number): 
 			statueBusy[statue] = nil
 			return
 		end
-		local turn = smooth(t / 0.6) * (1 - smooth((t - (duration - 0.6)) / 0.6))
-		root.CFrame = base:Lerp(turned, turn)
-		local flex = smooth((t - 1.3) / 0.35) * (1 - smooth((t - (duration - 0.7)) / 0.5))
-		local pump = math.abs(math.sin((t - 1.3) * 6)) * math.rad(pose.Pump) * flex
-		local shoulder = math.rad(pose.Shoulder) * flex
-		local elbow = math.rad(pose.Elbow) * flex + pump
+		local release = window(t, duration - 0.75, duration - 0.1)
+		-- Frisson de réveil, puis rotation avec dépassement ; elle revient à sa place à la fin
+		local shiver = if t < beats.Turn then math.sin(t * 90) * 0.04 * (1 - t / beats.Turn) else 0
+		local turn = backOut((t - beats.Turn) / (beats.TurnEnd - beats.Turn)) * (1 - release)
+		root.CFrame = base:Lerp(turned, math.max(turn, 0)) * CFrame.new(shiver, 0, 0)
+		-- Regard : la tête penche vers le joueur pendant le clin d'œil
+		local tilt = window(t, beats.TurnEnd - 0.1, beats.Wink) * (1 - window(t, beats.Ready, beats.Flex))
+		-- Préparation : bras qui descendent un peu, buste en arrière ; puis le geste part, avec dépassement
+		local ready = window(t, beats.Ready, beats.Flex) * (1 - window(t, beats.Flex, beats.Flex + 0.15))
+		local flex = backOut((t - beats.Flex) / 0.35) * (1 - release)
+		flex = math.max(flex, 0)
+		local pumpWave = math.abs(math.sin((t - beats.Flex) * cfg.PumpRate))
+		local pump = if t > beats.Flex then pumpWave * flex else 0
+		local shoulder = math.rad(pose.Shoulder) * flex - math.rad(12) * ready
+		local elbow = math.rad(pose.Elbow) * flex + math.rad(pose.Pump) * pump
 		set("RightShoulder", CFrame.Angles(0, 0, shoulder))
 		set("LeftShoulder", CFrame.Angles(0, 0, -shoulder))
 		set("RightElbow", CFrame.Angles(elbow, 0, 0))
 		set("LeftElbow", CFrame.Angles(elbow, 0, 0))
-		set("Neck", CFrame.Angles(math.rad(-8) * flex, 0, math.rad(6) * flex))
+		-- Torse bombé à chaque pompe (buste en arrière) ; la tête penche vers le joueur, puis menton relevé de fierté
+		set("Waist", CFrame.Angles(math.rad(pose.Chest) * (ready * 0.6 + flex * 0.5 + pump * 0.5), 0, 0))
+		set(
+			"Neck",
+			CFrame.Angles(
+				math.rad(-5) * tilt + math.rad(6) * flex + math.rad(3) * pump,
+				0,
+				math.rad(10) * tilt + math.rad(4) * flex
+			)
+		)
+		-- Jambes : petite flexion pendant la préparation (le poids descend), puis il se grandit
+		local knee = math.rad(8) * ready
+		set("RightKnee", CFrame.Angles(-knee, 0, 0))
+		set("LeftKnee", CFrame.Angles(-knee, 0, 0))
+		set("RightHip", CFrame.Angles(knee * 0.5, 0, 0))
+		set("LeftHip", CFrame.Angles(knee * 0.5, 0, 0))
 	end)
 	return turned
 end
@@ -395,8 +432,10 @@ local function onKnock(player: Player, marker: BasePart)
 	Remotes.SecretFx:FireAllClients("SewerGains", { rat = rat, player = player, duration = cfg.Show })
 	SecretService.Award(player, "SewerGains")
 	task.wait(cfg.Show)
-	TweenService:Create(rat, TweenInfo.new(0.4), { CFrame = down }):Play()
-	task.wait(0.4)
+	-- Il replonge : petit élan vers le haut puis chute dans le trou (D135)
+	TweenService:Create(rat, TweenInfo.new(0.45, Enum.EasingStyle.Back, Enum.EasingDirection.In), { CFrame = down })
+		:Play()
+	task.wait(0.45)
 	rat:Destroy()
 	TweenService:Create(lid, TweenInfo.new(0.35, Enum.EasingStyle.Bounce), { CFrame = closed }):Play()
 	lastRat = os.clock()
