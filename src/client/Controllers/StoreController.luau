@@ -28,8 +28,10 @@ local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Look = require(ReplicatedStorage.Shared.Look)
 local Outfit = require(ReplicatedStorage.Shared.Outfit)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local ChestArt = require(script.Parent.Parent.ChestArt)
 local Preview3D = require(script.Parent.Parent.Preview3D)
 local PreviewFx = require(script.Parent.Parent.PreviewFx)
+local ShopArt = require(script.Parent.Parent.ShopArt)
 local Ui = require(script.Parent.Parent.Ui)
 
 local player = Players.LocalPlayer
@@ -75,6 +77,7 @@ local look: Look.LookData? = nil
 local paid = { multiplier = 1, endsAt = 0 } -- boost Robux : fin estimée sur l'horloge locale (os.clock)
 
 local render
+local celebrate
 
 -- ------------------------------------------------------------------ prix (lus sur Roblox, une fois)
 
@@ -175,92 +178,33 @@ local function clear(frame: Instance)
 	end
 end
 
--- Bouton d'achat : vert avec le prix ; gris et inactif si le produit n'existe pas encore (Studio)
+-- Bouton d'achat : vert bonbon avec le prix et un reflet qui passe ; gris et inactif si le produit n'existe pas encore
 local function buyButton(props: { [string]: any }, id: number, price: number?, onBuy: () -> ()): TextButton
 	local onSale = id ~= 0
-	props.BackgroundColor3 = if onSale then GREEN else GREY
+	props.BackgroundColor3 = if onSale then Color3.new(1, 1, 1) else GREY
+	props.AutoButtonColor = false
 	props.Text = if not onSale
 		then Texts.Get("Store.NotOnSale")
 		elseif price then Texts.Get("Shop.BuyRobux", { price = price })
 		else Texts.Get("Shop.BuyRobuxNoPrice")
 	local button = Ui.button(props)
-	Ui.stroke(Ui.Ink, 2).Parent = button
+	Ui.stroke(Ui.Ink, 2.5).Parent = button
+	Ui.outline(button, 2)
 	if onSale then
+		Ui.gradient(Ui.shade(GREEN, 1.35), Ui.shade(GREEN, 0.85)).Parent = button
+		ShopArt.shine(button, 2.2, 0.5)
 		Ui.juice(button)
 		button.Activated:Connect(onBuy)
-	else
-		button.AutoButtonColor = false
 	end
 	return button
 end
 
--- Coffre de Cash en 3D (trois tailles : bois cerclé de fer, bois cerclé d'or, tout en or) pour la vignette du pack
-local function buildChest(tier: number): Model
-	local spec = StoreConfig.Chests[math.clamp(tier, 1, #StoreConfig.Chests)]
-	local model = Instance.new("Model")
-	local function part(size: Vector3, cframe: CFrame, color: Color3, material: Enum.Material?, shape: Enum.PartType?)
-		local piece = Instance.new("Part")
-		piece.Size = size
-		piece.CFrame = cframe
-		piece.Color = color
-		piece.Material = material or Enum.Material.SmoothPlastic
-		piece.Shape = shape or Enum.PartType.Block
-		piece.Anchored = true
-		piece.Parent = model
-		return piece
-	end
-	local w, h, d = 2.6 * spec.scale, 1.3 * spec.scale, 1.7 * spec.scale
-	part(Vector3.new(w, h, d), CFrame.new(0, h / 2, 0), spec.body, Enum.Material.Wood)
-	-- Couvercle bombé : un cylindre couché, dont la moitié basse reste dans la caisse
-	part(Vector3.new(w, d, d), CFrame.new(0, h, 0), spec.body, Enum.Material.Wood, Enum.PartType.Cylinder)
-	for _, x in { -w * 0.32, w * 0.32 } do
-		part(
-			Vector3.new(0.26 * spec.scale, h + 0.04, d + 0.08),
-			CFrame.new(x, h / 2, 0),
-			spec.band,
-			Enum.Material.Metal
-		)
-		part(
-			Vector3.new(0.26 * spec.scale, d + 0.08, d + 0.08),
-			CFrame.new(x, h, 0),
-			spec.band,
-			Enum.Material.Metal,
-			Enum.PartType.Cylinder
-		)
-	end
-	part(
-		Vector3.new(0.5, 0.6, 0.2) * spec.scale,
-		CFrame.new(0, h * 0.95, -d / 2 - 0.06),
-		spec.band,
-		Enum.Material.Metal
-	)
-	-- Liasses et pièces posées devant, de plus en plus nombreuses
-	local rng = Random.new(tier * 31)
-	for index = 1, spec.bills do
-		local x = (index - (spec.bills + 1) / 2) * 0.62
-		part(
-			Vector3.new(0.5, 0.16, 0.9),
-			CFrame.new(x, 0.08 + (index % 2) * 0.16, -d / 2 - 0.75) * CFrame.Angles(0, rng:NextNumber(-0.4, 0.4), 0),
-			Color3.fromRGB(70, 185, 95)
-		)
-	end
-	for _ = 1, spec.coins do
-		local coin = part(
-			Vector3.new(0.09, 0.42, 0.42),
-			CFrame.new(rng:NextNumber(-w * 0.55, w * 0.55), 0.05, -d / 2 - rng:NextNumber(0.3, 1.3))
-				* CFrame.Angles(0, 0, math.pi / 2),
-			Color3.fromRGB(255, 205, 60),
-			Enum.Material.Metal,
-			Enum.PartType.Cylinder
-		)
-		coin.Reflectance = 0.2
-	end
-	return model
-end
-
--- Carte d'un pack : vignette (3D ou icône), titre, sous-titre, bouton d'achat. `wide` : en ligne (téléphone debout)
+-- Carte d'un pack (D137) : fond dégradé selon le rang, soleil de rayons et étincelles derrière la récompense (coffre 3D
+-- ou icône qui flotte), montant au reflet doré, pastille « +X% » (comparé au plus petit pack), ruban « BEST VALUE »
+-- et bordure animée sur le pack le plus avantageux, bouton d'achat. `wide` : en ligne (téléphone debout)
 type CardSpec = {
 	order: number,
+	tier: number,
 	accent: Color3,
 	icon: string?,
 	chest: number?,
@@ -268,73 +212,130 @@ type CardSpec = {
 	subtitle: string?,
 	productId: number,
 	robux: number,
+	bonus: number?,
+	best: boolean,
 }
 local function packCard(parent: Instance, spec: CardSpec, wide: boolean, count: number)
+	local tier = StoreConfig.CardTiers[math.clamp(spec.tier, 1, #StoreConfig.CardTiers)]
 	local card = Ui.create("Frame", {
 		Name = "Pack" .. spec.order,
 		LayoutOrder = spec.order,
-		Size = if wide then UDim2.new(1, 0, 0, 104) else UDim2.new(1 / count, -8, 1, 0),
-		BackgroundColor3 = CARD,
+		Size = if wide then UDim2.new(1, 0, 0, 112) else UDim2.new(1 / count, -8, 1, 0),
+		BackgroundColor3 = Color3.new(1, 1, 1),
 		Parent = parent,
-	}, { Ui.corner(UDim.new(0, 14)), Ui.stroke(spec.accent, 2, 0.2) })
+	}, { Ui.corner(UDim.new(0, 16)), Ui.gradient(tier.top, tier.bottom), Ui.stroke(tier.glow, 2, 0.35) })
 	Ui.create("UISizeConstraint", { MaxSize = Vector2.new(if wide then math.huge else 230, math.huge), Parent = card })
-	local art = if wide
-		then { Position = UDim2.fromOffset(8, 8), Size = UDim2.fromOffset(88, 88) }
-		else {
-			AnchorPoint = Vector2.new(0.5, 0),
-			Position = UDim2.new(0.5, 0, 0, 10),
-			Size = UDim2.new(1, -20, 0.42, 0),
-		}
+	if spec.best then
+		ShopArt.glowStroke(card, tier.glow, 3.5)
+	end
+	local art = Ui.create("Frame", {
+		Name = "Art",
+		BackgroundColor3 = Color3.new(0, 0, 0),
+		BackgroundTransparency = 0.75,
+		ClipsDescendants = true,
+		Parent = card,
+	}, { Ui.corner(UDim.new(0, 12)) })
+	if wide then
+		art.Position = UDim2.fromOffset(8, 8)
+		art.Size = UDim2.fromOffset(96, 96)
+	else
+		art.AnchorPoint = Vector2.new(0.5, 0)
+		art.Position = UDim2.new(0.5, 0, 0, 10)
+		art.Size = UDim2.new(1, -20, 0.44, 0)
+	end
+	ShopArt.rays(art, {
+		color = tier.glow,
+		count = 6 + spec.tier * 2,
+		speed = 10 + spec.tier * 8,
+		transparency = 0.62 - spec.tier * 0.08,
+		size = UDim2.fromScale(1.7, 1.7),
+		zIndex = 2,
+	})
+	ShopArt.twinkles(art, tier.glow, 1 + spec.tier * 2, spec.order * 17 + spec.tier, 5)
 	if spec.chest then
-		local view = Preview3D.new(card, art)
+		local view = Preview3D.new(art, {
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(0.5, 0.5),
+			Size = UDim2.fromScale(1, 1),
+			ZIndex = 4,
+		})
 		view.frame.BackgroundTransparency = 1
 		local stroke = view.frame:FindFirstChildOfClass("UIStroke")
 		if stroke then
 			stroke:Destroy()
 		end
-		local chest = buildChest(spec.chest)
-		Preview3D.Show(view, chest)
-		chest:Destroy()
+		local chest = ChestArt.Build(spec.chest)
+		Preview3D.Show(view, chest.model)
+		chest.model:Destroy()
 	else
-		art.Text = spec.icon or ""
-		art.TextStrokeTransparency = 1
-		art.Parent = card
-		Ui.label(art)
+		local icon = Ui.label({
+			Name = "Icon",
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(0.5, 0.5),
+			Size = UDim2.fromScale(0.5 + spec.tier * 0.1, 0.5 + spec.tier * 0.1),
+			Text = spec.icon or "",
+			TextStrokeTransparency = 1,
+			ZIndex = 4,
+			Parent = art,
+		})
+		ShopArt.float(icon, 3 + spec.tier, 1.8 + spec.tier * 0.3, 0.03 + spec.tier * 0.02)
 	end
 	local title = Ui.label({
-		Position = if wide then UDim2.fromOffset(104, 10) else UDim2.fromScale(0.05, 0.5),
-		Size = if wide then UDim2.new(1, -262, 0, 40) else UDim2.fromScale(0.9, 0.16),
+		Position = if wide then UDim2.fromOffset(114, 12) else UDim2.fromScale(0.05, 0.52),
+		Size = if wide then UDim2.new(1, -276, 0, 44) else UDim2.fromScale(0.9, 0.15),
 		TextXAlignment = if wide then Enum.TextXAlignment.Left else Enum.TextXAlignment.Center,
-		TextColor3 = spec.accent,
 		Text = spec.title,
+		ZIndex = 3,
 		Parent = card,
 	})
-	Ui.outline(title, 2)
+	Ui.outline(title, 2.5)
+	ShopArt.shimmerText(title, spec.accent, Color3.new(1, 1, 1))
 	if spec.subtitle then
 		Ui.label({
-			Position = if wide then UDim2.fromOffset(104, 54) else UDim2.fromScale(0.05, 0.66),
-			Size = if wide then UDim2.new(1, -262, 0, 26) else UDim2.fromScale(0.9, 0.09),
+			Position = if wide then UDim2.fromOffset(114, 58) else UDim2.fromScale(0.05, 0.67),
+			Size = if wide then UDim2.new(1, -276, 0, 26) else UDim2.fromScale(0.9, 0.085),
 			TextXAlignment = if wide then Enum.TextXAlignment.Left else Enum.TextXAlignment.Center,
-			TextColor3 = Color3.fromRGB(215, 210, 230),
-			Font = Enum.Font.GothamMedium,
+			TextColor3 = Color3.fromRGB(225, 218, 240),
+			Font = Enum.Font.GothamBold,
 			Text = spec.subtitle,
+			ZIndex = 3,
 			Parent = card,
 		})
+	end
+	if spec.bonus then
+		local sticker = ShopArt.sticker(
+			card,
+			Texts.Get("Store.Bonus", { percent = math.floor(spec.bonus * 100 + 0.5) }),
+			Color3.fromRGB(235, 55, 85),
+			if wide then UDim2.fromOffset(100, 90) else UDim2.fromOffset(26, 26),
+			9
+		)
+		sticker.Size = UDim2.fromOffset(if wide then 48 else 58, if wide then 48 else 58)
+	end
+	if spec.best then
+		local ribbon = ShopArt.ribbon(card, Texts.Get("Store.BestValue"), Color3.fromRGB(235, 55, 85), 10)
+		if wide then
+			ribbon.AnchorPoint = Vector2.new(0, 0.5)
+			ribbon.Position = UDim2.fromOffset(110, 2)
+			ribbon.Size = UDim2.fromOffset(150, 24)
+		end
 	end
 	buyButton(
 		if wide
 			then {
 				Name = "Buy",
 				AnchorPoint = Vector2.new(1, 0.5),
-				Position = UDim2.new(1, -8, 0.5, 0),
-				Size = UDim2.fromOffset(142, 64),
+				Position = UDim2.new(1, -10, 0.5, 0),
+				Size = UDim2.fromOffset(146, 66),
+				ZIndex = 3,
 				Parent = card,
 			}
 			else {
 				Name = "Buy",
 				AnchorPoint = Vector2.new(0.5, 1),
-				Position = UDim2.new(0.5, 0, 1, -8),
-				Size = UDim2.new(1, -16, 0.2, 0),
+				Position = UDim2.new(0.5, 0, 1, -10),
+				Size = UDim2.new(1, -18, 0.19, 0),
+				ZIndex = 3,
 				Parent = card,
 			},
 		spec.productId,
@@ -343,6 +344,30 @@ local function packCard(parent: Instance, spec: CardSpec, wide: boolean, count: 
 			MarketplaceService:PromptProductPurchase(player, spec.productId)
 		end
 	)
+end
+
+-- Valeur de chaque pack par Robux, comparée au plus petit : bonus (« +31% ») et pack le plus avantageux.
+-- `values[i]` : ce que donne le pack i ; `robux[i]` : son prix réel (ou conseillé)
+local function compareValue(values: { number }, robux: { number }): ({ [number]: number }, number?)
+	local bonuses: { [number]: number } = {}
+	local base = if robux[1] and robux[1] > 0 then values[1] / robux[1] else 0
+	local best, bestRatio = nil, 0
+	for index, value in values do
+		local ratio = if robux[index] and robux[index] > 0 then value / robux[index] else 0
+		local bonus = if base > 0 then ratio / base - 1 else 0
+		if bonus >= StoreConfig.BonusMin then
+			bonuses[index] = bonus
+			if ratio > bestRatio then
+				best, bestRatio = index, ratio
+			end
+		end
+	end
+	return bonuses, best
+end
+
+-- Rang visuel d'un pack : le plus gros a toujours le plus beau fond, même quand il n'y a que deux packs
+local function tierOf(order: number, count: number): number
+	return math.clamp(#StoreConfig.CardTiers - count + order, 1, #StoreConfig.CardTiers)
 end
 
 -- Rangée de cartes (paysage) ou liste qui défile (téléphone debout), sous un titre d'une ligne ; renvoie la zone
@@ -369,7 +394,7 @@ local function packArea(titleKey: string, footer: number): (Instance, Frame?)
 			Parent = content,
 		}, {
 			Ui.create("UIListLayout", { Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder }),
-			Ui.create("UIPadding", { PaddingRight = UDim.new(0, 6), PaddingTop = UDim.new(0, 2) }),
+			Ui.create("UIPadding", { PaddingRight = UDim.new(0, 6), PaddingTop = UDim.new(0, 14) }),
 		})
 	else
 		holder = Ui.create("Frame", {
@@ -406,17 +431,25 @@ local function renderPacks(kind: string)
 	local packs = packsOf(kind)
 	local holder = packArea(`Store.{kind}Title`, 0)
 	local accent = if kind == "Cash" then Color3.fromRGB(140, 255, 140) else GOLD
+	local values, robux = {}, {}
 	for order, pack in packs do
-		local value = if kind == "Cash" then pack.amount or 0 else Products.MogAmount(pack, stage)
+		values[order] = if kind == "Cash" then pack.amount or 0 else Products.MogAmount(pack, stage)
+		robux[order] = priceOf(pack.productId, Enum.InfoType.Product, pack.robux) or pack.robux
+	end
+	local bonuses, best = compareValue(values, robux)
+	for order, pack in packs do
 		packCard(holder, {
 			order = order,
+			tier = tierOf(order, #packs),
 			accent = accent,
 			icon = pack.icon,
 			chest = if kind == "Cash" then order else nil,
-			title = Texts.Get(`Store.{kind}Amount`, { amount = Format.Short(value) }),
+			title = Texts.Get(`Store.{kind}Amount`, { amount = Format.Short(values[order]) }),
 			subtitle = Texts.Get(`Store.{kind}Pack{math.min(order, 3)}`),
 			productId = pack.productId,
 			robux = pack.robux,
+			bonus = bonuses[order],
+			best = best == order,
 		}, portrait, #packs)
 	end
 end
@@ -436,9 +469,18 @@ end
 local function renderBoosts()
 	local packs = packsOf("Boost")
 	local holder, footer = packArea("Store.BoostTitle", 44)
+	local values, robux = {}, {}
+	for order, pack in packs do
+		values[order] = pack.duration * math.max(pack.multiplier - 1, 0)
+		robux[order] = priceOf(pack.productId, Enum.InfoType.Product, pack.robux) or pack.robux
+	end
+	local bonuses, best = compareValue(values, robux)
 	for order, pack in packs do
 		packCard(holder, {
 			order = order,
+			tier = tierOf(order, #packs),
+			bonus = bonuses[order],
+			best = best == order,
 			accent = GOLD,
 			icon = pack.icon,
 			title = Texts.Get("Store.BoostName", { multiplier = pack.multiplier }),
@@ -509,6 +551,30 @@ local function renderOutfits()
 	viewport.Position = UDim2.new()
 	viewport.Size = if portrait then UDim2.new(1, 0, 0, 228) else UDim2.new(0.42, -6, 1, 0)
 	refreshPreview(chosen)
+	-- Scène derrière la tenue (D137) : fond dégradé, rayons de la couleur de la tenue, étincelles
+	local back = Ui.create("Frame", {
+		Name = "PreviewBack",
+		Position = viewport.Position,
+		Size = viewport.Size,
+		BackgroundColor3 = Color3.new(1, 1, 1),
+		ClipsDescendants = true,
+		ZIndex = 1,
+		Parent = content,
+	}, {
+		Ui.corner(UDim.new(0, 14)),
+		Ui.gradient(Ui.shade(chosen.color, 0.55), Color3.fromRGB(22, 16, 36)),
+		Ui.stroke(chosen.color, 2.5, 0.1),
+	})
+	ShopArt.rays(back, {
+		color = Ui.shade(chosen.color, 1.3),
+		count = 10,
+		speed = 16,
+		transparency = 0.55,
+		size = UDim2.fromScale(1.6, 1.6),
+		position = UDim2.fromScale(0.5, 0.42),
+		zIndex = 1,
+	})
+	ShopArt.twinkles(back, Ui.shade(chosen.color, 1.5), 7, #chosen.id, 1)
 
 	local right = Ui.create("Frame", {
 		Name = "Details",
@@ -804,14 +870,14 @@ local function buildGui()
 	-- Aperçu 3D des tenues (gardé d'un rendu à l'autre : seul le modèle change)
 	viewport = Ui.create("ViewportFrame", {
 		Name = "Preview",
-		BackgroundColor3 = Color3.fromRGB(30, 26, 44),
-		BackgroundTransparency = 0.1,
+		BackgroundTransparency = 1,
+		ZIndex = 2,
 		Ambient = Color3.fromRGB(150, 150, 160),
 		LightColor = Color3.fromRGB(255, 245, 230),
 		LightDirection = Vector3.new(-0.5, -1, 0.6),
 		Visible = false,
 		Parent = content,
-	}, { Ui.corner(UDim.new(0, 14)), Ui.stroke(GOLD, 2, 0.4) })
+	}, { Ui.corner(UDim.new(0, 14)) })
 	world = Ui.create("WorldModel", { Parent = viewport })
 	viewport.CurrentCamera = Ui.create("Camera", { FieldOfView = 35, Parent = viewport })
 	previewFx = PreviewFx.new(world, viewport.CurrentCamera :: Camera)
@@ -847,6 +913,27 @@ local function buildGui()
 		Text = Texts.Get("Store.NoThanks"),
 		Parent = offerCard,
 	})
+	-- Habillage (D137) : rayons dorés derrière, bordure qui tourne, bouton vert bonbon qui brille
+	local offerFx = Ui.create("Frame", {
+		Name = "OfferFx",
+		Size = UDim2.fromScale(1, 1),
+		BackgroundTransparency = 1,
+		ClipsDescendants = true,
+		ZIndex = 0,
+		Parent = offerCard,
+	}, { Ui.corner(UDim.new(0, 18)) })
+	ShopArt.rays(
+		offerFx,
+		{ color = GOLD, count = 10, speed = 18, transparency = 0.72, size = UDim2.fromScale(3, 3), zIndex = 0 }
+	)
+	ShopArt.glowStroke(offerCard, GOLD, 3)
+	offerButton.BackgroundColor3 = Color3.new(1, 1, 1)
+	offerButton.AutoButtonColor = false
+	Ui.gradient(Ui.shade(GREEN, 1.35), Ui.shade(GREEN, 0.85)).Parent = offerButton
+	Ui.stroke(Ui.Ink, 2.5).Parent = offerButton
+	Ui.outline(offerButton, 2)
+	ShopArt.shine(offerButton, 2.2, 0.5)
+	Ui.juice(offerButton)
 	offerButton.Activated:Connect(function()
 		local offer = currentOffer
 		if offer then
@@ -900,6 +987,59 @@ local function showOffer(offer)
 			end
 		end)
 	end)
+end
+
+-- Coffre de la taille du pack acheté (le plus petit dont le montant atteint `amount`)
+local function chestTier(amount: number): number
+	for order, pack in Products.Cash do
+		if (pack.amount or 0) >= amount then
+			return order
+		end
+	end
+	return #Products.Cash
+end
+
+-- Grande célébration d'un achat (D137) : la récompense jaillit sous des rayons, le montant défile, une gerbe d'icônes
+-- part, puis les pièces s'envolent vers le compteur
+celebrate = function(result: { [string]: any })
+	if result.kind == "Boost" then
+		local pack = nil
+		for _, entry in Products.Boost do
+			if entry.multiplier == result.multiplier then
+				pack = entry
+			end
+		end
+		ShopArt.Celebrate({
+			color = GOLD,
+			icon = if pack then pack.icon else Texts.Get("Store.IconBoosts"),
+			title = Texts.Get("Store.Celebrate.Boost", { multiplier = result.multiplier }),
+			subtitle = Texts.Get("Store.Celebrate.BoostTime", { minutes = result.minutes }),
+			glyphs = { "⚡", "💪", "✨" },
+		})
+		return
+	end
+	local amount = result.amount
+	if typeof(amount) ~= "number" then
+		return
+	end
+	local kind = if result.kind == "Mog" then "Mog" else "Cash"
+	local function text(value: number): string
+		return Texts.Get(`Store.Celebrate.{kind}`, { amount = Format.Short(value) })
+	end
+	ShopArt.Celebrate({
+		color = if kind == "Cash" then Color3.fromRGB(120, 255, 140) else GOLD,
+		icon = if kind == "Mog" then Texts.Get("Store.IconMog") else nil,
+		build = if kind == "Cash" then ChestArt.Scene(chestTier(amount)) else nil,
+		title = text(amount),
+		count = function(progress: number)
+			return text(math.floor(amount * progress))
+		end,
+		subtitle = Texts.Get("Store.Celebrate.Thanks"),
+		glyphs = if kind == "Cash" then { "💵", "💰", "✨" } else { "💪", "🔥", "✨" },
+		onDone = function()
+			UIController.FlyToCounter(kind)
+		end,
+	})
 end
 
 -- Case « Shop » du menu (MenuController) : seulement s'il y a quelque chose à vendre (ou dans Studio)
@@ -967,22 +1107,23 @@ function StoreController.Start()
 		if typeof(result) ~= "table" then
 			return
 		end
-		if result.kind == "Boost" then
-			UIController.Toast(
-				Texts.Get("Store.BoostGot", { multiplier = result.multiplier, minutes = result.minutes }),
-				3
-			)
-			return
-		end
-		if typeof(result.amount) ~= "number" then
-			return
-		end
-		local kind = if result.kind == "Mog" then "Mog" else "Cash"
 		close()
-		UIController.FlyToCounter(kind)
-		UIController.Toast(Texts.Get(`Store.{kind}Got`, { amount = Format.Short(result.amount) }), 3)
+		celebrate(result)
 	end)
 	Remotes.BossWinOffer.OnClientEvent:Connect(showOffer)
+	-- Tests dans Studio seulement : ouvrir un onglet ou jouer la célébration d'un achat sans rien acheter
+	if STUDIO then
+		local dev = Instance.new("BindableEvent")
+		dev.Name = "StoreDev"
+		dev.Event:Connect(function(action, value)
+			if action == "Open" then
+				open(value)
+			elseif action == "Celebrate" and typeof(value) == "table" then
+				celebrate(value)
+			end
+		end)
+		dev.Parent = player
+	end
 	-- Victoire accordée (achetée ou gagnée) : l'offre n'a plus lieu d'être
 	Remotes.BossUpdate.OnClientEvent:Connect(function(update)
 		if typeof(update) == "table" and update.state == "Victory" then

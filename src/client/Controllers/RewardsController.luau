@@ -16,6 +16,7 @@ local Rewards = require(ReplicatedStorage.Shared.Config.Rewards)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Format = require(ReplicatedStorage.Shared.Format)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local ShopArt = require(script.Parent.Parent.ShopArt)
 local Ui = require(script.Parent.Parent.Ui)
 
 local player = Players.LocalPlayer
@@ -109,28 +110,82 @@ local function render()
 		})
 	end
 
-	-- Pack de départ
+	-- Pack de départ (D137) : une vitrine qui brille (rayons dorés, cadeau qui flotte, ruban « une seule fois »)
 	if not state.starterOwned and state.starterProduct ~= 0 then
-		heading(nextOrder(), "Starter.Heading")
+		local showcase = Ui.create("Frame", {
+			Name = "Starter",
+			Size = UDim2.new(1, -8, 0, 168),
+			BackgroundColor3 = Color3.new(1, 1, 1),
+			LayoutOrder = nextOrder(),
+			Parent = list,
+		}, {
+			Ui.corner(UDim.new(0, 16)),
+			Ui.gradient(Color3.fromRGB(150, 80, 30), Color3.fromRGB(70, 28, 40)),
+		})
+		ShopArt.glowStroke(showcase, GOLD, 3)
+		local art = Ui.create("Frame", {
+			Name = "Art",
+			Position = UDim2.fromOffset(10, 24),
+			Size = UDim2.fromOffset(110, 110),
+			BackgroundColor3 = Color3.new(0, 0, 0),
+			BackgroundTransparency = 0.75,
+			ClipsDescendants = true,
+			Parent = showcase,
+		}, { Ui.corner(UDim.new(0, 12)) })
+		ShopArt.rays(
+			art,
+			{ color = GOLD, count = 10, speed = 30, transparency = 0.4, size = UDim2.fromScale(1.7, 1.7) }
+		)
+		ShopArt.twinkles(art, Color3.fromRGB(255, 240, 180), 5, 7, 4)
+		local gift = Ui.label({
+			AnchorPoint = Vector2.new(0.5, 0.5),
+			Position = UDim2.fromScale(0.5, 0.5),
+			Size = UDim2.fromScale(0.75, 0.75),
+			Text = Texts.Get("Starter.Icon"),
+			TextStrokeTransparency = 1,
+			ZIndex = 5,
+			Parent = art,
+		})
+		ShopArt.float(gift, 5, 2.4, 0.06)
+		local title = Ui.label({
+			Position = UDim2.fromOffset(130, 24),
+			Size = UDim2.new(1, -140, 0, 34),
+			TextXAlignment = Enum.TextXAlignment.Left,
+			Text = Texts.Get("Starter.Heading"),
+			Parent = showcase,
+		})
+		Ui.outline(title, 2.5)
+		ShopArt.shimmerText(title, GOLD, Color3.new(1, 1, 1))
 		Ui.label({
-			Size = UDim2.new(1, 0, 0, 44),
+			Position = UDim2.fromOffset(130, 60),
+			Size = UDim2.new(1, -140, 0, 44),
+			Font = Enum.Font.GothamBold,
+			TextWrapped = true,
+			TextXAlignment = Enum.TextXAlignment.Left,
+			TextYAlignment = Enum.TextYAlignment.Top,
 			Text = Texts.Get("Starter.Content", {
 				cash = Format.Short(STARTER.cash),
 				minutes = math.floor(STARTER.boostDuration / 60 + 0.5),
 			}),
-			TextWrapped = true,
-			TextXAlignment = Enum.TextXAlignment.Left,
-			LayoutOrder = nextOrder(),
-			Parent = list,
+			Parent = showcase,
 		})
+		local ribbon = ShopArt.ribbon(showcase, Texts.Get("Starter.Ribbon"), Color3.fromRGB(235, 55, 85), 10)
+		ribbon.Size = UDim2.new(0.5, 0, 0, 26)
+		ribbon.Position = UDim2.new(0.5, 0, 0, 2)
 		local buy = Ui.button({
 			Name = "BuyStarter",
-			Size = UDim2.new(1, 0, 0, 52),
-			BackgroundColor3 = GREEN,
+			AnchorPoint = Vector2.new(1, 1),
+			Position = UDim2.new(1, -10, 1, -10),
+			Size = UDim2.new(1, -140, 0, 50),
+			BackgroundColor3 = Color3.new(1, 1, 1),
+			AutoButtonColor = false,
 			Text = priceText(state.starterRobux),
-			LayoutOrder = nextOrder(),
-			Parent = list,
+			Parent = showcase,
 		})
+		Ui.gradient(Ui.shade(GREEN, 1.35), Ui.shade(GREEN, 0.85)).Parent = buy
+		Ui.stroke(Ui.Ink, 2.5).Parent = buy
+		Ui.outline(buy, 2)
+		ShopArt.shine(buy, 2.2, 0.5)
 		Ui.juice(buy, function()
 			Remotes.RewardsAction:FireServer("BuyStarter")
 		end)
@@ -241,7 +296,20 @@ end
 
 -- ------------------------------------------------------------------ cartes (pack de départ, absence)
 
+-- Retire l'habillage de l'offre de départ (la même carte sert aussi au message d'absence)
+local function clearOfferFx()
+	local fx = card:FindFirstChild("OfferFx")
+	if fx then
+		fx:Destroy()
+	end
+	local shine = cardMain:FindFirstChild("OfferShine")
+	if shine then
+		shine:Destroy()
+	end
+end
+
 local function showCard(popup: { [string]: any })
+	clearOfferFx()
 	if popup.kind == "Starter" then
 		cardText.Text = Texts.Get("Starter.Offer", {
 			cash = Format.Short(tonumber(popup.cash) or STARTER.cash),
@@ -256,6 +324,21 @@ local function showCard(popup: { [string]: any })
 		cardAction = function()
 			Remotes.RewardsAction:FireServer("BuyStarter")
 		end
+		-- Habillage de l'offre (D137) : rayons dorés derrière, bordure qui tourne, reflet sur le bouton
+		local fx = Ui.create("Frame", {
+			Name = "OfferFx",
+			Size = UDim2.fromScale(1, 1),
+			BackgroundTransparency = 1,
+			ClipsDescendants = true,
+			ZIndex = 0,
+			Parent = card,
+		}, { Ui.corner(UDim.new(0, 18)) })
+		ShopArt.rays(
+			fx,
+			{ color = GOLD, count = 10, speed = 18, transparency = 0.7, size = UDim2.fromScale(3, 3), zIndex = 0 }
+		)
+		ShopArt.twinkles(fx, Color3.fromRGB(255, 240, 180), 6, 11, 0)
+		ShopArt.shine(cardMain, 2.2, 0.5).Name = "OfferShine"
 	elseif popup.kind == "Away" then
 		cardText.Text = Texts.Get(if popup.capped then "Away.TextCapped" else "Away.Text", {
 			amount = Format.Short(tonumber(popup.cash) or 0),
@@ -284,6 +367,7 @@ end
 local function hideCard()
 	card.Visible = false
 	cardAction = nil
+	clearOfferFx()
 end
 
 -- ------------------------------------------------------------------ construction

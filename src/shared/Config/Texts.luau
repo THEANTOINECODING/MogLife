@@ -280,6 +280,8 @@ local STRINGS: { [string]: string } = {
 	["News.Line.GoldenHour"] = "🔥 Golden Pump Hour every Saturday at 18:00 UTC: x1.5 Mog for everyone!",
 	["News.Line.Away"] = "🥤 Your protein shaker makes Cash while you are away (up to 8 hours).",
 	["Starter.Heading"] = "Starter Pack (one time only)",
+	["Starter.Icon"] = "🎁",
+	["Starter.Ribbon"] = "ONE TIME ONLY",
 	["Starter.Content"] = "{cash} Cash, x2 Mog for {minutes} minutes and the exclusive Day One title.",
 	["Starter.Offer"] = "Starter Pack, one time only: {cash} Cash, x2 Mog for {minutes} minutes and the Day One title!",
 	["Group.Heading"] = "Join the MOG LIFE group",
@@ -993,6 +995,13 @@ local STRINGS: { [string]: string } = {
 	["Store.CashGot"] = "+{amount} Cash! Thanks for the support!",
 	["Store.BossWin"] = "{boss} is too strong? Win now and move on to the next stage!",
 	["Store.NoThanks"] = "No thanks",
+	["Store.Bonus"] = "+{percent}%",
+	["Store.BestValue"] = "BEST VALUE",
+	["Store.Celebrate.Cash"] = "+{amount} CASH!",
+	["Store.Celebrate.Mog"] = "+{amount} MOG!",
+	["Store.Celebrate.Boost"] = "x{multiplier} MOG!",
+	["Store.Celebrate.BoostTime"] = "Every rep counts double for {minutes} minutes of play!",
+	["Store.Celebrate.Thanks"] = "Thanks for the support, legend!",
 	["Boss.VictoryBought"] = "You skipped {boss}!",
 
 	-- Visite guidée d'un magasin à la première entrée (D121)

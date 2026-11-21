@@ -14,6 +14,8 @@ local Balance = require(ReplicatedStorage.Shared.Config.Balance)
 local Texts = require(ReplicatedStorage.Shared.Config.Texts)
 local Format = require(ReplicatedStorage.Shared.Format)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
+local ChestArt = require(script.Parent.Parent.ChestArt)
+local ShopArt = require(script.Parent.Parent.ShopArt)
 local Ui = require(script.Parent.Parent.Ui)
 
 local WEEKLY_UI = Balance.WeeklyWindow
@@ -540,104 +542,26 @@ local function buildGui()
 	layoutWeekly()
 end
 
--- Ouverture du coffre (D84) : il tombe, tremble trois fois, éclate (rayons, pièces), affiche le gain, puis les
--- billets s'envolent vers le compteur de Cash. Un toucher passe la scène.
-local function chestScene(cash: number)
-	local sceneGui = Ui.create("ScreenGui", { Name = "ChestScene", ResetOnSpawn = false, DisplayOrder = 25 })
-	local shade = Ui.create("TextButton", {
-		Size = UDim2.fromScale(1, 1),
-		BackgroundColor3 = Color3.new(0, 0, 0),
-		BackgroundTransparency = 1,
-		Text = "",
-		AutoButtonColor = false,
-		Parent = sceneGui,
-	})
-	local sceneRays = Ui.label({
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.45),
-		Size = UDim2.fromOffset(320, 320),
-		Text = "✴️",
-		TextTransparency = 1,
-		TextStrokeTransparency = 1,
-		Parent = sceneGui,
-	})
-	local chest = Ui.label({
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, -0.2),
-		Size = UDim2.fromOffset(150, 150),
-		Text = "🎁",
-		TextStrokeTransparency = 1,
-		ZIndex = 3,
-		Parent = sceneGui,
-	})
-	local amount = Ui.label({
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.fromScale(0.5, 0.72),
-		Size = UDim2.fromOffset(420, 70),
-		Text = Texts.Get("Weekly.ChestBurst", { cash = Format.Short(cash) }),
-		TextColor3 = GOLD,
-		TextTransparency = 1,
-		TextStrokeTransparency = 1,
-		ZIndex = 4,
-		Parent = sceneGui,
-	})
-	sceneGui.Parent = player:WaitForChild("PlayerGui")
-	local finished = false
-	local function finish()
-		if finished then
-			return
-		end
-		finished = true
-		sceneGui:Destroy()
-		UIController.FlyToCounter("Cash", 10)
+-- Ouverture du coffre (D84, refaite en D137) : un vrai coffre 3D tombe, tremble, le couvercle saute sur un tas d'or,
+-- le gain défile sous des rayons, puis les billets s'envolent vers le compteur. Plus on a coché de jours, plus le coffre
+-- est beau (bois, or, puis violet et pierres précieuses).
+local function chestScene(cash: number, days: number)
+	local tier = if days >= 6 then 3 elseif days >= 3 then 2 else 1
+	local function text(value: number): string
+		return Texts.Get("Weekly.ChestBurst", { cash = Format.Short(value) })
 	end
-	shade.Activated:Connect(finish)
-	task.spawn(function()
-		TweenService:Create(shade, TweenInfo.new(0.3), { BackgroundTransparency = 0.45 }):Play()
-		local drop = TweenService:Create(chest, TweenInfo.new(0.5, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out), {
-			Position = UDim2.fromScale(0.5, 0.45),
-		})
-		drop:Play()
-		drop.Completed:Wait()
-		-- Il tremble trois fois, de plus en plus fort
-		for shake = 1, 3 do
-			for _, angle in { -8 * shake, 8 * shake, 0 } do
-				chest.Rotation = angle
-				task.wait(0.05)
-			end
-			task.wait(0.18)
-		end
-		if finished then
-			return
-		end
-		-- Il éclate
-		chest.Text = "💰"
-		chest.Size = UDim2.fromOffset(190, 190)
-		TweenService:Create(chest, TweenInfo.new(0.3, Enum.EasingStyle.Back), { Size = UDim2.fromOffset(150, 150) })
-			:Play()
-		sceneRays.TextTransparency = 0.2
-		TweenService:Create(sceneRays, TweenInfo.new(2.5, Enum.EasingStyle.Linear), { Rotation = 180 }):Play()
-		TweenService:Create(amount, TweenInfo.new(0.3), { TextTransparency = 0, TextStrokeTransparency = 0.2 }):Play()
-		for index = 1, 12 do
-			local coin = Ui.label({
-				AnchorPoint = Vector2.new(0.5, 0.5),
-				Position = UDim2.fromScale(0.5, 0.45),
-				Size = UDim2.fromOffset(44, 44),
-				Text = if index % 2 == 0 then "🪙" else "💵",
-				TextStrokeTransparency = 1,
-				ZIndex = 2,
-				Parent = sceneGui,
-			})
-			local angle = index / 12 * 2 * math.pi
-			TweenService:Create(coin, TweenInfo.new(0.7, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-				Position = UDim2.new(0.5, math.cos(angle) * 220, 0.45, math.sin(angle) * 160),
-				Rotation = 360,
-				TextTransparency = 1,
-			}):Play()
-		end
-		task.wait(2)
-		finish()
-	end)
+	ShopArt.Celebrate({
+		color = GOLD,
+		build = ChestArt.Scene(tier),
+		title = text(cash),
+		count = function(progress: number)
+			return text(math.floor(cash * progress))
+		end,
+		glyphs = { "💵", "💰", "✨" },
+		onDone = function()
+			UIController.FlyToCounter("Cash", 10)
+		end,
+	})
 end
 
 -- Case « Rewards » du menu (MenuController, D124) : rouvrir la fenêtre quand on veut
@@ -715,7 +639,7 @@ function WeeklyController.Start()
 		end
 		-- Le coffre vient d'être ouvert : la scène d'ouverture
 		if state.chest and state.chest.opened and wasOpened == false then
-			chestScene(state.chest.cash or 0)
+			chestScene(state.chest.cash or 0, tonumber(state.chest.stamps) or 0)
 		end
 	end)
 	-- Compte à rebours
