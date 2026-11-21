@@ -22,6 +22,7 @@ Ce dossier est la source de vérité du jeu. Un fichier = un sujet.
 | [ANALYSE_VIRALE_2026-11-03.md](ANALYSE_VIRALE_2026-11-03.md) | Bons et mauvais points pour un jeu viral, solutions proposées | Avant de choisir les prochaines étapes |
 | [ANALYSE_JEU_2026-11-19.md](ANALYSE_JEU_2026-11-19.md) | Comparaison avec les meilleurs jeux Roblox (algorithme sur 28 jours, rétention), problèmes et 14 améliorations classées | Avant de choisir les prochaines étapes |
 | [ANALYSE_SUCCES_2026-11-20.md](ANALYSE_SUCCES_2026-11-20.md) | Tubes Roblox de 2026, 7 leçons (dont l'accès aux moins de 16 ans : Kids / Select), plan de la suite | Avant de choisir les prochaines étapes |
+| [AMELIORATIONS_2026-11-21.md](AMELIORATIONS_2026-11-21.md) | 15 meilleures améliorations classées (test à l'écran, Noël, partage, boutique honnête, iPhone) | Avant de choisir la prochaine étape |
 | [RECHERCHE_MENUS_2026-11-09.md](RECHERCHE_MENUS_2026-11-09.md) | Menus et HUD des jeux Roblox les plus joués, règles retenues | Avant de toucher à l'interface |
 | [RECHERCHE_TENUES_2026-11-09.md](RECHERCHE_TENUES_2026-11-09.md) | Ce qui fait vendre une tenue payante (silhouette, lumière, aura, mise en scène) | Avant de créer ou retoucher une tenue Robux |
 | [DECISIONS.md](DECISIONS.md) | Journal des décisions et de leurs raisons | On se demande « pourquoi on a fait ça ? » |

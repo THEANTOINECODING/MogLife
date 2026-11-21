@@ -2,6 +2,19 @@
 
 Format : date — décision — raison. La plus récente en haut.
 
+## 2026-11-21 (nuit — Demande d'Antoine : « refait les coffres et les choses payantes pour qu'ils aient l'air 10000x plus attrayants », animations incroyables)
+
+- **D137 — Boutique Robux et récompenses habillées comme une vitrine** (nouveaux modules client `ChestArt.luau` et `ShopArt.luau`, réglages `Config/Store.luau` `Chests`, `CardTiers`, `BonusMin`).
+  - **Coffres de Cash en 3D** (`ChestArt`) : caisse en planches avec cornières, bandes de métal et serrure, **couvercle ouvert sur un tas d'or qui déborde** (boules d'or néon, pièces dressées, lingots, pierres précieuses), liasses et pièces tombées devant. Trois rangs de plus en plus riches : bois et fer entrouvert ; bois rouge, or et un saphir ; violet royal, or, trois pierres, couvercle grand ouvert.
+  - **Cartes des packs** (Cash, Mog, Boosts) : fond dégradé selon le rang, soleil de rayons qui tourne et étincelles derrière la récompense, icône qui flotte et respire (Mog, Boosts), montant au reflet doré qui défile, bouton vert bonbon avec un reflet qui passe.
+  - **Pastille « +X% »** : valeur par Robux comparée au plus petit pack, calculée avec le **vrai prix** lu sur Roblox (jamais inventée) ; affichée à partir de +5 %. **Ruban « BEST VALUE » et bordure animée** sur le pack le plus avantageux. Avec les prix actuels : Cash +32 % et +64 %, Mog environ +15 % et +23 % (arrondis du stade), Boost 1 h +32 %.
+  - **Célébration d'achat** (Cash, Mog, Boost, pack de départ) : rideau sombre, rayons géants, la récompense jaillit et rebondit (coffre 3D qui tombe, tremble, couvercle qui saute ; ou grosse icône), le montant défile jusqu'au total, gerbe de billets et d'étincelles, puis les billets s'envolent vers le compteur. Remplace le simple message.
+  - **Coffre de la semaine** : même coffre 3D et même célébration (au lieu des émojis) ; il est plus beau selon le nombre de jours cochés (1–2, 3–5, 6–7).
+  - **Pack de départ** (fenêtre News) : vitrine dorée avec cadeau qui flotte, rayons, ruban « ONE TIME ONLY », bordure qui tourne ; la fenêtre surgissante de l'offre a aussi rayons, étincelles et bouton qui brille. **Offre « passer le boss »** : rayons dorés, bordure animée, bouton bonbon.
+  - **Onglet Tenues** : la tenue tourne devant une scène dégradée à sa couleur, avec rayons et étincelles.
+  - Studio seulement : `LocalPlayer.StoreDev` (BindableEvent) ouvre un onglet ou joue une célébration sans rien acheter (`:Fire("Open", "Cash")`, `:Fire("Celebrate", { kind = "Cash", amount = 20000 })`).
+  - **Vérifié** : Stylua et Selene propres ; dans Studio (code copié à la main, Rojo s'était déconnecté), la boutique se construit sans erreur, les 3 coffres se construisent (39, 61 et 88 pièces), la célébration se construit (coffre 3D de 88 pièces, textes). **Pas vérifié à l'écran** : le rendu de Studio était en pause toute la nuit (écran de veille), aucune capture possible de la nouvelle boutique ni des animations. À regarder en priorité au réveil.
+
 ## 2026-11-21 (Demande d'Antoine : icônes repliables, son au hasard en marchant, tableau à deux classements, secrets)
 
 - **D136 — Tableau central : 2 faces Mog Rush, 2 faces classement mondial du Mog total ; rang du joueur en bas.**
